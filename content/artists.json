@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "the-night-ferries",
+    "name": "The Night Ferries",
+    "sample": true,
+    "genres": ["blues", "soul"],
+    "location": "South London",
+    "bio": "Placeholder profile used to demonstrate the artist page. Replace with a real TAM artist: biography, links, performances and interviews all flow from this record.",
+    "socials": { "instagram": "", "youtube": "" },
+    "music": { "spotify": "", "bandcamp": "" },
+    "related": ["ada-okoro"]
+  },
+  {
+    "slug": "ada-okoro",
+    "name": "Ada Okoro",
+    "sample": true,
+    "genres": ["jazz", "soul"],
+    "location": "London",
+    "bio": "Placeholder profile. Each artist record generates a searchable page, structured data for search and AI systems, and a unique generative TAM sigil.",
+    "socials": {},
+    "music": {},
+    "related": ["the-night-ferries", "low-tide-collective"]
+  },
+  {
+    "slug": "low-tide-collective",
+    "name": "Low Tide Collective",
+    "sample": true,
+    "genres": ["electronic"],
+    "location": "London",
+    "bio": "Placeholder profile for an electronic act. Swap in real details via content/artists.json.",
+    "socials": {},
+    "music": {},
+    "related": ["ada-okoro"]
+  },
+  {
+    "slug": "marlowe-grey",
+    "name": "Marlowe Grey",
+    "sample": true,
+    "genres": ["folk"],
+    "location": "Kent",
+    "bio": "Placeholder profile for a singer-songwriter.",
+    "socials": {},
+    "music": {},
+    "related": []
+  }
+]

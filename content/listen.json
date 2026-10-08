@@ -1,0 +1,5 @@
+[
+  { "title": "TAM Festival — Now Playing", "kind": "playlist", "url": "", "summary": "Artists from upcoming TAM Festival nights. Add a Spotify, Apple Music or SoundCloud URL in content/listen.json." },
+  { "title": "Blues Jam Sessions", "kind": "playlist", "url": "", "summary": "Recorded at the Great British Blues Jam." },
+  { "title": "TAM Radio", "kind": "radio", "url": "", "summary": "Conversations and sessions. Coming soon." }
+]
