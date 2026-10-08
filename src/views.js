@@ -1,5 +1,5 @@
 import { h, raw, fmtDate, fmtTime, fmtDuration } from './lib/html.js';
-import { liveMark, sigil, archiveRings, londonTime, daypart } from './lib/logo.js';
+import { logo, artwork, archiveRings, londonTime, daypart } from './lib/brand.js';
 import { organization, artistLD, eventLD, videoLD, storyLD, jsonLdTag, paths } from './lib/seo.js';
 
 const NAV = [
@@ -38,10 +38,13 @@ ${noindex ? raw('<meta name="robots" content="noindex">') : ''}
 <meta property="og:title" content="${fullTitle}">
 <meta property="og:description" content="${desc}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${site.url}/og.svg">
+<meta property="og:image" content="${site.url}/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0907">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-48.png" type="image/png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,9 +54,10 @@ ${raw(jsonLdTag(organization(site), ...ld))}
 <script src="/js/tam.js" defer></script>
 </head>
 <body data-daypart="${daypart(londonTime(ctx.now).hour)}">
+<canvas class="chorus-rain" data-chorus aria-hidden="true"></canvas>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
-  <a class="brand" href="/" aria-label="TAM.TV home">${raw(liveMark({ id: 'hdr', size: 44, date: ctx.now, ring: false }))}<span class="brand-word">TAM<span>.TV</span></span></a>
+  <a class="brand" href="/" aria-label="TAM.TV home">${raw(logo('mark', { width: 40, alt: '' }))}${raw(logo('wordmark', { width: 92, alt: 'TAM' }))}<span class="brand-tv">.TV</span></a>
   <button class="nav-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
   <nav id="nav" class="site-nav" aria-label="Main">
     ${NAV.map(([href, label]) => h`<a href="${href}"${path.startsWith(href) ? raw(' aria-current="page"') : ''}>${label}</a>`)}
@@ -73,6 +77,7 @@ ${raw(jsonLdTag(organization(site), ...ld))}
       <ul class="plain">
         ${Object.entries(site.socials).map(([k, v]) => (v ? h`<li><a href="${v}" rel="me noopener">${k}</a></li>` : h`<li class="muted">${k} — link coming</li>`))}
       </ul>
+      <p><button class="link-button" data-chorus-toggle aria-pressed="false">Pause the falling choruses</button></p>
       <p><a href="/privacy">Privacy &amp; cookies</a> · <a href="/llms.txt">llms.txt</a> · <a href="/graph.json">Knowledge graph</a></p>
     </div>
   </div>
@@ -109,7 +114,7 @@ function signupForm(ctx, { compact = true } = {}) {
 const eventCard = (ctx, e) => {
   const q = ctx.q;
   return h`<article class="card event-card">
-  <a class="card-art" href="${paths.event(e.slug)}" tabindex="-1" aria-hidden="true">${raw(sigil(e.slug, { genre: e.genre, size: 160, label: false }))}</a>
+  <a class="card-art" href="${paths.event(e.slug)}" tabindex="-1" aria-hidden="true">${raw(artwork(e.slug, { genre: e.genre, size: 160, label: false }))}</a>
   <div class="card-body">
     <p class="eyebrow">${q.strand(e.strand)?.name} ${badge(e)}</p>
     <h3><a href="${paths.event(e.slug)}">${e.title}</a></h3>
@@ -120,7 +125,7 @@ const eventCard = (ctx, e) => {
 };
 
 const artistCard = (a) => h`<article class="card artist-card">
-  <a href="${paths.artist(a.slug)}" class="card-art">${raw(sigil(a.name, { genre: a.genres[0], size: 200 }))}</a>
+  <a href="${paths.artist(a.slug)}" class="card-art">${raw(artwork(a.name, { genre: a.genres[0], size: 200 }))}</a>
   <div class="card-body">
     <h3><a href="${paths.artist(a.slug)}">${a.name}</a> ${badge(a)}</h3>
     <p class="meta">${a.genres.join(' · ')} — ${a.location}</p>
@@ -129,7 +134,7 @@ const artistCard = (a) => h`<article class="card artist-card">
 
 const videoCard = (ctx, v) => h`<article class="card video-card">
   <a href="${paths.video(v.slug)}" class="card-art video-thumb">
-    ${v.youtubeId ? h`<img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" loading="lazy">` : raw(sigil(v.slug, { genre: ctx.q.artist(v.artist)?.genres?.[0], size: 160, label: false }))}
+    ${v.youtubeId ? h`<img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" loading="lazy">` : raw(artwork(v.slug, { genre: ctx.q.artist(v.artist)?.genres?.[0], size: 160, label: false }))}
     <span class="play" aria-hidden="true">▶</span>
   </a>
   <div class="card-body">
@@ -165,7 +170,7 @@ export function home(ctx) {
 
   const body = h`
 <section class="hero">
-  <div class="hero-mark">${raw(liveMark({ id: 'hero', size: 520, date: ctx.now }))}</div>
+  <div class="hero-mark"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 520, eager: true }))}</div></div>
   <div class="hero-copy">
     <p class="eyebrow">TAM Festival · ${c.site.locality}</p>
     <h1>Live music.<br>Emerging artists.<br>Real stories.</h1>
@@ -231,7 +236,7 @@ export function eventPage(ctx, e) {
   const past = q.isPast(e);
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(sigil(e.slug, { genre: e.genre, size: 360, label: false }))}</div>
+  <div class="detail-art">${raw(artwork(e.slug, { genre: e.genre, size: 360, label: false }))}</div>
   <div class="detail-copy">
     <p class="eyebrow">${q.strand(e.strand)?.name} ${badge(e)}</p>
     <h1>${e.title}</h1>
@@ -257,7 +262,7 @@ export function artists(ctx) {
 <header class="page-head">
   <p class="eyebrow">Artists</p>
   <h1>The people who passed through TAM.</h1>
-  <p class="lede">Every artist gets a permanent page, and a sigil: a version of the TAM mark generated from their name. Same name, same sigil, forever.</p>
+  <p class="lede">Every artist gets a permanent page, and a record pressed from their name: same name, same grooves, forever.</p>
 </header>
 <div class="grid grid-4">${ctx.c.artists.map(artistCard)}</div>`;
   return layout(ctx, { title: 'Artists', description: 'Emerging artists who have performed at TAM.', path: '/artists', body });
@@ -274,7 +279,7 @@ export function artistPage(ctx, a) {
   const links = [...Object.entries(a.music || {}), ...Object.entries(a.socials || {})].filter(([, v]) => v);
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(sigil(a.name, { genre: a.genres[0], size: 360 }))}<p class="meta center"><a href="/sigil/${a.slug}.svg" download>Download sigil (SVG)</a></p></div>
+  <div class="detail-art">${raw(artwork(a.name, { genre: a.genres[0], size: 360 }))}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download artwork (SVG)</a></p></div>
   <div class="detail-copy">
     <p class="eyebrow">${a.genres.join(' · ')} ${badge(a)}</p>
     <h1>${a.name}</h1>
@@ -312,7 +317,7 @@ export function videoPage(ctx, v) {
   <div class="player">
     ${v.youtubeId
     ? h`<iframe src="https://www.youtube-nocookie.com/embed/${v.youtubeId}" title="${v.title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
-    : h`<div class="player-placeholder">${raw(sigil(v.slug, { genre: artist?.genres?.[0], size: 260, label: false }))}<p>Film coming soon</p></div>`}
+    : h`<div class="player-placeholder">${raw(artwork(v.slug, { genre: artist?.genres?.[0], size: 260, label: false }))}<p>Film coming soon</p></div>`}
   </div>
   <div class="detail-copy narrow">
     <p class="eyebrow">${v.kind} · ${fmtDuration(v.duration)} · <time datetime="${v.published}">${fmtDate(v.published, { day: 'numeric', month: 'short', year: 'numeric' })}</time> ${badge(v)}</p>
@@ -404,15 +409,14 @@ export function about(ctx) {
 </section>
 
 <section class="section split">
-  <div class="logo-demo">${raw(liveMark({ id: 'about', size: 360, date: ctx.now }))}</div>
+  <div class="logo-demo"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 380 }))}</div></div>
   <div>
-    <h2>A logo that keeps time</h2>
-    <p>The TAM mark is four letters sharing one circle: T, A and two Ms. On TAM.TV it’s drawn live, piece by piece, and it runs on London time.</p>
+    <h2>The Temple of Art and Music</h2>
+    <p>The TAM mark is four letters sharing one circle: T, A and two Ms. It appears on TAM.TV exactly as drawn, and never altered.</p>
     <ul>
-      <li><strong>The light</strong> sweeps once around the mark every 24 hours, like the sun.</li>
-      <li><strong>The colour</strong> shifts from rose-gold dawn to bright day, amber dusk and a glowing night.</li>
-      <li><strong>The lettering ring</strong> turns like a minute hand; the dot on the rim ticks the seconds.</li>
-      <li><strong>Every artist, event and film</strong> gets a generative sigil: the mark re-cut from its name, with one letter lit and run-out grooves that encode the name.</li>
+      <li><strong>The light around it keeps London time.</strong> The halo behind the logo and the gold of the site move from rose-gold dawn to bright day, amber dusk and a slow-breathing night.</li>
+      <li><strong>The TAM 108 fall behind every page.</strong> 108 songs drop down the background: their titles, and for songs in the public domain their choruses.</li>
+      <li><strong>Every artist, event and film gets a record.</strong> Its grooves are generated from the name, so it’s the same record every time, until real photography arrives.</li>
     </ul>
   </div>
 </section>`;
@@ -508,9 +512,9 @@ export function studio(ctx, { aiEnabled }) {
 
 export function notFound(ctx) {
   const body = h`<header class="page-head narrow center">
-  ${raw(sigil(ctx.path, { size: 220, label: false }))}
+  ${raw(artwork(ctx.path, { size: 220, label: false }))}
   <h1>Nothing playing here.</h1>
-  <p class="lede">That page doesn’t exist (yet). This sigil was generated from the address you tried, so at least you got some art.</p>
+  <p class="lede">That page doesn’t exist (yet). This record was pressed from the address you tried, so at least you got some art.</p>
   <p><a class="btn" href="/">Back to TAM.TV</a></p>
 </header>`;
   return layout(ctx, { title: 'Not found', path: ctx.path, body, noindex: true });

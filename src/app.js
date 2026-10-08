@@ -5,7 +5,7 @@ import { timingSafeEqual, createHash } from 'node:crypto';
 
 import { loadContent, queries } from './lib/content.js';
 import { sitemap, robots, llmsTxt, graph, paths } from './lib/seo.js';
-import { sigil, staticMark, liveMark } from './lib/logo.js';
+import { artwork } from './lib/brand.js';
 import { append, validateSubmission, validateSignup } from './lib/store.js';
 import { aiEnabled, productionPackage } from './lib/ai.js';
 import * as views from './views.js';
@@ -114,7 +114,7 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
     } catch { return false; }
   }
 
-  const sigilName = (slug) => {
+  const artName = (slug) => {
     const q = queries(c);
     const a = q.artist(slug);
     if (a) return { name: a.name, genre: a.genres[0] };
@@ -156,16 +156,15 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
         if (p === '/privacy') return page(views.privacy(ctx));
         if (p === '/studio') return page(views.studio(ctx, { aiEnabled: aiEnabled() && Boolean(process.env.ADMIN_TOKEN) }));
 
-        // Marks and sigils.
+        // Brand: the original logo files are served from /img; these are aliases.
         const svg = (body, maxAge = 86400) => send(res, 200, body, 'image/svg+xml', { 'Cache-Control': `public, max-age=${maxAge}` });
-        if (p === '/favicon.svg') return svg(staticMark({ background: false }));
-        if (p === '/logo.svg') return svg(staticMark());
-        if (p === '/logo-live.svg') return svg(liveMark({ id: 'x', size: 512, date: now }).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" style="background:#0b0907" '), 60);
-        if (p === '/og.svg') return svg(staticMark({ part: 'night', angle: 45 }));
-        if ((match = m(/^\/sigil\/([a-z0-9-]+)\.svg$/))) {
-          const s = sigilName(match[1]);
-          if (s) return svg(sigil(s.name, { genre: s.genre, size: 512, label: s.label !== false }).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
+        if (p === '/favicon.ico' || p === '/favicon.png') return serveStatic(res, '/img/favicon-48.png');
+        if (p === '/apple-touch-icon.png') return serveStatic(res, '/img/apple-touch-icon.png');
+        if ((match = m(/^\/art\/([a-z0-9-]+)\.svg$/))) {
+          const s = artName(match[1]);
+          if (s) return svg(artwork(s.name, { genre: s.genre, size: 512, label: s.label !== false }).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
         }
+        if (p === '/chorus.json') return send(res, 200, JSON.stringify(c.chorus.songs.map(({ title, artist, year, chorus }) => ({ title, artist, year, chorus }))), 'application/json; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' });
 
         // Discovery.
         if (p === '/robots.txt') return send(res, 200, robots(c.site), 'text/plain; charset=utf-8');

@@ -37,16 +37,18 @@ Node 20 or newer. The server uses no web framework and has one dependency (the A
 | Search + AI discovery | schema.org JSON-LD on every page, `/sitemap.xml`, `/robots.txt`, `/llms.txt`, `/graph.json` |
 | AI Production Agent (§20) | `/studio`, `POST /api/agent/production` |
 
-## The logo, alive
+## The logo
 
-The TAM mark is rebuilt in code (`src/lib/logo.js`) as four separate letters sharing one circle: **T** at the top, **A** at the bottom and an **M** on each side. Because each letter is its own piece, the mark can move:
+The TAM logo is a trademark, and TAM.TV only ever shows it **exactly as drawn**. Every logo file in `public/img/` (full logo, circular mark, wordmark, favicons, social card) is cut directly from the original artwork `public/img/tam-logo-original.jpg` by `scripts/extract_logo.py`. The script only makes the black background transparent; nothing is redrawn, recoloured or reshaped. Where the logo sits over the moving background, a solid black disc behind the circle keeps it looking exactly like the original.
 
-- **It keeps London time.** The gold light makes one full turn around the mark every 24 hours. The palette moves through dawn (rose gold), day, dusk (amber) and night, when the mark glows and slowly breathes like a lit sign. The "Temple of Art and Music" lettering turns like a minute hand, and a dot on the rim ticks off the seconds. The server renders the current state, and `public/js/tam.js` keeps it moving.
-- **It assembles.** On the homepage the four letters fly in from their own quadrants and lock together. The hero mark also tilts slightly toward the pointer. Motion is turned off when the visitor's system asks for reduced motion.
-- **Generative sigils.** Every artist, event and film gets its own version of the mark, generated from its name. The colour leans toward the genre, the light angle and the lit letter are picked by a hash of the name, and the outer grooves encode the name like a record's run-out groove. The same name always gives the same sigil, so it works as a permanent avatar or poster until real photography exists. Download one at `/sigil/<slug>.svg`. Even the 404 page draws a sigil from the missing URL.
-- **Six years, six rings.** On `/about` the archive is drawn as one ring per year around the mark. Each ring grows as that year's material is added back into the archive.
+All the movement happens *around* the logo:
 
-The original artwork is kept at `public/img/tam-logo-original.jpg`.
+- **London time.** A halo behind the logo, and the gold used across the site, shift from rose-gold dawn to bright day, amber dusk and a slow-breathing glow at night.
+- **The TAM 108.** Behind every page, 108 songs fall from the top of the screen (`content/chorus.json`). Each one shows its title and artist. Choruses appear only for the 12 public-domain songs, because song lyrics are copyright. You can add a chorus for any other song once TAM holds a lyric licence for it, or has permission from the artist (e.g. TAM's own artists). Set `"licensed": true` on that song; the content check refuses unlicensed lyrics. Visitors can pause the rain from the footer, and it stays still for anyone whose system asks for reduced motion.
+- **Record artwork.** Every artist, event and film gets a generated record whose grooves come from its name (`/art/<slug>.svg`), until real photography exists. It deliberately doesn't use the TAM mark.
+- **Six years, six rings.** On `/about` the archive is drawn as one ring per year around the untouched mark, growing as each year's material is added.
+
+To regenerate the logo files: `python3 scripts/extract_logo.py` (needs Pillow and NumPy).
 
 ## AI: the Production Agent
 
@@ -74,11 +76,12 @@ src/app.js             routing, forms, APIs, security headers (CSP etc.)
 src/views.js           page templates
 src/lib/content.js     content loading, validation, queries   ← swap for a CMS later
 src/lib/seo.js         JSON-LD, sitemap, llms.txt, knowledge graph
-src/lib/logo.js        the live mark, sigils, archive rings
+src/lib/brand.js       logo (original artwork only), record artwork, archive rings
 src/lib/store.js       first-party data (JSONL)              ← swap for Postgres later
 src/lib/ai.js          Production Agent (Claude)
 public/                CSS, client JS, images
-content/               the site's content
+content/               the site's content (incl. chorus.json, the TAM 108)
+scripts/extract_logo.py  cuts the official logo files from the original artwork
 ```
 
 Each module is a seam where later phases plug in (pledges, membership, more agents) without rebuilding the platform. The roadmap is in [docs/ROADMAP.md](docs/ROADMAP.md).

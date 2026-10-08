@@ -24,6 +24,7 @@ export function loadContent() {
     stories: read('stories').sort((a, b) => b.published.localeCompare(a.published)),
     listen: read('listen'),
     legacy: read('archive'),
+    chorus: read('chorus'),
   };
   validate(c);
   return c;
@@ -59,6 +60,11 @@ export function validate(c) {
   for (const s of c.stories) {
     for (const a of s.related?.artists || []) if (!artists.has(a)) errors.push(`story ${s.slug}: unknown artist "${a}"`);
     for (const e of s.related?.events || []) if (!events.has(e)) errors.push(`story ${s.slug}: unknown event "${e}"`);
+  }
+  for (const song of c.chorus?.songs || []) {
+    if (!song.title || !song.artist) errors.push(`chorus: song missing title/artist`);
+    // Lyrics are copyright: only public-domain or licensed choruses may be published.
+    if (song.chorus?.length && !song.publicDomain && !song.licensed) errors.push(`chorus: "${song.title}" has lyrics but is not marked publicDomain or licensed`);
   }
   if (errors.length) throw new Error(`Content errors:\n  ${errors.join('\n  ')}`);
 }
