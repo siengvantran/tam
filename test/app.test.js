@@ -13,7 +13,7 @@ delete process.env.ANTHROPIC_AUTH_TOKEN;
 
 const { createApp } = await import('../src/app.js');
 const { loadContent, validate } = await import('../src/lib/content.js');
-const { sigil, liveMark, daypart, lightAngle } = await import('../src/lib/logo.js');
+const { artwork, logo, daypart } = await import('../src/lib/brand.js');
 
 let server;
 let base;
@@ -44,10 +44,10 @@ test('every public page renders', async () => {
   }
 });
 
-test('unknown pages 404 with a sigil', async () => {
+test('unknown pages 404 with generated artwork', async () => {
   const res = await get('/no-such-page');
   assert.equal(res.status, 404);
-  assert.match(await res.text(), /tam-sigil/);
+  assert.match(await res.text(), /class="tam-art"/);
 });
 
 test('artist page carries MusicGroup structured data linked to events', async () => {
@@ -137,21 +137,39 @@ test('production agent is token-protected and reports when AI is off', async () 
   assert.match((await res.json()).error, /ANTHROPIC_API_KEY/);
 });
 
-test('sigils are deterministic and distinct', () => {
-  assert.equal(sigil('Ada Okoro'), sigil('Ada Okoro'));
-  assert.notEqual(sigil('Ada Okoro'), sigil('Marlowe Grey'));
-  assert.match(sigil('<script>'), /&lt;SCRIPT&gt;/);
+test('artwork is deterministic and distinct', () => {
+  assert.equal(artwork('Ada Okoro'), artwork('Ada Okoro'));
+  assert.notEqual(artwork('Ada Okoro'), artwork('Marlowe Grey'));
+  assert.match(artwork('<script>'), /&lt;SCRIPT&gt;/);
 });
 
-test('the live mark follows London time', () => {
+test('the logo is always the original artwork', async () => {
+  const html = await (await get('/')).text();
+  assert.match(html, /src="\/img\/tam-logo-640\.png"/);
+  assert.match(html, /src="\/img\/tam-mark-96\.png"/);
+  for (const f of ['tam-logo.png', 'tam-logo-640.png', 'tam-mark.png', 'tam-mark-96.png', 'tam-wordmark.png', 'tam-wordmark-160.png', 'favicon-48.png', 'apple-touch-icon.png', 'og.jpg']) {
+    const res = await get(`/img/${f}`);
+    assert.equal(res.status, 200, f);
+  }
+  assert.match(logo('mark', { width: 40 }), /width="40" height="40"/);
+});
+
+test('the TAM 108 fall with lyrics only where publishable', async () => {
+  const songs = await (await get('/chorus.json')).json();
+  assert.equal(songs.length, 108);
+  const c = loadContent();
+  for (const s of c.chorus.songs) if (s.chorus.length) assert.ok(s.publicDomain || s.licensed, s.title);
+  const broken = structuredClone(c);
+  broken.chorus.songs[0].chorus = ['a line'];
+  broken.chorus.songs[0].publicDomain = false;
+  assert.throws(() => validate(broken), /not marked publicDomain or licensed/);
+});
+
+test('London time sets the daypart', () => {
   assert.equal(daypart(6), 'dawn');
   assert.equal(daypart(12), 'day');
   assert.equal(daypart(19), 'dusk');
   assert.equal(daypart(23), 'night');
-  assert.equal(lightAngle({ hour: 12, minute: 0 }), 270);
-  // 20:30 UTC in October is 21:30 BST: night.
-  assert.match(liveMark({ date: new Date('2026-10-08T20:30:00Z') }), /data-daypart="night"/);
-  assert.match(liveMark({ date: new Date('2026-01-08T12:00:00Z') }), /data-daypart="day"/);
 });
 
 test('content validation catches broken references', () => {

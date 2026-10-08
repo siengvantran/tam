@@ -62,8 +62,9 @@ code { background: var(--bg-3); padding: .1em .35em; border-radius: 4px; font-si
   border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
-.brand-word { font-family: var(--display); font-weight: 700; font-size: 1.35rem; letter-spacing: .14em; }
-.brand-word span { color: var(--gold); }
+.brand .tam-logo-mark { width: 40px; }
+.brand .tam-logo-wordmark { width: 92px; }
+.brand-tv { font-family: var(--display); font-weight: 600; font-size: 1.25rem; letter-spacing: .12em; color: var(--gold); margin-left: -4px; align-self: flex-end; padding-bottom: 6px; }
 .site-nav { display: flex; align-items: center; gap: clamp(12px, 2vw, 26px); }
 .site-nav a { font-family: var(--display); text-transform: uppercase; letter-spacing: .14em; font-size: .85rem; text-decoration: none; color: var(--text); }
 .site-nav a[aria-current="page"] { color: var(--gold-hi); }
@@ -112,8 +113,6 @@ main { padding: 0 var(--gutter); max-width: var(--max); margin: 0 auto; }
 
 /* ---- hero ---- */
 .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 4vw, 56px); min-height: min(86vh, 820px); padding: 24px 0; }
-.hero-mark { perspective: 900px; }
-.hero-mark svg { width: 100%; height: auto; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .4s ease-out; filter: drop-shadow(0 30px 60px rgba(230, 167, 90, .18)); }
 .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); }
 .clock { font-family: var(--display); letter-spacing: .08em; color: var(--muted); }
 .clock [data-clock-time] { color: var(--gold-hi); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -126,29 +125,45 @@ main { padding: 0 var(--gutter); max-width: var(--max); margin: 0 auto; }
   .hero-mark { max-width: 420px; margin: 0 auto; width: 100%; }
 }
 
-/* ---- the mark ---- */
-.tam-mark { display: block; overflow: visible; }
-.tam-words, .tam-tick { transform-origin: 0 0; transform-box: view-box; transition: transform 1s linear; }
-.tam-words text { font: 600 11.5px var(--display); letter-spacing: 3.4px; fill: var(--gold); opacity: .85; }
-.tam-tick circle { fill: var(--gold-hi); }
-.tam-sigil-label { font: 600 10px var(--display); letter-spacing: 2.4px; fill: var(--muted); }
-.tam-ring-year { font: 600 5.5px var(--display); letter-spacing: .6px; fill: var(--muted); }
-.tam-piece { transition: opacity .4s; }
-.brand .tam-mark { width: 44px; height: 44px; }
-
-/* The four letters arrive from their own quadrants, then the ring of words fades in. */
-.assemble .tam-piece { animation: tam-in 1.4s cubic-bezier(.2, .8, .2, 1) both; transform-box: view-box; transform-origin: 0 0; }
-.assemble .tam-t { --from: translate(0, -60px) rotate(-14deg); animation-delay: .05s; }
-.assemble .tam-a { --from: translate(0, 60px) rotate(14deg); animation-delay: .2s; }
-.assemble .tam-ml { --from: translate(-60px, 0) rotate(-14deg); animation-delay: .35s; }
-.assemble .tam-mr { --from: translate(60px, 0) rotate(14deg); animation-delay: .5s; }
-.assemble .tam-words { animation: tam-fade 1.6s .9s ease both; }
-.assemble .tam-tick { animation: tam-fade 1s 1.6s ease both; }
-@keyframes tam-in { from { transform: var(--from); opacity: 0; } to { transform: none; opacity: 1; } }
+/* ---- the logo ----
+   The TAM logo is shown exactly as supplied (see src/lib/brand.js).
+   Never filter, recolour, rotate, skew or animate the image itself; effects
+   live in the halo behind it. */
+.tam-logo { display: block; height: auto; max-width: 100%; }
+.hero-mark, .logo-demo { position: relative; display: grid; place-items: center; }
+.hero-mark .tam-logo, .logo-demo .tam-logo { position: relative; z-index: 1; width: 100%; animation: tam-fade 1.6s ease both; }
+.halo {
+  position: absolute; z-index: 0; pointer-events: none; border-radius: 50%;
+  /* Centred on the circle of the mark: (1004, 555) in the 1060 x 1116 logo. */
+  left: 50.4%; top: 49.7%; width: 104%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--gold-hi) 30%, transparent), color-mix(in srgb, var(--gold) 10%, transparent) 55%, transparent 72%);
+  filter: blur(14px); transition: background 2s ease;
+}
+/* The logo is black-backed artwork: keep its circle solid so nothing shows through. */
+.logo-backing {
+  position: absolute; z-index: 0; pointer-events: none; border-radius: 50%;
+  left: 50.4%; top: 49.7%; width: 76%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: #000;
+}
+.logo-frame { position: relative; width: min(100%, 520px); }
+.logo-demo .logo-frame { width: min(100%, 400px); }
+.hero-copy { position: relative; }
+.hero-copy::before { content: ''; position: absolute; inset: -8% -10%; z-index: -1; background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 82%, transparent), transparent); pointer-events: none; }
+body[data-daypart="night"] .halo { animation: tam-breathe 7s ease-in-out infinite; }
 @keyframes tam-fade { from { opacity: 0; } to { opacity: 1; } }
-/* Night: the mark breathes, like a lit sign. */
-svg.tam-live[data-daypart="night"] .tam-pieces { animation: tam-breathe 6s ease-in-out infinite; }
-@keyframes tam-breathe { 50% { opacity: .82; } }
+@keyframes tam-breathe { 50% { opacity: .55; transform: translate(-50%, -50%) scale(.96); } }
+.tam-art { display: block; overflow: visible; }
+.tam-art-initials { font: 700 17px var(--display); letter-spacing: 1.5px; }
+.tam-art-label { font: 600 10px var(--display); letter-spacing: 2.4px; fill: var(--muted); }
+.tam-archive { display: block; overflow: visible; }
+.tam-ring-year { font: 600 6.5px var(--display); letter-spacing: .6px; fill: var(--muted); }
+
+/* ---- the TAM 108: choruses falling behind every page ---- */
+.chorus-rain { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+.site-header, main, .site-footer { position: relative; z-index: 1; }
+.site-header { position: sticky; z-index: 20; }
+.link-button { background: none; border: 0; padding: 0; font: inherit; color: var(--gold-hi); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.link-button:hover { color: #fff; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

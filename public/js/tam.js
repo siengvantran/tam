@@ -1,14 +1,10 @@
-// TAM.TV client: the living logo, countdowns, consent, light analytics, studio.
+// TAM.TV client: London-time light, falling choruses, countdowns, consent, analytics, studio.
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- time --------------------------------------------------------------
-  const PALETTES = {
-    dawn: ['#f7cfa4', '#dc9273', '#7d4b3d'],
-    day: ['#ffd88f', '#e6a75a', '#8a5a2c'],
-    dusk: ['#f4a95c', '#c4733a', '#5e3420'],
-    night: ['#eebd78', '#a56f3c', '#3f2717'],
-  };
+  // The logo itself never changes. London time only moves the light around it:
+  // body[data-daypart] drives the halo and the site's gold (see site.css).
   const LINES = {
     dawn: 'Dawn in London. The room is quiet; the archive is open.',
     day: 'Daytime in London. Catch up on last night’s sets.',
@@ -19,24 +15,10 @@
   const london = () => Object.fromEntries(fmt.formatToParts(new Date()).filter((p) => p.type !== 'literal').map((p) => [p.type, +p.value]));
   const daypart = (h) => (h >= 5 && h < 9 ? 'dawn' : h >= 9 && h < 17 ? 'day' : h >= 17 && h < 21 ? 'dusk' : 'night');
 
-  // Mirrors src/lib/logo.js liveMark(): light angle, palette, minute ring, second tick.
-  function tickMarks() {
+  function tickClock() {
     const t = london();
     const part = daypart(t.hour);
-    const angle = ((((t.hour + t.minute / 60 + t.second / 3600) / 24) * 360 + 90) % 360).toFixed(2);
     document.body.dataset.daypart = part;
-    document.querySelectorAll('svg.tam-live').forEach((svg) => {
-      svg.dataset.daypart = part;
-      const grad = svg.querySelector('linearGradient');
-      if (grad) {
-        grad.setAttribute('gradientTransform', `rotate(${angle})`);
-        grad.querySelectorAll('stop').forEach((s, i) => s.setAttribute('stop-color', PALETTES[part][i]));
-      }
-      const words = svg.querySelector('.tam-words');
-      if (words) words.style.transform = `rotate(${(t.minute + t.second / 60) * 6}deg)`;
-      const tick = svg.querySelector('.tam-tick');
-      if (tick) tick.style.transform = `rotate(${t.second * 6}deg)`;
-    });
     const time = document.querySelector('[data-clock-time]');
     if (time) time.textContent = `${String(t.hour).padStart(2, '0')}:${String(t.minute).padStart(2, '0')}`;
     const line = document.querySelector('[data-clock-line]');
@@ -56,24 +38,113 @@
     });
   }
 
-  // Assemble: the four letters arrive from their own quadrant, once per visit.
-  function assemble() {
-    if (reduced) return;
-    document.querySelectorAll('.hero-mark svg.tam-live, .logo-demo svg.tam-live').forEach((svg) => svg.classList.add('assemble'));
-  }
+  // ---- the TAM 108: choruses falling from the top -------------------------
+  function chorusRain() {
+    const canvas = document.querySelector('[data-chorus]');
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    const toggle = document.querySelector('[data-chorus-toggle]');
+    const store = { get: () => { try { return localStorage.getItem('tam_chorus'); } catch { return null; } }, set: (v) => { try { localStorage.setItem('tam_chorus', v); } catch { /* private mode */ } } };
+    let paused = reduced || store.get() === 'paused';
+    let songs = [];
+    let queue = [];
+    let drops = [];
+    let w = 0;
+    let h = 0;
+    let last = 0;
+    let raf = 0;
 
-  // The hero mark leans a little toward the pointer, like light catching metal.
-  function tilt() {
-    const hero = document.querySelector('.hero-mark');
-    if (!hero || reduced) return;
-    hero.addEventListener('pointermove', (e) => {
-      const r = hero.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      hero.style.setProperty('--rx', `${(-y * 10).toFixed(2)}deg`);
-      hero.style.setProperty('--ry', `${(x * 10).toFixed(2)}deg`);
+    const css = getComputedStyle(document.documentElement);
+    const display = css.getPropertyValue('--display').trim() || 'sans-serif';
+    const gold = () => getComputedStyle(document.body).getPropertyValue('--gold-hi').trim() || '#f0b768';
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function nextSong() {
+      if (!queue.length) queue = songs.slice().sort(() => Math.random() - 0.5);
+      return queue.pop();
+    }
+
+    function makeDrop(song, y) {
+      const z = 0.3 + Math.random() * 0.7; // depth: near drops are bigger, brighter, faster
+      const size = Math.round(13 + z * (w < 600 ? 9 : 17));
+      const lines = song.chorus && song.chorus.length ? song.chorus : [song.title];
+      const caption = song.chorus && song.chorus.length ? `${song.title} · ${song.artist}` : `${song.artist}${song.year ? ` · ${song.year}` : ''}`;
+      ctx.font = `600 ${size}px ${display}`;
+      const width = Math.max(...lines.map((l) => ctx.measureText(l).width));
+      const x = Math.max(8, Math.random() * Math.max(8, w - width - 8));
+      return { lines, caption, size, z, x, y: y ?? -size * (lines.length + 2), speed: 10 + z * 26, sway: Math.random() * Math.PI * 2, color: gold() };
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, w, h);
+      for (const d of drops) {
+        const fadeIn = Math.min(1, (d.y + d.size * 3) / (h * 0.25));
+        const fadeOut = Math.min(1, (h - d.y) / (h * 0.3));
+        const alpha = Math.max(0, Math.min(fadeIn, fadeOut)) * (0.06 + d.z * 0.16);
+        const x = d.x + Math.sin(t / 2400 + d.sway) * 6 * d.z;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = d.color;
+        ctx.font = `600 ${d.size}px ${display}`;
+        d.lines.forEach((line, i) => ctx.fillText(line, x, d.y + i * d.size * 1.25));
+        ctx.globalAlpha = alpha * 0.8;
+        ctx.font = `400 ${Math.round(d.size * 0.55)}px ${display}`;
+        ctx.fillText(d.caption.toUpperCase(), x, d.y + d.lines.length * d.size * 1.25 + d.size * 0.1);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    const target = () => Math.max(4, Math.min(12, Math.round(w / 160)));
+
+    function frame(t) {
+      const dt = Math.min(0.1, (t - (last || t)) / 1000);
+      last = t;
+      for (const d of drops) d.y += d.speed * dt;
+      drops = drops.filter((d) => d.y < h + d.size * 2);
+      // Stagger new drops so they don't arrive in waves.
+      if (drops.length < target() && Math.random() < 0.03) drops.push(makeDrop(nextSong()));
+      draw(t);
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      cancelAnimationFrame(raf);
+      last = 0;
+      if (paused) { draw(0); return; } // a still frame: the choruses hang in place
+      raf = requestAnimationFrame(frame);
+    }
+
+    function setPaused(v, remember) {
+      paused = v;
+      if (remember) store.set(v ? 'paused' : 'playing');
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', String(v));
+        toggle.textContent = v ? 'Play the falling choruses' : 'Pause the falling choruses';
+      }
+      start();
+    }
+
+    fetch('/chorus.json').then((r) => r.json()).then((list) => {
+      songs = list;
+      resize();
+      // Seed the screen so it isn't empty on arrival.
+      for (let i = 0; i < target(); i++) drops.push(makeDrop(nextSong(), Math.random() * h * 0.9));
+      setPaused(paused, false);
+    }).catch(() => {});
+
+    toggle?.addEventListener('click', () => setPaused(!paused, true));
+    window.addEventListener('resize', () => { resize(); if (paused) draw(0); });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else if (!paused) start();
     });
-    hero.addEventListener('pointerleave', () => { hero.style.setProperty('--rx', '0deg'); hero.style.setProperty('--ry', '0deg'); });
   }
 
   // ---- consent + analytics ----------------------------------------------
@@ -146,10 +217,9 @@
   }
 
   // ---- go ----------------------------------------------------------------
-  assemble();
-  tilt();
-  tickMarks();
+  tickClock();
   tickCountdowns();
-  setInterval(() => { tickMarks(); tickCountdowns(); }, 1000);
+  chorusRain();
+  setInterval(() => { tickClock(); tickCountdowns(); }, 1000);
   track('view');
 })();
