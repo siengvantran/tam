@@ -47,7 +47,7 @@ test('every public page renders', async () => {
 test('unknown pages 404 with generated artwork', async () => {
   const res = await get('/no-such-page');
   assert.equal(res.status, 404);
-  assert.match(await res.text(), /class="tam-art"/);
+  assert.match(await res.text(), /class="tam-art tam-vinyl"/);
 });
 
 test('artist page carries MusicGroup structured data linked to events', async () => {
@@ -135,6 +135,15 @@ test('production agent is token-protected and reports when AI is off', async () 
   const res = await call('test-token');
   assert.equal(res.status, 503);
   assert.match((await res.json()).error, /ANTHROPIC_API_KEY/);
+});
+
+test('every name gets its own coloured vinyl', async () => {
+  const { pressing, COLOURWAYS, PRESSINGS } = await import('../src/lib/vinyl.js');
+  assert.deepEqual(pressing('Ada Okoro'), pressing('Ada Okoro'));
+  const seen = new Set(Array.from({ length: 2000 }, (_, i) => pressing(`Artist ${i}`).title));
+  assert.equal(seen.size, COLOURWAYS.length * PRESSINGS.length, 'every colourway x pressing is reachable');
+  const html = await (await get('/artists/ada-okoro')).text();
+  assert.match(html, new RegExp(`Pressed on.*${pressing('Ada Okoro').colourway.name}`, 's'));
 });
 
 test('artwork is deterministic and distinct', () => {

@@ -1,5 +1,6 @@
 import { h, raw, fmtDate, fmtTime, fmtDuration } from './lib/html.js';
 import { logo, artwork, archiveRings, londonTime, daypart } from './lib/brand.js';
+import { pressing } from './lib/vinyl.js';
 import { organization, artistLD, eventLD, videoLD, storyLD, jsonLdTag, paths } from './lib/seo.js';
 
 const NAV = [
@@ -16,6 +17,11 @@ const DAYPART_LINE = {
   day: 'Daytime in London. Catch up on last night’s sets.',
   dusk: 'Doors soon. Evening light at TAM.',
   night: 'Night in London. This is when TAM happens.',
+};
+
+const pressedOn = (name) => {
+  const p = pressing(name);
+  return h`<p class="pressed center"><span class="eyebrow">Pressed on</span><strong>${p.colourway.name}</strong> ${p.style.toLowerCase()} vinyl<br><span class="muted">${p.colourway.note}</span></p>`;
 };
 
 const badge = (item) => (item?.sample ? h`<span class="chip chip-sample" title="Placeholder content — replace in /content">Sample</span>` : '');
@@ -262,7 +268,7 @@ export function artists(ctx) {
 <header class="page-head">
   <p class="eyebrow">Artists</p>
   <h1>The people who passed through TAM.</h1>
-  <p class="lede">Every artist gets a permanent page, and a record pressed from their name: same name, same grooves, forever.</p>
+  <p class="lede">Every artist gets a permanent page and their own coloured vinyl, pressed from their name in a colourway you’ve probably never seen on a record. Same name, same record, forever.</p>
 </header>
 <div class="grid grid-4">${ctx.c.artists.map(artistCard)}</div>`;
   return layout(ctx, { title: 'Artists', description: 'Emerging artists who have performed at TAM.', path: '/artists', body });
@@ -279,7 +285,7 @@ export function artistPage(ctx, a) {
   const links = [...Object.entries(a.music || {}), ...Object.entries(a.socials || {})].filter(([, v]) => v);
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(artwork(a.name, { genre: a.genres[0], size: 360 }))}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download artwork (SVG)</a></p></div>
+  <div class="detail-art">${raw(artwork(a.name, { genre: a.genres[0], size: 360 }))}${pressedOn(a.name)}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download the record (SVG)</a></p></div>
   <div class="detail-copy">
     <p class="eyebrow">${a.genres.join(' · ')} ${badge(a)}</p>
     <h1>${a.name}</h1>
@@ -416,7 +422,7 @@ export function about(ctx) {
     <ul>
       <li><strong>The light around it keeps London time.</strong> The halo behind the logo and the gold of the site move from rose-gold dawn to bright day, amber dusk and a slow-breathing night.</li>
       <li><strong>The TAM 108 fall behind every page.</strong> 108 songs drop down the background: their titles, and for songs in the public domain their choruses.</li>
-      <li><strong>Every artist, event and film gets a record.</strong> Its grooves are generated from the name, so it’s the same record every time, until real photography arrives.</li>
+      <li><strong>Every artist, event and film gets its own coloured vinyl.</strong> Its name picks one of 24 rare colourways (Opal Fire, Bioluminescence, Ammolite, Cosmic Latte…) and one of seven pressings, from marble to splatter. It’s the same record every time, until real photography arrives.</li>
     </ul>
   </div>
 </section>`;
