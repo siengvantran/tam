@@ -153,8 +153,17 @@ body[data-daypart="night"] .halo { animation: tam-breathe 7s ease-in-out infinit
 @keyframes tam-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes tam-breathe { 50% { opacity: .55; transform: translate(-50%, -50%) scale(.96); } }
 .tam-art { display: block; overflow: visible; }
-.tam-art-initials { font: 700 17px var(--display); letter-spacing: 1.5px; }
+.tam-art-initials { font: 700 15px var(--display); letter-spacing: 1.5px; }
 .tam-art-label { font: 600 10px var(--display); letter-spacing: 2.4px; fill: var(--muted); }
+.tam-art-colourway { font: 600 6.5px var(--display); letter-spacing: 1.8px; fill: var(--gold); }
+.tam-art-side { font: 600 5px var(--display); letter-spacing: 1px; opacity: .8; }
+.tam-vinyl { filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .55)); }
+.tam-disc { transform-box: view-box; transform-origin: 0 0; }
+.card:hover .tam-disc, .detail-art:hover .tam-disc { animation: tam-spin 1.8s linear infinite; }
+@keyframes tam-spin { to { transform: rotate(360deg); } }
+.pressed { margin: 14px auto 6px; max-width: 34ch; line-height: 1.5; }
+.pressed .eyebrow { justify-content: center; margin-bottom: .2em; }
+.pressed strong { font-family: var(--display); font-size: 1.15rem; color: var(--gold-hi); }
 .tam-archive { display: block; overflow: visible; }
 .tam-ring-year { font: 600 6.5px var(--display); letter-spacing: .6px; fill: var(--muted); }
 
