@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "tam-began-as-a-place",
+    "title": "TAM began as a place. TAM is becoming a network.",
+    "dek": "Why TAM.TV exists, and what happens to a music venue when it stops being tied to one building.",
+    "pillar": "Stories",
+    "published": "2026-10-08",
+    "author": "TAM",
+    "body": [
+      "For six years TAM has been a room in Elephant & Castle where live music happened. Over that time it built something harder to see than a stage: relationships with artists and musicians, an audience, and an archive of nights that mattered to the people who were there.",
+      "The building is one part of TAM. The larger asset is the community, the content, the relationships and the cultural memory being made around it.",
+      "TAM.TV is where that continues. Every TAM Festival event now creates a set of things that last: a performance film, clips, an interview, photographs, a written profile and a permanent artist page. The live night is the raw material. TAM.TV turns it into media that can be found, shared and returned to.",
+      "TAM isn't leaving the venue. It's leaving the limitations of the venue behind."
+    ],
+    "related": { "artists": [], "events": [] }
+  },
+  {
+    "slug": "how-one-night-becomes-a-dozen-stories",
+    "title": "How one night becomes a dozen stories",
+    "dek": "The TAM loop: event, content, distribution, discovery, audience, and the next event.",
+    "pillar": "Festival",
+    "published": "2026-10-06",
+    "author": "TAM",
+    "body": [
+      "An emerging artist plays TAM. That single set can become a full performance film, three to ten short clips, an interview, backstage footage, a photographer's gallery, a written profile, a radio segment and a searchable artist page.",
+      "Social platforms carry the clips. Every clip points back to TAM.TV, where the artist's page links their music, their performances and their next appearance.",
+      "Instead of event, finished, it becomes event, content, distribution, discovery, audience, data, next event."
+    ],
+    "related": { "artists": ["ada-okoro"], "events": ["emerging-artist-night-2026-10-24"] }
+  },
+  {
+    "slug": "danas-documentary",
+    "title": "Project: Dana's documentary",
+    "dek": "A long-running TAM project in development. This page will collect interviews, clips and archive material as the film takes shape.",
+    "pillar": "Projects",
+    "published": "2026-10-02",
+    "author": "TAM",
+    "body": [
+      "Some TAM stories are longer than a single night. Dana's documentary is one of them: a film in development that draws on TAM's people, performances and archive.",
+      "As the project develops, this page will gather the interviews, clips, archival material and articles it produces, so the story can be followed while it is being made."
+    ],
+    "related": { "artists": [], "events": [] }
+  }
+]

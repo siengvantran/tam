@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "night-ferries-live-blues-jam-september",
+    "title": "The Night Ferries — Live at the Great British Blues Jam",
+    "kind": "performance",
+    "sample": true,
+    "artist": "the-night-ferries",
+    "event": "great-british-blues-jam-2026-09-17",
+    "youtubeId": "",
+    "duration": "PT24M",
+    "published": "2026-09-24",
+    "summary": "Full set from the September jam. Add a YouTube ID in content/videos.json to embed the film."
+  },
+  {
+    "slug": "night-ferries-interview",
+    "title": "Why we play the jam — The Night Ferries in conversation",
+    "kind": "interview",
+    "sample": true,
+    "artist": "the-night-ferries",
+    "event": "great-british-blues-jam-2026-09-17",
+    "youtubeId": "",
+    "duration": "PT8M",
+    "published": "2026-09-26",
+    "summary": "Backstage after the set."
+  },
+  {
+    "slug": "tam-transition-short",
+    "title": "Capture the Moment: TAM in transition",
+    "kind": "documentary",
+    "sample": true,
+    "artist": "",
+    "event": "",
+    "youtubeId": "",
+    "duration": "PT4M",
+    "published": "2026-10-01",
+    "summary": "Short film placeholder: six years at the venue, and what comes next."
+  }
+]
