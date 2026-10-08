@@ -1,0 +1,3882 @@
+[
+ {
+  "slug": "danagillespie",
+  "name": "Dana Gillespie",
+  "legend": true,
+  "appearances": 45,
+  "first": "2021-05-27",
+  "last": "2026-09-25",
+  "genres": [
+   "blues",
+   "pop",
+   "latin"
+  ],
+  "venues": [
+   "elephant-castle",
+   "mayfair",
+   "elsewhere",
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "dino-baptiste",
+  "name": "Dino Baptiste",
+  "legend": false,
+  "appearances": 34,
+  "first": "2021-05-29",
+  "last": "2026-04-03",
+  "genres": [
+   "blues",
+   "jazz",
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle",
+   "mayfair",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "titus-maz",
+  "name": "Titus Maz",
+  "legend": false,
+  "appearances": 24,
+  "first": "2021-06-30",
+  "last": "2023-09-22",
+  "genres": [
+   "jazz",
+   "funk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "smithfield",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "word-of-mouth",
+  "name": "Word of Mouth",
+  "legend": false,
+  "appearances": 23,
+  "first": "2022-03-01",
+  "last": "2026-10-20",
+  "genres": [
+   "jazz",
+   "folk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "project-culture",
+  "name": "Project Culture",
+  "legend": false,
+  "appearances": 20,
+  "first": "2021-08-31",
+  "last": "2023-12-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "smithfield",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "asha-keys-elfenbein",
+  "name": "Asha 'Keys' Elfenbein",
+  "legend": false,
+  "appearances": 18,
+  "first": "2022-03-01",
+  "last": "2025-06-03",
+  "genres": [
+   "jazz",
+   "folk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "mark-banks",
+  "name": "Mark Banks",
+  "legend": false,
+  "appearances": 18,
+  "first": "2022-09-15",
+  "last": "2023-12-21",
+  "genres": [
+   "blues",
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "dj-rwanda",
+  "name": "DJ Rwanda",
+  "legend": false,
+  "appearances": 16,
+  "first": "2022-07-24",
+  "last": "2023-03-18",
+  "genres": [
+   "jazz",
+   "latin",
+   "blues"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "mazza",
+  "name": "Mazza",
+  "legend": false,
+  "appearances": 16,
+  "first": "2022-07-16",
+  "last": "2024-02-09",
+  "genres": [
+   "blues",
+   "soul",
+   "folk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "smithfield",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-light",
+  "name": "The Light",
+  "legend": false,
+  "appearances": 16,
+  "first": "2022-08-22",
+  "last": "2023-07-11",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "harry-whitty",
+  "name": "Harry Whitty",
+  "legend": false,
+  "appearances": 15,
+  "first": "2022-02-19",
+  "last": "2023-10-20",
+  "genres": [
+   "blues",
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "dalston",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "susana-silva",
+  "name": "Susana Silva",
+  "legend": false,
+  "appearances": 14,
+  "first": "2021-12-14",
+  "last": "2023-07-20",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "mayfair",
+   "dalston",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "the-oggs",
+  "name": "The OGGs",
+  "legend": false,
+  "appearances": 14,
+  "first": "2021-07-25",
+  "last": "2024-01-05",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "smithfield",
+   "mayfair",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "david-gray",
+  "name": "David Gray",
+  "legend": false,
+  "note": "Pianist at TAM's jazz jams and classical piano nights (not the singer-songwriter of the same name).",
+  "appearances": 13,
+  "first": "2021-07-07",
+  "last": "2023-03-19",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-london-blues-band",
+  "name": "The London Blues Band",
+  "legend": false,
+  "appearances": 13,
+  "first": "2021-05-27",
+  "last": "2026-07-30",
+  "genres": [
+   "blues",
+   "latin"
+  ],
+  "venues": [
+   "elephant-castle",
+   "mayfair",
+   "elsewhere"
+  ]
+ },
+ {
+  "slug": "yaz",
+  "name": "YAZ",
+  "legend": false,
+  "appearances": 13,
+  "first": "2022-08-27",
+  "last": "2023-08-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "smithfield",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "alan-weekes",
+  "name": "Alan Weekes",
+  "legend": false,
+  "appearances": 12,
+  "first": "2021-07-07",
+  "last": "2023-12-19",
+  "genres": [
+   "jazz",
+   "reggae"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "bozard",
+  "name": "Bozard",
+  "legend": false,
+  "appearances": 12,
+  "first": "2022-08-10",
+  "last": "2023-07-22",
+  "genres": [
+   "rock",
+   "folk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "dom-pipkin",
+  "name": "Dom Pipkin",
+  "legend": false,
+  "appearances": 12,
+  "first": "2021-09-30",
+  "last": "2023-09-03",
+  "genres": [
+   "soul",
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "heidi-vogel",
+  "name": "Heidi Vogel",
+  "legend": false,
+  "appearances": 12,
+  "first": "2022-08-13",
+  "last": "2023-12-01",
+  "genres": [
+   "latin",
+   "soul",
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "patrick-hinds",
+  "name": "Patrick Hinds",
+  "legend": false,
+  "appearances": 12,
+  "first": "2022-11-14",
+  "last": "2026-10-14",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "rob-picazo",
+  "name": "Rob Picazo",
+  "legend": false,
+  "appearances": 11,
+  "first": "2022-06-02",
+  "last": "2024-04-25",
+  "genres": [
+   "blues",
+   "soul"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-remedy",
+  "name": "The Remedy",
+  "legend": false,
+  "appearances": 11,
+  "first": "2022-11-11",
+  "last": "2023-12-21",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "charmain-elliott",
+  "name": "Charmain Elliott",
+  "legend": false,
+  "appearances": 10,
+  "first": "2021-08-22",
+  "last": "2021-12-12",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "herman-guitar-duo",
+  "name": "Herman Guitar Duo",
+  "legend": false,
+  "appearances": 10,
+  "first": "2022-07-02",
+  "last": "2023-08-26",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "matt-zerek",
+  "name": "Matt Zerek",
+  "legend": false,
+  "appearances": 10,
+  "first": "2022-11-10",
+  "last": "2024-04-10",
+  "genres": [
+   "blues",
+   "soul",
+   "rock"
+  ],
+  "venues": [
+   "canary-wharf",
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-enso-swing-band",
+  "name": "The Ensō Swing Band",
+  "legend": false,
+  "appearances": 10,
+  "first": "2022-06-12",
+  "last": "2023-03-26",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "arch-57",
+  "name": "Arch 57",
+  "legend": false,
+  "appearances": 9,
+  "first": "2023-03-18",
+  "last": "2026-09-19",
+  "genres": [
+   "funk",
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "charlie-jackson",
+  "name": "Charlie Jackson",
+  "legend": false,
+  "appearances": 9,
+  "first": "2022-08-04",
+  "last": "2023-08-22",
+  "genres": [
+   "soul",
+   "funk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "matt-and-the-night-walkers",
+  "name": "Matt & The Night Walkers",
+  "legend": false,
+  "appearances": 9,
+  "first": "2022-07-09",
+  "last": "2023-06-24",
+  "genres": [
+   "blues",
+   "rock"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "andy-twyman",
+  "name": "Andy Twyman",
+  "legend": false,
+  "appearances": 8,
+  "first": "2023-02-01",
+  "last": "2025-09-03",
+  "genres": [
+   "blues",
+   "comedy",
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "chris-tummings",
+  "name": "Chris Tummings",
+  "legend": false,
+  "appearances": 8,
+  "first": "2021-05-30",
+  "last": "2021-10-03",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dan-bam-bam-watt",
+  "name": "Dan \"Bam Bam\" Watt",
+  "legend": false,
+  "appearances": 8,
+  "first": "2022-12-15",
+  "last": "2023-05-25",
+  "genres": [
+   "blues",
+   "jazz"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-burning-shoes",
+  "name": "The Burning Shoes",
+  "legend": false,
+  "appearances": 8,
+  "first": "2022-06-16",
+  "last": "2023-06-29",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-cinelli-brothers",
+  "name": "The Cinelli Brothers",
+  "legend": false,
+  "appearances": 8,
+  "first": "2021-05-28",
+  "last": "2022-12-11",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "albion",
+  "name": "Albion",
+  "legend": false,
+  "appearances": 7,
+  "first": "2021-08-14",
+  "last": "2026-03-07",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "chris-hyde-harrison",
+  "name": "Chris Hyde-Harrison",
+  "legend": false,
+  "appearances": 7,
+  "first": "2022-06-06",
+  "last": "2023-02-01",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "kosmic-love-collective",
+  "name": "Kosmic Love Collective",
+  "legend": false,
+  "appearances": 7,
+  "first": "2023-02-15",
+  "last": "2025-10-03",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "matteo-palmieri",
+  "name": "Matteo Palmieri",
+  "legend": false,
+  "appearances": 7,
+  "first": "2022-10-01",
+  "last": "2023-10-21",
+  "genres": [
+   "rock",
+   "folk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-flaming-alligators",
+  "name": "The Flaming Alligators",
+  "legend": false,
+  "appearances": 7,
+  "first": "2021-07-08",
+  "last": "2023-02-24",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "the-ikos",
+  "name": "The IKOS",
+  "legend": false,
+  "appearances": 7,
+  "first": "2021-09-30",
+  "last": "2023-01-10",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "earl-okin",
+  "name": "Earl Okin",
+  "legend": true,
+  "appearances": 6,
+  "first": "2021-05-18",
+  "last": "2026-02-08",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "holly-penfield",
+  "name": "Holly Penfield",
+  "legend": true,
+  "appearances": 6,
+  "first": "2022-05-21",
+  "last": "2023-12-07",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "izzy-roberts",
+  "name": "Izzy Roberts",
+  "legend": false,
+  "appearances": 6,
+  "first": "2021-05-23",
+  "last": "2021-11-21",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jim-jams",
+  "name": "Jim Jams",
+  "legend": false,
+  "appearances": 6,
+  "first": "2022-01-15",
+  "last": "2023-08-18",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "marcus-praestgaard",
+  "name": "Marcus Praestgaard",
+  "legend": false,
+  "appearances": 6,
+  "first": "2023-05-23",
+  "last": "2023-09-21",
+  "genres": [
+   "blues",
+   "jazz",
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "rios-and-king-guitar-duo",
+  "name": "Rios & King Guitar Duo",
+  "legend": false,
+  "appearances": 6,
+  "first": "2021-09-16",
+  "last": "2023-03-25",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "ruby-and-the-revival",
+  "name": "Ruby & The Revival",
+  "legend": false,
+  "appearances": 6,
+  "first": "2022-09-09",
+  "last": "2023-04-07",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "subatomic-souls",
+  "name": "Subatomic Souls",
+  "legend": false,
+  "appearances": 6,
+  "first": "2022-07-22",
+  "last": "2023-08-05",
+  "genres": [
+   "soul",
+   "blues",
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-hendrix-trio",
+  "name": "The Hendrix Trio",
+  "legend": false,
+  "appearances": 6,
+  "first": "2022-04-09",
+  "last": "2023-08-19",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-kid-and-i",
+  "name": "The Kid And I",
+  "legend": false,
+  "appearances": 6,
+  "first": "2023-01-30",
+  "last": "2023-08-28",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-reformation-blues-club",
+  "name": "The Reformation Blues Club",
+  "legend": false,
+  "appearances": 6,
+  "first": "2022-10-15",
+  "last": "2023-12-22",
+  "genres": [
+   "blues",
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "artur-king",
+  "name": "Artur King",
+  "legend": false,
+  "appearances": 5,
+  "first": "2023-01-24",
+  "last": "2023-09-16",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "giulia-and-the-lizards",
+  "name": "Giulia & the Lizards",
+  "legend": false,
+  "appearances": 5,
+  "first": "2022-07-14",
+  "last": "2023-03-16",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jamilah",
+  "name": "Jamilah",
+  "legend": false,
+  "appearances": 5,
+  "first": "2024-02-03",
+  "last": "2024-09-24",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "manny-fizzotti",
+  "name": "Manny Fizzotti",
+  "legend": false,
+  "appearances": 5,
+  "first": "2022-10-18",
+  "last": "2023-06-22",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "nighttrain",
+  "name": "NightTrain",
+  "legend": false,
+  "appearances": 5,
+  "first": "2021-07-24",
+  "last": "2022-03-29",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "ramshackle",
+  "name": "RAMSHACKLE",
+  "legend": false,
+  "appearances": 5,
+  "first": "2022-01-29",
+  "last": "2022-12-23",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "will-james",
+  "name": "Will James",
+  "legend": false,
+  "appearances": 5,
+  "first": "2023-04-23",
+  "last": "2023-08-15",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "aremuorin",
+  "name": "Aremuorin",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-06-06",
+  "last": "2023-08-11",
+  "genres": [],
+  "venues": [
+   "dalston",
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "arif-raihan",
+  "name": "Arif Raihan",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-10-08",
+  "last": "2025-05-29",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "counterflow",
+  "name": "Counterflow",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-05-20",
+  "last": "2023-06-23",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dom-stockbridge",
+  "name": "Dom Stockbridge",
+  "legend": false,
+  "appearances": 4,
+  "first": "2021-06-26",
+  "last": "2022-06-23",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "fire-in-her-eyes",
+  "name": "Fire In Her Eyes",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-04-06",
+  "last": "2024-06-06",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "genn",
+  "name": "Genn",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-12-05",
+  "last": "2023-02-27",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "jimmy-martinez",
+  "name": "Jimmy Martinez",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-06-29",
+  "last": "2023-09-14",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "john-drain",
+  "name": "John Drain",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-04-14",
+  "last": "2023-08-05",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "oak-royale",
+  "name": "Oak Royale",
+  "legend": false,
+  "appearances": 4,
+  "first": "2024-06-15",
+  "last": "2025-12-13",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sammy-vincent",
+  "name": "Sammy Vincent",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-10-03",
+  "last": "2023-01-03",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "sara-mcguinness",
+  "name": "Sara McGuinness",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-06-29",
+  "last": "2023-09-14",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sarabanda",
+  "name": "Sarabanda",
+  "legend": false,
+  "appearances": 4,
+  "first": "2021-11-20",
+  "last": "2022-06-03",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "tasha-tarusva",
+  "name": "Tasha Tarusøva",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-02-04",
+  "last": "2023-03-30",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "canary-wharf",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "the-chris-corcoran-band",
+  "name": "The Chris Corcoran Band",
+  "legend": false,
+  "appearances": 4,
+  "first": "2023-01-23",
+  "last": "2023-09-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "troy-jackson",
+  "name": "Troy Jackson",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-06-15",
+  "last": "2023-03-07",
+  "genres": [
+   "soul",
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "velvet-lapel",
+  "name": "Velvet Lapel",
+  "legend": false,
+  "appearances": 4,
+  "first": "2022-10-08",
+  "last": "2023-10-27",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "yj-shine",
+  "name": "YJ Shine",
+  "legend": false,
+  "appearances": 4,
+  "first": "2021-11-13",
+  "last": "2022-09-01",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "bailey-marie",
+  "name": "Bailey Marie",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-11-11",
+  "last": "2023-11-04",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "bex-marshall",
+  "name": "Bex Marshall",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-05-25",
+  "last": "2021-08-19",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "callum-smith",
+  "name": "Callum Smith",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-09-14",
+  "last": "2023-01-18",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dj-d-francisco",
+  "name": "DJ D'Francisco",
+  "legend": false,
+  "appearances": 3,
+  "first": "2025-07-12",
+  "last": "2025-12-13",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dave-ferra",
+  "name": "Dave Ferra",
+  "legend": false,
+  "appearances": 3,
+  "first": "2022-09-08",
+  "last": "2023-05-25",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dave-thomas",
+  "name": "Dave Thomas",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-06-10",
+  "last": "2021-10-12",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dawn-tales",
+  "name": "Dawn Tales",
+  "legend": false,
+  "appearances": 3,
+  "first": "2025-04-26",
+  "last": "2026-03-06",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "denquar-chupak-soul-jazz-quartet",
+  "name": "Denquar Chupak Soul-Jazz Quartet",
+  "legend": false,
+  "appearances": 3,
+  "first": "2022-10-27",
+  "last": "2023-03-16",
+  "genres": [
+   "jazz",
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "francesco-mendolia",
+  "name": "Francesco Mendolia",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-07-16",
+  "last": "2022-04-27",
+  "genres": [
+   "jazz",
+   "rock",
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "halo",
+  "name": "HALO",
+  "legend": false,
+  "appearances": 3,
+  "first": "2024-03-01",
+  "last": "2024-10-25",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "harry-yates",
+  "name": "Harry Yates",
+  "legend": false,
+  "appearances": 3,
+  "first": "2025-09-12",
+  "last": "2025-12-05",
+  "genres": [
+   "folk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "hypnogator",
+  "name": "Hypnogator",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-01-16",
+  "last": "2023-11-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "interfunk",
+  "name": "Interfunk",
+  "legend": false,
+  "appearances": 3,
+  "first": "2022-07-18",
+  "last": "2026-08-20",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jake-zaitz",
+  "name": "Jake Zaitz",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-05-17",
+  "last": "2021-05-31",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "keith-west",
+  "name": "Keith West",
+  "legend": true,
+  "appearances": 3,
+  "first": "2021-10-16",
+  "last": "2023-01-28",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "luis-avila",
+  "name": "Luis Avila",
+  "legend": false,
+  "appearances": 3,
+  "first": "2024-01-20",
+  "last": "2025-11-22",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "luis-cano",
+  "name": "Luis Cano",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-08-27",
+  "last": "2025-05-15",
+  "genres": [
+   "jazz",
+   "funk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "mar",
+  "name": "MAR",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-02-06",
+  "last": "2023-10-21",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "marco-farris",
+  "name": "Marco Farris",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-04-14",
+  "last": "2023-08-05",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "martin-green",
+  "name": "Martin Green",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-12-31",
+  "last": "2022-01-07",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "mayfair"
+  ]
+ },
+ {
+  "slug": "merle-forbes",
+  "name": "Merle Forbes",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-06-13",
+  "last": "2021-09-26",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "mojak",
+  "name": "MoJak",
+  "legend": false,
+  "appearances": 3,
+  "first": "2022-06-10",
+  "last": "2022-12-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "patrick-alan",
+  "name": "Patrick Alan",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-07-11",
+  "last": "2022-01-30",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-big-smoke-family",
+  "name": "The Big Smoke Family",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-01-13",
+  "last": "2023-07-01",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-daybreakers",
+  "name": "The Daybreakers",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-04-28",
+  "last": "2023-09-29",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-hickory-swingers",
+  "name": "The Hickory Swingers",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-09-14",
+  "last": "2023-01-27",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-julian-burdock-band",
+  "name": "The Julian Burdock Band",
+  "legend": false,
+  "appearances": 3,
+  "first": "2021-07-15",
+  "last": "2022-03-03",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-trashcans",
+  "name": "The Trashcans",
+  "legend": false,
+  "appearances": 3,
+  "first": "2025-06-21",
+  "last": "2026-03-06",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-trip-advisor-duo",
+  "name": "The Trip Advisor Duo",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-02-02",
+  "last": "2023-04-22",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle",
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-wang-dang-doodle",
+  "name": "The Wang Dang Doodle",
+  "legend": false,
+  "appearances": 3,
+  "first": "2023-02-18",
+  "last": "2023-08-04",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "todd-sharpville",
+  "name": "Todd Sharpville",
+  "legend": true,
+  "appearances": 3,
+  "first": "2022-05-20",
+  "last": "2023-05-13",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "aaron-liddard",
+  "name": "Aaron Liddard",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-09-20",
+  "last": "2022-10-08",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "adelaide-mackenzie",
+  "name": "Adelaide Mackenzie",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-08-01",
+  "last": "2021-10-31",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "babel-brass-band",
+  "name": "Babel Brass Band",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-09-03",
+  "last": "2022-10-02",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "basharan",
+  "name": "Basharan",
+  "legend": false,
+  "appearances": 2,
+  "first": "2024-12-20",
+  "last": "2025-05-30",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "bee-jar",
+  "name": "Bee Jar",
+  "legend": false,
+  "appearances": 2,
+  "first": "2024-09-12",
+  "last": "2025-02-21",
+  "genres": [
+   "rock",
+   "folk",
+   "pop"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "connor-selby",
+  "name": "Connor Selby",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-02-05",
+  "last": "2022-07-30",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dj-vivra-verra",
+  "name": "DJ Vivra Verra",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-01-14",
+  "last": "2023-02-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "davide-sanna",
+  "name": "Davide Sanna",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-09-17",
+  "last": "2023-01-17",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "dead-authors",
+  "name": "Dead Authors",
+  "legend": false,
+  "appearances": 2,
+  "first": "2024-03-01",
+  "last": "2024-08-30",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dom-glynn",
+  "name": "Dom Glynn",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-11-08",
+  "last": "2023-07-02",
+  "genres": [
+   "blues",
+   "folk"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "ese-and-the-vooduu-people",
+  "name": "Ese & The Vooduu People",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-07-21",
+  "last": "2023-09-08",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "faye-patton",
+  "name": "Faye Patton",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-29",
+  "last": "2022-12-03",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "francis-wolfe",
+  "name": "Francis Wolfe",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-07-20",
+  "last": "2021-09-23",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "fresh-arms-airlines",
+  "name": "Fresh Arms Airlines",
+  "legend": false,
+  "appearances": 2,
+  "first": "2025-12-12",
+  "last": "2026-04-17",
+  "genres": [
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "george-kelly",
+  "name": "George Kelly",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-24",
+  "last": "2023-12-19",
+  "genres": [
+   "jazz",
+   "reggae"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "helena-may",
+  "name": "Helena May",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-11-19",
+  "last": "2023-02-17",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "ilana-lorraine",
+  "name": "Ilana Lorraine",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-01-11",
+  "last": "2023-01-21",
+  "genres": [],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "imperio-bamba",
+  "name": "Imperio Bamba",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-12-14",
+  "last": "2026-09-27",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "j-p-rose",
+  "name": "J P Rose",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-06-11",
+  "last": "2022-07-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jimmy-carpenter",
+  "name": "Jimmy Carpenter",
+  "legend": true,
+  "appearances": 2,
+  "first": "2022-11-22",
+  "last": "2024-09-26",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jo-buddy",
+  "name": "Jo Buddy",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-17",
+  "last": "2022-11-13",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "johnny-mayers",
+  "name": "Johnny Mayers",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-04-25",
+  "last": "2023-05-09",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "kat-pearson",
+  "name": "Kat Pearson",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-11-21",
+  "last": "2022-06-02",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "lit-fm",
+  "name": "LIT FM",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-05-07",
+  "last": "2023-05-26",
+  "genres": [
+   "jazz",
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "little-george-sueref",
+  "name": "Little George Sueref",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-06-19",
+  "last": "2022-08-13",
+  "genres": [
+   "blues",
+   "soul",
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "little-house",
+  "name": "Little House",
+  "legend": false,
+  "appearances": 2,
+  "first": "2025-12-12",
+  "last": "2026-04-17",
+  "genres": [
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "lovescene",
+  "name": "Lovescene",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-05-15",
+  "last": "2022-05-16",
+  "genres": [],
+  "venues": [
+   "mayfair",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "luke-askew",
+  "name": "Luke Askew",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-02-20",
+  "last": "2023-03-07",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "mapleton-sessions",
+  "name": "MAPLETON SESSIONS",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-08-11",
+  "last": "2023-06-17",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "matias-dal-pos",
+  "name": "Matias Dal Pos",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-24",
+  "last": "2022-12-17",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "matt-kent",
+  "name": "Matt Kent",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-06-05",
+  "last": "2023-12-12",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "najwa-ezzaher",
+  "name": "Najwa Ezzaher",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-07-25",
+  "last": "2021-08-15",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "nomade",
+  "name": "Nómade",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-28",
+  "last": "2023-04-29",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "oliver-darling",
+  "name": "Oliver Darling",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-10",
+  "last": "2022-11-10",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "rob-quo",
+  "name": "Rob Quo",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-05-06",
+  "last": "2023-07-22",
+  "genres": [
+   "blues",
+   "folk"
+  ],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "selfish-jean",
+  "name": "Selfish Jean",
+  "legend": false,
+  "appearances": 2,
+  "first": "2026-03-20",
+  "last": "2026-05-08",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "slaphazzard-funk-band",
+  "name": "Slaphazzard Funk Band",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-03-04",
+  "last": "2023-03-25",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "smiles-collective",
+  "name": "Smiles Collective",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-09-28",
+  "last": "2021-10-23",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "stereo-house",
+  "name": "Stereo House",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-10-07",
+  "last": "2023-10-06",
+  "genres": [
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sustain-groove-band",
+  "name": "Sustain Groove Band",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-06-02",
+  "last": "2023-09-01",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "tamara-raven",
+  "name": "Tamara Raven",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-10-31",
+  "last": "2022-08-16",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-park",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "teo-treska",
+  "name": "Teo Treska",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-09-22",
+  "last": "2023-01-16",
+  "genres": [
+   "reggae"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-chicco-allotta-quartet",
+  "name": "The Chicco Allotta Quartet",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-07-03",
+  "last": "2021-07-09",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-dana-elle-band",
+  "name": "The Dana Elle Band",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-06-25",
+  "last": "2022-07-16",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-henry-kimber-trio",
+  "name": "The Henry Kimber Trio",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-02-11",
+  "last": "2023-06-02",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "the-latin-formula",
+  "name": "The Latin Formula",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-01-25",
+  "last": "2023-03-17",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-minyanaires",
+  "name": "The Minyanaires",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-08-05",
+  "last": "2021-10-17",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-shantlys",
+  "name": "The Shantlys",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-12-15",
+  "last": "2024-07-13",
+  "genres": [
+   "soul",
+   "rock",
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "thomas-heppell",
+  "name": "Thomas Heppell",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-01-14",
+  "last": "2023-02-04",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "tim-penn-and-the-second-line",
+  "name": "Tim Penn & The Second Line",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-01-20",
+  "last": "2023-05-22",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "tom-waters",
+  "name": "Tom Waters",
+  "legend": false,
+  "appearances": 2,
+  "first": "2021-06-17",
+  "last": "2021-08-05",
+  "genres": [
+   "folk",
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "two-inch-voices",
+  "name": "Two Inch Voices",
+  "legend": false,
+  "appearances": 2,
+  "first": "2024-09-12",
+  "last": "2025-07-05",
+  "genres": [
+   "rock",
+   "folk",
+   "pop"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "voda",
+  "name": "VODA",
+  "legend": false,
+  "appearances": 2,
+  "first": "2023-04-27",
+  "last": "2025-11-13",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "smithfield",
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "zac-the-vampire",
+  "name": "Zac The Vampire",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-08-23",
+  "last": "2023-05-07",
+  "genres": [],
+  "venues": [
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
+  "slug": "zami-yazeed",
+  "name": "Zami Yazeed",
+  "legend": false,
+  "appearances": 2,
+  "first": "2022-08-18",
+  "last": "2023-12-12",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "adriana-hamilton",
+  "name": "Adriana Hamilton",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-06-21",
+  "last": "2024-06-21",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "agnes-hustler",
+  "name": "Agnes Hustler",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-09",
+  "last": "2023-05-09",
+  "genres": [],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "aigul-imanbayeva",
+  "name": "Aigul Imanbayeva",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-03-14",
+  "last": "2025-03-14",
+  "genres": [
+   "pop"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "alice-phelps",
+  "name": "Alice Phelps",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-10-04",
+  "last": "2022-10-04",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "athena-lim",
+  "name": "Athena Lim",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-07-10",
+  "last": "2025-07-10",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "big-joe-louis",
+  "name": "Big Joe Louis",
+  "legend": true,
+  "appearances": 1,
+  "first": "2021-10-14",
+  "last": "2021-10-14",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "boys-wonder",
+  "name": "Boys Wonder",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-10-02",
+  "last": "2024-10-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "bradley-waterman",
+  "name": "Bradley Waterman",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-29",
+  "last": "2023-07-29",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "bunyod",
+  "name": "Bunyod",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-12-03",
+  "last": "2024-12-03",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "cam-rossi",
+  "name": "Cam Rossi",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-01-12",
+  "last": "2023-01-12",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "charlotte-awbery",
+  "name": "Charlotte Awbery",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-15",
+  "last": "2023-12-15",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "charlotte-lansman-trio",
+  "name": "Charlotte Lansman Trio",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-07-30",
+  "last": "2022-07-30",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "chelsea-becker",
+  "name": "Chelsea Becker",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-13",
+  "last": "2023-04-13",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "combo-yanze",
+  "name": "Combo Yanzé",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-04-10",
+  "last": "2022-04-10",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "d-c-entropy",
+  "name": "D.C Entropy",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-03-20",
+  "last": "2025-03-20",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dj-cortex",
+  "name": "DJ Cortex",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-07-21",
+  "last": "2022-07-21",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "dan-millson",
+  "name": "Dan Millson",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-04",
+  "last": "2023-04-04",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "dani-milano-and-the-groove-keepers",
+  "name": "Dani Milano & The Groove Keepers",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-10-05",
+  "last": "2023-10-05",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "darren-mason",
+  "name": "Darren Mason",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-09-18",
+  "last": "2025-09-18",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "diz-establishment",
+  "name": "Diz Establishment",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-06-19",
+  "last": "2024-06-19",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "dominik-ogorek",
+  "name": "Dominik Ogorek",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-01-12",
+  "last": "2023-01-12",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "dr-yana-johnson",
+  "name": "Dr. Yana Johnson",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-04-02",
+  "last": "2025-04-02",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "eddie-monroe",
+  "name": "Eddie Monroe",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-10-25",
+  "last": "2022-10-25",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "elie-pichard",
+  "name": "Elie Pichard",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-28",
+  "last": "2023-12-28",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "emrys",
+  "name": "Emrys",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-16",
+  "last": "2023-09-16",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "enobong-bassey",
+  "name": "Enobong Bassey",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-11",
+  "last": "2023-07-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "enzo-strano",
+  "name": "Enzo Strano",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-05-27",
+  "last": "2022-05-27",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "eolisfar",
+  "name": "Eolisfar",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-03-31",
+  "last": "2023-03-31",
+  "genres": [],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "errol-linton",
+  "name": "Errol Linton",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-30",
+  "last": "2023-05-30",
+  "genres": [
+   "blues",
+   "reggae"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "evan-jenkins",
+  "name": "Evan Jenkins",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-12-19",
+  "last": "2021-12-19",
+  "genres": [],
+  "venues": [
+   "mayfair"
+  ]
+ },
+ {
+  "slug": "fraser-smith",
+  "name": "Fraser Smith",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-09-26",
+  "last": "2022-09-26",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "freya-everest",
+  "name": "Freya Everest",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-05-30",
+  "last": "2024-05-30",
+  "genres": [
+   "soul",
+   "rock",
+   "folk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "gary-cain-band",
+  "name": "Gary Cain Band",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-07-13",
+  "last": "2022-07-13",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "george-theodorou",
+  "name": "George Theodorou",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-10-20",
+  "last": "2023-10-20",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "gerg-holt",
+  "name": "Gerg Holt",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-03-01",
+  "last": "2026-03-01",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "guido-spannocchi-quartet",
+  "name": "Guido Spannocchi Quartet",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-30",
+  "last": "2023-06-30",
+  "genres": [
+   "jazz",
+   "reggae"
+  ],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "gokhan-demirdogmez",
+  "name": "Gökhan Demirdöğmez",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-04-02",
+  "last": "2022-04-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "hoos-collective",
+  "name": "Hoos Collective",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-22",
+  "last": "2023-06-22",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "ian-siegal",
+  "name": "Ian Siegal",
+  "legend": true,
+  "appearances": 1,
+  "first": "2022-07-06",
+  "last": "2022-07-06",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jason-jenkins",
+  "name": "Jason Jenkins",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-17",
+  "last": "2023-09-17",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "jimmy-regal-and-the-royals",
+  "name": "Jimmy Regal and the Royals",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-28",
+  "last": "2023-07-28",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "joe-corbin",
+  "name": "Joe Corbin",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-10-21",
+  "last": "2023-10-21",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "jonny-liebeck",
+  "name": "Jonny Liebeck",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-16",
+  "last": "2023-11-16",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "juan-pachanga",
+  "name": "Juan Pachanga",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-07-17",
+  "last": "2024-07-17",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "julieta-iglesias",
+  "name": "Julieta Iglesias",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-06",
+  "last": "2023-07-06",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "justin-light-and-the-midnighters",
+  "name": "Justin Light & The Midnighters",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-09",
+  "last": "2023-05-09",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "kalila",
+  "name": "KALILA",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-11-28",
+  "last": "2021-11-28",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "kozy",
+  "name": "KOZY",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-09-13",
+  "last": "2022-09-13",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "kandy-kobras",
+  "name": "Kandy Kobras",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-08",
+  "last": "2023-06-08",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "keith-shocklee",
+  "name": "Keith Shocklee",
+  "legend": true,
+  "appearances": 1,
+  "first": "2023-10-19",
+  "last": "2023-10-19",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "kenta-shoji",
+  "name": "Kenta Shoji",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-10-13",
+  "last": "2022-10-13",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "kevin-davy",
+  "name": "Kevin Davy",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-10-17",
+  "last": "2022-10-17",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "kick-pistol",
+  "name": "Kick Pistol",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-02",
+  "last": "2023-12-02",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "lady-petrol",
+  "name": "Lady Petrol",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-02-16",
+  "last": "2023-02-16",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "lea-kay",
+  "name": "Lea Kay",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-08-09",
+  "last": "2022-08-09",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "leonardo-giuliani",
+  "name": "Leonardo Giuliani",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-08-25",
+  "last": "2023-08-25",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "lighthaus",
+  "name": "Lighthaus",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-09-13",
+  "last": "2022-09-13",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "logan-j-parker",
+  "name": "Logan J Parker",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-07-13",
+  "last": "2021-07-13",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "london-beat-club",
+  "name": "London Beat Club",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-10-09",
+  "last": "2026-10-09",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "lory-muratti",
+  "name": "Lory Muratti",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-05-11",
+  "last": "2024-05-11",
+  "genres": [
+   "pop"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "louise-balkwill",
+  "name": "Louise Balkwill",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-08",
+  "last": "2023-04-08",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "luca-somigli-jazz-trio",
+  "name": "Luca Somigli Jazz Trio",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-27",
+  "last": "2023-11-27",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "lucy-june",
+  "name": "Lucy June",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-09-12",
+  "last": "2024-09-12",
+  "genres": [
+   "rock",
+   "folk",
+   "pop"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "maggie-baring",
+  "name": "Maggie Baring",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-07-10",
+  "last": "2025-07-10",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "manu-vera-tudela",
+  "name": "Manu Vera Tudela",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-02",
+  "last": "2023-09-02",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "margot-antignac",
+  "name": "Margot Antignac",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-02-02",
+  "last": "2024-02-02",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "mario-bakuna-band",
+  "name": "Mario Bakuna Band",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-23",
+  "last": "2023-09-23",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "menino-josue",
+  "name": "Menino Josué",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-12-03",
+  "last": "2022-12-03",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "mess-of-blues",
+  "name": "Mess of Blues",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-03-21",
+  "last": "2022-03-21",
+  "genres": [
+   "blues"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "nonunonu",
+  "name": "NONUNONU",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-02-07",
+  "last": "2023-02-07",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "natasha-sampson",
+  "name": "Natasha Sampson",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-12-12",
+  "last": "2021-12-12",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "omar-rios",
+  "name": "Omar Rios",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-15",
+  "last": "2023-06-15",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "orin-kilo",
+  "name": "Orin Kilo",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-23",
+  "last": "2023-12-23",
+  "genres": [
+   "blues",
+   "funk",
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "osibisa",
+  "name": "Osibisa",
+  "legend": true,
+  "appearances": 1,
+  "first": "2021-08-28",
+  "last": "2021-08-28",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "paolo-morena",
+  "name": "Paolo Morena",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-02-13",
+  "last": "2026-02-13",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "paul-marney",
+  "name": "Paul Marney",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-04-03",
+  "last": "2026-04-03",
+  "genres": [
+   "blues",
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "pearl-fish",
+  "name": "Pearl Fish",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-22",
+  "last": "2023-07-22",
+  "genres": [],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "peter-wise",
+  "name": "Peter Wise",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-19",
+  "last": "2023-05-19",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "pisco-sour",
+  "name": "Pisco Sour",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-26",
+  "last": "2023-11-26",
+  "genres": [
+   "jazz",
+   "latin"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "rachel-d-arcy",
+  "name": "Rachel D'Arcy",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-05-22",
+  "last": "2021-05-22",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "reece-chapman",
+  "name": "Reece Chapman",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-20",
+  "last": "2023-05-20",
+  "genres": [
+   "rock",
+   "folk"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "ritchaz-cabral",
+  "name": "Ritchaz Cabral",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-08-08",
+  "last": "2023-08-08",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "rory-sturgeon",
+  "name": "Rory Sturgeon",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-06-26",
+  "last": "2025-06-26",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "ryan-d-auria",
+  "name": "Ryan D'Auria",
+  "legend": false,
+  "appearances": 1,
+  "first": "2024-12-19",
+  "last": "2024-12-19",
+  "genres": [
+   "funk"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "samuel-virgo",
+  "name": "Samuel Virgo",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-12-03",
+  "last": "2025-12-03",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sassy-hammersley",
+  "name": "Sassy Hammersley",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-07-10",
+  "last": "2025-07-10",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sebastian-reyes",
+  "name": "Sebastian Reyes",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-01",
+  "last": "2023-04-01",
+  "genres": [
+   "latin"
+  ],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "sedric-perry",
+  "name": "Sedric Perry",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-02-25",
+  "last": "2023-02-25",
+  "genres": [],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "sickrichard",
+  "name": "SickRichard",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-10-09",
+  "last": "2026-10-09",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "sienna-senate",
+  "name": "Sienna Senate",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-05-13",
+  "last": "2023-05-13",
+  "genres": [
+   "soul"
+  ],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "skowa-kabala",
+  "name": "Skowa Kabala",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-04-21",
+  "last": "2022-04-21",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "soju",
+  "name": "Soju",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-24",
+  "last": "2023-09-24",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "southern-aces",
+  "name": "Southern Aces",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-07-20",
+  "last": "2023-07-20",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "spread",
+  "name": "Spread",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-11",
+  "last": "2023-04-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "stuffy-and-the-fuses",
+  "name": "Stuffy And The Fuses",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-16",
+  "last": "2023-12-16",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "tamara-barschak",
+  "name": "Tamara Barschak",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-10-09",
+  "last": "2025-10-09",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-brandon-allen-groove-band",
+  "name": "The Brandon Allen Groove Band",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-08-04",
+  "last": "2023-08-04",
+  "genres": [],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "the-elliot-martin-trio",
+  "name": "The Elliot Martin Trio",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-06-17",
+  "last": "2022-06-17",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-emily-williams-quartet",
+  "name": "The Emily Williams Quartet",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-10-29",
+  "last": "2023-10-29",
+  "genres": [
+   "jazz",
+   "soul"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-family-dog",
+  "name": "The Family Dog",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-29",
+  "last": "2023-04-29",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-foo-birds",
+  "name": "The Foo Birds",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-04-21",
+  "last": "2023-04-21",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-high-wave",
+  "name": "The High Wave",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-02-27",
+  "last": "2026-02-27",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-mayans-collective",
+  "name": "The Mayans Collective",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-10",
+  "last": "2023-11-10",
+  "genres": [
+   "jazz",
+   "funk"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-turtlenecks",
+  "name": "The Turtlenecks",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-08-17",
+  "last": "2021-08-17",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "the-untouchables",
+  "name": "The Untouchables",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-11-30",
+  "last": "2021-11-30",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "tim-arnold",
+  "name": "Tim Arnold",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-05-14",
+  "last": "2022-05-14",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "tristan-butler",
+  "name": "Tristan Butler",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-03-18",
+  "last": "2022-03-18",
+  "genres": [
+   "blues",
+   "electronic"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "vegas-on-bass",
+  "name": "Vegas on Bass",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-09-16",
+  "last": "2023-09-16",
+  "genres": [
+   "rock"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "velvet-grip",
+  "name": "Velvet Grip",
+  "legend": false,
+  "appearances": 1,
+  "first": "2025-06-18",
+  "last": "2025-06-18",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "veronica-and-max",
+  "name": "Veronica & Max",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-06-22",
+  "last": "2022-06-22",
+  "genres": [],
+  "venues": [
+   "mayfair"
+  ]
+ },
+ {
+  "slug": "victor-masntrangioli",
+  "name": "Victor Masntrangioli",
+  "legend": false,
+  "appearances": 1,
+  "first": "2026-01-15",
+  "last": "2026-01-15",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "walter-celi",
+  "name": "Walter Celi",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-18",
+  "last": "2023-06-18",
+  "genres": [
+   "soul",
+   "rock"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "wills-morgan",
+  "name": "Wills Morgan",
+  "legend": false,
+  "appearances": 1,
+  "first": "2022-12-30",
+  "last": "2022-12-30",
+  "genres": [],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "woodshed",
+  "name": "Woodshed",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-29",
+  "last": "2023-11-29",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "wun-yen-chan",
+  "name": "Wun Yen Chan",
+  "legend": false,
+  "appearances": 1,
+  "first": "2021-09-14",
+  "last": "2021-09-14",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "xandau",
+  "name": "Xandau",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-10-10",
+  "last": "2023-10-10",
+  "genres": [
+   "jazz"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "yazmyn-hendrix",
+  "name": "Yazmyn Hendrix",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-01-22",
+  "last": "2023-01-22",
+  "genres": [],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "zac-celinder",
+  "name": "Zac Celinder",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-03-08",
+  "last": "2023-03-08",
+  "genres": [],
+  "venues": [
+   "smithfield"
+  ]
+ },
+ {
+  "slug": "zachary-aghaizu",
+  "name": "Zachary Aghaizu",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-06-03",
+  "last": "2023-06-03",
+  "genres": [],
+  "venues": [
+   "dalston"
+  ]
+ },
+ {
+  "slug": "zak-layden-and-the-thieves",
+  "name": "Zak Layden & The Thieves",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-11-02",
+  "last": "2023-11-02",
+  "genres": [],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
+  "slug": "albie-salter",
+  "name": "Albie Salter",
+  "legend": false,
+  "appearances": 0,
+  "first": null,
+  "last": null,
+  "genres": [],
+  "venues": []
+ },
+ {
+  "slug": "gemma-schito",
+  "name": "Gemma Schito",
+  "legend": false,
+  "appearances": 0,
+  "first": null,
+  "last": null,
+  "genres": [],
+  "venues": []
+ },
+ {
+  "slug": "hans-theessink",
+  "name": "Hans Theessink",
+  "legend": true,
+  "appearances": 0,
+  "first": null,
+  "last": null,
+  "genres": [],
+  "venues": []
+ },
+ {
+  "slug": "iris",
+  "name": "Iris",
+  "legend": false,
+  "appearances": 0,
+  "first": null,
+  "last": null,
+  "genres": [],
+  "venues": []
+ },
+ {
+  "slug": "mark-wardel",
+  "name": "Mark Wardel",
+  "legend": false,
+  "appearances": 0,
+  "first": null,
+  "last": null,
+  "genres": [],
+  "venues": []
+ }
+]

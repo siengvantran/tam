@@ -1,0 +1,40 @@
+[
+ {
+  "slug": "elephant-castle",
+  "name": "TAM Elephant & Castle",
+  "place": "Mercato Metropolitano",
+  "address": "42 Newington Causeway, London SE1 6DR",
+  "legacy": "/locations/elephant-castle"
+ },
+ {
+  "slug": "canary-wharf",
+  "name": "TAM's Vineyard & Jazz Club",
+  "place": "MMy Wood Wharf, Canary Wharf",
+  "address": "Wood Wharf, London E14 9QG"
+ },
+ {
+  "slug": "smithfield",
+  "name": "TAM Smithfield",
+  "place": "Smithfield & Farringdon",
+  "address": "London EC1M",
+  "legacy": "/locations/smithfield"
+ },
+ {
+  "slug": "dalston",
+  "name": "TAM Dalston",
+  "place": "Dalston",
+  "address": "33 Stoke Newington Road, London N16 8BJ"
+ },
+ {
+  "slug": "mayfair",
+  "name": "TAM at Mercato Mayfair",
+  "place": "St Mark's Church, Mayfair",
+  "address": "North Audley Street, London W1K 6ZA"
+ },
+ {
+  "slug": "elephant-park",
+  "name": "TAM at MMy Elephant Park",
+  "place": "Elephant Park",
+  "address": "London SE17 1GA"
+ }
+]

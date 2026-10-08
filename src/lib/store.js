@@ -70,3 +70,30 @@ export function validateSignup(body) {
   if (body.consent !== 'on' && body.consent !== true) errors.consent = 'Tick the box so we know you want emails from TAM.';
   return { value: { email, interests, consent: true }, errors, ok: !Object.keys(errors).length };
 }
+
+// ---- Demand: "Bring them back" (artists) and "I was there" (past nights) ----
+// Every press is a first-party signal: who people want to see again, and which
+// nights people actually went to. Counts are public; emails never are.
+
+export const DEMAND_TYPES = { 'bring-back': 'artist', 'was-there': 'event' };
+
+export function validateDemand(body, exists) {
+  const type = str(body.type, 20);
+  const target = str(body.target, 120);
+  const email = str(body.email, 254).toLowerCase();
+  const errors = {};
+  if (!DEMAND_TYPES[type]) errors.type = 'Unknown action.';
+  else if (!exists(DEMAND_TYPES[type], target)) errors.target = 'Unknown artist or night.';
+  if (email && !EMAIL.test(email)) errors.email = 'That email doesn’t look right.';
+  if (email && body.consent !== 'on' && body.consent !== true) errors.consent = 'Tick the box so we can email you.';
+  return { value: { type, target, ...(email ? { email, consent: true } : {}) }, errors, ok: !Object.keys(errors).length };
+}
+
+export async function demandCounts() {
+  const counts = new Map();
+  for (const r of await readAll('demand.jsonl')) {
+    const k = `${r.type}:${r.target}`;
+    counts.set(k, (counts.get(k) || 0) + 1);
+  }
+  return counts;
+}

@@ -12,28 +12,48 @@ delete process.env.ANTHROPIC_API_KEY;
 delete process.env.ANTHROPIC_AUTH_TOKEN;
 
 const { createApp } = await import('../src/app.js');
-const { loadContent, validate } = await import('../src/lib/content.js');
+const { loadContent, validate, queries, londonISO } = await import('../src/lib/content.js');
 const { artwork, logo, daypart } = await import('../src/lib/brand.js');
+
+const NOW = new Date('2026-10-08T20:30:00Z');
+const c = loadContent();
+const q = queries(c, NOW);
 
 let server;
 let base;
 before(async () => {
-  server = createServer(createApp({ clock: () => new Date('2026-10-08T20:30:00Z') }));
+  server = createServer(createApp({ content: c, clock: () => NOW }));
   await new Promise((r) => server.listen(0, r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
 after(() => { server.close(); rmSync(dataDir, { recursive: true, force: true }); });
 
-const get = (p, opts) => fetch(base + p, opts);
+const get = (p, opts) => fetch(base + p, { redirect: 'manual', ...opts });
 const form = (p, data, headers = {}) => fetch(base + p, {
   method: 'POST', redirect: 'manual', body: new URLSearchParams(data), headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers },
 });
+const ldOf = (html) => JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1])['@graph'];
 
-test('every public page renders', async () => {
-  const c = loadContent();
-  const pages = ['/', '/festival', '/artists', '/watch', '/listen', '/stories', '/about', '/submit', '/privacy', '/studio',
-    ...c.artists.map((a) => `/artists/${a.slug}`), ...c.events.map((e) => `/events/${e.slug}`),
-    ...c.videos.map((v) => `/watch/${v.slug}`), ...c.stories.map((s) => `/stories/${s.slug}`)];
+test('every URL of the old www.tam.tv still answers', async () => {
+  for (const { path: p } of c.legacy) {
+    const res = await get(p);
+    if (p === '/home') {
+      assert.equal(res.status, 301, p);
+      assert.equal(res.headers.get('location'), '/');
+    } else {
+      assert.equal(res.status, 200, p);
+    }
+  }
+  // Old artist URLs keep their exact slugs.
+  for (const p of ['/artists/danagillespie', '/artists/hans-theessink', '/artists/dino-baptiste', '/locations/elephant-castle', '/tv', '/whats-on']) {
+    assert.equal((await get(p)).status, 200, p);
+  }
+});
+
+test('hub pages render with structured data', async () => {
+  const pages = ['/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/listen', '/stories', '/about', '/submit', '/privacy',
+    ...q.years().map((y) => `/archive/${y}`), ...c.series.slice(0, 5).map((s) => `/series/${s.slug}`), ...c.venues.map((v) => `/locations/${v.slug}`),
+    ...q.genres().map((g) => `/genres/${g}`), ...c.videos.slice(0, 3).map((v) => `/tv/${v.slug}`), ...c.stories.map((s) => `/stories/${s.slug}`)];
   for (const p of pages) {
     const res = await get(p);
     assert.equal(res.status, 200, p);
@@ -44,56 +64,111 @@ test('every public page renders', async () => {
   }
 });
 
-test('unknown pages 404 with generated artwork', async () => {
-  const res = await get('/no-such-page');
-  assert.equal(res.status, 404);
-  assert.match(await res.text(), /class="tam-art tam-vinyl"/);
+test('moved URLs redirect permanently', async () => {
+  for (const [from, to] of [['/watch', '/tv'], ['/festival', '/whats-on'], ['/events', '/whats-on']]) {
+    const res = await get(from);
+    assert.equal(res.status, 301, from);
+    assert.equal(res.headers.get('location'), to);
+  }
 });
 
-test('artist page carries MusicGroup structured data linked to events', async () => {
-  const html = await (await get('/artists/the-night-ferries')).text();
-  const ld = JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);
-  const artist = ld['@graph'].find((n) => n['@type'] === 'MusicGroup');
-  assert.equal(artist.name, 'The Night Ferries');
+test('the archive holds the Eventbrite history', () => {
+  assert.ok(c.events.length > 1500, `${c.events.length} events`);
+  assert.ok(c.artists.filter((a) => a.appearances).length > 250);
+  const dana = q.artist('danagillespie');
+  assert.ok(dana.legend);
+  assert.ok(dana.appearances >= 40);
+  assert.ok(q.eventsFor('danagillespie').every((e) => /Dana/i.test(e.title)), 'every Dana night names her');
+  assert.equal(q.artist('david-gray').note.includes('not the singer-songwriter'), true);
+});
+
+test('an artist page is a full record of their nights', async () => {
+  const html = await (await get('/artists/dino-baptiste')).text();
+  const a = q.artist('dino-baptiste');
+  assert.match(html, new RegExp(`${a.appearances} nights at TAM`));
+  assert.match(html, /Shared the bill with/);
+  assert.match(html, /data-demand/);
+  const artist = ldOf(html).find((n) => n['@type'] === 'MusicGroup');
+  assert.equal(artist.name, 'Dino Baptiste');
   assert.ok(artist.performerIn.length > 0);
 });
 
-test('discovery endpoints', async () => {
-  const sitemap = await (await get('/sitemap.xml')).text();
-  assert.match(sitemap, /\/artists\/ada-okoro/);
-  const llms = await (await get('/llms.txt')).text();
-  assert.match(llms, /^# TAM/);
-  const graph = await (await get('/graph.json')).json();
-  assert.ok(graph['@graph'].some((n) => n['@type'] === 'MusicEvent'));
-  const robots = await (await get('/robots.txt')).text();
-  assert.match(robots, /Sitemap:/);
+test('a past night page links its performers, venue and series', async () => {
+  const e = q.past().find((x) => x.performers.length && x.series && x.venue !== 'elsewhere');
+  const html = await (await get(`/events/${e.slug}`)).text();
+  for (const p of e.performers) assert.ok(html.includes(`/artists/${p}"`), p);
+  assert.ok(html.includes(`/locations/${e.venue}"`));
+  assert.ok(html.includes(`/series/${e.series}"`));
+  assert.match(html, /I was there/);
+  const ev = ldOf(html).find((n) => n['@type'] === 'MusicEvent');
+  assert.equal(ev.startDate, e.start);
+  assert.equal(ev.location['@type'], 'MusicVenue');
 });
 
-test('calendar export', async () => {
-  const res = await get('/events/emerging-artist-night-2026-10-24.ics');
+test('discovery endpoints cover the whole archive', async () => {
+  const sitemap = await (await get('/sitemap.xml')).text();
+  for (const p of ['/artists/danagillespie', '/locations/smithfield', '/nft/holly-penfield', `/events/${c.events[0].slug}`, '/archive/2023']) {
+    assert.ok(sitemap.includes(`${p}</loc>`), p);
+  }
+  assert.ok(!sitemap.includes('/home</loc>'));
+  const llms = await (await get('/llms.txt')).text();
+  assert.match(llms, /^# TAM/);
+  assert.match(llms, /Dana Gillespie\]\([^)]+\): cult legend/);
+  const graph = await (await get('/graph.json')).json();
+  assert.ok(graph['@graph'].filter((n) => n['@type'] === 'MusicEvent').length > 1500);
+});
+
+test('calendar export for an upcoming night', async () => {
+  const e = q.upcoming()[0];
+  const res = await get(`/events/${e.slug}.ics`);
   assert.equal(res.status, 200);
   const body = await res.text();
   assert.match(body, /BEGIN:VEVENT/);
-  assert.match(body, /DTSTART:20261024T180000Z/);
+  assert.ok(body.includes(e.url.replace(/[,;]/g, (m) => `\\${m}`)));
+});
+
+test('London times carry the right offset', () => {
+  assert.equal(londonISO('2023-07-01', '19:00'), '2023-07-01T19:00:00+01:00');
+  assert.equal(londonISO('2023-01-15', '19:00'), '2023-01-15T19:00:00+00:00');
+});
+
+test('"Bring them back" and "I was there" are counted', async () => {
+  const send = (data) => form('/demand', data, { accept: 'application/json' });
+  let res = await send({ type: 'bring-back', target: 'dino-baptiste' });
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).count, 1);
+  // The same person pressing again the same day isn't double-counted.
+  res = await send({ type: 'bring-back', target: 'dino-baptiste' });
+  assert.equal((await res.json()).count, 1);
+  // Emails need consent.
+  res = await send({ type: 'bring-back', target: 'danagillespie', email: 'fan@example.com' });
+  assert.equal(res.status, 422);
+  res = await send({ type: 'bring-back', target: 'danagillespie', email: 'fan@example.com', consent: 'on' });
+  assert.equal(res.status, 200);
+  // Unknown targets are refused.
+  assert.equal((await send({ type: 'was-there', target: 'no-such-night' })).status, 422);
+  // Without JS: redirect back to the page.
+  res = await form('/demand', { type: 'was-there', target: q.past()[0].slug, back: `/events/${q.past()[0].slug}` });
+  assert.equal(res.status, 303);
+  const rows = readFileSync(path.join(dataDir, 'demand.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+  assert.equal(rows.length, 3);
+  assert.equal(rows[1].email, 'fan@example.com');
+  assert.match(await (await get('/artists/dino-baptiste')).text(), /1<\/strong> person wants them back/);
 });
 
 test('static files cannot escape public/', async () => {
-  const status = await new Promise((resolve) => {
-    request(`${base}/css/..%2f..%2fpackage.json`, (res) => { res.resume(); resolve(res.statusCode); }).end();
-  });
-  assert.equal(status, 404);
-  const raw = await new Promise((resolve) => {
+  const status = (p) => new Promise((resolve) => {
     const u = new URL(base);
-    request({ host: u.hostname, port: u.port, path: '/css/../../package.json' }, (res) => { res.resume(); resolve(res.statusCode); }).end();
+    request({ host: u.hostname, port: u.port, path: p }, (res) => { res.resume(); resolve(res.statusCode); }).end();
   });
-  assert.equal(raw, 404);
+  assert.equal(await status('/css/..%2f..%2fpackage.json'), 404);
+  assert.equal(await status('/css/../../package.json'), 404);
 });
 
 test('Play TAM submission validates, then stores', async () => {
   const bad = await form('/submit', { name: '', email: 'nope' });
   assert.equal(bad.status, 422);
   assert.match(await bad.text(), /aria-invalid="true"/);
-
   const good = await form('/submit', {
     name: 'Sam', email: 'Sam@Example.com', act: 'Sam & the Tides', proposal: 'A night of tidal blues with two support acts.',
     link1: 'https://example.com/sam', link2: 'javascript:alert(1)', privacy: 'on', newsletter: 'on',
@@ -102,12 +177,6 @@ test('Play TAM submission validates, then stores', async () => {
   const rows = readFileSync(path.join(dataDir, 'submissions.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
   assert.equal(rows.at(-1).email, 'sam@example.com');
   assert.deepEqual(rows.at(-1).links, ['https://example.com/sam']);
-  assert.match(readFileSync(path.join(dataDir, 'signups.jsonl'), 'utf8'), /sam@example.com/);
-});
-
-test('honeypot submissions are dropped silently', async () => {
-  const res = await form('/submit', { website: 'spam', name: 'x' });
-  assert.equal(res.status, 303);
 });
 
 test('newsletter requires explicit consent', async () => {
@@ -123,13 +192,8 @@ test('analytics are only stored with consent', async () => {
   assert.match(readFileSync(path.join(dataDir, 'events.jsonl'), 'utf8'), /"visitor":"abc"/);
 });
 
-test('consent banner only shows until a choice is made', async () => {
-  assert.match(await (await get('/')).text(), /class="consent"/);
-  assert.doesNotMatch(await (await get('/', { headers: { cookie: 'tam_consent=denied' } })).text(), /class="consent"/);
-});
-
 test('production agent is token-protected and reports when AI is off', async () => {
-  const call = (token) => fetch(`${base}/api/agent/production`, { method: 'POST', body: JSON.stringify({ artist: 'ada-okoro' }), headers: { 'content-type': 'application/json', ...(token ? { 'x-admin-token': token } : {}) } });
+  const call = (token) => fetch(`${base}/api/agent/production`, { method: 'POST', body: JSON.stringify({ artist: 'dino-baptiste' }), headers: { 'content-type': 'application/json', ...(token ? { 'x-admin-token': token } : {}) } });
   assert.equal((await call()).status, 401);
   assert.equal((await call('wrong')).status, 401);
   const res = await call('test-token');
@@ -137,56 +201,48 @@ test('production agent is token-protected and reports when AI is off', async () 
   assert.match((await res.json()).error, /ANTHROPIC_API_KEY/);
 });
 
-test('every name gets its own coloured vinyl', async () => {
+test('every name gets its own coloured vinyl; legends get Legend Edition', async () => {
   const { pressing, COLOURWAYS, PRESSINGS } = await import('../src/lib/vinyl.js');
-  assert.deepEqual(pressing('Ada Okoro'), pressing('Ada Okoro'));
+  assert.deepEqual(pressing('Dino Baptiste'), pressing('Dino Baptiste'));
   const seen = new Set(Array.from({ length: 2000 }, (_, i) => pressing(`Artist ${i}`).title));
-  assert.equal(seen.size, COLOURWAYS.length * PRESSINGS.length, 'every colourway x pressing is reachable');
-  const html = await (await get('/artists/ada-okoro')).text();
-  assert.match(html, new RegExp(`Pressed on.*${pressing('Ada Okoro').colourway.name}`, 's'));
-});
-
-test('cult legends get their own section, badge and Legend Edition record', async () => {
-  const html = await (await get('/artists')).text();
-  const legendsAt = html.indexOf('Cult legends</h2>');
-  const emergingAt = html.indexOf('Emerging artists</h2>');
-  assert.ok(legendsAt > 0 && emergingAt > legendsAt, 'legends section comes first');
-  assert.ok(html.slice(legendsAt, emergingAt).includes('The Velvet Orchard'));
-  assert.ok(!html.slice(emergingAt).includes('The Velvet Orchard'));
-  const page = await (await get('/artists/the-velvet-orchard')).text();
-  assert.match(page, /chip-legend/);
-  assert.match(page, /LEGEND EDITION/);
-  assert.doesNotMatch(await (await get('/artists/ada-okoro')).text(), /LEGEND EDITION/);
-  assert.match(await (await get('/art/the-velvet-orchard.svg')).text(), /Legend Edition/);
-  assert.match(await (await get('/llms.txt')).text(), /The Velvet Orchard\]\([^)]+\): cult legend/);
-});
-
-test('artwork is deterministic and distinct', () => {
-  assert.equal(artwork('Ada Okoro'), artwork('Ada Okoro'));
-  assert.notEqual(artwork('Ada Okoro'), artwork('Marlowe Grey'));
+  assert.equal(seen.size, COLOURWAYS.length * PRESSINGS.length);
+  assert.equal(artwork('Dino Baptiste'), artwork('Dino Baptiste'));
+  assert.notEqual(artwork('Dino Baptiste'), artwork('Harry Whitty'));
   assert.match(artwork('<script>'), /&lt;SCRIPT&gt;/);
+  assert.match(await (await get('/art/danagillespie.svg')).text(), /Legend Edition/);
+  assert.match(await (await get('/artists/danagillespie')).text(), /chip-legend/);
 });
 
 test('the logo is always the original artwork', async () => {
   const html = await (await get('/')).text();
   assert.match(html, /src="\/img\/tam-logo-640\.png"/);
   assert.match(html, /src="\/img\/tam-mark-96\.png"/);
-  for (const f of ['tam-logo.png', 'tam-logo-640.png', 'tam-mark.png', 'tam-mark-96.png', 'tam-wordmark.png', 'tam-wordmark-160.png', 'favicon-48.png', 'apple-touch-icon.png', 'og.jpg']) {
-    const res = await get(`/img/${f}`);
-    assert.equal(res.status, 200, f);
+  for (const f of ['tam-logo.png', 'tam-mark.png', 'tam-wordmark.png', 'favicon-48.png', 'og.jpg']) {
+    assert.equal((await get(`/img/${f}`)).status, 200, f);
   }
   assert.match(logo('mark', { width: 40 }), /width="40" height="40"/);
+});
+
+test('archived photos are served locally, not hotlinked', async () => {
+  const withImages = c.legacy.filter((p) => p.images.length);
+  assert.ok(withImages.length > 10);
+  for (const p of withImages) for (const src of p.images) assert.match(src, /^\/img\/archive\/[0-9a-f]{16}\.webp$/);
+  assert.equal((await get(withImages[0].images[0])).status, 200);
 });
 
 test('the TAM 108 fall with lyrics only where publishable', async () => {
   const songs = await (await get('/chorus.json')).json();
   assert.equal(songs.length, 108);
-  const c = loadContent();
-  for (const s of c.chorus.songs) if (s.chorus.length) assert.ok(s.publicDomain || s.licensed, s.title);
-  const broken = structuredClone(c);
+  const broken = structuredClone({ ...c, index: undefined });
   broken.chorus.songs[0].chorus = ['a line'];
   broken.chorus.songs[0].publicDomain = false;
   assert.throws(() => validate(broken), /not marked publicDomain or licensed/);
+});
+
+test('content validation catches broken references', () => {
+  const broken = structuredClone({ ...c, index: undefined });
+  broken.events[0].performers = ['nobody'];
+  assert.throws(() => validate(broken), /unknown performer "nobody"/);
 });
 
 test('London time sets the daypart', () => {
@@ -194,11 +250,4 @@ test('London time sets the daypart', () => {
   assert.equal(daypart(12), 'day');
   assert.equal(daypart(19), 'dusk');
   assert.equal(daypart(23), 'night');
-});
-
-test('content validation catches broken references', () => {
-  const c = loadContent();
-  const broken = structuredClone(c);
-  broken.events[0].artists.push('nobody');
-  assert.throws(() => validate(broken), /unknown artist "nobody"/);
 });

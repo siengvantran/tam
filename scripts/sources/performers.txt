@@ -1,0 +1,294 @@
+# Curated from 1,552 TAM Eventbrite listings (2020-2026) and the old tam.tv.
+# One act per line:  Name | alias | alias ... [| @slug=old-url-slug] [| @note=disambiguation] [| !legend]
+# Aliases are matched case-insensitively as whole words in event titles.
+Dana Gillespie | Dana & Dino | @slug=danagillespie | !legend
+Dino Baptiste | Dino Baptise | Dino's Christmas | Dana & Dino's
+Hans Theessink | !legend
+Harry Whitty
+Albie Salter
+Gemma Schito
+Iris
+Mark Wardel
+Holly Penfield | !legend
+The London Blues Band | London Blues Band
+Todd Sharpville | !legend
+Osibisa | !legend
+Keith West | !legend
+Ian Siegal | !legend
+Jimmy Carpenter | !legend
+Big Joe Louis | !legend
+Earl Okin | !legend
+Keith Shocklee | !legend
+Errol Linton
+Bex Marshall | Bex Marsha
+Little George Sueref | Little George
+Boys Wonder
+Dave Thomas
+Connor Selby | Connor Selby Band
+The Cinelli Brothers | Cinelli brothers | Cinelli Christmas
+Kevin Davy
+Tim Arnold
+Dom Pipkin | Dom Pipkin and the IKOS | Dom Pipkin and the Ikos
+The IKOS | IKOS New Orleans Music Shop
+The Flaming Alligators
+Dan "Bam Bam" Watt | Bam Bam Watt | Bam Bam | Daniel "Bam Bam" Watt | Dan “Bam Bam” Watt | Daniel 'Bam Bam' Watt
+Johnny Mayers
+Evan Jenkins
+Paul Marney
+Tristan Butler
+Gerg Holt
+Cam Rossi
+NightTrain
+Andy Twyman
+Mark Banks | Mark Banks Duo | Mark Banks Jazz Duo | Mark Banks Blues Duo | Mark Banks' Jazz Duo
+The Remedy | Remedy Blues Duo
+Titus Maz | Titus Maz Measures Quartet | Measures Quartet
+Chris Hyde-Harrison
+Alan Weekes | Alan Weeks
+David Gray | @note=Pianist at TAM's jazz jams and classical piano nights (not the singer-songwriter of the same name).
+Asha 'Keys' Elfenbein | Asha ‘Keys’ Elfenbein | ASHA 'Keys'
+Word of Mouth | Word of Mouth Fusion Jazz
+Troy Jackson
+Charlie Jackson
+Charmain Elliott | Charmain & Friends
+Chris Tummings
+Izzy Roberts | Izzy R
+Patrick Hinds | Dr Patrick Hinds
+Patrick Alan
+Adelaide Mackenzie
+Najwa Ezzaher
+Merle Forbes
+Jamilah
+Aremuorin
+Susana Silva
+Matt Zerek
+Mazza | Davide Mazza | Davide "Mazza" | Mazza Trio | Mazza's Telecaster Blues
+Bozard | Bozard Duo
+Pearl Fish
+Rob Quo
+Rob Picazo | Rob Picazo Band
+The Hendrix Trio
+The Burning Shoes
+RAMSHACKLE
+Jim Jams
+Project Culture
+The Light
+Velvet Lapel
+Albion
+The Hickory Swingers
+Dom Stockbridge | Dom Stockbridge Trio | Dom Stockbridge band
+Callum Smith | Callum Smith Organ Trio
+Wun Yen Chan
+The High Wave
+Arch 57 | Arch 57 Funk Orchestra | ARCH 57
+Oak Royale
+DJ D'Francisco
+DJ Rwanda | Dj Rwanda
+DJ Vivra Verra
+DJ Cortex
+Heidi Vogel | Heidi Vogel Latin Trio | Heidi Vogel Jazz Trio
+Menino Josué
+The OGGs | OGGs
+Herman Guitar Duo | Matt & Herman | Matt & Herman Guitar Duo | Matt & Herman Guitar Duet
+Matt & The Night Walkers | Matt and the Night Walkers | Matt & The Nightwalkers | Matt and The Night Walkers | Nightwalkers
+Rios & King Guitar Duo | Rios & King
+Artur King | Artur King 777 | ARTUR KING
+Omar Rios
+Genn
+Tasha Tarusøva
+Manny Fizzotti
+Matteo Palmieri
+MAR
+Arif Raihan
+The Henry Kimber Trio
+Charlotte Awbery
+Charlotte Lansman Trio
+Chelsea Becker
+Bailey Marie
+Bradley Waterman
+Reece Chapman
+Dan Millson
+Keith West
+Dani Milano & The Groove Keepers
+Darren Mason
+Dave Ferra
+Davide Sanna
+Denquar Chupak Soul-Jazz Quartet
+Dom Glynn
+Dominik Ogorek
+Eddie Monroe
+Elie Pichard
+Enobong Bassey
+Ese & The Vooduu People | Vooduu People
+Faye Patton | Faye Patton Nu Jazz Quartet
+Francis Wolfe
+Fraser Smith
+Freya Everest
+Gary Cain Band
+George Kelly
+George Theodorou
+Giulia & the Lizards
+Guido Spannocchi Quartet | Guido Spannocchi
+Harry Yates
+Helena May
+Hoos Collective
+Imperio Bamba | IMPERIO BAMBA
+Interfunk | INTERFUNK
+J P Rose
+Jake Zaitz
+Jimmy Martinez
+Sara McGuinness
+Jimmy Regal and the Royals | Jimmy Regal
+Joe Corbin
+John Drain
+Marco Farris
+Jonny Liebeck
+Julieta Iglesias
+Justin Light & The Midnighters
+Kat Pearson
+Kandy Kobras
+Kenta Shoji
+Kosmic Love Collective | Kosmic Troubadour | Kosmic Love
+Lady Petrol
+Lea Kay
+Leonardo Giuliani
+LIT FM
+Logan J Parker
+Louise Balkwill
+Luca Somigli Jazz Trio | Luca Somigli
+Luis Avila
+Luis Cano | Luis Cano Trio
+Luke Askew
+Manu Vera Tudela
+MAPLETON SESSIONS
+Marcus Praestgaard | Marcus Praestgaard Trio | Marcus Praestgaard Duo
+Margot Antignac
+Mario Bakuna Band | Mario Bakuna
+Martin Green
+Matias Dal Pos
+Matt Kent
+MoJak
+NONUNONU
+Nómade
+Oliver Darling | Oliver Darling Trio
+Orin Kilo
+Paolo Morena
+Peter Wise
+Rachel D'Arcy
+Ritchaz Cabral
+Rory Sturgeon
+Ruby & The Revival | Ruby And The Revival | RUBY REVIVAL
+Ryan D'Auria
+Sammy Vincent
+Samuel Virgo
+Sarabanda
+Sebastian Reyes
+Sedric Perry
+Selfish Jean
+Sienna Senate
+Skowa Kabala
+Slaphazzard Funk Band
+Smiles Collective
+Southern Aces
+Stuffy And The Fuses
+Subatomic Souls | Subatomic Souls Duo
+Sustain Groove Band
+Tamara Raven
+Tamara Barschak
+Teo Treska
+The Brandon Allen Groove Band
+The Big Smoke Family
+The Chicco Allotta Quartet | Chicco Allotta Trio | Chicco Allotta
+The Chris Corcoran Band | Chris Corcoran Trio
+The Daybreakers | THE DAYBREAKERS
+The Dana Elle Band
+The Ensō Swing Band | Enso Swing Band | Enzo Swing Band
+The Elliot Martin Trio
+The Emily Williams Quartet
+The Family Dog
+The Foo Birds
+The Julian Burdock Band | JULIAN BURDOCK BAND
+The Kid And I | The Kid & I
+The Latin Formula
+The Mayans Collective
+The Minyanaires
+The Reformation Blues Club
+The Shantlys
+The Trashcans
+The Trip Advisor Duo | Trip Advisor Duo
+The Turtlenecks
+The Untouchables
+The Wang Dang Doodle
+Thomas Heppell | Thomas Heppell Blues Band
+Tim Penn & The Second Line
+Tom Waters
+Two Inch Voices
+Vegas on Bass
+Velvet Grip | VELVET GRIP
+Walter Celi
+Will James | Will James Duo
+Wills Morgan
+Xandau
+YAZ | Yaz Band | YAZ Band | YAZ Duo
+YJ Shine | YJ SHiNE | YJ's Soul Jam
+Zac Celinder
+Zac The Vampire | Zac, The Vampire
+Zami Yazeed
+Zak Layden & The Thieves
+Hypnogator
+Bee Jar
+Lucy June
+Fresh Arms Airlines
+Little House
+Fire In Her Eyes
+HALO | H A L O
+Dead Authors
+Dawn Tales | The Dawn Tales
+Counterflow
+Babel Brass Band
+Basharan
+Lovescene
+Mess of Blues
+Pisco Sour
+Combo Yanzé
+Counterflow
+Gökhan Demirdöğmez
+Juan Pachanga
+KALILA
+KOZY
+Kick Pistol
+Lighthaus
+Pearl Fish
+Soju
+Spread
+Stereo House
+Bunyod | BUNYOD
+D.C Entropy
+Diz Establishment
+Eolisfar
+Emrys
+Enzo Strano
+Jason Jenkins
+Jo Buddy | Jo' Buddy
+Aigul Imanbayeva
+Athena Lim
+Maggie Baring
+Sassy Hammersley
+Alice Phelps
+Aaron Liddard
+Adriana Hamilton
+Agnes Hustler | AGNES HUSTLER
+Lory Muratti
+Ilana Lorraine
+Natasha Sampson
+Francesco Mendolia
+Dr. Yana Johnson
+Callum Smith
+Yazmyn Hendrix
+Zachary Aghaizu
+Veronica & Max
+VODA | VODA Trio
+Victor Masntrangioli
+Woodshed
+SickRichard
+London Beat Club

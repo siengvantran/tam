@@ -1,0 +1,234 @@
+[
+ {
+  "slug": "great-british-blues-jam",
+  "name": "The Great British Blues Jam",
+  "genre": "blues",
+  "count": 19,
+  "first": "2021-05-17",
+  "last": "2026-10-24"
+ },
+ {
+  "slug": "singers-at-sunday-spot",
+  "name": "Singers @ Sunday Spot",
+  "genre": "soul",
+  "count": 53,
+  "first": "2021-05-23",
+  "last": "2025-07-06"
+ },
+ {
+  "slug": "word-of-mouth",
+  "name": "Word of Mouth Fusion Jazz",
+  "genre": "jazz",
+  "count": 23,
+  "first": "2022-03-01",
+  "last": "2026-10-20"
+ },
+ {
+  "slug": "funk-me",
+  "name": "Funk Me, It's Friday / Saturday",
+  "genre": "funk",
+  "count": 13,
+  "first": "2021-08-07",
+  "last": "2023-08-12"
+ },
+ {
+  "slug": "jazz-in-the-city",
+  "name": "Jazz in the City",
+  "genre": "jazz",
+  "count": 16,
+  "first": "2021-05-21",
+  "last": "2024-01-05"
+ },
+ {
+  "slug": "jazz-jam",
+  "name": "Jazz Jam in the TAM",
+  "genre": "jazz",
+  "count": 44,
+  "first": "2021-06-23",
+  "last": "2026-06-29"
+ },
+ {
+  "slug": "saturday-spotlight",
+  "name": "Saturday Spotlight",
+  "genre": null,
+  "count": 11,
+  "first": "2021-05-22",
+  "last": "2021-10-16"
+ },
+ {
+  "slug": "thirsty-thursday",
+  "name": "Thirsty Thursday",
+  "genre": null,
+  "count": 7,
+  "first": "2021-06-17",
+  "last": "2021-10-07"
+ },
+ {
+  "slug": "mic-drop",
+  "name": "LondonJamSession x TAM MIC DROP",
+  "genre": null,
+  "count": 19,
+  "first": "2024-05-12",
+  "last": "2026-07-12"
+ },
+ {
+  "slug": "tam-music-showcase",
+  "name": "TAM Music Showcase",
+  "genre": null,
+  "count": 13,
+  "first": "2025-02-01",
+  "last": "2026-01-31"
+ },
+ {
+  "slug": "bunny-land-fest",
+  "name": "Bunny Land Fest",
+  "genre": "rock",
+  "count": 12,
+  "first": "2023-07-21",
+  "last": "2025-07-18"
+ },
+ {
+  "slug": "dove-and-lion",
+  "name": "Dove & Lion Variety Show",
+  "genre": null,
+  "count": 8,
+  "first": "2023-11-04",
+  "last": "2025-06-27"
+ },
+ {
+  "slug": "engine-room",
+  "name": "The Engine Room",
+  "genre": "electronic",
+  "count": 7,
+  "first": "2024-07-09",
+  "last": "2026-06-30"
+ },
+ {
+  "slug": "junior-open-mic",
+  "name": "JOM Junior & Youth Open Mic",
+  "genre": null,
+  "count": 19,
+  "first": "2023-07-02",
+  "last": "2026-09-20"
+ },
+ {
+  "slug": "disney-hours",
+  "name": "Disney Hours",
+  "genre": null,
+  "count": 14,
+  "first": "2022-10-16",
+  "last": "2023-03-19"
+ },
+ {
+  "slug": "bluescape",
+  "name": "Bluescape Festival",
+  "genre": "blues",
+  "count": 6,
+  "first": "2024-07-29",
+  "last": "2024-09-30"
+ },
+ {
+  "slug": "festival-14",
+  "name": "Festival 14",
+  "genre": null,
+  "count": 14,
+  "first": "2022-07-21",
+  "last": "2022-07-24"
+ },
+ {
+  "slug": "innercity-blues-jam",
+  "name": "Innercity Blues Jam",
+  "genre": "blues",
+  "count": 4,
+  "first": "2023-02-02",
+  "last": "2023-02-23"
+ },
+ {
+  "slug": "city-of-london-blues-jam",
+  "name": "The City of London Blues Jam",
+  "genre": "blues",
+  "count": 3,
+  "first": "2023-03-13",
+  "last": "2023-09-25"
+ },
+ {
+  "slug": "basement-sessions",
+  "name": "Basement & Bunker Sessions",
+  "genre": null,
+  "count": 23,
+  "first": "2023-01-26",
+  "last": "2026-03-01"
+ },
+ {
+  "slug": "morley-college",
+  "name": "Morley College Nights",
+  "genre": null,
+  "count": 10,
+  "first": "2024-05-21",
+  "last": "2026-07-01"
+ },
+ {
+  "slug": "immersive-experience-network",
+  "name": "Immersive Experience Network",
+  "genre": null,
+  "count": 6,
+  "first": "2024-03-18",
+  "last": "2026-09-21"
+ },
+ {
+  "slug": "tam-summer-academy",
+  "name": "TAM Summer Academy",
+  "genre": null,
+  "count": 10,
+  "first": "2021-08-16",
+  "last": "2026-05-31"
+ },
+ {
+  "slug": "everywhere-at-once",
+  "name": "Everywhere At Once",
+  "genre": null,
+  "count": 3,
+  "first": "2026-06-05",
+  "last": "2026-06-28"
+ },
+ {
+  "slug": "dana-gillespie-nights",
+  "name": "Dana Gillespie Nights",
+  "genre": "blues",
+  "count": 41,
+  "first": "2021-05-27",
+  "last": "2026-09-25"
+ },
+ {
+  "slug": "open-mic",
+  "name": "Open Mic at TAM",
+  "genre": null,
+  "count": 85,
+  "first": "2021-08-03",
+  "last": "2026-10-14"
+ },
+ {
+  "slug": "karaoke",
+  "name": "Karaoke at TAM",
+  "genre": null,
+  "count": 74,
+  "first": "2021-10-30",
+  "last": "2026-10-24"
+ },
+ {
+  "slug": "comedy",
+  "name": "Comedy at TAM",
+  "genre": "comedy",
+  "count": 17,
+  "first": "2023-03-30",
+  "last": "2026-10-21"
+ },
+ {
+  "slug": "latin-nights",
+  "name": "Latin Nights",
+  "genre": "latin",
+  "count": 43,
+  "first": "2021-11-20",
+  "last": "2026-04-07"
+ }
+]
