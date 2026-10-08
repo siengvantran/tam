@@ -131,7 +131,7 @@
       start();
     }
 
-    fetch('/chorus.json').then((r) => r.json()).then((list) => {
+    Promise.all([fetch('/chorus.json').then((r) => r.json()), document.fonts?.ready]).then(([list]) => {
       songs = list;
       resize();
       // Seed the screen so it isn't empty on arrival.

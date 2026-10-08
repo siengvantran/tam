@@ -1,8 +1,37 @@
 [
-  { "slug": "emerging-artist-nights", "name": "Emerging Artist Nights", "summary": "New artists, a real audience, and a full content package from every set." },
-  { "slug": "great-british-blues-jam", "name": "Great British Blues Jam", "summary": "The long-running TAM blues jam: house band, open stage, and whoever walks in with a guitar." },
-  { "slug": "record-releases", "name": "Record Releases", "summary": "Launch nights for new records, filmed and published on TAM.TV." },
-  { "slug": "collaborations", "name": "Special Collaborations", "summary": "One-off pairings between artists who have passed through TAM." },
-  { "slug": "screenings", "name": "Documentary Screenings", "summary": "Films about music and the people who make it, followed by conversation." },
-  { "slug": "dj-nights", "name": "DJ Nights", "summary": "Selectors from the TAM community." }
+  {
+    "slug": "emerging-artist-nights",
+    "name": "Emerging Artist Nights",
+    "summary": "New artists, a real audience, and a full content package from every set."
+  },
+  {
+    "slug": "cult-legends",
+    "name": "Cult Legends",
+    "summary": "Artists with devoted followings and long stories, up close in a small room. The records people pass between friends, played by the people who made them."
+  },
+  {
+    "slug": "great-british-blues-jam",
+    "name": "Great British Blues Jam",
+    "summary": "The long-running TAM blues jam: house band, open stage, and whoever walks in with a guitar."
+  },
+  {
+    "slug": "record-releases",
+    "name": "Record Releases",
+    "summary": "Launch nights for new records, filmed and published on TAM.TV."
+  },
+  {
+    "slug": "collaborations",
+    "name": "Special Collaborations",
+    "summary": "One-off pairings between artists who have passed through TAM."
+  },
+  {
+    "slug": "screenings",
+    "name": "Documentary Screenings",
+    "summary": "Films about music and the people who make it, followed by conversation."
+  },
+  {
+    "slug": "dj-nights",
+    "name": "DJ Nights",
+    "summary": "Selectors from the TAM community."
+  }
 ]

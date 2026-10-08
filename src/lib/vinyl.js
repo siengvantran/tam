@@ -147,7 +147,7 @@ const ink = (hex) => {
  * Press a coloured vinyl record for a name.
  * Same name in, same record out.
  */
-export function vinyl(name, { size = 240, label = true } = {}) {
+export function vinyl(name, { size = 240, label = true, legend = false } = {}) {
   const p = pressing(name);
   const { colours, translucent } = p.colourway;
   const [base] = colours;
@@ -163,13 +163,15 @@ export function vinyl(name, { size = 240, label = true } = {}) {
     grooves += `<circle r="${r}" stroke-width="${gap ? 1.4 : 0.45}" opacity="${gap ? 0.45 : (0.1 + rand() * 0.14).toFixed(2)}"/>`;
   }
 
-  const labelColour = p.colourway.label;
+  // Legend Edition: cult legends get a gold-foil label and a gold rim.
+  const labelColour = legend ? `url(#${id}g)` : p.colourway.label;
+  const labelInk = legend ? '#2a1a06' : ink(p.colourway.label);
   const caption = label
     ? `<text class="tam-art-label" y="114" text-anchor="middle">${esc(String(name).toUpperCase().slice(0, 28))}</text>`
-      + `<text class="tam-art-colourway" y="124" text-anchor="middle">${esc(p.title.toUpperCase())}</text>`
+      + `<text class="tam-art-colourway" y="124" text-anchor="middle">${esc(p.title.toUpperCase())}${legend ? ' · LEGEND EDITION' : ''}</text>`
     : '';
 
-  return `<svg class="tam-art tam-vinyl" viewBox="-104 -104 208 ${label ? 234 : 208}" width="${size}" height="${size}" role="img" aria-label="${esc(name)}: ${esc(p.title)} vinyl">`
+  return `<svg class="tam-art tam-vinyl" viewBox="-104 -104 208 ${label ? 234 : 208}" width="${size}" height="${size}" role="img" aria-label="${esc(name)}: ${esc(p.title)} vinyl${legend ? ', Legend Edition' : ''}">`
     + '<defs>'
     + `<clipPath id="${id}c"><circle r="100"/></clipPath>`
     + `<filter id="${id}m" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".014" numOctaves="3" seed="${p.seed % 997}" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="70" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation=".9"/></filter>`
@@ -177,6 +179,7 @@ export function vinyl(name, { size = 240, label = true } = {}) {
     + `<filter id="${id}d" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".2" numOctaves="1" seed="${p.seed % 991}" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3"/></filter>`
     + `<radialGradient id="${id}b"><stop offset=".3" stop-color="${base}"/><stop offset="1" stop-color="${base}" stop-opacity="${translucent ? 0.7 : 1}"/></radialGradient>`
     + `<linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`
+    + (legend ? `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe3a1"/><stop offset=".45" stop-color="#d4a24c"/><stop offset=".55" stop-color="#b8862f"/><stop offset="1" stop-color="#f1cf7a"/></linearGradient>` : '')
     + '</defs>'
     // The disc spins (on hover, see site.css); the light on it stays put.
     + '<g class="tam-disc">'
@@ -188,11 +191,12 @@ export function vinyl(name, { size = 240, label = true } = {}) {
     + '<circle r="99.5" fill="none" stroke="#fff" stroke-opacity=".18"/>'
     + `<circle r="33" fill="${labelColour}"/>`
     + '<circle r="33" fill="none" stroke="#000" stroke-opacity=".25"/>'
-    + `<circle r="28" fill="none" stroke="${ink(labelColour)}" stroke-opacity=".25" stroke-width=".5"/>`
-    + `<text class="tam-art-initials" y="-9" text-anchor="middle" fill="${ink(labelColour)}">${esc(initials(name))}</text>`
-    + `<text class="tam-art-side" y="19" text-anchor="middle" fill="${ink(labelColour)}">SIDE A · 33⅓</text>`
+    + `<circle r="28" fill="none" stroke="${labelInk}" stroke-opacity=".25" stroke-width=".5"/>`
+    + `<text class="tam-art-initials" y="-9" text-anchor="middle" fill="${labelInk}">${esc(initials(name))}</text>`
+    + `<text class="tam-art-side" y="19" text-anchor="middle" fill="${labelInk}">${legend ? 'LEGEND EDITION' : 'SIDE A · 33⅓'}</text>`
     + '<circle r="2.6" fill="#0b0907"/>'
     + '</g>'
+    + (legend ? '<circle r="101.5" fill="none" stroke="#e6b45c" stroke-width="1.6" opacity=".9"/>' : '')
     // Light catching the grooves on two opposite sides, like a real record.
     + `<g clip-path="url(#${id}c)" transform="rotate(${shine})"><path d="${wedge(-12, 12)}" fill="url(#${id}h)"/><path d="${wedge(168, 192)}" fill="url(#${id}h)" opacity=".7"/></g>`
     + caption

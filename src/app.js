@@ -117,9 +117,9 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
   const artName = (slug) => {
     const q = queries(c);
     const a = q.artist(slug);
-    if (a) return { name: a.name, genre: a.genres[0] };
+    if (a) return { name: a.name, genre: a.genres[0], legend: a.legend };
     const e = q.event(slug);
-    if (e) return { name: e.slug, genre: e.genre, label: false };
+    if (e) return { name: e.slug, genre: e.genre, label: false, legend: e.strand === 'cult-legends' };
     const v = q.video(slug);
     if (v) return { name: v.slug, genre: q.artist(v.artist)?.genres?.[0], label: false };
     return null;
@@ -162,7 +162,7 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
         if (p === '/apple-touch-icon.png') return serveStatic(res, '/img/apple-touch-icon.png');
         if ((match = m(/^\/art\/([a-z0-9-]+)\.svg$/))) {
           const s = artName(match[1]);
-          if (s) return svg(artwork(s.name, { genre: s.genre, size: 512, label: s.label !== false }).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
+          if (s) return svg(artwork(s.name, { genre: s.genre, size: 512, label: s.label !== false, legend: s.legend }).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
         }
         if (p === '/chorus.json') return send(res, 200, JSON.stringify(c.chorus.songs.map(({ title, artist, year, chorus }) => ({ title, artist, year, chorus }))), 'application/json; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' });
 

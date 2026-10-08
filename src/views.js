@@ -19,10 +19,13 @@ const DAYPART_LINE = {
   night: 'Night in London. This is when TAM happens.',
 };
 
-const pressedOn = (name) => {
+const pressedOn = (name, legend = false) => {
   const p = pressing(name);
-  return h`<p class="pressed center"><span class="eyebrow">Pressed on</span><strong>${p.colourway.name}</strong> ${p.style.toLowerCase()} vinyl<br><span class="muted">${p.colourway.note}</span></p>`;
+  return h`<p class="pressed center"><span class="eyebrow">Pressed on</span><strong>${p.colourway.name}</strong> ${p.style.toLowerCase()} vinyl${legend ? h`, <strong>Legend Edition</strong> with a gold-foil label` : ''}<br><span class="muted">${p.colourway.note}</span></p>`;
 };
+
+const legendBadge = (a) => (a?.legend ? h`<span class="chip chip-legend">Cult legend</span>` : '');
+const isLegendNight = (e) => e.strand === 'cult-legends';
 
 const badge = (item) => (item?.sample ? h`<span class="chip chip-sample" title="Placeholder content — replace in /content">Sample</span>` : '');
 
@@ -120,7 +123,7 @@ function signupForm(ctx, { compact = true } = {}) {
 const eventCard = (ctx, e) => {
   const q = ctx.q;
   return h`<article class="card event-card">
-  <a class="card-art" href="${paths.event(e.slug)}" tabindex="-1" aria-hidden="true">${raw(artwork(e.slug, { genre: e.genre, size: 160, label: false }))}</a>
+  <a class="card-art" href="${paths.event(e.slug)}" tabindex="-1" aria-hidden="true">${raw(artwork(e.slug, { genre: e.genre, size: 160, label: false, legend: isLegendNight(e) }))}</a>
   <div class="card-body">
     <p class="eyebrow">${q.strand(e.strand)?.name} ${badge(e)}</p>
     <h3><a href="${paths.event(e.slug)}">${e.title}</a></h3>
@@ -131,9 +134,9 @@ const eventCard = (ctx, e) => {
 };
 
 const artistCard = (a) => h`<article class="card artist-card">
-  <a href="${paths.artist(a.slug)}" class="card-art">${raw(artwork(a.name, { genre: a.genres[0], size: 200 }))}</a>
+  <a href="${paths.artist(a.slug)}" class="card-art">${raw(artwork(a.name, { genre: a.genres[0], size: 200, legend: a.legend }))}</a>
   <div class="card-body">
-    <h3><a href="${paths.artist(a.slug)}">${a.name}</a> ${badge(a)}</h3>
+    <h3><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)} ${badge(a)}</h3>
     <p class="meta">${a.genres.join(' · ')} — ${a.location}</p>
   </div>
 </article>`;
@@ -179,8 +182,8 @@ export function home(ctx) {
   <div class="hero-mark"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 520, eager: true }))}</div></div>
   <div class="hero-copy">
     <p class="eyebrow">TAM Festival · ${c.site.locality}</p>
-    <h1>Live music.<br>Emerging artists.<br>Real stories.</h1>
-    <p class="lede">TAM.TV is where the story continues: every night at TAM becomes films, interviews and artist pages that last.</p>
+    <h1>Live music.<br>Emerging artists.<br>Cult legends.</h1>
+    <p class="lede">From first gigs to cult legends up close, every night at TAM becomes films, interviews and artist pages that last. TAM.TV is where the story continues.</p>
     <p class="clock" data-clock><span data-clock-time>${String(t.hour).padStart(2, '0')}:${String(t.minute).padStart(2, '0')}</span> London · <span data-clock-line>${DAYPART_LINE[part]}</span></p>
     ${next ? h`<div class="next-up">
       <p class="eyebrow">Next at TAM</p>
@@ -207,13 +210,13 @@ ${section('Coming up', h`<div class="grid grid-3">${q.upcoming().slice(0, 3).map
 </section>
 
 ${section('Watch', h`<div class="grid grid-3">${c.videos.slice(0, 3).map((v) => videoCard(ctx, v))}</div>`, { href: '/watch' })}
-${section('Artists', h`<div class="grid grid-4">${c.artists.slice(0, 4).map(artistCard)}</div>`, { href: '/artists' })}
+${section('Artists', h`<div class="grid grid-4">${[...c.artists.filter((a) => a.legend), ...c.artists.filter((a) => !a.legend)].slice(0, 4).map(artistCard)}</div>`, { href: '/artists' })}
 ${section('Stories', h`<div class="grid grid-3">${c.stories.slice(0, 3).map(storyCard)}</div>`, { href: '/stories' })}
 
 <section class="section play-tam">
   <div>
     <h2>Play TAM</h2>
-    <p>TAM doesn’t just put artists on stage. It helps build their audience: a live room, a filmed set, an interview, a profile on TAM.TV and distribution across our channels.</p>
+    <p>Whether it’s your first gig or your thirtieth year on the road, TAM doesn’t just put artists on stage. It helps build their audience: a live room, a filmed set, an interview, a profile on TAM.TV and distribution across our channels.</p>
   </div>
   <a class="btn" href="/submit">Propose a night</a>
 </section>`;
@@ -242,7 +245,7 @@ export function eventPage(ctx, e) {
   const past = q.isPast(e);
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(artwork(e.slug, { genre: e.genre, size: 360, label: false }))}</div>
+  <div class="detail-art">${raw(artwork(e.slug, { genre: e.genre, size: 360, label: false, legend: isLegendNight(e) }))}</div>
   <div class="detail-copy">
     <p class="eyebrow">${q.strand(e.strand)?.name} ${badge(e)}</p>
     <h1>${e.title}</h1>
@@ -264,14 +267,17 @@ ${stories.length ? section('Stories', h`<div class="grid grid-3">${stories.map(s
 }
 
 export function artists(ctx) {
+  const legends = ctx.c.artists.filter((a) => a.legend);
+  const emerging = ctx.c.artists.filter((a) => !a.legend);
   const body = h`
 <header class="page-head">
   <p class="eyebrow">Artists</p>
   <h1>The people who passed through TAM.</h1>
-  <p class="lede">Every artist gets a permanent page and their own coloured vinyl, pressed from their name in a colourway you’ve probably never seen on a record. Same name, same record, forever.</p>
+  <p class="lede">From first gigs to cult legends. Every artist gets a permanent page and their own coloured vinyl, pressed from their name in a colourway you’ve probably never seen on a record. Legends are pressed as a gold-foil Legend Edition.</p>
 </header>
-<div class="grid grid-4">${ctx.c.artists.map(artistCard)}</div>`;
-  return layout(ctx, { title: 'Artists', description: 'Emerging artists who have performed at TAM.', path: '/artists', body });
+${legends.length ? section('Cult legends', h`<div class="grid grid-4">${legends.map(artistCard)}</div>`, { id: 'legends' }) : ''}
+${section(legends.length ? 'Emerging artists' : 'Artists', h`<div class="grid grid-4">${emerging.map(artistCard)}</div>`, { id: 'emerging' })}`;
+  return layout(ctx, { title: 'Artists', description: 'Emerging artists and cult legends who have performed at TAM.', path: '/artists', body });
 }
 
 export function artistPage(ctx, a) {
@@ -285,9 +291,9 @@ export function artistPage(ctx, a) {
   const links = [...Object.entries(a.music || {}), ...Object.entries(a.socials || {})].filter(([, v]) => v);
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(artwork(a.name, { genre: a.genres[0], size: 360 }))}${pressedOn(a.name)}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download the record (SVG)</a></p></div>
+  <div class="detail-art">${raw(artwork(a.name, { genre: a.genres[0], size: 360, legend: a.legend }))}${pressedOn(a.name, a.legend)}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download the record (SVG)</a></p></div>
   <div class="detail-copy">
-    <p class="eyebrow">${a.genres.join(' · ')} ${badge(a)}</p>
+    <p class="eyebrow">${a.genres.join(' · ')} ${legendBadge(a)} ${badge(a)}</p>
     <h1>${a.name}</h1>
     <p class="meta big">${a.location}</p>
     <p class="lede">${a.bio}</p>

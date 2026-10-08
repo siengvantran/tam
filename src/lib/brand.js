@@ -50,8 +50,8 @@ export { hash } from './vinyl.js';
  * Artwork for an artist, event or film: a coloured vinyl record pressed from
  * its name (see vinyl.js). Deliberately not the TAM mark.
  */
-export function artwork(name, { size = 240, label = true } = {}) {
-  return vinyl(name, { size, label });
+export function artwork(name, { size = 240, label = true, legend = false } = {}) {
+  return vinyl(name, { size, label, legend });
 }
 
 /**

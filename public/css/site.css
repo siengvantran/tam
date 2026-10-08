@@ -95,6 +95,7 @@ code { background: var(--bg-3); padding: .1em .35em; border-radius: 4px; font-si
 /* ---- chips ---- */
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip { display: inline-block; font: 600 .7rem/1 var(--display); letter-spacing: .16em; text-transform: uppercase; padding: .45em .8em; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.chip-legend { border-color: #b8862f; color: #2a1a06; background: linear-gradient(120deg, #fbe3a1, #d4a24c 50%, #f1cf7a); }
 .chip-sample { border-color: #6d5233; color: #d9b98c; background: rgba(230, 167, 90, .08); }
 
 /* ---- layout ---- */

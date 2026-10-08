@@ -146,6 +146,21 @@ test('every name gets its own coloured vinyl', async () => {
   assert.match(html, new RegExp(`Pressed on.*${pressing('Ada Okoro').colourway.name}`, 's'));
 });
 
+test('cult legends get their own section, badge and Legend Edition record', async () => {
+  const html = await (await get('/artists')).text();
+  const legendsAt = html.indexOf('Cult legends</h2>');
+  const emergingAt = html.indexOf('Emerging artists</h2>');
+  assert.ok(legendsAt > 0 && emergingAt > legendsAt, 'legends section comes first');
+  assert.ok(html.slice(legendsAt, emergingAt).includes('The Velvet Orchard'));
+  assert.ok(!html.slice(emergingAt).includes('The Velvet Orchard'));
+  const page = await (await get('/artists/the-velvet-orchard')).text();
+  assert.match(page, /chip-legend/);
+  assert.match(page, /LEGEND EDITION/);
+  assert.doesNotMatch(await (await get('/artists/ada-okoro')).text(), /LEGEND EDITION/);
+  assert.match(await (await get('/art/the-velvet-orchard.svg')).text(), /Legend Edition/);
+  assert.match(await (await get('/llms.txt')).text(), /The Velvet Orchard\]\([^)]+\): cult legend/);
+});
+
 test('artwork is deterministic and distinct', () => {
   assert.equal(artwork('Ada Okoro'), artwork('Ada Okoro'));
   assert.notEqual(artwork('Ada Okoro'), artwork('Marlowe Grey'));

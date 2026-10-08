@@ -2,7 +2,7 @@
 
 **TAM began as a place. TAM is becoming a network.**
 
-TAM.TV is the digital home of TAM (Temple of Art and Music) and TAM Festival. It is a live music and media platform that turns each night at TAM into content that lasts: performance films, interviews, artist pages and stories. Search engines and AI systems can read all of it, and the audience it builds belongs to TAM, not to a social platform.
+TAM.TV is the digital home of TAM (Temple of Art and Music) and TAM Festival, which hosts emerging artists and cult legends alike. It is a live music and media platform that turns each night at TAM into content that lasts: performance films, interviews, artist pages and stories. Search engines and AI systems can read all of it, and the audience it builds belongs to TAM, not to a social platform.
 
 This repository is the **Phase 1 MVP** from the [development brief](docs/BRIEF.md).
 
@@ -53,6 +53,16 @@ To regenerate the logo files: `python3 scripts/extract_logo.py` (needs Pillow an
 ## AI: the Production Agent
 
 `/studio` turns one night into a content package. You pick an artist and an event and paste your notes. Claude then drafts a profile, captions for Instagram, TikTok, YouTube and X, an SEO title and description, clip ideas, interview questions and story angles. The output follows a JSON schema, and a person edits it before anything is published. To switch it on, set `ANTHROPIC_API_KEY` and `ADMIN_TOKEN`. The studio is protected by the token and is not indexed by search engines.
+
+## Cult legends
+
+TAM hosts cult legends as well as emerging artists. Add `"legend": true` to an artist in `content/artists.json` and the site:
+
+- lists them under **Cult legends** on `/artists`, ahead of emerging artists, and first in the homepage's artist row,
+- gives them a gold **Cult legend** badge,
+- presses their record as a **Legend Edition**, with a gold-foil label and a gold rim.
+
+Nights in the **Cult Legends** strand (`cult-legends`) get Legend Edition art too.
 
 ## Content
 
