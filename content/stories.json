@@ -12,7 +12,10 @@
       "TAM.TV is where that continues. Every TAM Festival event now creates a set of things that last: a performance film, clips, an interview, photographs, a written profile and a permanent artist page. The live night is the raw material. TAM.TV turns it into media that can be found, shared and returned to.",
       "TAM isn't leaving the venue. It's leaving the limitations of the venue behind."
     ],
-    "related": { "artists": [], "events": [] }
+    "related": {
+      "artists": [],
+      "events": []
+    }
   },
   {
     "slug": "how-one-night-becomes-a-dozen-stories",
@@ -26,7 +29,10 @@
       "Social platforms carry the clips. Every clip points back to TAM.TV, where the artist's page links their music, their performances and their next appearance.",
       "Instead of event, finished, it becomes event, content, distribution, discovery, audience, data, next event."
     ],
-    "related": { "artists": ["ada-okoro"], "events": ["emerging-artist-night-2026-10-24"] }
+    "related": {
+      "artists": [],
+      "events": []
+    }
   },
   {
     "slug": "danas-documentary",
@@ -39,6 +45,11 @@
       "Some TAM stories are longer than a single night. Dana's documentary is one of them: a film in development that draws on TAM's people, performances and archive.",
       "As the project develops, this page will gather the interviews, clips, archival material and articles it produces, so the story can be followed while it is being made."
     ],
-    "related": { "artists": [], "events": [] }
+    "related": {
+      "artists": [
+        "danagillespie"
+      ],
+      "events": []
+    }
   }
 ]

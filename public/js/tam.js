@@ -131,7 +131,7 @@
       start();
     }
 
-    fetch('/chorus.json').then((r) => r.json()).then((list) => {
+    Promise.all([fetch('/chorus.json').then((r) => r.json()), document.fonts?.ready]).then(([list]) => {
       songs = list;
       resize();
       // Seed the screen so it isn't empty on arrival.
@@ -170,6 +170,36 @@
     }
     const a = e.target.closest('a[href$=".ics"]');
     if (a) track('calendar');
+  });
+
+  // ---- demand: "Bring them back" / "I was there" -------------------------
+  // Works without JS (plain POST); here it updates in place and remembers.
+  const pressed = { get: (k) => { try { return localStorage.getItem(`tam_d_${k}`); } catch { return null; } }, set: (k) => { try { localStorage.setItem(`tam_d_${k}`, '1'); } catch { /* private mode */ } } };
+  document.querySelectorAll('[data-demand]').forEach((form) => {
+    const key = `${form.elements.type.value}:${form.elements.target.value}`;
+    const button = form.querySelector('button');
+    const done = () => { form.classList.add('is-done'); button.textContent = '✓ Counted'; };
+    if (pressed.get(key)) done();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (form.classList.contains('is-done') && !form.elements.email.value) return;
+      button.disabled = true;
+      try {
+        const res = await fetch('/demand', { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        const [one, many] = form.elements.type.value === 'was-there' ? ['person was there', 'people were there'] : ['person wants them back at TAM', 'people want them back at TAM'];
+        form.querySelector('[data-demand-count]').innerHTML = `<strong>${Number(data.count).toLocaleString('en-GB')}</strong> ${data.count === 1 ? one : many}`;
+        pressed.set(key);
+        done();
+        if (form.elements.email.value) { form.elements.email.value = ''; form.elements.consent.checked = false; form.querySelector('[data-demand-count]').insertAdjacentHTML('beforeend', ' · We’ll be in touch.'); }
+        track('click', { path: `${location.pathname}#${form.elements.type.value}` });
+      } catch (err) {
+        form.querySelector('[data-demand-count]').textContent = err.message || 'Something went wrong. Try again?';
+      } finally {
+        button.disabled = false;
+      }
+    });
   });
 
   // ---- nav ---------------------------------------------------------------

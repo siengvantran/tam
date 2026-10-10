@@ -1,38 +1,374 @@
 [
-  {
-    "slug": "night-ferries-live-blues-jam-september",
-    "title": "The Night Ferries — Live at the Great British Blues Jam",
-    "kind": "performance",
-    "sample": true,
-    "artist": "the-night-ferries",
-    "event": "great-british-blues-jam-2026-09-17",
-    "youtubeId": "",
-    "duration": "PT24M",
-    "published": "2026-09-24",
-    "summary": "Full set from the September jam. Add a YouTube ID in content/videos.json to embed the film."
-  },
-  {
-    "slug": "night-ferries-interview",
-    "title": "Why we play the jam — The Night Ferries in conversation",
-    "kind": "interview",
-    "sample": true,
-    "artist": "the-night-ferries",
-    "event": "great-british-blues-jam-2026-09-17",
-    "youtubeId": "",
-    "duration": "PT8M",
-    "published": "2026-09-26",
-    "summary": "Backstage after the set."
-  },
-  {
-    "slug": "tam-transition-short",
-    "title": "Capture the Moment: TAM in transition",
-    "kind": "documentary",
-    "sample": true,
-    "artist": "",
-    "event": "",
-    "youtubeId": "",
-    "duration": "PT4M",
-    "published": "2026-10-01",
-    "summary": "Short film placeholder: six years at the venue, and what comes next."
-  }
+ {
+  "slug": "globetrotting-with-gillespie-episode-20-ft-sieng-van-tran",
+  "youtubeId": "F0fPXrcyn8M",
+  "title": "Globetrotting With Gillespie Episode 20 Ft. Sieng Van Tran",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/home",
+   "/locations/elephant-castle",
+   "/artists/danagillespie/globetrotting-with-gillespie"
+  ]
+ },
+ {
+  "slug": "om-shakti-dana-gillespie-at-sxsw-the-continental-club-austin-tx",
+  "youtubeId": "oF1TEIGJ--Q",
+  "title": "Om Shakti : Dana Gillespie at SXSW : The Continental Club , Austin, TX",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "andy-warhol-bowie-78th-birthday-tribute-by-dana-gillespie",
+  "youtubeId": "14S-mbMlF8w",
+  "title": "Andy Warhol - Bowie 78th Birthday tribute by Dana Gillespie",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/artists/danagillespie/danas-birthday",
+   "/home",
+   "/whats-on"
+  ]
+ },
+ {
+  "slug": "andy-warhol-written-by-david-bowie-sung-by-dana-gillespie-around-my-world-in-six",
+  "youtubeId": "jVXxNIpPhos",
+  "title": "Andy Warhol - Written By David Bowie, Sung By Dana Gillespie (Around My World In Sixty Songs: Song 8",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "danny-aaron-kiss-by-prince",
+  "youtubeId": "0OAyA2pHrK4",
+  "title": "Danny Aaron Kiss by Prince",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "dana-gillespie-i-don-t-know-how-to-love-him-from-jesus-christ-superstar",
+  "youtubeId": "uxwqR6ZJk1o",
+  "title": "Dana Gillespie - I Don't Know How To Love Him from Jesus Christ Superstar",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/artists/danagillespie",
+   "/home"
+  ]
+ },
+ {
+  "slug": "om-shakti-dana-gillespie-75th-birthday-sathya-sai-baba",
+  "youtubeId": "NV8skfECHnU",
+  "title": "Om Shakti - Dana Gillespie 75th Birthday Sathya Sai Baba",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "lenny-beige-lenny-waits-for-all",
+  "youtubeId": "GdPZ1RkwKww",
+  "title": "Lenny Beige - Lenny Waits for All",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-featuring-frances-whately-episode-35",
+  "youtubeId": "O_5c9hwCCa4",
+  "title": "Globetrotting With Gillespie Featuring Frances Whately episode 35",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/",
+   "/home"
+  ]
+ },
+ {
+  "slug": "dana-gillespie-sxsw-journey-and-the-london-blues-band",
+  "youtubeId": "DmAQ0VGONaQ",
+  "title": "Dana Gillespie SXSW Journey & The London Blues Band",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie",
+   "the-london-blues-band"
+  ],
+  "pages": [
+   "/artists",
+   "/artists/danagillespie"
+  ]
+ },
+ {
+  "slug": "move-your-body-close-to-me-dana-gillespie-sxsw-at-the-continental-club-austin-73",
+  "youtubeId": "ygBGBOnM5ug",
+  "title": "Move Your Body Close To Me - Dana Gillespie SXSW at The Continental Club Austin 73:Live at the Tam",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie"
+  ]
+ },
+ {
+  "slug": "dana-gillespie-sxsw",
+  "youtubeId": "G1Vn20eeq1g",
+  "title": "Dana Gillespie SXSW",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie",
+   "/nft"
+  ]
+ },
+ {
+  "slug": "love-potion-no-9-dana-gillespie-bbc-seaside-special-ft-grace-jones",
+  "youtubeId": "FCzu-yFQqQ0",
+  "title": "Love Potion No. 9 - Dana Gillespie BBC Seaside Special ft. Grace Jones",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie"
+  ]
+ },
+ {
+  "slug": "my-man-stands-out-dana-gillespie-and-joachim-palden-trio",
+  "youtubeId": "X8isIibez3A",
+  "title": "My Man Stands Out - Dana Gillespie & Joachim Palden Trio",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/locations/austria/innsbruck"
+  ]
+ },
+ {
+  "slug": "come-on-if-you-re-coming-dana-gillespie-and-joachim-palden-live-at-the-piano-inn",
+  "youtubeId": "wl8keEe-RsI",
+  "title": "Come On (If You're Coming) - Dana Gillespie & Joachim Palden Live at The Piano Innsbruck",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/locations/austria/innsbruck"
+  ]
+ },
+ {
+  "slug": "the-matrix-white-rabbit-in-the-age-of-ai-a-new-era-of-music-awaits-you-re-invite",
+  "youtubeId": "LrsAFKUatxo",
+  "title": "The Matrix White Rabbit in the age of AI - A New Era of Music Awaits: You're Invited! 🎶",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/nft"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-episode-34-ft-ben-taylor",
+  "youtubeId": "FoW8WAtbFBs",
+  "title": "Globetrotting With Gillespie Episode 34 Ft. Ben Taylor",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "indie-night",
+  "youtubeId": "bSD3DyCerCI",
+  "title": "Indie Night",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "we-share-the-same-sky-deep-pockets-dana-gillespie-and-the-london-blues-band",
+  "youtubeId": "g_LJWez5H_I",
+  "title": "We Share The Same Sky - Deep Pockets, Dana Gillespie & The London Blues Band",
+  "kind": "performance",
+  "show": null,
+  "artists": [
+   "danagillespie",
+   "the-london-blues-band"
+  ],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-and-mike-vernon",
+  "youtubeId": "XsoC3PRtXvY",
+  "title": "Globetrotting With Gillespie and Mike Vernon",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "singers-live-at-the-tam",
+  "youtubeId": "trFmGoXcLMw",
+  "title": "Singers Live at The TAM",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "angels-the-theatrery",
+  "youtubeId": "NlsLHD4oqvs",
+  "title": "Angels @ The Theatrery",
+  "kind": "performance",
+  "show": null,
+  "artists": [],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-episode-7-featuring-dino-baptise",
+  "youtubeId": "BxEJsR32fSM",
+  "title": "Globetrotting With Gillespie Episode 7 Featuring Dino Baptise",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie",
+   "dino-baptiste"
+  ],
+  "pages": [
+   "/tv"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-episode-15-ft-marcalmondofficial",
+  "youtubeId": "h2XeMhd1FN8",
+  "title": "Globetrotting With Gillespie Episode 15 Ft. @MarcAlmondOfficial",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie/globetrotting-with-gillespie"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-ft-nick-mason-cbe-s01e27",
+  "youtubeId": "oSrKM3ythm0",
+  "title": "Globetrotting With Gillespie Ft. Nick Mason CBE S01E27",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie/globetrotting-with-gillespie"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-ft-sir-tim-rice-episode-21",
+  "youtubeId": "T5SqHJ-cuq0",
+  "title": "Globetrotting With Gillespie Ft. Sir Tim Rice - Episode 21",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie/globetrotting-with-gillespie"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-ft-mark-wardel-episode-45",
+  "youtubeId": "RbO-ks5Ebh0",
+  "title": "Globetrotting With Gillespie Ft. Mark Wardel Episode 45",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie",
+   "mark-wardel"
+  ],
+  "pages": [
+   "/artists/mark-wardel"
+  ]
+ },
+ {
+  "slug": "globetrotting-with-gillespie-ft-piqued-jacks-episode-42-eurovision-london-party",
+  "youtubeId": "HmFti-Qr1Vs",
+  "title": "Globetrotting With Gillespie Ft. Piqued Jacks Episode 42 - Eurovision London Party at The Outernet",
+  "kind": "episode",
+  "show": "globetrotting-with-gillespie",
+  "artists": [
+   "danagillespie"
+  ],
+  "pages": [
+   "/artists/danagillespie/globetrotting-with-gillespie/piqued-jacks"
+  ]
+ }
 ]
