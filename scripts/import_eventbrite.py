@@ -140,6 +140,10 @@ def main(src):
     raw = json.load(open(src, encoding="utf-8"))
     events_in = raw["past"] + raw.get("upcoming", [])
     acts = load_performers(ROOT / "scripts" / "sources" / "performers.txt")
+    # Names TAM asked to remove: drop them and every night that names them.
+    excluded = [l.strip() for l in (ROOT / "scripts" / "sources" / "excluded.txt").read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")]
+    excluded_rx = [re.compile(r"(?<![\w])" + re.escape(n) + r"(?![\w])", re.I) for n in excluded]
+    acts = [a for a in acts if not any(rx.search(a["name"]) for rx in excluded_rx)]
 
     events, used = [], set()
     for e in sorted(events_in, key=lambda e: (e["start_date"], e.get("start_time") or "")):
@@ -173,6 +177,10 @@ def main(src):
         if count[ev["slug"]] > 1:
             ev["slug"] = f"{ev['slug']}-{ev['id'][-4:]}"
 
+    removed_events = [ev for ev in events if any(rx.search(ev["title"]) for rx in excluded_rx)]
+    events = [ev for ev in events if ev not in removed_events]
+    removed_paths = sorted({f"/artists/{slugify(n)}" for n in excluded} | {f"/events/{ev['slug']}" for ev in removed_events})
+
     perf = []
     for a in acts:
         mine = [ev for ev in events if a["slug"] in ev["performers"]]
@@ -199,11 +207,13 @@ def main(src):
     OUT.mkdir(parents=True, exist_ok=True)
     dump = lambda name, obj: (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     dump("events.json", events)
+    dump("removed.json", removed_paths)
     dump("performers.json", perf)
     dump("series.json", series)
     dump("venues.json", [{"slug": k, **{x: y for x, y in v.items() if x != "postcodes"}} for k, v in VENUES.items()])
 
     linked = sum(1 for ev in events if ev["performers"])
+    print(f"removed {len(removed_events)} nights naming: {', '.join(excluded)}")
     print(f"{len(events)} events, {sum(1 for p in perf if p['appearances'])} performers with appearances, {len(series)} series; "
           f"{linked} events linked to at least one performer")
     unmatched = [p["name"] for p in perf if not p["appearances"]]

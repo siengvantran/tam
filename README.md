@@ -78,7 +78,7 @@ python3 scripts/crawl_oldsite.py /tmp/oldsite.json
 python3 scripts/import_oldsite.py /tmp/oldsite.json        # needs Pillow
 ```
 
-Artists are matched to nights by name in the event titles (Eventbrite descriptions are empty), using the hand-curated list in `scripts/sources/performers.txt`. Each line is a name, its aliases, and optionally `@slug=` (keep an old URL), `@note=` (tell namesakes apart, e.g. TAM's pianist David Gray is not the singer-songwriter) and `!legend`. To add or correct an artist, edit that file and re-run the import. Bios and links go in `content/artists.json`, keyed by slug.
+Artists are matched to nights by name in the event titles (Eventbrite descriptions are empty), using the hand-curated list in `scripts/sources/performers.txt`. Each line is a name, its aliases, and optionally `@slug=` (keep an old URL), `@note=` (tell namesakes apart, when a TAM artist shares a name with someone famous) and `!legend`. To add or correct an artist, edit that file and re-run the import. Bios and links go in `content/artists.json`, keyed by slug.
 
 ## The logo
 

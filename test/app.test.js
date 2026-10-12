@@ -104,7 +104,6 @@ test('the archive holds the Eventbrite history', () => {
   assert.ok(dana.legend);
   assert.ok(dana.appearances >= 40);
   assert.ok(q.eventsFor('danagillespie').every((e) => /Dana/i.test(e.title)), 'every Dana night names her');
-  assert.equal(q.artist('david-gray').note.includes('not the singer-songwriter'), true);
 });
 
 test('an artist page is a full record of their nights', async () => {
@@ -440,5 +439,22 @@ test('venue pages drop the old "7 days a week" and opening hours', async () => {
   for (const p of ['/locations', '/locations/elephant-castle']) {
     const html = await (await get(p)).text();
     assert.doesNotMatch(html, /7 days a week|Opening Times|Andrea Rasca/i, p);
+  }
+});
+
+test('artists TAM asked to remove are gone everywhere', async () => {
+  const rx = /mark banks|samuel virgo|stuffy and the fuses|david gray/i;
+  for (const slug of ['mark-banks', 'samuel-virgo', 'stuffy-and-the-fuses', 'david-gray']) {
+    assert.equal(q.artist(slug), undefined, slug);
+    const res = await get(`/artists/${slug}`);
+    assert.equal(res.status, 410, slug);
+    assert.doesNotMatch(await res.text(), rx);
+  }
+  assert.ok(!c.events.some((e) => rx.test(e.title)), 'no nights name them');
+  // A removed night's old URL is gone too.
+  const old = c.removed.size && [...c.removed].find((p) => p.startsWith('/events/'));
+  assert.equal((await get(old)).status, 410);
+  for (const p of ['/artists', '/sitemap.xml', '/llms.txt', '/graph.json', '/archive/2022', '/archive/2023']) {
+    assert.doesNotMatch(await (await get(p)).text(), rx, p);
   }
 });

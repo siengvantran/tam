@@ -102,39 +102,6 @@
   ]
  },
  {
-  "slug": "mark-banks",
-  "name": "Mark Banks",
-  "legend": false,
-  "appearances": 18,
-  "first": "2022-09-15",
-  "last": "2023-12-21",
-  "genres": [
-   "blues",
-   "jazz"
-  ],
-  "venues": [
-   "canary-wharf",
-   "elephant-castle",
-   "smithfield"
-  ]
- },
- {
-  "slug": "dj-rwanda",
-  "name": "DJ Rwanda",
-  "legend": false,
-  "appearances": 16,
-  "first": "2022-07-24",
-  "last": "2023-03-18",
-  "genres": [
-   "jazz",
-   "latin",
-   "blues"
-  ],
-  "venues": [
-   "canary-wharf"
-  ]
- },
- {
   "slug": "mazza",
   "name": "Mazza",
   "legend": false,
@@ -165,6 +132,22 @@
   ],
   "venues": [
    "elephant-castle",
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "dj-rwanda",
+  "name": "DJ Rwanda",
+  "legend": false,
+  "appearances": 15,
+  "first": "2022-07-24",
+  "last": "2023-03-18",
+  "genres": [
+   "latin",
+   "jazz",
+   "blues"
+  ],
+  "venues": [
    "canary-wharf"
   ]
  },
@@ -223,22 +206,6 @@
   ]
  },
  {
-  "slug": "david-gray",
-  "name": "David Gray",
-  "legend": false,
-  "note": "Pianist at TAM's jazz jams and classical piano nights (not the singer-songwriter of the same name).",
-  "appearances": 13,
-  "first": "2021-07-07",
-  "last": "2023-03-19",
-  "genres": [
-   "jazz"
-  ],
-  "venues": [
-   "canary-wharf",
-   "elephant-castle"
-  ]
- },
- {
   "slug": "the-london-blues-band",
   "name": "The London Blues Band",
   "legend": false,
@@ -253,37 +220,6 @@
    "elephant-castle",
    "mayfair",
    "elsewhere"
-  ]
- },
- {
-  "slug": "yaz",
-  "name": "YAZ",
-  "legend": false,
-  "appearances": 13,
-  "first": "2022-08-27",
-  "last": "2023-08-11",
-  "genres": [],
-  "venues": [
-   "elephant-castle",
-   "canary-wharf",
-   "smithfield",
-   "dalston"
-  ]
- },
- {
-  "slug": "alan-weekes",
-  "name": "Alan Weekes",
-  "legend": false,
-  "appearances": 12,
-  "first": "2021-07-07",
-  "last": "2023-12-19",
-  "genres": [
-   "jazz",
-   "reggae"
-  ],
-  "venues": [
-   "canary-wharf",
-   "elephant-castle"
   ]
  },
  {
@@ -352,6 +288,21 @@
   ]
  },
  {
+  "slug": "yaz",
+  "name": "YAZ",
+  "legend": false,
+  "appearances": 12,
+  "first": "2022-08-27",
+  "last": "2023-08-11",
+  "genres": [],
+  "venues": [
+   "elephant-castle",
+   "smithfield",
+   "canary-wharf",
+   "dalston"
+  ]
+ },
+ {
   "slug": "rob-picazo",
   "name": "Rob Picazo",
   "legend": false,
@@ -366,22 +317,6 @@
    "canary-wharf",
    "elephant-castle",
    "dalston"
-  ]
- },
- {
-  "slug": "the-remedy",
-  "name": "The Remedy",
-  "legend": false,
-  "appearances": 11,
-  "first": "2022-11-11",
-  "last": "2023-12-21",
-  "genres": [
-   "blues"
-  ],
-  "venues": [
-   "elephant-castle",
-   "canary-wharf",
-   "smithfield"
   ]
  },
  {
@@ -2335,6 +2270,21 @@
   ]
  },
  {
+  "slug": "alan-weekes",
+  "name": "Alan Weekes",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-12-19",
+  "last": "2023-12-19",
+  "genres": [
+   "jazz",
+   "reggae"
+  ],
+  "venues": [
+   "elephant-castle"
+  ]
+ },
+ {
   "slug": "alice-phelps",
   "name": "Alice Phelps",
   "legend": false,
@@ -3374,18 +3324,6 @@
   ]
  },
  {
-  "slug": "samuel-virgo",
-  "name": "Samuel Virgo",
-  "legend": false,
-  "appearances": 1,
-  "first": "2025-12-03",
-  "last": "2025-12-03",
-  "genres": [],
-  "venues": [
-   "elephant-castle"
-  ]
- },
- {
   "slug": "sassy-hammersley",
   "name": "Sassy Hammersley",
   "legend": false,
@@ -3500,18 +3438,6 @@
   ]
  },
  {
-  "slug": "stuffy-and-the-fuses",
-  "name": "Stuffy And The Fuses",
-  "legend": false,
-  "appearances": 1,
-  "first": "2023-12-16",
-  "last": "2023-12-16",
-  "genres": [],
-  "venues": [
-   "elephant-castle"
-  ]
- },
- {
   "slug": "tamara-barschak",
   "name": "Tamara Barschak",
   "legend": false,
@@ -3608,6 +3534,20 @@
   "genres": [
    "jazz",
    "funk"
+  ],
+  "venues": [
+   "canary-wharf"
+  ]
+ },
+ {
+  "slug": "the-remedy",
+  "name": "The Remedy",
+  "legend": false,
+  "appearances": 1,
+  "first": "2023-01-07",
+  "last": "2023-01-07",
+  "genres": [
+   "blues"
   ],
   "venues": [
    "canary-wharf"

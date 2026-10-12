@@ -815,6 +815,14 @@ export function studio(ctx, { aiEnabled }) {
   return layout(ctx, { title: 'Studio', path: '/studio', body, noindex: true });
 }
 
+export function gone(ctx) {
+  const body = h`<header class="page-head narrow center">
+  <h1>This page has been removed.</h1>
+  <p><a class="btn" href="/whats-on">What’s on</a> <a class="btn btn-ghost" href="/artists">Artists</a></p>
+</header>`;
+  return layout(ctx, { title: 'Removed', path: ctx.path, body, noindex: true });
+}
+
 export function notFound(ctx) {
   const body = h`<header class="page-head narrow center">
   ${raw(artwork(ctx.path, { size: 220, label: false }))}

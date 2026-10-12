@@ -65,8 +65,10 @@ export function loadContent() {
   });
 
   const videos = read('videos');
+  // Pages taken down at TAM's request: answered with 410 Gone.
+  const removed = new Set(read('archive/removed'));
   const c = {
-    site, venues, series, legacy, legacyBy, events, artists, videos,
+    site, venues, series, legacy, legacyBy, events, artists, videos, removed,
     stories: read('stories').sort((a, b) => b.published.localeCompare(a.published)),
     listen: read('listen'),
     chorus: read('chorus'),

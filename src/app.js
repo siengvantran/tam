@@ -178,6 +178,7 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         await ready;
         const q = ctx.q;
         if (MOVED[p]) return moved(res, MOVED[p]);
+        if (c.removed.has(p)) return page(views.gone(ctx), 410);
         if ((match = m(/^\/watch\/([a-z0-9-]+)$/))) return moved(res, '/tv');
         if (p === '/') return page(views.home(ctx));
         if (p === '/whats-on') return page(views.whatsOn(ctx));
