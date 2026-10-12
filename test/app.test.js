@@ -469,7 +469,7 @@ test('the Best Christmas Ever: Dana Gillespie’s show opens with the Golden Hou
   assert.match(html, /The Golden Hour/);
   assert.match(html, /href="\/the-best-christmas-ever">TAM Christmas Festival/);
   assert.doesNotMatch(html, /Tickets on Eventbrite|href=""/, 'a TAM-only night has no Eventbrite link');
-  assert.match(html, /Tickets soon/);
+  assert.match(html, /Book early, pay less/);
   const ev = ldOf(html).find((n) => n['@type'] === 'MusicEvent');
   assert.ok(ev.superEvent.some((s) => s['@type'] === 'Festival'));
   // Juniors: it shows on the Academy page too.
@@ -489,14 +489,59 @@ test('the Christmas festival landing page lists its shows and plays the song', a
   assert.ok(fest.subEvent.length >= 1);
   // Promoted from the home and What's on pages while it has shows coming up.
   for (const p of ['/', '/whats-on']) assert.match(await (await get(p)).text(), /href="\/the-best-christmas-ever"/, p);
-  // Opening sales in the box office swaps "tickets soon" for the booking form.
-  const cookie = await staff();
-  await form('/box-office/e/dana-gillespie-the-best-christmas-ever-2026-12-16/config', { open: 'on', type0_name: 'Christmas ticket', type0_price: '0' }, { cookie });
-  const page = await (await get('/events/dana-gillespie-the-best-christmas-ever-2026-12-16')).text();
-  assert.match(page, /Book tickets/);
-  assert.doesNotMatch(page, /Tickets soon/);
 });
 
 test('festivals are validated', () => {
   assert.throws(() => validate({ ...c, events: [...c.events, { ...c.events[0], slug: 'x-1', festival: 'nope' }] }), /unknown festival "nope"/);
+});
+
+test('Christmas tickets: the price steps up by date or when a tier sells out, £30 the week before', async () => {
+  const slug = 'dana-gillespie-the-best-christmas-ever-2026-12-16';
+  const { createBoxOffice } = await import('../src/lib/tickets.js');
+  const dir = mkdtempSync(path.join(tmpdir(), 'tam-ladder-'));
+  let t = Date.parse('2026-10-12T12:00:00Z');
+  const office = createBoxOffice({ dataDir: dir, now: () => t, schedules: { [slug]: q.event(slug).pricing } });
+  const price = () => office.offer(slug, { paymentsEnabled: true })?.types[0].price;
+  assert.equal(price(), 1500, 'Early Bird');
+  assert.equal(office.offer(slug, { paymentsEnabled: false }), null, 'paid tickets wait for Stripe');
+  // The first 50 go at the Early Bird price; then it's Advent, even in October.
+  const book = (qty) => office.book({ event: slug, typeId: 'ticket', qty, name: 'A', email: 'a@example.com' }, { paymentsEnabled: true });
+  for (let i = 0; i < 6; i++) assert.ok(book(8).order);
+  assert.match(book(3).error, /Only 2 left at the Early Bird price/);
+  const last = book(2).order;
+  assert.equal(last.total, 3000);
+  assert.equal(last.typeName, 'Christmas ticket (Early Bird)');
+  assert.equal(price(), 2000, 'Advent once the Early Birds are gone');
+  // By date.
+  t = Date.parse('2026-11-29T23:59:00Z'); assert.equal(price(), 2000);
+  t = Date.parse('2026-11-30T00:00:00Z'); assert.equal(price(), 2500, 'Last Orders');
+  t = Date.parse('2026-12-09T00:00:00Z'); assert.equal(price(), 3000, 'the week before: door price');
+  t = Date.parse('2026-12-16T18:00:00Z'); assert.equal(price(), 3000);
+  // Staff can still close sales.
+  await office.setConfig(slug, { open: false, capacity: null });
+  assert.equal(office.offer(slug, { paymentsEnabled: true }), null);
+  await office.flush();
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('the Christmas show page shows the price ladder and its offers', async () => {
+  const slug = 'dana-gillespie-the-best-christmas-ever-2026-12-16';
+  const html = await (await get(`/events/${slug}`)).text();
+  assert.match(html, /aria-current="true">\s*<span class="ladder-name">Early Bird<\/span>\s*<span class="ladder-price">£15/);
+  assert.match(html, /save <strong>£15<\/strong> on the door price/);
+  assert.match(html, /\d+ left at this price/);
+  assert.match(html, /Christmas ticket <span class="chip">Early Bird price/);
+  const offers = ldOf(html).find((n) => n['@type'] === 'MusicEvent').offers;
+  assert.deepEqual(offers.map((o) => o.price), ['15.00', '20.00', '25.00', '30.00']);
+  assert.equal(offers[3].validFrom, '2026-12-09T00:00:00+00:00');
+  // The box office shows the schedule and what each step has sold.
+  const bo = await (await get(`/box-office/e/${slug}`, { headers: { cookie: await staff() } })).text();
+  assert.match(bo, /sells on a price schedule/);
+  assert.match(bo, /On the door: £30/);
+});
+
+test('price schedules are validated', () => {
+  const e = q.event('dana-gillespie-the-best-christmas-ever-2026-12-16');
+  const bad = { ...e, slug: 'x-2', pricing: { tiers: [{ id: 'a', price: 10.5 }, { id: 'a', price: 1000 }] } };
+  assert.throws(() => validate({ ...c, events: [...c.events, bad] }), /whole pence|unique id|never ends/);
 });

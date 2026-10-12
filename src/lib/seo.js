@@ -80,7 +80,13 @@ export function eventLD(site, e, q) {
       e.festival && q.festival(e.festival) && { '@type': 'Festival', '@id': abs(site, `${q.festival(e.festival).path}#festival`), name: q.festival(e.festival).name },
     ].filter(Boolean),
     performer: e.performers.map((s) => ({ '@type': 'MusicGroup', '@id': abs(site, `${paths.artist(s)}#artist`), name: q.artist(s)?.name })),
-    offers: upcoming && e.url ? { '@type': 'Offer', url: e.url, availability: 'https://schema.org/InStock', ...(e.free ? { price: 0, priceCurrency: 'GBP' } : {}) } : undefined,
+    offers: upcoming && e.pricing
+      // A price schedule: one Offer per step, each valid until the next begins.
+      ? e.pricing.tiers.map((t, i) => ({
+        '@type': 'Offer', name: t.name, url: abs(site, paths.event(e.slug)), price: (t.price / 100).toFixed(2), priceCurrency: 'GBP',
+        validFrom: i ? e.pricing.tiers[i - 1].until : undefined, validThrough: t.until, availability: 'https://schema.org/InStock',
+      }))
+      : upcoming && e.url ? { '@type': 'Offer', url: e.url, availability: 'https://schema.org/InStock', ...(e.free ? { price: 0, priceCurrency: 'GBP' } : {}) } : undefined,
     sameAs: e.url || undefined,
     description: e.summary,
   });

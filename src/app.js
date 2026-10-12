@@ -107,7 +107,7 @@ const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').repla
 export function createApp({ content = loadContent(), clock = () => new Date(), tvFetcher = fetch, stripe = createStripe(), dataDir = DATA_DIR } = {}) {
   const c = content;
   const tv = createTv({ channelId: c.site.youtubeChannelId, archive: c.videos, fetcher: tvFetcher });
-  const office = createBoxOffice({ dataDir, now: () => clock().getTime() });
+  const office = createBoxOffice({ dataDir, now: () => clock().getTime(), schedules: Object.fromEntries(c.events.filter((e) => e.pricing).map((e) => [e.slug, e.pricing])) });
   const payments = () => stripe.enabled;
   // Box office sessions: the cookie holds an HMAC of the token, never the token.
   const boCookie = () => (process.env.ADMIN_TOKEN ? createHmac('sha256', process.env.ADMIN_TOKEN).update('tam-box-office').digest('hex') : null);
@@ -166,7 +166,7 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
     const offerFor = (e) => (ctx.q.isPast(e) ? null : office.offer(e.slug, { paymentsEnabled: payments() }));
     const eventHtml = (e, opts = {}) => {
       const offer = offerFor(e);
-      return views.eventPage(ctx, e, { counts, ticketing: offer ? String(views.ticketForm(ctx, e, offer, opts)) : null });
+      return views.eventPage(ctx, e, { counts, ticketing: offer ? String(views.ticketForm(ctx, e, offer, opts)) : null, ladder: ctx.q.isPast(e) ? null : office.ladder(e.slug) });
     };
     const qr = (text) => QRCode.toString(text, { type: 'svg', margin: 1, color: { dark: '#0b0907', light: '#ffffff' } });
     const page = (html, status = 200) => send(res, status, html);
@@ -350,6 +350,11 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
               types.push({ id, name, price, capacity });
             }
             const capacity = int(body.capacity);
+            if (office.ladder(slug)) {
+              if (capacity != null && (!Number.isInteger(capacity) || capacity < 0)) return redirect(res, `/box-office/e/${slug}?err=bad`);
+              await office.setConfig(slug, { open: body.open === 'on', capacity });
+              return redirect(res, `/box-office/e/${slug}?msg=saved`);
+            }
             if (bad || !types.length || (capacity != null && (!Number.isInteger(capacity) || capacity < 0))) return redirect(res, `/box-office/e/${slug}?err=bad`);
             await office.setConfig(slug, { open: body.open === 'on', capacity, types });
             return redirect(res, `/box-office/e/${slug}?msg=saved`);

@@ -107,6 +107,19 @@ export function validate(c) {
     if (Number.isNaN(Date.parse(e.start))) errors.push(`event ${e.slug}: bad date`);
     if (e.venue !== 'elsewhere' && !venues.has(e.venue)) errors.push(`event ${e.slug}: unknown venue "${e.venue}"`);
     if (e.series && !series.has(e.series)) errors.push(`event ${e.slug}: unknown series "${e.series}"`);
+    if (e.pricing) {
+      const tiers = e.pricing.tiers || [];
+      if (!tiers.length) errors.push(`event ${e.slug}: pricing has no tiers`);
+      const ids = new Set();
+      tiers.forEach((t, i) => {
+        if (!/^[a-z0-9-]+$/.test(t.id || '') || ids.has(t.id)) errors.push(`event ${e.slug}: pricing tier ${i + 1} needs a unique id`);
+        ids.add(t.id);
+        if (!Number.isInteger(t.price) || t.price < 0) errors.push(`event ${e.slug}: pricing tier "${t.id}" price must be whole pence`);
+        if (t.until != null && Number.isNaN(Date.parse(t.until))) errors.push(`event ${e.slug}: pricing tier "${t.id}" has a bad date`);
+        if (i && t.until && tiers[i - 1].until && Date.parse(t.until) <= Date.parse(tiers[i - 1].until)) errors.push(`event ${e.slug}: pricing tiers must end in order`);
+        if (i < tiers.length - 1 && !t.until && t.limit == null) errors.push(`event ${e.slug}: pricing tier "${t.id}" never ends, so later tiers can't start`);
+      });
+    }
     if (e.festival && !festivals.has(e.festival)) errors.push(`event ${e.slug}: unknown festival "${e.festival}"`);
     for (const a of e.performers || []) if (!artists.has(a)) errors.push(`event ${e.slug}: unknown performer "${a}"`);
   }
