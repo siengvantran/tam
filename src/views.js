@@ -336,7 +336,7 @@ ${current.length ? section('Regular nights', chipLinks(current.map((s) => [paths
 
 // ---------------------------------------------------------------- events
 
-export function eventPage(ctx, e, { counts, ticketing }) {
+export function eventPage(ctx, e, { counts, ticketing, ladder }) {
   const { q } = ctx;
   const past = q.isPast(e);
   const venue = q.venue(e.venue);
@@ -362,6 +362,7 @@ export function eventPage(ctx, e, { counts, ticketing }) {
     <p class="cta-row">
       ${past ? (e.url ? h`<a class="btn btn-ghost" href="${e.url}" rel="noopener">The original listing</a>` : '') : h`${ticketing ? '' : e.url ? h`<a class="btn" href="${e.url}" rel="noopener">Tickets on Eventbrite</a> ` : h`<a class="btn" href="#footer-signup">Tickets soon: join the list</a> `}<a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>`}
     </p>
+    ${ladder ? priceLadder(ladder) : ''}
     ${e.programme?.length ? h`<h2>The night</h2><ol class="plain programme">${e.programme.map((x) => h`<li><span class="programme-time">${x.time}</span><div><h3>${x.title}</h3><p>${x.text}</p></div></li>`)}</ol>` : ''}
     ${lineup.length ? h`<h2>On the bill</h2><ul class="plain lineup">${lineup.map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)}</li>`)}</ul>` : ''}
     ${e.genres.length ? chipLinks(e.genres.filter((g) => GENRE_NAMES[g]).map((g) => [paths.genre(g), GENRE_NAMES[g]])) : ''}
@@ -376,6 +377,22 @@ ${alsoBy.length ? section(lineup.length === 1 ? `More from ${lineup[0].name}` : 
     description: `${e.title} at ${venue?.name || 'TAM'}, London on ${longDay(e)}.${lineup.length ? ` With ${lineup.map((a) => a.name).join(', ')}.` : ''}`,
     path: paths.event(e.slug), body, ld: [eventLD(ctx.c.site, e, q)], image: e.image || undefined,
   });
+}
+
+// A night's price schedule: every step, where it is now, and what booking now saves.
+function priceLadder(l) {
+  const cur = l.current;
+  const save = cur && l.door != null ? l.door - cur.price : 0;
+  return h`<section class="price-ladder" aria-labelledby="ladder-h">
+  <h2 id="ladder-h">Book early, pay less</h2>
+  <p>The price goes up as Christmas gets closer${l.door != null ? h`, to ${money(l.door)} in the final week and on the door` : ''}.</p>
+  <ol class="plain ladder">${l.tiers.map((t) => h`<li class="is-${t.state}"${t.state === 'now' ? raw(' aria-current="true"') : ''}>
+    <span class="ladder-name">${t.name}</span>
+    <span class="ladder-price">${money(t.price)}</span>
+    <span class="ladder-note">${t.note || ''}${t.state === 'gone' ? h` · <strong>${t.why === 'sold out' ? 'Sold out' : 'Ended'}</strong>` : ''}${t.state === 'now' ? h` · <strong>On sale now${t.left != null ? h`: ${t.left} left at this price` : ''}</strong>` : ''}</span>
+  </li>`)}</ol>
+  ${cur && save > 0 ? h`<p class="ladder-push">Book now at <strong>${money(cur.price)}</strong> and save <strong>${money(save)}</strong> on the door price.${l.next && cur.until ? h` Goes up to ${money(l.next.price)}${cur.limit != null ? ' when these sell out, or' : ''} at midnight on ${fmtDate(new Date(Date.parse(cur.until) - 1).toISOString(), { weekday: 'long', day: 'numeric', month: 'long' })}: <span class="countdown" data-countdown="${cur.until}"></span>` : ''}</p>` : ''}
+</section>`;
 }
 
 // ---------------------------------------------------------------- artists
@@ -908,9 +925,9 @@ export function ticketForm(ctx, e, offer, { error, values = {} } = {}) {
   <fieldset class="field ticket-types"><legend>Ticket</legend>
     ${offer.types.map((t) => h`<label class="ticket-type${t.left <= 0 ? ' is-out' : ''}">
       <input type="radio" name="type" value="${t.id}"${t.id === checked ? raw(' checked') : ''}${t.left <= 0 ? raw(' disabled') : ''} required>
-      <span class="tt-name">${t.name}</span>
+      <span class="tt-name">${t.name}${t.tierName ? h` <span class="chip">${t.tierName} price</span>` : ''}</span>
       <span class="tt-price">${money(t.price)}</span>
-      <span class="meta">${t.left <= 0 ? 'Sold out' : t.left <= 20 ? `${t.left} left` : ''}</span>
+      <span class="meta">${t.left <= 0 ? 'Sold out' : t.tierLeft != null && t.tierLeft <= 20 ? `${t.tierLeft} left at this price` : t.left <= 20 ? `${t.left} left` : ''}</span>
     </label>`)}
   </fieldset>
   <div class="field-row">
@@ -999,9 +1016,11 @@ export function boxOfficeEvent(ctx, e, { office, paymentsEnabled, message, error
   <h2>Ticket sales</h2>
   <label class="check"><input type="checkbox" name="open"${cfg.open ? raw(' checked') : ''}> On sale on TAM.TV (replaces the Eventbrite button on the night’s page)</label>
   <div class="field"><label for="cap">Room capacity (all ticket types, optional)</label><input id="cap" name="capacity" inputmode="numeric" value="${cfg.capacity ?? ''}"></div>
-  <table class="bo-types"><thead><tr><th>Ticket type</th><th>Price £</th><th>Limit</th></tr></thead><tbody>
+  ${cfg.scheduled ? h`<p class="meta">This night sells on a price schedule (set in <code>content/events.json</code>):</p>
+  <table class="bo-table"><thead><tr><th>Price</th><th></th><th>Sold</th><th></th></tr></thead><tbody>${office.ladder(e.slug).tiers.map((t) => h`<tr class="${t.state === 'gone' ? 'is-dead' : ''}"><td><strong>${t.name}</strong><br><span class="meta">${t.note || ''}</span></td><td>${money(t.price)}</td><td>${office.taken(e.slug, 'ticket', t.id)}${t.limit != null ? ` / ${t.limit}` : ''}</td><td>${t.state === 'now' ? 'Selling now' : t.state === 'gone' ? t.why : ''}</td></tr>`)}</tbody></table>
+  ${office.ladder(e.slug).door != null ? h`<p class="meta">On the door: ${money(office.ladder(e.slug).door)}.</p>` : ''}` : h`<table class="bo-types"><thead><tr><th>Ticket type</th><th>Price £</th><th>Limit</th></tr></thead><tbody>
   ${rows.map((t, i) => h`<tr><td><input name="type${i}_name" value="${t.name}" placeholder="${i ? '' : 'General admission'}"><input type="hidden" name="type${i}_id" value="${t.id}"></td><td><input name="type${i}_price" inputmode="decimal" value="${t.price === '' ? '' : (t.price / 100).toFixed(2)}" placeholder="0"></td><td><input name="type${i}_capacity" inputmode="numeric" value="${t.capacity ?? ''}"></td></tr>`)}
-  </tbody></table>
+  </tbody></table>`}
   ${paymentsEnabled ? '' : h`<p class="muted small">Paid types stay hidden from the public until Stripe is set up.</p>`}
   <button class="btn" type="submit">Save</button>
 </form>

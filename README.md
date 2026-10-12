@@ -57,6 +57,21 @@ Nights that aren't on Eventbrite go in `content/events.json`. They can carry a `
 
 Festivals live in `content/festivals.json`. Each has a landing page at its `path`, an optional `song` (a YouTube ID) played on that page, and a `pastPattern` for earlier nights to list. A night joins a festival with `"festival": "<slug>"`. **To add a show to the TAM Christmas Festival, add a night with `"festival": "tam-christmas-festival"` to `content/events.json`.** It then appears on `/the-best-christmas-ever` (which keeps the old page's text, so the URL keeps its search value), on the home and What's on pages while it's coming up, and in the festival's structured data.
 
+### Price schedules
+
+A night can sell on a price schedule instead of fixed ticket types: add `pricing` to it in `content/events.json`. Each tier has a price in pence and ends at its `until` date or when its `limit` sells out, whichever comes first. The next tier then takes over. A buyer's price is locked in when they book. The night's page shows the whole ladder: the current price, what's gone, how many are left at this price, how much booking now saves on the door price, and a countdown to the next rise. Every tier is also published as an Offer in the structured data.
+
+Dana Gillespie's Best Christmas Ever (16 Dec 2026) is set up like this:
+
+| Tier | Price | Until |
+|---|---|---|
+| Early Bird | £15 | the first 50 tickets, until Sun 1 Nov |
+| Advent | £20 | Advent Sunday, 29 Nov |
+| Last Orders | £25 | Tue 8 Dec |
+| Final week | £30 | from Wed 9 Dec, and £30 on the door |
+
+A scheduled night goes on sale by itself (`"onSale": true`) once Stripe is set up; until then it shows the ladder and "Tickets soon". In the box office, staff can still close sales or set a room capacity, and they can see how many tickets each tier has sold.
+
 ## TAM TV
 
 `/tv` reads TAM's YouTube channel feed (`youtubeChannelId` in `content/site.json`), refreshes it every 30 minutes and plays films in the page. If YouTube can't be reached, it shows the films archived in `content/videos.json`.

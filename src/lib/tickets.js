@@ -8,6 +8,11 @@
 // Free tickets are confirmed at once. Paid tickets are held for 30 minutes
 // while the buyer pays on Stripe Checkout, then confirmed when Stripe says
 // paid (on return to the site, or by webhook if they close the tab).
+//
+// A night can also carry a price schedule in its content ("pricing" in
+// content/events.json): one ticket whose price steps up through tiers, each
+// ending on a date or when its allocation sells out, whichever comes first.
+// The price is fixed when the ticket is booked.
 
 import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -27,7 +32,7 @@ export function ticketCode() {
 const pounds = (pence) => (pence === 0 ? 'Free' : `£${(pence / 100).toFixed(pence % 100 ? 2 : 0)}`);
 export { pounds };
 
-export function createBoxOffice({ dataDir, now = () => Date.now() }) {
+export function createBoxOffice({ dataDir, now = () => Date.now(), schedules = {} }) {
   const configFile = path.join(dataDir, 'box-office.json');
   const logFile = path.join(dataDir, 'orders.jsonl');
   let config = {};
@@ -68,14 +73,53 @@ export function createBoxOffice({ dataDir, now = () => Date.now() }) {
 
   const live = (o) => o.status === 'confirmed' || o.status === 'paid' || (o.status === 'pending' && now() - Date.parse(o.createdAt) < HOLD_MS);
 
-  function taken(event, typeId) {
+  function taken(event, typeId, tierId) {
     let n = 0;
-    for (const o of orders.values()) if (o.event === event && (!typeId || o.type === typeId) && live(o)) n += o.qty;
+    for (const o of orders.values()) if (o.event === event && (!typeId || o.type === typeId) && (!tierId || o.tier === tierId) && live(o)) n += o.qty;
     return n;
   }
 
+  // The settings in force for a night: the box office's, or its price schedule.
+  // On a scheduled night staff can still close sales or set a room capacity.
+  function cfgOf(event) {
+    const sch = schedules[event];
+    if (!sch) return config[event];
+    const saved = config[event];
+    return {
+      open: saved ? saved.open : Boolean(sch.onSale),
+      capacity: saved?.capacity ?? sch.capacity ?? null,
+      types: [{ id: 'ticket', name: sch.name || 'Ticket', capacity: null, schedule: sch }],
+      scheduled: true,
+    };
+  }
+
+  // Where a night is on its price schedule right now.
+  function ladder(event) {
+    const sch = schedules[event];
+    if (!sch) return null;
+    const t = now();
+    let current = -1;
+    const tiers = sch.tiers.map((tier, i) => {
+      const sold = taken(event, 'ticket', tier.id);
+      const expired = tier.until && t >= Date.parse(tier.until);
+      const soldOut = tier.limit != null && sold >= tier.limit;
+      const state = expired || soldOut ? 'gone' : current === -1 ? 'now' : 'later';
+      if (state === 'now') current = i;
+      return { ...tier, state, why: expired ? 'ended' : soldOut ? 'sold out' : null, left: tier.limit != null ? Math.max(0, tier.limit - sold) : null };
+    });
+    return { name: sch.name, door: sch.door ?? null, tiers, current: tiers[current] || null, next: current >= 0 ? tiers[current + 1] || null : null };
+  }
+
+  // A ticket type as it stands now: a scheduled type takes its current tier's price.
+  function resolve(event, type) {
+    if (!type.schedule) return type;
+    const tier = ladder(event).current;
+    if (!tier) return null;
+    return { ...type, price: tier.price, tier: tier.id, tierName: tier.name, tierLeft: tier.left };
+  }
+
   function remaining(event, typeId) {
-    const cfg = config[event];
+    const cfg = cfgOf(event);
     if (!cfg) return 0;
     const type = cfg.types.find((t) => t.id === typeId);
     if (!type) return 0;
@@ -87,21 +131,23 @@ export function createBoxOffice({ dataDir, now = () => Date.now() }) {
 
   return {
     load,
-    config: (event) => config[event] || null,
+    config: (event) => cfgOf(event) || null,
     allConfig: () => config,
+    ladder,
 
     // Public view of what's on sale for a night.
     offer(event, { paymentsEnabled }) {
-      const cfg = config[event];
+      const cfg = cfgOf(event);
       if (!cfg?.open) return null;
       const types = cfg.types
-        .filter((t) => t.price === 0 || paymentsEnabled)
+        .map((t) => resolve(event, t))
+        .filter((t) => t && (t.price === 0 || paymentsEnabled))
         .map((t) => ({ ...t, left: remaining(event, t.id) }));
       return types.length ? { types, soldOut: types.every((t) => t.left <= 0) } : null;
     },
 
     async setConfig(event, { open, capacity, types }) {
-      config = { ...config, [event]: { open: Boolean(open), capacity: capacity ?? null, types } };
+      config = { ...config, [event]: { open: Boolean(open), capacity: capacity ?? null, types: types || [] } };
       await mkdir(dataDir, { recursive: true });
       const tmp = `${configFile}.${process.pid}.tmp`;
       await writeFile(tmp, JSON.stringify(config, null, 1));
@@ -111,17 +157,20 @@ export function createBoxOffice({ dataDir, now = () => Date.now() }) {
     // Reserve tickets. Capacity is checked and claimed synchronously, so two
     // buyers can never take the last ticket at once.
     book({ event, typeId, qty, name, email, marketing }, { paymentsEnabled }) {
-      const cfg = config[event];
+      const cfg = cfgOf(event);
       if (!cfg?.open) return { error: 'Tickets for this night aren’t on sale here.' };
-      const type = cfg.types.find((t) => t.id === typeId);
+      const base = cfg.types.find((t) => t.id === typeId);
+      const type = base && resolve(event, base);
       if (!type || (type.price > 0 && !paymentsEnabled)) return { error: 'Please choose a ticket.' };
       if (!Number.isInteger(qty) || qty < 1 || qty > MAX_PER_ORDER) return { error: `You can book 1 to ${MAX_PER_ORDER} tickets at a time.` };
       const left = remaining(event, typeId);
       if (left < qty) return { error: left ? `Only ${left} left.` : 'Sold out.' };
+      if (type.tierLeft != null && type.tierLeft < qty) return { error: `Only ${type.tierLeft} left at the ${type.tierName} price. Book ${type.tierLeft === 1 ? 'it' : 'those'} now, then the rest at the next price.` };
       let code;
       do code = ticketCode(); while (byCode.has(code));
       const order = {
-        id: randomUUID(), code, event, type: type.id, typeName: type.name, qty,
+        id: randomUUID(), code, event, type: type.id, typeName: type.tierName ? `${type.name} (${type.tierName})` : type.name, qty,
+        ...(type.tier ? { tier: type.tier } : {}),
         unitPrice: type.price, total: type.price * qty, name, email, marketing: Boolean(marketing),
         status: type.price === 0 ? 'confirmed' : 'pending', createdAt: new Date(now()).toISOString(),
       };
