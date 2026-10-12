@@ -53,7 +53,7 @@ Bookings are an append-only log (`data/orders.jsonl`) and settings live in `data
 
 ## Festivals and hand-made nights
 
-Nights that aren't on Eventbrite go in `content/events.json`. They can carry a `summary`, a `programme` (time, title, text) and `"academy": true`, which lists the night on `/academy`. A night with no Eventbrite `url` shows "Tickets soon" until staff open sales in the box office.
+Nights that aren't on Eventbrite go in `content/events.json`. They can carry a `summary`, a `programme` (time, title, text), `highlights` (title, text, optional links; shown as "Why you'll want to be there" with a booking button) and `"academy": true`, which lists the night on `/academy`. A night with no Eventbrite `url` shows "Tickets soon" until staff open sales in the box office.
 
 Festivals live in `content/festivals.json`. Each has a landing page at its `path`, an optional `song` (a YouTube ID) played on that page, and a `pastPattern` for earlier nights to list. A night joins a festival with `"festival": "<slug>"`. **To add a show to the TAM Christmas Festival, add a night with `"festival": "tam-christmas-festival"` to `content/events.json`.** It then appears on `/the-best-christmas-ever` (which keeps the old page's text, so the URL keeps its search value), on the home and What's on pages while it's coming up, and in the festival's structured data.
 

@@ -545,3 +545,15 @@ test('price schedules are validated', () => {
   const bad = { ...e, slug: 'x-2', pricing: { tiers: [{ id: 'a', price: 10.5 }, { id: 'a', price: 1000 }] } };
   assert.throws(() => validate({ ...c, events: [...c.events, bad] }), /whole pence|unique id|never ends/);
 });
+
+test('the Christmas show sells itself: highlights about Dana and the band, every link works', async () => {
+  const slug = 'dana-gillespie-the-best-christmas-ever-2026-12-16';
+  const html = await (await get(`/events/${slug}`)).text();
+  assert.match(html, /Why you’ll want to be there/);
+  for (const x of q.event(slug).highlights) {
+    assert.ok(html.includes(x.title.replace(/&/g, '&amp;')), x.title);
+    for (const [, href] of x.links || []) assert.equal((await get(href)).status, 200, href);
+  }
+  assert.match(html, /Andy Warhol/);
+  assert.match(html, /href="#book">Book now at £15/);
+});
