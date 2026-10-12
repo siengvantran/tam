@@ -3,12 +3,7 @@
 # Aliases are matched case-insensitively as whole words in event titles.
 Dana Gillespie | Dana & Dino | @slug=danagillespie | !legend
 Dino Baptiste | Dino Baptise | Dino's Christmas | Dana & Dino's
-Hans Theessink | !legend
 Harry Whitty
-Albie Salter
-Gemma Schito
-Iris
-Mark Wardel
 Holly Penfield | !legend
 The London Blues Band | London Blues Band
 Todd Sharpville | !legend

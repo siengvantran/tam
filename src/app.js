@@ -1,13 +1,17 @@
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { timingSafeEqual, createHash } from 'node:crypto';
+import { timingSafeEqual, createHash, createHmac } from 'node:crypto';
+import QRCode from 'qrcode';
 
 import { loadContent, queries } from './lib/content.js';
 import { sitemap, robots, llmsTxt, graph, paths } from './lib/seo.js';
 import { GENRE_NAMES } from './lib/content.js';
 import { artwork } from './lib/brand.js';
-import { append, validateSubmission, validateSignup, validateDemand, demandCounts } from './lib/store.js';
+import { append, validateSubmission, validateSignup, validateDemand, demandCounts, DATA_DIR } from './lib/store.js';
+import { createTv } from './lib/youtube.js';
+import { createBoxOffice } from './lib/tickets.js';
+import { createStripe } from './lib/stripe.js';
 import { aiEnabled, productionPackage } from './lib/ai.js';
 import * as views from './views.js';
 
@@ -34,7 +38,7 @@ const CSP = [
   "img-src 'self' data: https://i.ytimg.com https://img.evbuc.com",
   'frame-src https://www.youtube-nocookie.com',
   "connect-src 'self'",
-  "form-action 'self'",
+  "form-action 'self' https://checkout.stripe.com",
   "base-uri 'self'",
   "frame-ancestors 'none'",
 ].join('; ');
@@ -43,7 +47,7 @@ function parseCookies(header = '') {
   return Object.fromEntries(header.split(';').map((p) => p.trim().split('=')).filter(([k]) => k).map(([k, ...v]) => [k, decodeURIComponent(v.join('='))]));
 }
 
-async function readBody(req) {
+async function readRaw(req) {
   let size = 0;
   const chunks = [];
   for await (const chunk of req) {
@@ -51,7 +55,11 @@ async function readBody(req) {
     if (size > MAX_BODY) { const e = new Error('Payload too large'); e.status = 413; e.expose = true; throw e; }
     chunks.push(chunk);
   }
-  const text = Buffer.concat(chunks).toString('utf8');
+  return Buffer.concat(chunks).toString('utf8');
+}
+
+async function readBody(req) {
+  const text = await readRaw(req);
   const type = req.headers['content-type'] || '';
   if (type.includes('application/json')) {
     try { return JSON.parse(text || '{}'); } catch { const e = new Error('Invalid JSON'); e.status = 400; e.expose = true; throw e; }
@@ -88,11 +96,24 @@ function ics(c, e, venue) {
   ].join('\r\n');
 }
 
-export function createApp({ content = loadContent(), clock = () => new Date() } = {}) {
+const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
+const csvCell = (v) => {
+  let s = String(v ?? '');
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`; // no spreadsheet formulas
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
+const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'ticket';
+
+export function createApp({ content = loadContent(), clock = () => new Date(), tvFetcher = fetch, stripe = createStripe(), dataDir = DATA_DIR } = {}) {
   const c = content;
+  const tv = createTv({ channelId: c.site.youtubeChannelId, archive: c.videos, fetcher: tvFetcher });
+  const office = createBoxOffice({ dataDir, now: () => clock().getTime() });
+  const payments = () => stripe.enabled;
+  // Box office sessions: the cookie holds an HMAC of the token, never the token.
+  const boCookie = () => (process.env.ADMIN_TOKEN ? createHmac('sha256', process.env.ADMIN_TOKEN).update('tam-box-office').digest('hex') : null);
   // Public "Bring them back" / "I was there" totals, loaded once, then kept in memory.
   let counts = new Map();
-  const ready = demandCounts().then((m) => { counts = m; });
+  const ready = Promise.all([demandCounts().then((m) => { counts = m; }), office.load(), tv.ready()]);
   // One press per person per target per day, without storing IPs.
   const recent = new Set();
   let recentDay = '';
@@ -140,7 +161,14 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
     const p = url.pathname.replace(/\/+$/, '') || '/';
     const now = clock();
     const cookies = parseCookies(req.headers.cookie);
-    const ctx = { c, q: queries(c, now), now, path: p, consent: cookies.tam_consent };
+    const ctx = { c, q: queries(c, now), now, path: p, consent: cookies.tam_consent, tv: tv.list() };
+    const isStaff = () => Boolean(boCookie()) && tokenMatches(cookies.tam_bo, boCookie());
+    const offerFor = (e) => (ctx.q.isPast(e) ? null : office.offer(e.slug, { paymentsEnabled: payments() }));
+    const eventHtml = (e, opts = {}) => {
+      const offer = offerFor(e);
+      return views.eventPage(ctx, e, { counts, ticketing: offer ? String(views.ticketForm(ctx, e, offer, opts)) : null });
+    };
+    const qr = (text) => QRCode.toString(text, { type: 'svg', margin: 1, color: { dark: '#0b0907', light: '#ffffff' } });
     const page = (html, status = 200) => send(res, status, html);
     const m = (re) => re.exec(p);
     let match;
@@ -157,7 +185,42 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
           const e = q.event(match[1]);
           if (e) return send(res, 200, ics(c, e, q.venue(e.venue)), 'text/calendar; charset=utf-8', { 'Content-Disposition': `attachment; filename="${e.slug}.ics"` });
         }
-        if ((match = m(/^\/events\/([a-z0-9-]+)$/)) && q.event(match[1])) return page(views.eventPage(ctx, q.event(match[1]), { counts }));
+        if ((match = m(/^\/events\/([a-z0-9-]+)$/)) && q.event(match[1])) return page(eventHtml(q.event(match[1])));
+        if (p === '/academy') return page(views.academy(ctx));
+        if ((match = m(/^\/tickets\/(TAM-[A-Z0-9]{5}-[A-Z0-9]{5})$/))) {
+          let o = office.byCode(match[1]);
+          if (!o) return page(views.notFound(ctx), 404);
+          let message = null;
+          const sid = url.searchParams.get('session_id');
+          if (o.status === 'pending' && sid && payments()) {
+            const session = await stripe.getCheckout(sid);
+            if (session.payment_status === 'paid' && session.metadata?.order === o.id && session.amount_total === o.total) {
+              o = await office.markPaid(o.id, session.id);
+              message = 'Payment received. Enjoy the night!';
+            }
+          } else if (url.searchParams.has('booked')) message = 'You’re booked. See you there!';
+          return page(views.ticketPage(ctx, o, q.event(o.event), { qr: await qr(o.code), message, paymentsEnabled: payments() }));
+        }
+        // ---- box office (staff)
+        if (p === '/box-office' || p.startsWith('/box-office/')) {
+          if (!isStaff()) return page(views.boxOfficeLogin(ctx), p === '/box-office' ? 200 : 401);
+          if (p === '/box-office') {
+            return page(views.boxOfficeHome(ctx, { office, paymentsEnabled: payments(), error: url.searchParams.get('err') === 'notfound' ? 'No ticket with that code.' : null }));
+          }
+          if ((match = m(/^\/box-office\/e\/([a-z0-9-]+)\.csv$/)) && q.event(match[1])) {
+            const rows = [['name', 'email', 'code', 'ticket', 'qty', 'total_gbp', 'status', 'checked_in', 'marketing_ok', 'booked_at']];
+            for (const o of office.ordersFor(match[1])) rows.push([o.name, o.email, o.code, o.typeName, o.qty, (o.total / 100).toFixed(2), office.isLive(o) || o.status !== 'pending' ? o.status : 'expired', o.checkedIn, o.marketing ? 'yes' : 'no', o.createdAt]);
+            return send(res, 200, rows.map((r) => r.map(csvCell).join(',')).join('\r\n'), 'text/csv; charset=utf-8', { 'Content-Disposition': `attachment; filename="${match[1]}-guests.csv"`, 'Cache-Control': 'no-store' });
+          }
+          if ((match = m(/^\/box-office\/e\/([a-z0-9-]+)$/)) && q.event(match[1])) {
+            const msgs = { saved: 'Saved.', cancelled: 'Booking cancelled.' };
+            const errs = { notfound: 'No ticket with that code.', bad: 'Check the ticket types: each needs a name, and prices and limits must be numbers.' };
+            let message = msgs[url.searchParams.get('msg')];
+            const inCode = url.searchParams.get('in');
+            if (inCode) { const o = office.byCode(inCode); if (o) message = `Checked in: ${o.name} (${o.checkedIn} of ${o.qty}).`; }
+            return page(views.boxOfficeEvent(ctx, q.event(match[1]), { office, paymentsEnabled: payments(), message, error: errs[url.searchParams.get('err')] || url.searchParams.get('why') && office.byCode(url.searchParams.get('code')) && `Not checked in: ${url.searchParams.get('why') === 'done' ? 'already checked in' : 'booking not confirmed'}.` }));
+          }
+        }
         if (p === '/artists') return page(views.artists(ctx));
         if ((match = m(/^\/artists\/([a-z0-9-]+)$/i)) && q.artist(match[1])) return page(views.artistPage(ctx, q.artist(match[1]), { counts }));
         if (p === '/archive') return page(views.archive(ctx));
@@ -202,6 +265,103 @@ export function createApp({ content = loadContent(), clock = () => new Date() } 
       }
 
       if (req.method === 'POST') {
+        await ready;
+        // Forms must come from this site.
+        const origin = req.headers.origin;
+        if (origin && origin !== 'null' && new URL(origin).host !== req.headers.host && p !== '/api/stripe/webhook') return send(res, 403, 'Forbidden', 'text/plain; charset=utf-8');
+        const q = ctx.q;
+
+        if ((match = m(/^\/events\/([a-z0-9-]+)\/book$/)) && q.event(match[1])) {
+          const e = q.event(match[1]);
+          const body = await readBody(req);
+          const values = { type: String(body.type || ''), qty: Number(body.qty), name: String(body.name || '').trim().slice(0, 120), email: String(body.email || '').trim().toLowerCase().slice(0, 254), marketing: body.marketing === 'on' };
+          let error = null;
+          if (!offerFor(e)) error = 'Tickets for this night aren’t on sale here.';
+          else if (!values.name) error = 'Please add a name for the door.';
+          else if (!EMAIL.test(values.email)) error = 'Please add a valid email.';
+          else if (body.terms !== 'on') error = 'Please confirm you’ve read the privacy notice.';
+          let result;
+          if (!error) {
+            result = office.book({ event: e.slug, typeId: values.type, qty: values.qty, name: values.name, email: values.email, marketing: values.marketing }, { paymentsEnabled: payments() });
+            error = result.error;
+          }
+          if (error) return page(eventHtml(e, { error, values }), 422);
+          const { order } = result;
+          await result.saved;
+          if (values.marketing) await append('signups.jsonl', { email: values.email, interests: [`event:${e.slug}`], consent: true, source: 'tickets' });
+          if (order.status === 'confirmed') return redirect(res, `/tickets/${order.code}?booked`);
+          const session = await stripe.createCheckout({
+            order, title: `${e.title} — ${order.typeName}`,
+            successUrl: `${c.site.url}/tickets/${order.code}?session_id={CHECKOUT_SESSION_ID}`,
+            cancelUrl: `${c.site.url}/tickets/${order.code}`,
+            now: clock().getTime(),
+          });
+          await office.setSession(order.id, session.id);
+          return redirect(res, session.url);
+        }
+        if ((match = m(/^\/tickets\/(TAM-[A-Z0-9]{5}-[A-Z0-9]{5})\/pay$/))) {
+          const o = office.byCode(match[1]);
+          const e = o && q.event(o.event);
+          if (!o || !e) return page(views.notFound(ctx), 404);
+          if (o.status !== 'pending' || !payments()) return redirect(res, `/tickets/${o.code}`);
+          if (!office.isLive(o)) return page(views.ticketPage(ctx, o, e, { qr: '', message: 'Your 30-minute hold has run out. Please book again from the night’s page.', paymentsEnabled: false }), 410);
+          const session = await stripe.createCheckout({ order: o, title: `${e.title} — ${o.typeName}`, successUrl: `${c.site.url}/tickets/${o.code}?session_id={CHECKOUT_SESSION_ID}`, cancelUrl: `${c.site.url}/tickets/${o.code}`, now: clock().getTime() });
+          await office.setSession(o.id, session.id);
+          return redirect(res, session.url);
+        }
+        if (p === '/api/stripe/webhook') {
+          const raw = await readRaw(req);
+          const event = stripe.verifyWebhook(raw, req.headers['stripe-signature'], { now: clock().getTime() });
+          const session = event.data?.object;
+          if (event.type === 'checkout.session.completed' && session?.payment_status === 'paid') {
+            const o = office.get(session.metadata?.order);
+            if (o && session.amount_total === o.total) await office.markPaid(o.id, session.id);
+          }
+          return json(res, 200, { received: true });
+        }
+        if (p === '/box-office/login') {
+          const body = await readBody(req);
+          if (!boCookie() || !tokenMatches(body.token, process.env.ADMIN_TOKEN)) return page(views.boxOfficeLogin(ctx, { error: boCookie() ? 'That token isn’t right.' : 'The box office isn’t set up: set ADMIN_TOKEN on the server.' }), 401);
+          const secure = req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
+          res.writeHead(303, { Location: '/box-office', 'Set-Cookie': `tam_bo=${boCookie()}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${12 * 3600}${secure}` });
+          return res.end();
+        }
+        if (p.startsWith('/box-office/')) {
+          if (!isStaff()) return page(views.boxOfficeLogin(ctx), 401);
+          const body = await readBody(req);
+          const back = typeof body.back === 'string' && /^\/box-office[\w\-/]*$/.test(body.back) ? body.back : '/box-office';
+          if ((match = m(/^\/box-office\/e\/([a-z0-9-]+)\/config$/)) && q.event(match[1])) {
+            const slug = match[1];
+            const int = (v) => (v === undefined || String(v).trim() === '' ? null : Number.parseInt(v, 10));
+            const types = [];
+            let bad = false;
+            for (let i = 0; i < 4; i++) {
+              const name = String(body[`type${i}_name`] || '').trim().slice(0, 60);
+              const priceRaw = String(body[`type${i}_price`] ?? '').trim().replace(/^£/, '');
+              const capacity = int(body[`type${i}_capacity`]);
+              if (!name) { if (priceRaw || capacity != null) bad = true; continue; }
+              const price = priceRaw === '' ? 0 : Math.round(Number(priceRaw) * 100);
+              if (!Number.isFinite(price) || price < 0 || (capacity != null && (!Number.isInteger(capacity) || capacity < 0))) { bad = true; continue; }
+              let id = String(body[`type${i}_id`] || '') || slugify(name);
+              while (types.some((t) => t.id === id)) id = `${id}-2`;
+              types.push({ id, name, price, capacity });
+            }
+            const capacity = int(body.capacity);
+            if (bad || !types.length || (capacity != null && (!Number.isInteger(capacity) || capacity < 0))) return redirect(res, `/box-office/e/${slug}?err=bad`);
+            await office.setConfig(slug, { open: body.open === 'on', capacity, types });
+            return redirect(res, `/box-office/e/${slug}?msg=saved`);
+          }
+          if (p === '/box-office/checkin') {
+            const r = await office.checkIn(body.code);
+            const target = r.order ? `/box-office/e/${r.order.event}` : back;
+            if (r.error) return redirect(res, r.order ? `${target}?why=${r.order.checkedIn >= r.order.qty ? 'done' : 'status'}&code=${r.order.code}` : `${target}?err=notfound`);
+            return redirect(res, `${target}?in=${r.order.code}`);
+          }
+          if ((match = m(/^\/box-office\/orders\/([0-9a-f-]{36})\/cancel$/)) && office.get(match[1])) {
+            const o = await office.cancel(match[1]);
+            return redirect(res, `/box-office/e/${o.event}?msg=cancelled`);
+          }
+        }
         if (p === '/submit') {
           const body = await readBody(req);
           if (body.website) return redirect(res, '/submit?thanks'); // honeypot

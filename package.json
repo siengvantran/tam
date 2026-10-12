@@ -5,7 +5,9 @@
   "description": "TAM.TV: the location-independent live music and media platform for TAM Festival.",
   "type": "module",
   "main": "server.js",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
@@ -13,6 +15,7 @@
     "check:content": "node -e \"import('./src/lib/content.js').then(m => { m.loadContent(); console.log('content ok'); })\""
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.132.1"
+    "@anthropic-ai/sdk": "^0.132.1",
+    "qrcode": "^1.5.4"
   }
 }
