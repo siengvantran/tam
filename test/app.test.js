@@ -458,3 +458,45 @@ test('artists TAM asked to remove are gone everywhere', async () => {
     assert.doesNotMatch(await (await get(p)).text(), rx, p);
   }
 });
+
+test('the Best Christmas Ever: Dana Gillespie’s show opens with the Golden Hour for the juniors', async () => {
+  const slug = 'dana-gillespie-the-best-christmas-ever-2026-12-16';
+  const e = q.event(slug);
+  assert.equal(e.start, '2026-12-16T19:00:00+00:00');
+  assert.equal(e.festival, 'tam-christmas-festival');
+  assert.deepEqual(e.performers, ['danagillespie', 'the-london-blues-band']);
+  const html = await (await get(`/events/${slug}`)).text();
+  assert.match(html, /The Golden Hour/);
+  assert.match(html, /href="\/the-best-christmas-ever">TAM Christmas Festival/);
+  assert.doesNotMatch(html, /Tickets on Eventbrite|href=""/, 'a TAM-only night has no Eventbrite link');
+  assert.match(html, /Tickets soon/);
+  const ev = ldOf(html).find((n) => n['@type'] === 'MusicEvent');
+  assert.ok(ev.superEvent.some((s) => s['@type'] === 'Festival'));
+  // Juniors: it shows on the Academy page too.
+  assert.match(await (await get('/academy')).text(), new RegExp(slug));
+});
+
+test('the Christmas festival landing page lists its shows and plays the song', async () => {
+  const res = await get('/the-best-christmas-ever');
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  assert.match(html, /youtube-nocookie\.com\/embed\/PJLdrC-1tZw/);
+  assert.match(html, /\/events\/dana-gillespie-the-best-christmas-ever-2026-12-16/);
+  assert.match(html, /Christmas at TAM before/, 'Dana’s earlier Christmas nights are listed');
+  assert.match(html, /Christmas party one to remember/, 'the old page’s text is kept for search');
+  const fest = ldOf(html).find((n) => n['@type'] === 'Festival');
+  assert.equal(fest.name, 'TAM Christmas Festival');
+  assert.ok(fest.subEvent.length >= 1);
+  // Promoted from the home and What's on pages while it has shows coming up.
+  for (const p of ['/', '/whats-on']) assert.match(await (await get(p)).text(), /href="\/the-best-christmas-ever"/, p);
+  // Opening sales in the box office swaps "tickets soon" for the booking form.
+  const cookie = await staff();
+  await form('/box-office/e/dana-gillespie-the-best-christmas-ever-2026-12-16/config', { open: 'on', type0_name: 'Christmas ticket', type0_price: '0' }, { cookie });
+  const page = await (await get('/events/dana-gillespie-the-best-christmas-ever-2026-12-16')).text();
+  assert.match(page, /Book tickets/);
+  assert.doesNotMatch(page, /Tickets soon/);
+});
+
+test('festivals are validated', () => {
+  assert.throws(() => validate({ ...c, events: [...c.events, { ...c.events[0], slug: 'x-1', festival: 'nope' }] }), /unknown festival "nope"/);
+});

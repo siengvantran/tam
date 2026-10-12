@@ -3,7 +3,7 @@ import { logo, artwork, londonTime, daypart } from './lib/brand.js';
 import { pressing } from './lib/vinyl.js';
 import { GENRE_NAMES } from './lib/content.js';
 import {
-  organization, artistLD, eventLD, videoLD, storyLD, venueLD, seriesLD, itemList, jsonLdTag, paths,
+  organization, artistLD, eventLD, festivalLD, videoLD, storyLD, venueLD, seriesLD, itemList, jsonLdTag, paths,
 } from './lib/seo.js';
 
 const NAV = [
@@ -243,6 +243,16 @@ const legacyImages = (images, alt) => (images.length ? h`<div class="gallery">${
 
 const embed = (id, title) => h`<div class="player"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
 
+// Festivals with shows coming up get a band on the home and What's on pages.
+const festivalBands = (ctx) => ctx.c.festivals.filter((f) => ctx.q.eventsInFestival(f.slug).some((e) => !ctx.q.isPast(e))).map((f) => h`<section class="section play-tam festival-band">
+  <div>
+    <p class="eyebrow">${f.name}</p>
+    <h2>${f.title}</h2>
+    <p>${f.lede}</p>
+  </div>
+  <a class="btn" href="${f.path}">See the shows</a>
+</section>`);
+
 // ---------------------------------------------------------------- home
 
 export function home(ctx) {
@@ -270,6 +280,7 @@ export function home(ctx) {
   </div>
 </section>
 
+${festivalBands(ctx)}
 ${upcoming.length ? section('Coming up', h`<div class="grid grid-3">${upcoming.slice(0, 6).map((e) => eventCard(ctx, e))}</div>`, { href: '/whats-on' }) : ''}
 
 <section class="section play-tam academy-band">
@@ -314,6 +325,7 @@ export function whatsOn(ctx) {
   <h1>What’s on at TAM.</h1>
   <p class="lede">Live music, open mics and karaoke at TAM. Book here where tickets are on sale, or on Eventbrite.</p>
 </header>
+${festivalBands(ctx)}
 ${upcoming.length ? [...byDay].map(([d, list]) => section(d, h`<div class="grid grid-3">${list.map((e) => eventCard(ctx, e))}</div>`)) : h`<p>New dates are on the way. <a href="#footer-signup">Join the list</a> to hear first.</p>`}
 ${current.length ? section('Regular nights', chipLinks(current.map((s) => [paths.series(s.slug), s.name]))) : ''}`;
   return layout(ctx, {
@@ -329,6 +341,8 @@ export function eventPage(ctx, e, { counts, ticketing }) {
   const past = q.isPast(e);
   const venue = q.venue(e.venue);
   const series = e.series && q.series(e.series);
+  const festival = e.festival && q.festival(e.festival);
+  const festivalMore = festival ? q.eventsInFestival(festival.slug).filter((x) => x.slug !== e.slug && !q.isPast(x)) : [];
   const lineup = e.performers.map(q.artist).filter(Boolean);
   const sameSeries = series ? q.eventsInSeries(series.slug).filter((x) => x.slug !== e.slug) : [];
   const nearby = sameSeries.filter((x) => Math.abs(Date.parse(x.start) - Date.parse(e.start)) < 120 * 864e5).slice(0, 6);
@@ -338,20 +352,23 @@ export function eventPage(ctx, e, { counts, ticketing }) {
 <article class="detail">
   <div class="detail-art${e.image ? ' detail-photo' : ''}">${eventArt(ctx, e, 360)}</div>
   <div class="detail-copy">
-    <p class="eyebrow">${series ? h`<a href="${paths.series(series.slug)}">${series.name}</a>` : 'TAM'}${past ? ' · From the archive' : ''}</p>
+    <p class="eyebrow">${festival ? h`<a href="${festival.path}">${festival.name}</a>` : series ? h`<a href="${paths.series(series.slug)}">${series.name}</a>` : 'TAM'}${past ? ' · From the archive' : ''}</p>
     <h1>${e.title}</h1>
     <p class="meta big"><time datetime="${e.start}">${longDay(e)}</time> · ${fmtTime(e.start)}</p>
     <p class="meta">${venue ? h`<a href="${paths.venue(venue.slug)}">${venue.name}</a>, ${venue.address}` : e.venueName}</p>
+    ${e.summary ? h`<p class="lede">${e.summary}</p>` : ''}
     ${past ? '' : h`<p class="countdown" data-countdown="${e.start}"></p>`}
     ${past ? '' : raw(ticketing || '')}
     <p class="cta-row">
-      ${past ? h`<a class="btn btn-ghost" href="${e.url}" rel="noopener">The original listing</a>` : h`${ticketing ? '' : h`<a class="btn" href="${e.url}" rel="noopener">Tickets on Eventbrite</a> `}<a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>`}
+      ${past ? (e.url ? h`<a class="btn btn-ghost" href="${e.url}" rel="noopener">The original listing</a>` : '') : h`${ticketing ? '' : e.url ? h`<a class="btn" href="${e.url}" rel="noopener">Tickets on Eventbrite</a> ` : h`<a class="btn" href="#footer-signup">Tickets soon: join the list</a> `}<a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>`}
     </p>
+    ${e.programme?.length ? h`<h2>The night</h2><ol class="plain programme">${e.programme.map((x) => h`<li><span class="programme-time">${x.time}</span><div><h3>${x.title}</h3><p>${x.text}</p></div></li>`)}</ol>` : ''}
     ${lineup.length ? h`<h2>On the bill</h2><ul class="plain lineup">${lineup.map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)}</li>`)}</ul>` : ''}
     ${e.genres.length ? chipLinks(e.genres.filter((g) => GENRE_NAMES[g]).map((g) => [paths.genre(g), GENRE_NAMES[g]])) : ''}
     ${past ? demandForm(ctx, { type: 'was-there', target: e.slug, count: there, label: 'I was there', ask: 'Were you there? Add yourself to the night.' }) : ''}
   </div>
 </article>
+${festival ? section(`The ${festival.name}`, h`${festivalMore.length ? eventList(ctx, festivalMore) : h`<p>${e.title} is part of the ${festival.name}. <a href="${festival.path}">See every show and play “${festival.song?.title || festival.title}”.</a></p>`}`, { href: festival.path, more: `${festival.title} →` }) : ''}
 ${nearby.length ? section(`More ${series.name}`, eventList(ctx, nearby), { href: paths.series(series.slug) }) : ''}
 ${alsoBy.length ? section(lineup.length === 1 ? `More from ${lineup[0].name}` : 'More from these artists', eventList(ctx, alsoBy)) : ''}`;
   return layout(ctx, {
@@ -611,6 +628,48 @@ ${section('More from TAM TV', h`<div class="grid grid-3">${(ctx.tv || []).filter
   return layout(ctx, { title: v.title, description: `${v.title}, on TAM TV from the Temple of Art and Music, London.`, path: paths.video(v.slug), body, ld: [videoLD(c.site, v, q)], ogType: 'video.other', image: `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg` });
 }
 
+// ---------------------------------------------------------------- festivals
+
+// A festival's landing page. Its shows come from the events that name it, so
+// adding a show is one more entry in content/events.json.
+export function festivalPage(ctx, f, legacy) {
+  const { q } = ctx;
+  const shows = q.eventsInFestival(f.slug);
+  const coming = shows.filter((e) => !q.isPast(e));
+  const rx = f.pastPattern ? new RegExp(f.pastPattern, 'i') : null;
+  const before = rx ? q.past().filter((e) => e.festival !== f.slug && rx.test(e.title)) : [];
+  const singer = f.song?.artist && q.artist(f.song.artist);
+  const body = h`
+<header class="page-head festival-head">
+  <p class="eyebrow">${f.name}${f.season ? ` · ${f.season}` : ''}</p>
+  <h1>${f.title}</h1>
+  <p class="lede">${f.lede}</p>
+  <p class="cta-row">${coming.length ? h`<a class="btn" href="#shows">See the shows</a> ` : ''}<a class="btn btn-ghost" href="#footer-signup">Hear about new shows</a></p>
+</header>
+${f.song ? h`<section class="section festival-song">
+  <div class="festival-song-copy">
+    <p class="eyebrow">Now playing</p>
+    <h2>${f.song.title}</h2>
+    ${singer ? h`<p>By <a href="${paths.artist(singer.slug)}">${singer.name}</a>.</p>` : ''}
+    <p><a class="btn btn-ghost btn-small" href="https://www.youtube.com/watch?v=${f.song.youtubeId}" rel="noopener">Listen on YouTube</a></p>
+  </div>
+  ${embed(f.song.youtubeId, `${f.song.title}${singer ? ` by ${singer.name}` : ''}`)}
+</section>` : ''}
+<section class="section" id="shows">
+  <div class="section-head"><h2>The shows</h2></div>
+  ${coming.length ? h`<div class="grid grid-3">${coming.map((e) => eventCard(ctx, e))}</div>` : ''}
+  <p class="meta">${coming.length ? 'More Christmas shows will be added here as they’re announced.' : 'Shows will be announced here.'} <a href="#footer-signup">Join the list</a> to hear first.</p>
+</section>
+${before.length ? section('Christmas at TAM before', h`${eventList(ctx, before)}<p class="meta">${SOURCE_NOTE}</p>`) : ''}
+${legacy ? section('Christmas parties at TAM', h`<div class="prose narrow">${blocksHtml(legacy.blocks)}</div>`) : ''}`;
+  return layout(ctx, {
+    title: `${f.title}: the ${f.name}`,
+    description: `${f.name} at the Temple of Art and Music (TAM), Elephant & Castle, London. ${coming.length ? `Shows: ${coming.map((e) => e.title).join('; ')}.` : ''}`.trim(),
+    path: f.path, body,
+    ld: [festivalLD(ctx.c.site, f, shows), ...coming.map((e) => eventLD(ctx.c.site, e, q))],
+  });
+}
+
 // ---------------------------------------------------------------- legacy pages
 
 export function legacyPage(ctx, p) {
@@ -702,7 +761,7 @@ ${section('From the TAM archive', h`<ul class="plain link-list">${ctx.c.legacy.f
 
 export function academy(ctx) {
   const { q, c } = ctx;
-  const upcoming = q.upcoming().filter((e) => ACADEMY_RX.test(e.title) || e.series === 'junior-open-mic' || e.series === 'tam-summer-academy');
+  const upcoming = q.upcoming().filter((e) => e.academy || ACADEMY_RX.test(e.title) || e.series === 'junior-open-mic' || e.series === 'tam-summer-academy');
   const past = q.past().filter((e) => ACADEMY_RX.test(e.title) || e.series === 'junior-open-mic' || e.series === 'tam-summer-academy').slice(0, 20);
   const pages = c.legacy.filter((p) => p.path.startsWith('/tom') || p.path === '/whats-on/junior-open-mic');
   const dana = q.artist('danagillespie');

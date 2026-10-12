@@ -241,6 +241,8 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         if (p === '/submit') return page(views.submit(ctx, { done: url.searchParams.has('thanks') }));
         if (p === '/privacy') return page(views.privacy(ctx));
         if (p === '/studio') return page(views.studio(ctx, { aiEnabled: aiEnabled() && Boolean(process.env.ADMIN_TOKEN) }));
+        // A festival's landing page (it may take over an old URL, e.g. /the-best-christmas-ever).
+        if (q.festivalAt(p)) return page(views.festivalPage(ctx, q.festivalAt(p), q.legacy(p)));
         // Every other page of the old www.tam.tv, at its original address.
         if (q.legacy(p)) return page(views.legacyPage(ctx, q.legacy(p)));
 
