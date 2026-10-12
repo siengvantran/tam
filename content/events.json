@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "slug": "dana-gillespie-the-best-christmas-ever-2026-12-16",
+    "title": "The Best Christmas Ever with Dana Gillespie & The London Blues Band",
+    "date": "2026-12-16",
+    "time": "19:00",
+    "venue": "elephant-castle",
+    "url": "",
+    "image": "",
+    "performers": ["danagillespie", "the-london-blues-band"],
+    "series": "dana-gillespie-nights",
+    "festival": "tam-christmas-festival",
+    "academy": true,
+    "genres": ["blues"],
+    "free": false,
+    "summary": "Dana Gillespie’s Christmas party at TAM, opening with the Golden Hour: the first hour of the night belongs to the juniors.",
+    "programme": [
+      { "time": "19:00", "title": "The Golden Hour", "text": "The night opens with TAM’s juniors: young singers and players from the TAM Academy and the Junior & Youth Open Mic take the stage, in front of a full Christmas crowd." },
+      { "time": "20:00", "title": "Dana Gillespie & The London Blues Band", "text": "Dana and the band bring the blues home for Christmas, in the tradition of Dana’s Christmas nights at TAM." }
+    ]
+  }
+]

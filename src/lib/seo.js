@@ -75,10 +75,31 @@ export function eventLD(site, e, q) {
       ? { '@type': 'MusicVenue', '@id': abs(site, `${paths.venue(v.slug)}#venue`), name: v.name, address: { '@type': 'PostalAddress', streetAddress: v.address, addressLocality: 'London', addressCountry: 'GB' } }
       : { '@type': 'Place', name: e.venueName || 'London' },
     organizer: { '@id': abs(site, '/#tam') },
-    superEvent: e.series ? { '@type': 'EventSeries', '@id': abs(site, `${paths.series(e.series)}#series`), name: q.series(e.series)?.name } : undefined,
+    superEvent: [
+      e.series && { '@type': 'EventSeries', '@id': abs(site, `${paths.series(e.series)}#series`), name: q.series(e.series)?.name },
+      e.festival && q.festival(e.festival) && { '@type': 'Festival', '@id': abs(site, `${q.festival(e.festival).path}#festival`), name: q.festival(e.festival).name },
+    ].filter(Boolean),
     performer: e.performers.map((s) => ({ '@type': 'MusicGroup', '@id': abs(site, `${paths.artist(s)}#artist`), name: q.artist(s)?.name })),
     offers: upcoming && e.url ? { '@type': 'Offer', url: e.url, availability: 'https://schema.org/InStock', ...(e.free ? { price: 0, priceCurrency: 'GBP' } : {}) } : undefined,
-    sameAs: e.url,
+    sameAs: e.url || undefined,
+    description: e.summary,
+  });
+}
+
+// A festival is an Event whose sub-events are its shows.
+export function festivalLD(site, f, events) {
+  return clean({
+    '@type': 'Festival',
+    '@id': abs(site, `${f.path}#festival`),
+    name: f.name,
+    alternateName: f.title,
+    url: abs(site, f.path),
+    description: f.lede,
+    startDate: events[0]?.start,
+    endDate: events.at(-1)?.start,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    organizer: { '@id': abs(site, '/#tam') },
+    subEvent: events.map((e) => ({ '@id': abs(site, `${paths.event(e.slug)}#event`) })),
   });
 }
 

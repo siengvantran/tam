@@ -34,6 +34,7 @@ Node 20 or newer. CI runs the tests on Node 20 and 22.
 | `/artists`, `/artists/:slug` | Cult legends and A–Z; each artist's nights at TAM, who they shared bills with, TAM TV films, "Bring them back" |
 | `/tv` | TAM TV, live from the YouTube channel |
 | `/academy` | The TAM Academy |
+| `/the-best-christmas-ever` | The TAM Christmas Festival: its shows, the song player, past Christmas nights at TAM |
 | `/archive`, `/archive/:year` | Past nights by year |
 | `/series/:slug`, `/genres/:genre`, `/locations/:venue` | Regular nights, genres, venues (past ones say so) |
 | `/locations` | Find us |
@@ -49,6 +50,12 @@ TAM sells its own tickets. Eventbrite stays the default: a night only sells on T
 4. Each booking has a ticket page with a QR code and a code like `TAM-ABCDE-FGHJK`. At the door, staff type or scan the code into the box office to check people in. Each night has a guest-list CSV.
 
 Bookings are an append-only log (`data/orders.jsonl`) and settings live in `data/box-office.json`, so both need the Railway volume. Not built yet: emailing tickets (buyers get their ticket page straight away, so they should bookmark it) and automatic refunds (cancel the booking in the box office, then refund it in Stripe).
+
+## Festivals and hand-made nights
+
+Nights that aren't on Eventbrite go in `content/events.json`. They can carry a `summary`, a `programme` (time, title, text) and `"academy": true`, which lists the night on `/academy`. A night with no Eventbrite `url` shows "Tickets soon" until staff open sales in the box office.
+
+Festivals live in `content/festivals.json`. Each has a landing page at its `path`, an optional `song` (a YouTube ID) played on that page, and a `pastPattern` for earlier nights to list. A night joins a festival with `"festival": "<slug>"`. **To add a show to the TAM Christmas Festival, add a night with `"festival": "tam-christmas-festival"` to `content/events.json`.** It then appears on `/the-best-christmas-ever` (which keeps the old page's text, so the URL keeps its search value), on the home and What's on pages while it's coming up, and in the festival's structured data.
 
 ## TAM TV
 
@@ -78,7 +85,7 @@ python3 scripts/crawl_oldsite.py /tmp/oldsite.json
 python3 scripts/import_oldsite.py /tmp/oldsite.json        # needs Pillow
 ```
 
-Artists are matched to nights by name in the event titles (Eventbrite descriptions are empty), using the hand-curated list in `scripts/sources/performers.txt`. Each line is a name, its aliases, and optionally `@slug=` (keep an old URL), `@note=` (tell namesakes apart, e.g. TAM's pianist David Gray is not the singer-songwriter) and `!legend`. To add or correct an artist, edit that file and re-run the import. Bios and links go in `content/artists.json`, keyed by slug.
+Artists are matched to nights by name in the event titles (Eventbrite descriptions are empty), using the hand-curated list in `scripts/sources/performers.txt`. Each line is a name, its aliases, and optionally `@slug=` (keep an old URL), `@note=` (tell namesakes apart, when a TAM artist shares a name with someone famous) and `!legend`. To add or correct an artist, edit that file and re-run the import. Bios and links go in `content/artists.json`, keyed by slug.
 
 ## The logo
 

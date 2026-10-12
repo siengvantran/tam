@@ -178,6 +178,7 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         await ready;
         const q = ctx.q;
         if (MOVED[p]) return moved(res, MOVED[p]);
+        if (c.removed.has(p)) return page(views.gone(ctx), 410);
         if ((match = m(/^\/watch\/([a-z0-9-]+)$/))) return moved(res, '/tv');
         if (p === '/') return page(views.home(ctx));
         if (p === '/whats-on') return page(views.whatsOn(ctx));
@@ -240,6 +241,8 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         if (p === '/submit') return page(views.submit(ctx, { done: url.searchParams.has('thanks') }));
         if (p === '/privacy') return page(views.privacy(ctx));
         if (p === '/studio') return page(views.studio(ctx, { aiEnabled: aiEnabled() && Boolean(process.env.ADMIN_TOKEN) }));
+        // A festival's landing page (it may take over an old URL, e.g. /the-best-christmas-ever).
+        if (q.festivalAt(p)) return page(views.festivalPage(ctx, q.festivalAt(p), q.legacy(p)));
         // Every other page of the old www.tam.tv, at its original address.
         if (q.legacy(p)) return page(views.legacyPage(ctx, q.legacy(p)));
 

@@ -43,7 +43,7 @@
   "slug": "jazz-jam",
   "name": "Jazz Jam in the TAM",
   "genre": "jazz",
-  "count": 44,
+  "count": 33,
   "first": "2021-06-23",
   "last": "2026-06-29"
  },
@@ -136,14 +136,6 @@
   "last": "2022-07-24"
  },
  {
-  "slug": "innercity-blues-jam",
-  "name": "Innercity Blues Jam",
-  "genre": "blues",
-  "count": 4,
-  "first": "2023-02-02",
-  "last": "2023-02-23"
- },
- {
   "slug": "city-of-london-blues-jam",
   "name": "The City of London Blues Jam",
   "genre": "blues",
@@ -203,7 +195,7 @@
   "slug": "open-mic",
   "name": "Open Mic at TAM",
   "genre": null,
-  "count": 85,
+  "count": 83,
   "first": "2021-08-03",
   "last": "2026-10-14"
  },

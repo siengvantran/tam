@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "tam-christmas-festival",
+    "name": "TAM Christmas Festival",
+    "title": "The Best Christmas Ever",
+    "path": "/the-best-christmas-ever",
+    "season": "Christmas 2026",
+    "lede": "Christmas at the Temple of Art and Music: live shows through December in Elephant & Castle, London.",
+    "song": { "youtubeId": "PJLdrC-1tZw", "title": "The Best Christmas Ever", "artist": "danagillespie" },
+    "pastPattern": "christmas"
+  }
+]

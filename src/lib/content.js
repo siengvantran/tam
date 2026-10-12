@@ -7,6 +7,7 @@
 //   videos.json   TAM TV's YouTube films
 //   artists.json  editorial overrides for artists (bio, links, legend)
 //   events.json   hand-made events that aren't on Eventbrite
+//   festivals.json festivals (e.g. the TAM Christmas Festival); events join one with "festival"
 //   stories.json, listen.json, site.json, chorus.json
 //
 // Everything is indexed once at startup; pages only filter by "now".
@@ -65,8 +66,11 @@ export function loadContent() {
   });
 
   const videos = read('videos');
+  // Pages taken down at TAM's request: answered with 410 Gone.
+  const removed = new Set(read('archive/removed'));
   const c = {
-    site, venues, series, legacy, legacyBy, events, artists, videos,
+    site, venues, series, legacy, legacyBy, events, artists, videos, removed,
+    festivals: read('festivals'),
     stories: read('stories').sort((a, b) => b.published.localeCompare(a.published)),
     listen: read('listen'),
     chorus: read('chorus'),
@@ -93,10 +97,17 @@ export function validate(c) {
   uniq('stories', c.stories);
   const series = uniq('series', c.series);
   const venues = uniq('venues', c.venues);
+  const festivals = uniq('festivals', c.festivals);
+  for (const f of c.festivals) {
+    if (!/^\/[a-z0-9/-]+$/.test(f.path || '')) errors.push(`festival ${f.slug}: bad path`);
+    if (f.song && !/^[\w-]{11}$/.test(f.song.youtubeId || '')) errors.push(`festival ${f.slug}: bad song youtubeId`);
+    if (f.song?.artist && !artists.has(f.song.artist)) errors.push(`festival ${f.slug}: unknown artist "${f.song.artist}"`);
+  }
   for (const e of c.events) {
     if (Number.isNaN(Date.parse(e.start))) errors.push(`event ${e.slug}: bad date`);
     if (e.venue !== 'elsewhere' && !venues.has(e.venue)) errors.push(`event ${e.slug}: unknown venue "${e.venue}"`);
     if (e.series && !series.has(e.series)) errors.push(`event ${e.slug}: unknown series "${e.series}"`);
+    if (e.festival && !festivals.has(e.festival)) errors.push(`event ${e.slug}: unknown festival "${e.festival}"`);
     for (const a of e.performers || []) if (!artists.has(a)) errors.push(`event ${e.slug}: unknown performer "${a}"`);
   }
   for (const v of c.videos) {
@@ -141,6 +152,9 @@ function buildIndex(c) {
     story: by(c.stories),
     series: by(c.series),
     venue: by(c.venues),
+    festival: by(c.festivals),
+    festivalByPath: new Map(c.festivals.map((f) => [f.path, f])),
+    eventsByFestival: group(c.events, (e) => e.festival),
     eventsByArtist,
     eventsByYear: group(c.events, (e) => e.date.slice(0, 4)),
     eventsByVenue: group(c.events, (e) => e.venue),
@@ -166,6 +180,9 @@ export function queries(c, now = new Date()) {
     series: (s) => ix.series.get(s),
     venue: (s) => ix.venue.get(s),
     legacy: (p) => c.legacyBy[p],
+    festival: (s) => ix.festival.get(s),
+    festivalAt: (p) => ix.festivalByPath.get(p),
+    eventsInFestival: (f) => ix.eventsByFestival.get(f) || [],
     isPast,
     upcoming: () => c.events.filter((e) => !isPast(e)),
     past: () => c.events.filter(isPast).reverse(),

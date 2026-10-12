@@ -1,0 +1,7 @@
+# Names TAM has asked to remove from the site entirely.
+# The importer drops these artists and every night whose title names them,
+# and records their old URLs in content/archive/removed.json (served as 410 Gone).
+Mark Banks
+Samuel Virgo
+Stuffy And The Fuses
+David Gray
