@@ -90,6 +90,7 @@ ${path.startsWith('/box-office') || path.startsWith('/tickets') ? '' : raw('<can
         <li><a href="/whats-on">What’s on</a></li>
         <li><a href="/archive">The archive</a></li>
         <li><a href="/academy">The TAM Academy</a></li>
+        <li><a href="/tech-nights">Tech nights</a></li>
         <li><a href="/stories">Stories</a> · <a href="/listen">Listen</a></li>
         ${Object.entries(site.socials).filter(([, v]) => v).map(([k, v]) => h`<li><a href="${v}" rel="me noopener">${k[0].toUpperCase() + k.slice(1)}</a></li>`)}
       </ul>
@@ -195,6 +196,7 @@ const chipLinks = (items) => h`<p class="chips">${items.map(([href, label]) => h
 const DEMAND_DONE = {
   'bring-back': ['wants them back at TAM', 'want them back at TAM'],
   'was-there': ['was there', 'were there'],
+  'want-community': ['wants this at TAM', 'want this at TAM'],
 };
 const demandForm = (ctx, { type, target, count, label, ask }) => h`<form class="demand" method="post" action="/demand" data-demand>
   <input type="hidden" name="type" value="${type}">
@@ -694,6 +696,89 @@ ${legacy ? section('Christmas parties at TAM', h`<div class="prose narrow">${blo
     description: `${f.name} at the Temple of Art and Music (TAM), Elephant & Castle, London. ${coming.length ? `Shows: ${coming.map((e) => e.title).join('; ')}.` : ''}`.trim(),
     path: f.path, body,
     ld: [festivalLD(ctx.c.site, f, shows), ...coming.map((e) => eventLD(ctx.c.site, e, q))],
+  });
+}
+
+// ---------------------------------------------------------------- tech nights
+
+// One-tap "I'd come" vote for a community: no email, counted like "Bring them back".
+const voteForm = (ctx, x, count) => h`<form class="demand demand-compact" method="post" action="/demand" data-demand>
+  <input type="hidden" name="type" value="want-community"><input type="hidden" name="target" value="${x.slug}"><input type="hidden" name="back" value="${ctx.path}">
+  <p class="demand-count" data-demand-count data-one="person wants this at TAM" data-many="people want this at TAM">${count ? h`<strong>${num(count)}</strong> ${count === 1 ? 'person wants' : 'people want'} this at TAM` : 'Want this at TAM?'}</p>
+  <button class="btn btn-small btn-ghost" type="submit">I’d come</button>
+</form>`;
+
+export function techNights(ctx, { counts, sent = false, values = {}, errors = {} }) {
+  const { c, q } = ctx;
+  const t = c.techNights;
+  const votes = (x) => counts.get(`want-community:${x.slug}`) || 0;
+  // Most wanted first; ties keep the seeded order.
+  const communities = t.communities.map((x, i) => ({ x, i, n: votes(x) })).sort((a, b) => b.n - a.n || a.i - b.i);
+  const tech = q.techEvents();
+  const coming = tech.filter((e) => !q.isPast(e));
+  const before = tech.filter((e) => q.isPast(e)).reverse();
+  const err = (k) => (errors[k] ? h`<span class="error" id="te-err-${k}">${errors[k]}</span>` : '');
+  const v = (k) => values[k] ?? '';
+  const aria = (k) => raw(errors[k] ? ` aria-invalid="true" aria-describedby="te-err-${k}"` : '');
+  const opt = (k, val, label) => h`<option value="${val}"${v(k) === val ? raw(' selected') : ''}>${label}</option>`;
+  const body = h`
+<header class="page-head tech-head">
+  <p class="eyebrow">${t.name}</p>
+  <h1>${t.title}</h1>
+  <p class="lede">${t.lede}</p>
+  <p class="cta-row"><a class="btn" href="#enquire">Host a night at TAM</a> <a class="btn btn-ghost" href="#communities">The communities</a></p>
+  <p class="chips">${t.sponsors.map((x) => h`<span class="chip">${x}</span>`)}</p>
+</header>
+${coming.length ? section('Coming up', h`<div class="grid grid-3">${coming.map((e) => eventCard(ctx, e))}</div>`) : ''}
+${section('The nights', h`<div class="grid grid-4">${t.formats.map((f) => h`<article class="card"><div class="card-body"><h3>${f.title}</h3><p>${f.text}</p></div></article>`)}</div>`)}
+${section('What you get', h`<div class="grid grid-4">${t.offer.map((f) => h`<article class="card"><div class="card-body"><h3>${f.title}</h3><p>${f.text}</p></div></article>`)}</div>`)}
+<section class="section" id="communities">
+  <div class="section-head"><h2>${t.communities.length} crypto communities we’d love to host</h2></div>
+  <p class="lede-small">Some of the biggest communities in crypto. Tap <strong>I’d come</strong> on the ones you want to see at TAM. The most wanted rise to the top, and that’s who TAM approaches first.</p>
+  <div class="grid grid-3 communities">${communities.map(({ x, n }) => h`<article class="card community" id="c-${x.slug}"><div class="card-body">
+    <p class="eyebrow">${x.kind}</p>
+    <h3>${x.name}</h3>
+    <p>${x.text}</p>
+    <p class="meta"><a href="${x.url}" rel="noopener nofollow">Official site</a> · <a href="?community=${x.slug}#enquire">Bring ${x.name} to TAM</a></p>
+    ${voteForm(ctx, x, n)}
+  </div></article>`)}</div>
+  <p class="meta">These communities are listed because people might want to meet them here. They are not sponsors or partners of TAM unless a night says so. Names and trademarks belong to their owners.</p>
+</section>
+${before.length ? section('Tech nights at TAM before', h`${eventList(ctx, before)}<p class="meta">${SOURCE_NOTE}</p>`) : ''}
+<section class="section" id="enquire">
+  <div class="section-head"><h2>Host a night at TAM</h2></div>
+  ${sent ? h`<p class="notice" role="status">Thank you. We’ve got it, and a person will reply by email.</p>` : h`
+  <form class="form narrow" method="post" action="${t.path}#enquire" novalidate>
+    ${Object.keys(errors).length ? h`<p class="error-summary" role="alert">Please fix the highlighted fields.</p>` : ''}
+    <p>For sponsors, foundations, companies and community organisers. Tell us about the night and we’ll come back with dates.</p>
+    <div class="field-row">
+      <div class="field"><label for="te-name">Your name</label><input id="te-name" name="name" value="${v('name')}" required autocomplete="name"${aria('name')}>${err('name')}</div>
+      <div class="field"><label for="te-email">Email</label><input id="te-email" type="email" name="email" value="${v('email')}" required autocomplete="email"${aria('email')}>${err('email')}</div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="te-org">Company or community</label><input id="te-org" name="organisation" value="${v('organisation')}" required autocomplete="organization"${aria('organisation')}>${err('organisation')}</div>
+      <div class="field"><label for="te-community">Ecosystem</label><select id="te-community" name="community">${opt('community', '', 'Not crypto / not listed')}${t.communities.map((x) => opt('community', x.slug, x.name))}${opt('community', 'other', 'Another chain')}</select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="te-format">Kind of night</label><select id="te-format" name="format">${opt('format', '', 'Not sure yet')}${t.formats.map((f) => opt('format', f.title, f.title))}</select></div>
+      <div class="field"><label for="te-when">When</label><input id="te-when" name="when" value="${v('when')}" placeholder="e.g. February 2027"></div>
+      <div class="field"><label for="te-guests">Expected guests</label><select id="te-guests" name="guests">${opt('guests', '', 'Not sure')}${['Up to 50', '50 to 100', 'Over 100'].map((g) => opt('guests', g, g))}</select></div>
+    </div>
+    <div class="field"><label for="te-message">The night</label><textarea id="te-message" name="message" rows="5" required${aria('message')}>${v('message')}</textarea>${err('message')}</div>
+    <label class="check"><input type="checkbox" name="newsletter"${values.newsletter ? raw(' checked') : ''}> Tell me about tech nights at TAM.</label>
+    <label class="check"><input type="checkbox" name="privacy" required${aria('privacy')}> I’ve read the <a href="/privacy">privacy notice</a>.</label>${err('privacy')}
+    <div class="hp" aria-hidden="true"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <button class="btn" type="submit">Send enquiry</button>
+  </form>`}
+</section>`;
+  return layout(ctx, {
+    title: t.name,
+    description: 'Tech nights at the Temple of Art and Music, London: meetups, demo nights and build nights for AI companies, blockchains and crypto communities, with live music to finish.',
+    path: t.path, body,
+    ld: [
+      { '@type': 'ItemList', name: 'Crypto communities TAM would like to host', itemListElement: communities.map(({ x }, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Organization', name: x.name, url: x.url } })) },
+      ...coming.map((e) => eventLD(c.site, e, q)),
+    ],
   });
 }
 

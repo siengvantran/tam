@@ -397,3 +397,12 @@ input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: 
 .highlight h3 { margin-top: 0; }
 .highlights-cta { margin-top: 24px; align-items: center; }
 .highlights .highlight:last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+
+/* Tech nights */
+.tech-head .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.lede-small { max-width: 70ch; color: var(--muted); margin: -6px 0 20px; }
+.community .card-body { display: flex; flex-direction: column; height: 100%; }
+.community h3 { margin-top: 0; }
+.demand-compact { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--line); }
+.demand-compact .demand-count { margin: 0; font-size: .9rem; color: var(--muted); }
+.demand-compact.is-done .btn { border-color: var(--gold-hi); color: var(--gold-hi); }

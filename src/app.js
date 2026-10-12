@@ -8,7 +8,7 @@ import { loadContent, queries } from './lib/content.js';
 import { sitemap, robots, llmsTxt, graph, paths } from './lib/seo.js';
 import { GENRE_NAMES } from './lib/content.js';
 import { artwork } from './lib/brand.js';
-import { append, validateSubmission, validateSignup, validateDemand, demandCounts, DATA_DIR } from './lib/store.js';
+import { append, validateSubmission, validateTechEnquiry, validateSignup, validateDemand, demandCounts, DATA_DIR } from './lib/store.js';
 import { createTv } from './lib/youtube.js';
 import { createBoxOffice } from './lib/tickets.js';
 import { createStripe } from './lib/stripe.js';
@@ -239,6 +239,7 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         if ((match = m(/^\/stories\/([a-z0-9-]+)$/)) && q.story(match[1])) return page(views.storyPage(ctx, q.story(match[1])));
         if (p === '/about') return page(views.about(ctx));
         if (p === '/submit') return page(views.submit(ctx, { done: url.searchParams.has('thanks') }));
+        if (p === c.techNights.path) return page(views.techNights(ctx, { counts, sent: url.searchParams.has('thanks'), values: { community: url.searchParams.get('community') || '' } }));
         if (p === '/privacy') return page(views.privacy(ctx));
         if (p === '/studio') return page(views.studio(ctx, { aiEnabled: aiEnabled() && Boolean(process.env.ADMIN_TOKEN) }));
         // A festival's landing page (it may take over an old URL, e.g. /the-best-christmas-ever).
@@ -379,6 +380,15 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
           if (r.value.newsletter) await append('signups.jsonl', { email: r.value.email, interests: [r.value.genre].filter(Boolean), consent: true, source: 'submission' });
           return redirect(res, '/submit?thanks');
         }
+        if (p === c.techNights.path) {
+          const body = await readBody(req);
+          if (body.website) return redirect(res, `${p}?thanks#enquire`); // honeypot
+          const r = validateTechEnquiry(body, c.techNights.communities.map((x) => x.slug));
+          if (!r.ok) return page(views.techNights(ctx, { counts, values: { ...body, ...r.value }, errors: r.errors }), 422);
+          await append('tech-enquiries.jsonl', { ...r.value, status: 'new' });
+          if (r.value.newsletter) await append('signups.jsonl', { email: r.value.email, interests: ['tech-nights'], consent: true, source: 'tech-nights' });
+          return redirect(res, `${p}?thanks#enquire`);
+        }
         if (p === '/signup') {
           const body = await readBody(req);
           const r = validateSignup(body);
@@ -389,7 +399,7 @@ export function createApp({ content = loadContent(), clock = () => new Date(), t
         if (p === '/demand') {
           await ready;
           const body = await readBody(req);
-          const exists = (kind, slug) => Boolean(kind === 'artist' ? ctx.q.artist(slug) : ctx.q.event(slug));
+          const exists = (kind, slug) => Boolean(kind === 'artist' ? ctx.q.artist(slug) : kind === 'community' ? ctx.q.community(slug) : ctx.q.event(slug));
           const r = validateDemand(body, exists);
           const wantsJson = (req.headers.accept || '').includes('application/json');
           const back = typeof body.back === 'string' && /^\/[\w\-/]*$/.test(body.back) ? body.back : '/';
