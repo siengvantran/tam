@@ -14,15 +14,40 @@ delete process.env.ANTHROPIC_AUTH_TOKEN;
 const { createApp } = await import('../src/app.js');
 const { loadContent, validate, queries, londonISO } = await import('../src/lib/content.js');
 const { artwork, logo, daypart } = await import('../src/lib/brand.js');
+const { createStripe } = await import('../src/lib/stripe.js');
+const { createHmac } = await import('node:crypto');
 
 const NOW = new Date('2026-10-08T20:30:00Z');
 const c = loadContent();
 const q = queries(c, NOW);
 
+// A stand-in for YouTube's channel feed.
+const FEED = `<feed><entry><yt:videoId>AAAAAAAAAAA</yt:videoId><title>Brand New &amp; Live at TAM</title><published>2026-10-01T10:00:00+00:00</published></entry>
+<entry><yt:videoId>${c.videos[0].youtubeId}</yt:videoId><title>${c.videos[0].title}</title><published>2026-09-01T10:00:00+00:00</published></entry></feed>`;
+const tvFetcher = async () => ({ ok: true, text: async () => FEED });
+
+// A stand-in for Stripe's API, so the real client (and its request format) is tested.
+const stripeSessions = new Map();
+const stripeFetch = async (url, opts) => {
+  if (opts.method === 'POST' && url.endsWith('/checkout/sessions')) {
+    const f = new URLSearchParams(opts.body);
+    const s = {
+      id: `cs_test_${stripeSessions.size + 1}`, url: `https://checkout.stripe.com/c/pay/cs_test_${stripeSessions.size + 1}`,
+      metadata: { order: f.get('metadata[order]') }, amount_total: Number(f.get('line_items[0][quantity]')) * Number(f.get('line_items[0][price_data][unit_amount]')),
+      currency: f.get('line_items[0][price_data][currency]'), payment_status: 'unpaid',
+    };
+    stripeSessions.set(s.id, s);
+    return { ok: true, json: async () => s };
+  }
+  const id = decodeURIComponent(url.split('/').pop());
+  return stripeSessions.has(id) ? { ok: true, json: async () => stripeSessions.get(id) } : { ok: false, status: 404, json: async () => ({ error: { message: 'No such session' } }) };
+};
+const stripe = createStripe({ secretKey: 'sk_test_x', webhookSecret: 'whsec_test', fetcher: stripeFetch });
+
 let server;
 let base;
 before(async () => {
-  server = createServer(createApp({ content: c, clock: () => NOW }));
+  server = createServer(createApp({ content: c, clock: () => NOW, tvFetcher, stripe, dataDir }));
   await new Promise((r) => server.listen(0, r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -51,7 +76,7 @@ test('every URL of the old www.tam.tv still answers', async () => {
 });
 
 test('hub pages render with structured data', async () => {
-  const pages = ['/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/listen', '/stories', '/about', '/submit', '/privacy',
+  const pages = ['/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/academy', '/listen', '/stories', '/about', '/submit', '/privacy',
     ...q.years().map((y) => `/archive/${y}`), ...c.series.slice(0, 5).map((s) => `/series/${s.slug}`), ...c.venues.map((v) => `/locations/${v.slug}`),
     ...q.genres().map((g) => `/genres/${g}`), ...c.videos.slice(0, 3).map((v) => `/tv/${v.slug}`), ...c.stories.map((s) => `/stories/${s.slug}`)];
   for (const p of pages) {
@@ -84,8 +109,9 @@ test('the archive holds the Eventbrite history', () => {
 
 test('an artist page is a full record of their nights', async () => {
   const html = await (await get('/artists/dino-baptiste')).text();
-  const a = q.artist('dino-baptiste');
-  assert.match(html, new RegExp(`${a.appearances} nights at TAM`));
+  for (const e of q.eventsFor('dino-baptiste').filter((x) => q.isPast(x)).slice(0, 5)) assert.ok(html.includes(`/events/${e.slug}"`), e.slug);
+  assert.match(html, /Nights at TAM/);
+  assert.match(html, /some nights may be missing/);
   assert.match(html, /Shared the bill with/);
   assert.match(html, /data-demand/);
   const artist = ldOf(html).find((n) => n['@type'] === 'MusicGroup');
@@ -250,4 +276,169 @@ test('London time sets the daypart', () => {
   assert.equal(daypart(12), 'day');
   assert.equal(daypart(19), 'dusk');
   assert.equal(daypart(23), 'night');
+});
+
+// ---------------------------------------------------------------- feedback round
+
+test('no unverifiable totals are published', async () => {
+  const home = await (await get('/')).text();
+  for (const phrase of [/nights of live music/, /named artists/, /London venues/, /regular nights<\/dt>/, /seven days a week/i, /Daytime in London/, /twice a month/i]) {
+    assert.doesNotMatch(home, phrase);
+  }
+  const artistsPage = await (await get('/artists')).text();
+  assert.doesNotMatch(artistsPage, /Most-played/);
+  assert.doesNotMatch(await (await get('/archive')).text(), /\d+ nights/);
+  assert.doesNotMatch(await (await get('/whats-on')).text(), /seven days a week|noticeboard/i);
+  assert.doesNotMatch(await (await get('/llms.txt')).text(), /\d+ nights/);
+});
+
+test('Hans Theessink is not listed as having played TAM, but his old URL still works', async () => {
+  assert.equal(q.artist('hans-theessink'), undefined);
+  assert.doesNotMatch(await (await get('/artists')).text(), /Hans Theessink/);
+  const res = await get('/artists/hans-theessink');
+  assert.equal(res.status, 200);
+  assert.doesNotMatch(await res.text(), /Bring them back/);
+});
+
+test('About is rewritten: academy, no food claim, no Mercato history, no logo claims', async () => {
+  const about = await (await get('/about')).text();
+  assert.match(about, /TAM Academy/);
+  assert.doesNotMatch(about, /food/i);
+  assert.doesNotMatch(about, /Andrea Rasca/);
+  assert.doesNotMatch(about, /two Ms|TAM 108|keeps London time/);
+  assert.match(await (await get('/academy')).text(), /Dana Gillespie/);
+});
+
+test('past regular nights and venues are not presented as current', async () => {
+  const current = q.currentSeries().map((s) => s.name);
+  const series = await (await get('/series')).text();
+  for (const s of c.series.filter((x) => !current.includes(x.name))) assert.ok(!series.includes(`>${s.name}</a>`), s.name);
+  const old = c.venues.find((v) => !q.isCurrentVenue(v.slug));
+  if (old) assert.match(await (await get(`/locations/${old.slug}`)).text(), /doesn’t currently run nights here/);
+});
+
+test('TAM TV is live from the YouTube feed, with the archive as fallback', async () => {
+  const html = await (await get('/tv')).text();
+  assert.match(html, /Brand New &amp; Live at TAM/);
+  assert.ok(html.indexOf('Brand New') < html.indexOf(c.videos[1].title), 'newest first');
+  assert.match(html, /youtube\.com\/@TAM88/);
+  // YouTube down: the archive is shown instead.
+  const offline = createApp({ content: c, clock: () => NOW, tvFetcher: async () => { throw new Error('offline'); }, stripe, dataDir });
+  const srv = createServer(offline);
+  await new Promise((r) => srv.listen(0, r));
+  const page = await (await fetch(`http://127.0.0.1:${srv.address().port}/tv`)).text();
+  srv.close();
+  assert.ok(page.includes(c.videos[0].title.replace(/&/g, '&amp;')));
+});
+
+// ---------------------------------------------------------------- ticketing
+
+const staff = async () => {
+  const res = await form('/box-office/login', { token: 'test-token' });
+  assert.equal(res.status, 303);
+  return res.headers.get('set-cookie').split(';')[0];
+};
+
+test('box office needs the token', async () => {
+  assert.equal((await get('/box-office/e/x')).status, 401);
+  assert.equal((await form('/box-office/login', { token: 'nope' })).status, 401);
+  const cookie = await staff();
+  assert.match(cookie, /^tam_bo=[0-9a-f]{64}$/);
+  assert.equal((await get('/box-office', { headers: { cookie } })).status, 200);
+  // Posts from other sites are refused.
+  assert.equal((await form('/box-office/checkin', { code: 'x' }, { cookie, origin: 'https://evil.example' })).status, 403);
+});
+
+test('free tickets: book, capacity, ticket page, check-in, guest list', async () => {
+  const cookie = await staff();
+  const e = q.upcoming()[0];
+  // Before sales open, the night links to Eventbrite.
+  assert.match(await (await get(`/events/${e.slug}`)).text(), /Tickets on Eventbrite/);
+  let res = await form(`/box-office/e/${e.slug}/config`, { open: 'on', capacity: '3', type0_name: 'General admission', type0_price: '0' }, { cookie });
+  assert.equal(res.headers.get('location'), `/box-office/e/${e.slug}?msg=saved`);
+  const page = await (await get(`/events/${e.slug}`)).text();
+  assert.match(page, /Book tickets/);
+  assert.doesNotMatch(page, /Tickets on Eventbrite/);
+
+  const book = (qty, name = 'Ada', email = 'ada@example.com') => form(`/events/${e.slug}/book`, { type: 'general-admission', qty: String(qty), name, email, terms: 'on' });
+  assert.equal((await form(`/events/${e.slug}/book`, { type: 'general-admission', qty: '1', name: 'Ada', email: 'ada@example.com' })).status, 422, 'needs privacy tick');
+  res = await book(2);
+  assert.equal(res.status, 303);
+  const ticketUrl = res.headers.get('location');
+  assert.match(ticketUrl, /^\/tickets\/TAM-[A-Z0-9]{5}-[A-Z0-9]{5}\?booked$/);
+  const ticket = await (await get(ticketUrl)).text();
+  assert.match(ticket, /<svg[^>]+viewBox/);
+  assert.match(ticket, /2 × General admission/);
+
+  res = await book(2, 'Bo', 'bo@example.com');
+  assert.equal(res.status, 422);
+  assert.match(await res.text(), /Only 1 left/);
+  assert.equal((await book(1, '=cmd()', 'eve@example.com')).status, 303);
+  res = await book(1, 'Late', 'late@example.com');
+  assert.match(await res.text(), /Sold out/);
+
+  const code = ticketUrl.split('/')[2].split('?')[0];
+  res = await form('/box-office/checkin', { code }, { cookie });
+  assert.match(res.headers.get('location'), new RegExp(`\\?in=${code}`));
+  res = await form('/box-office/checkin', { code }, { cookie });
+  assert.match(res.headers.get('location'), /why=done/);
+  assert.match(await (await get(`/tickets/${code}`)).text(), /Checked in<\/dt><dd>2 of 2/);
+
+  const csv = await (await get(`/box-office/e/${e.slug}.csv`, { headers: { cookie } })).text();
+  assert.match(csv, /^name,email,code/);
+  assert.match(csv, /Ada,ada@example.com/);
+  assert.match(csv, /'=cmd\(\)/, 'spreadsheet formulas are neutralised');
+  assert.equal((await get(`/box-office/e/${e.slug}.csv`)).status, 401);
+});
+
+test('paid tickets go through Stripe and are confirmed on return or by webhook', async () => {
+  const cookie = await staff();
+  const e = q.upcoming()[1];
+  await form(`/box-office/e/${e.slug}/config`, { open: 'on', type0_name: 'Advance', type0_price: '12.50', type0_capacity: '50' }, { cookie });
+  let res = await form(`/events/${e.slug}/book`, { type: 'advance', qty: '2', name: 'Sam', email: 'sam@example.com', terms: 'on' });
+  assert.equal(res.status, 303);
+  assert.match(res.headers.get('location'), /^https:\/\/checkout\.stripe\.com\//);
+  const session = [...stripeSessions.values()].at(-1);
+  assert.equal(session.amount_total, 2500);
+  assert.equal(session.currency, 'gbp');
+  const code = [...(await (await get(`/box-office/e/${e.slug}`, { headers: { cookie } })).text()).matchAll(/TAM-[A-Z0-9]{5}-[A-Z0-9]{5}/g)].at(-1)[0];
+
+  // Not paid yet: no QR code.
+  let page = await (await get(`/tickets/${code}?session_id=${session.id}`)).text();
+  assert.match(page, /Waiting for payment/);
+  // Paid: confirmed on return.
+  session.payment_status = 'paid';
+  page = await (await get(`/tickets/${code}?session_id=${session.id}`)).text();
+  assert.match(page, /Payment received/);
+  assert.match(page, /<svg[^>]+viewBox/);
+
+  // A second order, confirmed by a signed webhook instead.
+  res = await form(`/events/${e.slug}/book`, { type: 'advance', qty: '1', name: 'Kim', email: 'kim@example.com', terms: 'on' });
+  const s2 = [...stripeSessions.values()].at(-1);
+  const payload = JSON.stringify({ type: 'checkout.session.completed', data: { object: { ...s2, payment_status: 'paid' } } });
+  const t = Math.floor(NOW.getTime() / 1000);
+  const sig = createHmac('sha256', 'whsec_test').update(`${t}.${payload}`).digest('hex');
+  const hook = (signature) => fetch(`${base}/api/stripe/webhook`, { method: 'POST', body: payload, headers: { 'content-type': 'application/json', 'stripe-signature': signature } });
+  assert.equal((await hook(`t=${t},v1=${'0'.repeat(64)}`)).status, 400, 'forged signature refused');
+  assert.equal((await hook(`t=${t},v1=${sig}`)).status, 200);
+  const list = await (await get(`/box-office/e/${e.slug}`, { headers: { cookie } })).text();
+  assert.match(list, /Kim<\/strong>[\s\S]*?<td>paid<\/td>/);
+});
+
+test('paid tickets are hidden when Stripe is not set up', async () => {
+  const noPay = createApp({ content: c, clock: () => NOW, tvFetcher, stripe: createStripe({ secretKey: '' }), dataDir });
+  const srv = createServer(noPay);
+  await new Promise((r) => srv.listen(0, r));
+  const e = q.upcoming()[1];
+  const html = await (await fetch(`http://127.0.0.1:${srv.address().port}/events/${e.slug}`)).text();
+  srv.close();
+  assert.doesNotMatch(html, /Book tickets/);
+  assert.match(html, /Tickets on Eventbrite/);
+});
+
+test('venue pages drop the old "7 days a week" and opening hours', async () => {
+  for (const p of ['/locations', '/locations/elephant-castle']) {
+    const html = await (await get(p)).text();
+    assert.doesNotMatch(html, /7 days a week|Opening Times|Andrea Rasca/i, p);
+  }
 });

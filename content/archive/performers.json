@@ -3828,55 +3828,5 @@
   "venues": [
    "elephant-castle"
   ]
- },
- {
-  "slug": "albie-salter",
-  "name": "Albie Salter",
-  "legend": false,
-  "appearances": 0,
-  "first": null,
-  "last": null,
-  "genres": [],
-  "venues": []
- },
- {
-  "slug": "gemma-schito",
-  "name": "Gemma Schito",
-  "legend": false,
-  "appearances": 0,
-  "first": null,
-  "last": null,
-  "genres": [],
-  "venues": []
- },
- {
-  "slug": "hans-theessink",
-  "name": "Hans Theessink",
-  "legend": true,
-  "appearances": 0,
-  "first": null,
-  "last": null,
-  "genres": [],
-  "venues": []
- },
- {
-  "slug": "iris",
-  "name": "Iris",
-  "legend": false,
-  "appearances": 0,
-  "first": null,
-  "last": null,
-  "genres": [],
-  "venues": []
- },
- {
-  "slug": "mark-wardel",
-  "name": "Mark Wardel",
-  "legend": false,
-  "appearances": 0,
-  "first": null,
-  "last": null,
-  "genres": [],
-  "venues": []
  }
 ]

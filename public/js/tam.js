@@ -202,6 +202,30 @@
     });
   });
 
+  // ---- TAM TV: play a card in the main player instead of leaving the site --
+  const player = document.querySelector('[data-player]');
+  if (player) {
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-play]');
+      if (!card || e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      const iframe = player.querySelector('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${card.dataset.play}?autoplay=1`;
+      iframe.title = card.dataset.title;
+      const title = document.querySelector('[data-player-title]');
+      if (title) title.textContent = card.dataset.title;
+      player.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+      track('play', { path: `/tv#${card.dataset.play}` });
+    });
+  }
+
+  // ---- small things --------------------------------------------------------
+  document.addEventListener('submit', (e) => {
+    const msg = e.target.closest('[data-confirm]')?.dataset.confirm;
+    if (msg && !window.confirm(msg)) e.preventDefault();
+  });
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+
   // ---- nav ---------------------------------------------------------------
   const toggle = document.querySelector('.nav-toggle');
   toggle?.addEventListener('click', () => {

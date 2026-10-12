@@ -180,14 +180,11 @@ export function queries(c, now = new Date()) {
       .sort((a, b) => b[1] - a[1]).slice(0, n).map(([s, count]) => ({ artist: ix.artist.get(s), count })),
     storiesFor: ({ artist }) => c.stories.filter((s) => artist && s.related?.artists?.includes(artist)),
     years: () => [...ix.eventsByYear.keys()].sort(),
+    // "Current" means it has a night coming up; everything else is history.
+    currentVenues: () => c.venues.filter((v) => (ix.eventsByVenue.get(v.slug) || []).some((e) => !isPast(e))),
+    currentSeries: () => c.series.filter((s) => (ix.eventsBySeries.get(s.slug) || []).some((e) => !isPast(e))),
+    isCurrentVenue: (v) => (ix.eventsByVenue.get(v) || []).some((e) => !isPast(e)),
+    isCurrentSeries: (s) => (ix.eventsBySeries.get(s) || []).some((e) => !isPast(e)),
     genres: () => Object.keys(GENRE_NAMES).filter((g) => ix.eventsByGenre.has(g)),
-    // Six years, six rings: nights per year, used by the archive rings.
-    archiveByYear: () => [...ix.eventsByYear].sort().map(([year, list]) => ({ year, count: list.filter(isPast).length })),
-    stats: () => ({
-      nights: c.events.filter(isPast).length,
-      artists: c.artists.filter((a) => a.appearances).length,
-      venues: c.venues.length,
-      since: c.events[0]?.date.slice(0, 4),
-    }),
   };
 }

@@ -27,7 +27,6 @@ export function organization(site) {
     logo: abs(site, '/img/tam-logo.png'),
     slogan: site.tagline,
     description: site.description,
-    foundingDate: '2020',
     address: { '@type': 'PostalAddress', streetAddress: '42 Newington Causeway', addressLocality: 'London', postalCode: 'SE1 6DR', addressCountry: 'GB' },
     sameAs: Object.values(site.socials || {}).filter(Boolean),
   });
@@ -51,7 +50,7 @@ export function artistLD(site, a, q) {
     '@id': abs(site, `${paths.artist(a.slug)}#artist`),
     name: a.name,
     url: abs(site, paths.artist(a.slug)),
-    description: a.bio?.[0] || a.note || `${a.name} has played ${a.appearances} ${a.appearances === 1 ? 'night' : 'nights'} at the Temple of Art and Music, London.`,
+    description: a.bio?.[0] || a.note || `${a.name} has played at the Temple of Art and Music, London.`,
     genre: a.genres,
     image: abs(site, `/art/${a.slug}.svg`),
     sameAs: [...Object.values(a.socials || {}), ...Object.values(a.music || {})].filter(Boolean),
@@ -157,7 +156,7 @@ export function jsonLdTag(...nodes) {
 
 export function allPaths(c, q) {
   return [...new Set([
-    '/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/listen', '/stories', '/about', '/submit', '/privacy',
+    '/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/academy', '/listen', '/stories', '/about', '/submit', '/privacy',
     ...c.legacy.map((p) => p.path).filter((p) => p !== '/home'),
     ...c.artists.map((a) => paths.artist(a.slug)),
     ...c.events.map((e) => paths.event(e.slug)),
@@ -181,33 +180,34 @@ export function robots(site) {
 }
 
 // llms.txt: a plain-language map of the site for AI assistants and crawlers.
+// No totals: the archive comes from Eventbrite listings, which miss some nights.
 export function llmsTxt(c, q) {
   const line = (title, p, note) => `- [${title}](${abs(c.site, p)})${note ? `: ${note}` : ''}`;
-  const s = q.stats();
   return [
     `# ${c.site.legalName} (${c.site.name})`,
     '',
     `> ${c.site.description}`,
     '',
-    `TAM has hosted ${s.nights.toLocaleString('en-GB')} nights of live music across ${s.venues} London venues since ${s.since}, with ${s.artists} named artists. Every artist, night, series and venue has its own page. A machine-readable graph of everything is at /graph.json (schema.org JSON-LD).`,
+    'Every artist, night, regular night and venue has its own page. The archive of past nights comes from TAM\'s Eventbrite listings and may be incomplete. A machine-readable graph is at /graph.json (schema.org JSON-LD).',
     '',
-    '## Venues',
-    ...c.venues.map((v) => line(v.name, paths.venue(v.slug), v.address)),
+    '## Find TAM',
+    ...q.currentVenues().map((v) => line(v.name, paths.venue(v.slug), v.address)),
     '',
     '## Regular nights',
-    ...c.series.map((x) => line(x.name, paths.series(x.slug), `${x.count} nights, ${x.first.slice(0, 4)}–${x.last.slice(0, 4)}`)),
-    '',
-    '## Artists who have played TAM (most appearances first)',
-    ...c.artists.filter((a) => a.appearances || a.legacyPath).map((a) => line(a.name, paths.artist(a.slug), `${a.legend ? 'cult legend; ' : ''}${a.appearances} nights at TAM${a.genres.length ? `; ${a.genres.join(', ')}` : ''}${a.note ? `; ${a.note}` : ''}`)),
+    ...q.currentSeries().map((x) => line(x.name, paths.series(x.slug))),
     '',
     '## Coming up',
     ...q.upcoming().map((e) => line(`${e.title} (${e.date})`, paths.event(e.slug), q.venue(e.venue)?.name)),
     '',
-    '## Archive by year',
-    ...q.years().map((y) => line(y, paths.year(y), `${q.eventsInYear(y).length} nights`)),
+    '## Artists who have played TAM',
+    ...c.artists.map((a) => line(a.name, paths.artist(a.slug), [a.legend ? 'cult legend' : '', a.genres.join(', '), a.note || ''].filter(Boolean).join('; '))),
     '',
-    '## TAM TV',
-    ...c.videos.map((v) => line(v.title, paths.video(v.slug))),
+    '## Archive by year',
+    ...q.years().map((y) => line(y, paths.year(y))),
+    '',
+    '## Also',
+    line('The TAM Academy', '/academy'),
+    line('TAM TV', '/tv', 'films from TAM\'s YouTube channel'),
     '',
   ].join('\n');
 }

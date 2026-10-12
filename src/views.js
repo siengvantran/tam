@@ -1,5 +1,5 @@
 import { h, raw, fmtDate, fmtTime } from './lib/html.js';
-import { logo, artwork, archiveRings, londonTime, daypart } from './lib/brand.js';
+import { logo, artwork, londonTime, daypart } from './lib/brand.js';
 import { pressing } from './lib/vinyl.js';
 import { GENRE_NAMES } from './lib/content.js';
 import {
@@ -9,21 +9,13 @@ import {
 const NAV = [
   ['/whats-on', 'What’s on'],
   ['/artists', 'Artists'],
-  ['/archive', 'Archive'],
   ['/tv', 'TV'],
-  ['/locations', 'Locations'],
+  ['/academy', 'Academy'],
+  ['/archive', 'Archive'],
   ['/about', 'About'],
 ];
 
-const DAYPART_LINE = {
-  dawn: 'Dawn in London. The room is quiet; the archive is open.',
-  day: 'Daytime in London. Dig through six years of nights.',
-  dusk: 'Doors soon. Evening light at TAM.',
-  night: 'Night in London. This is when TAM happens.',
-};
-
 const num = (n) => Number(n).toLocaleString('en-GB');
-const plural = (n, one, many = `${one}s`) => `${num(n)} ${n === 1 ? one : many}`;
 const day = (e, opts) => fmtDate(e.start, opts);
 const longDay = (e) => fmtDate(e.start, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 const shortDay = (e) => fmtDate(e.start, { day: 'numeric', month: 'short', year: 'numeric' });
@@ -73,7 +65,7 @@ ${raw(jsonLdTag(organization(site), ...ld))}
 <script src="/js/tam.js" defer></script>
 </head>
 <body data-daypart="${daypart(londonTime(ctx.now).hour)}">
-<canvas class="chorus-rain" data-chorus aria-hidden="true"></canvas>
+${path.startsWith('/box-office') || path.startsWith('/tickets') ? '' : raw('<canvas class="chorus-rain" data-chorus aria-hidden="true"></canvas>')}
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <a class="brand" href="/" aria-label="TAM.TV home">${raw(logo('mark', { width: 40, alt: '' }))}${raw(logo('wordmark', { width: 92, alt: 'TAM' }))}<span class="brand-tv">.TV</span></a>
@@ -88,16 +80,16 @@ ${raw(jsonLdTag(organization(site), ...ld))}
   <div class="footer-grid">
     <div>
       <p class="big-idea">${site.bigIdea}</p>
-      <p class="muted">${site.legalName} · London since 2020</p>
-      <p class="footer-links">${ctx.c.venues.map((v) => h`<a href="${paths.venue(v.slug)}">${v.name}</a>`)}</p>
+      <p class="muted">${site.legalName} · ${site.locality}</p>
+      <p class="footer-links">${ctx.q.currentVenues().map((v) => h`<a href="${paths.venue(v.slug)}">${v.name}</a>`)} <a href="/locations">Find us</a></p>
     </div>
     ${signupForm(ctx)}
     <div>
       <h2 class="eyebrow">Explore</h2>
       <ul class="plain">
-        <li><a href="/archive">The archive, by year</a></li>
-        <li><a href="/series">Regular nights</a></li>
-        <li><a href="/genres">Genres</a></li>
+        <li><a href="/whats-on">What’s on</a></li>
+        <li><a href="/archive">The archive</a></li>
+        <li><a href="/academy">The TAM Academy</a></li>
         <li><a href="/stories">Stories</a> · <a href="/listen">Listen</a></li>
         ${Object.entries(site.socials).filter(([, v]) => v).map(([k, v]) => h`<li><a href="${v}" rel="me noopener">${k[0].toUpperCase() + k.slice(1)}</a></li>`)}
       </ul>
@@ -124,7 +116,7 @@ function consentBanner() {
 function signupForm(ctx, { compact = true } = {}) {
   return h`<form class="signup"${compact ? raw(' id="footer-signup"') : ''} method="post" action="/signup">
   <h2 class="eyebrow">The TAM list</h2>
-  <p class="muted">New nights, artists and films. Roughly twice a month.</p>
+  <p class="muted">Hear about new nights and artists first.</p>
   <label class="sr" for="signup-email-${compact ? 'f' : 'p'}">Email</label>
   <div class="inline-field">
     <input id="signup-email-${compact ? 'f' : 'p'}" type="email" name="email" required placeholder="you@example.com" autocomplete="email">
@@ -173,7 +165,7 @@ const artistCard = (a) => h`<article class="card artist-card">
   <a href="${paths.artist(a.slug)}" class="card-art">${raw(artwork(a.name, { size: 200, legend: a.legend }))}</a>
   <div class="card-body">
     <h3><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)}</h3>
-    <p class="meta">${a.appearances ? plural(a.appearances, 'night') + ' at TAM' : 'From the TAM archive'}${a.genres.length ? ` · ${a.genres.map((g) => GENRE_NAMES[g] || g).join(', ')}` : ''}</p>
+    ${a.genres.length ? h`<p class="meta">${a.genres.map((g) => GENRE_NAMES[g] || g).join(' · ')}</p>` : ''}
   </div>
 </article>`;
 
@@ -196,9 +188,8 @@ const storyCard = (s) => h`<article class="card story-card">
   </div>
 </article>`;
 
-const chipLinks = (items) => h`<p class="chips">${items.map(([href, label, count]) => h`<a class="chip chip-link" href="${href}">${label}${count != null ? h` <span>${num(count)}</span>` : ''}</a>`)}</p>`;
+const chipLinks = (items) => h`<p class="chips">${items.map(([href, label]) => h`<a class="chip chip-link" href="${href}">${label}</a>`)}</p>`;
 
-const statRow = (items) => h`<dl class="stats">${items.map(([n, label]) => h`<div><dt>${label}</dt><dd>${n}</dd></div>`)}</dl>`;
 
 // The "data" buttons. Work without JS (POST + redirect); tam.js upgrades them.
 const DEMAND_DONE = {
@@ -217,6 +208,21 @@ const demandForm = (ctx, { type, target, count, label, ask }) => h`<form class="
   </div>
   <label class="check demand-consent"><input type="checkbox" name="consent"> If I leave my email, TAM can contact me about this.</label>
 </form>`;
+
+// The old site's venue text, minus what's out of date: opening hours (now in
+// site.json), "7 days a week", the recurring-events list (What's on covers
+// it) and the Mercato history.
+function venueBlocks(blocks) {
+  const out = [];
+  let skipping = false;
+  for (const b of blocks) {
+    if (/^h[1-4]$/.test(b.type)) skipping = /opening times|recurring events/i.test(b.text);
+    if (skipping) continue;
+    if (/7 days a week|seven days a week|Mercato Metropolitano, which|Andrea/i.test(b.text)) continue;
+    out.push(b);
+  }
+  return out;
+}
 
 // Legacy (old tam.tv) content blocks, with list items grouped.
 function blocksHtml(blocks, { skipFirstHeading = true } = {}) {
@@ -243,54 +249,47 @@ export function home(ctx) {
   const { c, q } = ctx;
   const upcoming = q.upcoming();
   const next = upcoming[0];
-  const s = q.stats();
-  const t = londonTime(ctx.now);
-  const part = daypart(t.hour);
   const mmdd = fmtDate(ctx.now.toISOString(), { month: '2-digit', day: '2-digit' }).split('/').reverse().join('-');
   const onThisDay = q.past().filter((e) => e.date.slice(5) === mmdd).slice(0, 6);
-  const legends = c.artists.filter((a) => a.legend && (a.appearances || a.legacyPath)).sort((a, b) => b.appearances - a.appearances);
+  const legends = c.artists.filter((a) => a.legend && a.appearances).sort((a, b) => b.appearances - a.appearances);
   const regulars = c.artists.filter((a) => !a.legend).slice(0, 8);
 
   const body = h`
 <section class="hero">
   <div class="hero-mark"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 520, eager: true }))}</div></div>
   <div class="hero-copy">
-    <p class="eyebrow">Temple of Art and Music · London</p>
+    <p class="eyebrow">Temple of Art and Music · ${c.site.locality}</p>
     <h1>Live music.<br>Emerging artists.<br>Cult legends.</h1>
-    <p class="lede">${num(s.nights)} nights. ${num(s.artists)} artists. ${s.venues} London venues. Since ${s.since}. Every one of them is here, and the next one is coming up.</p>
-    <p class="clock" data-clock><span data-clock-time>${String(t.hour).padStart(2, '0')}:${String(t.minute).padStart(2, '0')}</span> London · <span data-clock-line>${DAYPART_LINE[part]}</span></p>
+    <p class="lede">A home for artists at every stage, from first gigs to cult legends, and a place where they pass on what they know to the next generation.</p>
     ${next ? h`<div class="next-up">
       <p class="eyebrow">Next at TAM</p>
       <p class="next-title"><a href="${paths.event(next.slug)}">${next.title}</a></p>
       <p class="countdown" data-countdown="${next.start}">${longDay(next)} · ${fmtTime(next.start)}</p>
     </div>` : ''}
-    <p class="cta-row"><a class="btn" href="/whats-on">What’s on</a> <a class="btn btn-ghost" href="/archive">Explore the archive</a></p>
+    <p class="cta-row"><a class="btn" href="/whats-on">What’s on</a> <a class="btn btn-ghost" href="/academy">The TAM Academy</a></p>
   </div>
 </section>
-
-${statRow([[num(s.nights), 'nights of live music'], [num(s.artists), 'named artists'], [s.venues, 'London venues'], [c.series.length, 'regular nights']])}
 
 ${upcoming.length ? section('Coming up', h`<div class="grid grid-3">${upcoming.slice(0, 6).map((e) => eventCard(ctx, e))}</div>`, { href: '/whats-on' }) : ''}
 
-${onThisDay.length ? section(`On this day at TAM · ${fmtDate(ctx.now.toISOString(), { day: 'numeric', month: 'long' })}`, eventList(ctx, onThisDay), { href: '/archive', more: 'The whole archive →' }) : ''}
-
-${legends.length ? section('Cult legends who played TAM', h`<div class="grid grid-4">${legends.slice(0, 8).map(artistCard)}</div>`, { href: '/artists#legends' }) : ''}
-${section('The TAM regulars', h`<div class="grid grid-4">${regulars.map(artistCard)}</div>`, { href: '/artists', more: `All ${num(c.artists.length)} artists →` })}
-${c.videos.length ? section('TAM TV', h`<div class="grid grid-3">${c.videos.slice(0, 3).map(videoCard)}</div>`, { href: '/tv' }) : ''}
-
-<section class="section split">
-  <div>${raw(archiveRings(q.archiveByYear()))}</div>
+<section class="section play-tam academy-band">
   <div>
-    <h2>Six years, six rings</h2>
-    <p>Each ring around the TAM mark is a year of nights; its length is how many happened. Every one has a page: who played, where, and who else shared the bill.</p>
-    ${chipLinks(q.years().map((y) => [paths.year(y), y, q.eventsInYear(y).length]))}
+    <p class="eyebrow">The TAM Academy</p>
+    <h2>Passing it on.</h2>
+    <p>Dana Gillespie and the musicians around TAM sharing what they’ve learned with the next generation of artists.</p>
   </div>
+  <a class="btn" href="/academy">Find out more</a>
 </section>
+
+${legends.length ? section('Cult legends who have played TAM', h`<div class="grid grid-4">${legends.slice(0, 8).map(artistCard)}</div>`, { href: '/artists#legends' }) : ''}
+${section('Regulars', h`<div class="grid grid-4">${regulars.map(artistCard)}</div>`, { href: '/artists', more: 'All artists →' })}
+${(ctx.tv || []).length ? section('Latest on TAM TV', h`<div class="grid grid-3">${ctx.tv.slice(0, 3).map(tvCard)}</div>`, { href: '/tv' }) : ''}
+${onThisDay.length ? section(`On this day at TAM · ${fmtDate(ctx.now.toISOString(), { day: 'numeric', month: 'long' })}`, eventList(ctx, onThisDay), { href: '/archive', more: 'The archive →' }) : ''}
 
 <section class="section play-tam">
   <div>
     <h2>Play TAM</h2>
-    <p>Whether it’s your first gig or your thirtieth year on the road, TAM doesn’t just put artists on stage. It helps build their audience: a live room, a filmed set, a permanent page on TAM.TV and the TAM community.</p>
+    <p>Whether it’s your first gig or your thirtieth year on the road, tell us about the night you’d put on.</p>
   </div>
   <a class="btn" href="/submit">Propose a night</a>
 </section>`;
@@ -302,31 +301,30 @@ ${c.videos.length ? section('TAM TV', h`<div class="grid grid-3">${c.videos.slic
 export function whatsOn(ctx) {
   const { q } = ctx;
   const upcoming = q.upcoming();
-  const legacy = q.legacy('/whats-on');
   const byDay = new Map();
   for (const e of upcoming) {
     const k = longDay(e);
     if (!byDay.has(k)) byDay.set(k, []);
     byDay.get(k).push(e);
   }
+  const current = q.currentSeries();
   const body = h`
 <header class="page-head">
   <p class="eyebrow">What’s on</p>
-  <h1>Live music, seven days a week.</h1>
-  <p class="lede">Every upcoming night at TAM, across London. Tickets are on Eventbrite.</p>
+  <h1>What’s on at TAM.</h1>
+  <p class="lede">Live music, open mics and karaoke at TAM. Book here where tickets are on sale, or on Eventbrite.</p>
 </header>
 ${upcoming.length ? [...byDay].map(([d, list]) => section(d, h`<div class="grid grid-3">${list.map((e) => eventCard(ctx, e))}</div>`)) : h`<p>New dates are on the way. <a href="#footer-signup">Join the list</a> to hear first.</p>`}
-${section('Regular nights', chipLinks(ctx.c.series.map((s) => [paths.series(s.slug), s.name, s.count])), { href: '/series' })}
-${legacy?.blocks.length ? section('From the TAM noticeboard', h`<div class="prose narrow-left">${blocksHtml(legacy.blocks)}</div>`) : ''}`;
+${current.length ? section('Regular nights', chipLinks(current.map((s) => [paths.series(s.slug), s.name]))) : ''}`;
   return layout(ctx, {
-    title: 'What’s on', description: 'Upcoming live music at the Temple of Art and Music (TAM) in London: blues jams, jazz, soul, open mics, karaoke and gigs, seven days a week.', path: '/whats-on', body,
+    title: 'What’s on', description: 'What’s on at the Temple of Art and Music (TAM), Elephant & Castle, London: live music, blues jams, open mics and karaoke. Book tickets.', path: '/whats-on', body,
     ld: [itemList(ctx.c.site, 'What’s on at TAM', upcoming.map((e) => paths.event(e.slug))), ...upcoming.slice(0, 30).map((e) => eventLD(ctx.c.site, e, q))],
   });
 }
 
 // ---------------------------------------------------------------- events
 
-export function eventPage(ctx, e, { counts }) {
+export function eventPage(ctx, e, { counts, ticketing }) {
   const { q } = ctx;
   const past = q.isPast(e);
   const venue = q.venue(e.venue);
@@ -343,12 +341,13 @@ export function eventPage(ctx, e, { counts }) {
     <p class="eyebrow">${series ? h`<a href="${paths.series(series.slug)}">${series.name}</a>` : 'TAM'}${past ? ' · From the archive' : ''}</p>
     <h1>${e.title}</h1>
     <p class="meta big"><time datetime="${e.start}">${longDay(e)}</time> · ${fmtTime(e.start)}</p>
-    <p class="meta">${venue ? h`<a href="${paths.venue(venue.slug)}">${venue.name}</a>, ${venue.address}` : e.venueName}${e.free ? ' · Free entry' : ''}</p>
+    <p class="meta">${venue ? h`<a href="${paths.venue(venue.slug)}">${venue.name}</a>, ${venue.address}` : e.venueName}</p>
     ${past ? '' : h`<p class="countdown" data-countdown="${e.start}"></p>`}
+    ${past ? '' : raw(ticketing || '')}
     <p class="cta-row">
-      ${past ? h`<a class="btn btn-ghost" href="${e.url}" rel="noopener">The original listing</a>` : h`<a class="btn" href="${e.url}" rel="noopener">Tickets on Eventbrite</a> <a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>`}
+      ${past ? h`<a class="btn btn-ghost" href="${e.url}" rel="noopener">The original listing</a>` : h`${ticketing ? '' : h`<a class="btn" href="${e.url}" rel="noopener">Tickets on Eventbrite</a> `}<a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>`}
     </p>
-    ${lineup.length ? h`<h2>On the bill</h2><ul class="plain lineup">${lineup.map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)} <span class="meta">${plural(a.appearances, 'night')} at TAM</span></li>`)}</ul>` : ''}
+    ${lineup.length ? h`<h2>On the bill</h2><ul class="plain lineup">${lineup.map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a> ${legendBadge(a)}</li>`)}</ul>` : ''}
     ${e.genres.length ? chipLinks(e.genres.filter((g) => GENRE_NAMES[g]).map((g) => [paths.genre(g), GENRE_NAMES[g]])) : ''}
     ${past ? demandForm(ctx, { type: 'was-there', target: e.slug, count: there, label: 'I was there', ask: 'Were you there? Add yourself to the night.' }) : ''}
   </div>
@@ -364,24 +363,25 @@ ${alsoBy.length ? section(lineup.length === 1 ? `More from ${lineup[0].name}` : 
 
 // ---------------------------------------------------------------- artists
 
+const SOURCE_NOTE = 'Nights are taken from TAM’s Eventbrite listings, so some nights may be missing.';
+
 export function artists(ctx) {
   const { c } = ctx;
   const legends = c.artists.filter((a) => a.legend);
-  const top = c.artists.filter((a) => !a.legend && a.appearances).slice(0, 12);
   const az = [...c.artists].sort((a, b) => a.name.replace(/^The /i, '').localeCompare(b.name.replace(/^The /i, ''), 'en'));
   const letters = [...new Set(az.map((a) => a.name.replace(/^The /i, '')[0].toUpperCase()))];
   const body = h`
 <header class="page-head">
   <p class="eyebrow">Artists</p>
-  <h1>Everyone who has played TAM.</h1>
-  <p class="lede">${num(c.artists.length)} artists, from first gigs to cult legends. Every one has a permanent page, their nights at TAM, who they’ve shared a bill with, and their own coloured vinyl.</p>
+  <h1>Artists who have played TAM.</h1>
+  <p class="lede">From first gigs to cult legends. Every artist has a page with their nights at TAM and who they’ve shared a bill with.</p>
 </header>
 ${legends.length ? section('Cult legends', h`<div class="grid grid-4">${legends.map(artistCard)}</div>`, { id: 'legends' }) : ''}
-${section('Most-played', h`<div class="grid grid-4">${top.map(artistCard)}</div>`)}
 ${section('A–Z', h`<p class="az-index">${letters.map((l) => h`<a href="#az-${l}">${l}</a>`)}</p>
-<div class="az">${letters.map((l) => h`<div class="az-group" id="az-${l}"><h3>${l}</h3><ul class="plain">${az.filter((a) => a.name.replace(/^The /i, '')[0].toUpperCase() === l).map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a> <span class="meta">${a.appearances || ''}</span></li>`)}</ul></div>`)}</div>`, { id: 'a-z' })}`;
+<div class="az">${letters.map((l) => h`<div class="az-group" id="az-${l}"><h3>${l}</h3><ul class="plain">${az.filter((a) => a.name.replace(/^The /i, '')[0].toUpperCase() === l).map((a) => h`<li><a href="${paths.artist(a.slug)}">${a.name}</a></li>`)}</ul></div>`)}</div>
+<p class="muted small">${SOURCE_NOTE}</p>`, { id: 'a-z' })}`;
   return layout(ctx, {
-    title: 'Artists', description: `All ${c.artists.length} artists who have played the Temple of Art and Music in London, from emerging artists to cult legends like Dana Gillespie.`, path: '/artists', body,
+    title: 'Artists', description: 'Artists who have played the Temple of Art and Music in London, from emerging artists to cult legends like Dana Gillespie.', path: '/artists', body,
     ld: [itemList(c.site, 'Artists who have played TAM', c.artists.map((a) => paths.artist(a.slug)))],
   });
 }
@@ -391,7 +391,7 @@ export function artistPage(ctx, a, { counts }) {
   const nights = q.eventsFor(a.slug);
   const upcoming = nights.filter((e) => !q.isPast(e));
   const past = nights.filter((e) => q.isPast(e)).reverse();
-  const videos = q.videosFor(a.slug);
+  const videos = (ctx.tv || []).filter((v) => v.title.toLowerCase().includes(a.name.toLowerCase()) || (v.artists || []).includes(a.slug));
   const stories = q.storiesFor({ artist: a.slug });
   const withThem = q.playedWith(a.slug).filter((x) => x.artist);
   const subpages = a.legacyPath ? c.legacy.filter((p) => p.path.startsWith(`${a.legacyPath}/`)) : [];
@@ -403,33 +403,28 @@ export function artistPage(ctx, a, { counts }) {
     byYear.get(y).push(e);
   }
   const want = counts.get(`bring-back:${a.slug}`) || 0;
-  const summary = a.appearances
-    ? `${a.name} has played ${plural(a.appearances, 'night')} at the Temple of Art and Music${a.first ? `, from ${fmtDate(a.first, { month: 'long', year: 'numeric' })}` : ''}${a.last && a.last !== a.first ? ` to ${fmtDate(a.last, { month: 'long', year: 'numeric' })}` : ''}.`
-    : `${a.name} is part of the TAM story.`;
   const body = h`
 <article class="detail">
-  <div class="detail-art">${raw(artwork(a.name, { size: 360, legend: a.legend }))}${pressedOn(a.name, a.legend)}<p class="meta center"><a href="/art/${a.slug}.svg" download>Download the record (SVG)</a></p></div>
+  <div class="detail-art">${raw(artwork(a.name, { size: 360, legend: a.legend }))}${pressedOn(a.name, a.legend)}</div>
   <div class="detail-copy">
     <p class="eyebrow">${a.genres.map((g) => GENRE_NAMES[g] || g).join(' · ') || 'Artist'} ${legendBadge(a)}</p>
     <h1>${a.name}</h1>
     ${a.note ? h`<p class="meta">${a.note}</p>` : ''}
-    <p class="lede">${summary}</p>
-    ${a.appearances ? statRow([[num(a.appearances), 'nights at TAM'], [venues.length, venues.length === 1 ? 'venue' : 'venues'], [a.first?.slice(0, 4) || '—', 'first played']]) : ''}
     ${a.bio.length ? h`<div class="prose bio">${a.bio.slice(0, 2).map((p) => h`<p>${p}</p>`)}${a.bio.length > 2 ? h`<details><summary>More from the TAM archive</summary>${a.bio.slice(2, 40).map((p) => h`<p>${p}</p>`)}</details>` : ''}</div>` : ''}
     ${upcoming.length ? h`<h2>Next at TAM</h2>${eventList(ctx, upcoming)}` : ''}
     ${demandForm(ctx, { type: 'bring-back', target: a.slug, count: want, label: 'Bring them back', ask: upcoming.length ? `Want more ${a.name} at TAM? Say so, and we’ll tell you when there’s a new date.` : `Want ${a.name} back at TAM? Say so, and we’ll tell you when it happens.` })}
   </div>
 </article>
 ${a.images.length ? section('From the TAM archive', legacyImages(a.images, a.name)) : ''}
-${videos.length ? section('On TAM TV', h`<div class="grid grid-3">${videos.map(videoCard)}</div>`) : ''}
-${past.length ? section(`${plural(past.length, 'night')} at TAM`, [...byYear].map(([y, list]) => h`<h3 class="year-head"><a href="${paths.year(y)}">${y}</a></h3>${eventList(ctx, list, { showYear: false })}`)) : ''}
+${videos.length ? section('On TAM TV', h`<div class="grid grid-3">${videos.slice(0, 6).map(tvCard)}</div>`, { href: '/tv' }) : ''}
+${past.length ? section('Nights at TAM', h`${[...byYear].map(([y, list]) => h`<h3 class="year-head"><a href="${paths.year(y)}">${y}</a></h3>${eventList(ctx, list, { showYear: false })}`)}<p class="muted small">${SOURCE_NOTE}</p>`) : ''}
 ${withThem.length ? section('Shared the bill with', h`<div class="grid grid-4">${withThem.map((x) => artistCard(x.artist))}</div>`) : ''}
 ${subpages.length ? section('More about ' + a.name, h`<ul class="plain link-list">${subpages.map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`) : ''}
 ${stories.length ? section('Stories', h`<div class="grid grid-3">${stories.map(storyCard)}</div>`) : ''}
-${venues.length ? section('Where they played', chipLinks(venues.map((v) => [paths.venue(v.slug), v.name, q.eventsFor(a.slug).filter((e) => e.venue === v.slug).length]))) : ''}`;
+${venues.length ? section('Where they played', chipLinks(venues.map((v) => [paths.venue(v.slug), v.name]))) : ''}`;
   return layout(ctx, {
-    title: `${a.name}${a.appearances ? ' at TAM' : ''}`,
-    description: `${summary} ${a.note || ''} Every night, who they played with, and what’s next.`.trim(),
+    title: `${a.name} at TAM`,
+    description: `${a.name} at the Temple of Art and Music, London. ${a.note || ''} Their nights at TAM, who they played with, and what’s next.`.replace(/\s+/g, ' '),
     path: paths.artist(a.slug), body, ld: [artistLD(c.site, a, q)], ogType: 'profile',
   });
 }
@@ -437,28 +432,22 @@ ${venues.length ? section('Where they played', chipLinks(venues.map((v) => [path
 // ---------------------------------------------------------------- archive
 
 export function archive(ctx) {
-  const { q, c } = ctx;
-  const s = q.stats();
-  const years = q.years();
+  const { q } = ctx;
   const body = h`
 <header class="page-head">
   <p class="eyebrow">The archive</p>
-  <h1>Every night at TAM, since ${s.since}.</h1>
-  <p class="lede">${num(s.nights)} nights across ${s.venues} London venues. Who played, where, and who else was on the bill. Were you there? Add yourself to the night.</p>
+  <h1>Past nights at TAM.</h1>
+  <p class="lede">Who played, where and when. Were you there? Add yourself to the night.</p>
+  <p class="muted">${SOURCE_NOTE}</p>
 </header>
-<section class="section split">
-  <div>${raw(archiveRings(q.archiveByYear()))}</div>
-  <div>${years.map((y) => h`<p class="year-line"><a href="${paths.year(y)}"><strong>${y}</strong></a> <span class="meta">${plural(q.eventsInYear(y).length, 'night')} · ${new Set(q.eventsInYear(y).flatMap((e) => e.performers)).size} artists</span></p>`)}</div>
-</section>
-${section('Regular nights', chipLinks(c.series.map((x) => [paths.series(x.slug), x.name, x.count])), { href: '/series' })}
-${section('Genres', chipLinks(q.genres().map((g) => [paths.genre(g), GENRE_NAMES[g], q.eventsInGenre(g).length])), { href: '/genres' })}
-${section('Venues', chipLinks(c.venues.map((v) => [paths.venue(v.slug), v.name, q.eventsAtVenue(v.slug).length])), { href: '/locations' })}`;
-  return layout(ctx, { title: 'The archive', description: `Every live music night at the Temple of Art and Music (TAM), London, since ${s.since}: ${num(s.nights)} nights, ${num(s.artists)} artists.`, path: '/archive', body });
+${section('By year', chipLinks(q.years().slice().reverse().map((y) => [paths.year(y), y])))}
+${section('Recent nights', eventList(ctx, q.past().slice(0, 30)))}`;
+  return layout(ctx, { title: 'The archive', description: 'Past live music nights at the Temple of Art and Music (TAM), London: who played, where and when.', path: '/archive', body });
 }
 
 export function archiveYear(ctx, year) {
   const { q } = ctx;
-  const list = q.eventsInYear(year);
+  const list = q.eventsInYear(year).filter((e) => q.isPast(e));
   const months = new Map();
   for (const e of list) {
     const m = Number(e.date.slice(5, 7));
@@ -467,33 +456,29 @@ export function archiveYear(ctx, year) {
   }
   const years = q.years();
   const i = years.indexOf(String(year));
-  const counts = new Map();
-  for (const e of list) for (const p of e.performers) counts.set(p, (counts.get(p) || 0) + 1);
-  const top = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([s]) => q.artist(s)).filter(Boolean);
   const body = h`
 <header class="page-head">
   <p class="eyebrow"><a href="/archive">The archive</a></p>
   <h1>TAM in ${year}</h1>
-  <p class="lede">${plural(list.length, 'night')} of live music, ${counts.size} named artists.</p>
+  <p class="muted">${SOURCE_NOTE}</p>
   <p class="cta-row">${years[i - 1] ? h`<a class="btn btn-ghost btn-small" href="${paths.year(years[i - 1])}">← ${years[i - 1]}</a>` : ''} ${years[i + 1] ? h`<a class="btn btn-ghost btn-small" href="${paths.year(years[i + 1])}">${years[i + 1]} →</a>` : ''}</p>
 </header>
-${top.length ? section(`The artists of ${year}`, h`<div class="grid grid-4">${top.map(artistCard)}</div>`) : ''}
 ${[...months].map(([m, l]) => section(`${monthName(m)} ${year}`, eventList(ctx, l, { showYear: false })))}`;
-  return layout(ctx, { title: `TAM in ${year}`, description: `All ${list.length} live music nights at the Temple of Art and Music in London in ${year}, month by month, with every artist on the bill.`, path: paths.year(year), body });
+  return layout(ctx, { title: `TAM in ${year}`, description: `Live music nights at the Temple of Art and Music in London in ${year}, month by month, with the artists on the bill.`, path: paths.year(year), body });
 }
 
 export function seriesIndex(ctx) {
+  const current = ctx.q.currentSeries();
   const body = h`
 <header class="page-head">
   <p class="eyebrow">Regular nights</p>
-  <h1>The nights that keep coming back.</h1>
+  <h1>Regular nights at TAM.</h1>
 </header>
-<div class="grid grid-3">${ctx.c.series.map((s) => h`<article class="card"><div class="card-body">
-  <p class="eyebrow">${s.first.slice(0, 4)}–${s.last.slice(0, 4)}</p>
+${current.length ? h`<div class="grid grid-3">${current.map((s) => h`<article class="card"><div class="card-body">
   <h3><a href="${paths.series(s.slug)}">${s.name}</a></h3>
-  <p class="meta">${plural(s.count, 'night')}</p>
-</div></article>`)}</div>`;
-  return layout(ctx, { title: 'Regular nights', description: 'The regular nights at TAM London: the Great British Blues Jam, Singers @ Sunday Spot, Word of Mouth Fusion Jazz, open mics, karaoke and more.', path: '/series', body });
+  <p class="meta">Next: ${longDay(ctx.q.eventsInSeries(s.slug).find((e) => !ctx.q.isPast(e)))}</p>
+</div></article>`)}</div>` : h`<p>See <a href="/whats-on">what’s on</a>.</p>`}`;
+  return layout(ctx, { title: 'Regular nights', description: 'Regular nights at TAM, Elephant & Castle, London.', path: '/series', body });
 }
 
 export function seriesPage(ctx, s) {
@@ -501,29 +486,22 @@ export function seriesPage(ctx, s) {
   const list = q.eventsInSeries(s.slug);
   const upcoming = list.filter((e) => !q.isPast(e));
   const past = list.filter((e) => q.isPast(e)).reverse();
-  const counts = new Map();
-  for (const e of list) for (const p of e.performers) counts.set(p, (counts.get(p) || 0) + 1);
-  const regulars = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([x]) => q.artist(x)).filter(Boolean);
   const body = h`
 <header class="page-head">
   <p class="eyebrow"><a href="/series">Regular nights</a></p>
   <h1>${s.name}</h1>
-  <p class="lede">${plural(s.count, 'night')} at TAM since ${fmtDate(s.first, { month: 'long', year: 'numeric' })}.</p>
+  ${upcoming.length ? '' : h`<p class="lede">This night isn’t running at the moment. Here’s its history at TAM.</p>`}
 </header>
 ${upcoming.length ? section('Next up', h`<div class="grid grid-3">${upcoming.map((e) => eventCard(ctx, e))}</div>`) : ''}
-${regulars.length ? section('Regulars', h`<div class="grid grid-4">${regulars.map(artistCard)}</div>`) : ''}
-${section('Every night', eventList(ctx, past))}`;
-  return layout(ctx, { title: `${s.name} at TAM`, description: `${s.name} at the Temple of Art and Music, London: ${s.count} nights since ${s.first.slice(0, 4)}, with every date and artist.`, path: paths.series(s.slug), body, ld: [seriesLD(ctx.c.site, s)] });
+${past.length ? section('Past nights', h`${eventList(ctx, past.slice(0, 60))}<p class="muted small">${SOURCE_NOTE}</p>`) : ''}`;
+  return layout(ctx, { title: `${s.name} at TAM`, description: `${s.name} at the Temple of Art and Music, London.`, path: paths.series(s.slug), body, ld: [seriesLD(ctx.c.site, s)] });
 }
 
 export function genresIndex(ctx) {
   const { q } = ctx;
   const body = h`
 <header class="page-head"><p class="eyebrow">Genres</p><h1>What TAM sounds like.</h1></header>
-<div class="grid grid-3">${q.genres().map((g) => h`<article class="card"><div class="card-body">
-  <h3><a href="${paths.genre(g)}">${GENRE_NAMES[g]}</a></h3>
-  <p class="meta">${plural(q.eventsInGenre(g).length, 'night')} · ${plural(q.artistsInGenre(g).length, 'artist')}</p>
-</div></article>`)}</div>`;
+${chipLinks(q.genres().map((g) => [paths.genre(g), GENRE_NAMES[g]]))}`;
   return layout(ctx, { title: 'Genres', path: '/genres', body });
 }
 
@@ -531,42 +509,36 @@ export function genrePage(ctx, g) {
   const { q } = ctx;
   const nights = q.eventsInGenre(g);
   const upcoming = nights.filter((e) => !q.isPast(e));
-  const artistsHere = q.artistsInGenre(g).slice(0, 24);
   const body = h`
 <header class="page-head">
   <p class="eyebrow"><a href="/genres">Genres</a></p>
   <h1>${GENRE_NAMES[g]} at TAM</h1>
-  <p class="lede">${plural(nights.length, 'night')} of ${GENRE_NAMES[g].toLowerCase()} in London since ${nights[0]?.date.slice(0, 4)}.</p>
 </header>
 ${upcoming.length ? section('Coming up', h`<div class="grid grid-3">${upcoming.map((e) => eventCard(ctx, e))}</div>`) : ''}
-${artistsHere.length ? section('Artists', h`<div class="grid grid-4">${artistsHere.map(artistCard)}</div>`) : ''}
-${section('Recent nights', eventList(ctx, nights.filter((e) => q.isPast(e)).reverse().slice(0, 60)))}`;
-  return layout(ctx, { title: `${GENRE_NAMES[g]} in London at TAM`, description: `Live ${GENRE_NAMES[g].toLowerCase()} in London at the Temple of Art and Music: upcoming nights, ${nights.length} past nights and the artists who play them.`, path: paths.genre(g), body });
+${section('Recent nights', eventList(ctx, nights.filter((e) => q.isPast(e)).reverse().slice(0, 40)))}`;
+  return layout(ctx, { title: `${GENRE_NAMES[g]} in London at TAM`, description: `Live ${GENRE_NAMES[g].toLowerCase()} in London at the Temple of Art and Music.`, path: paths.genre(g), body });
 }
 
 // ---------------------------------------------------------------- locations
 
 export function locations(ctx) {
   const { q, c } = ctx;
-  const legacy = q.legacy('/locations');
+  const current = q.currentVenues();
+  const before = c.venues.filter((v) => !current.includes(v));
+  const home = q.venue('elephant-castle');
+  const homeLegacy = home?.legacy ? q.legacy(home.legacy) : null;
   const body = h`
 <header class="page-head">
-  <p class="eyebrow">Locations</p>
-  <h1>Where TAM happens.</h1>
-  <p class="lede">TAM began as a place. Since 2020 it has played ${c.venues.length} rooms across London, and taken its artists further, from Vienna to Austin.</p>
+  <p class="eyebrow">Find us</p>
+  <h1>${current.length === 1 ? current[0].name : 'Where TAM is'}</h1>
+  ${current.length === 1 ? h`<p class="lede">${current[0].address}</p>` : ''}
 </header>
-<div class="grid grid-3">${c.venues.map((v) => {
-    const n = q.eventsAtVenue(v.slug).length;
-    return h`<article class="card"><div class="card-body">
-  <p class="eyebrow">${v.place}</p>
-  <h3><a href="${paths.venue(v.slug)}">${v.name}</a></h3>
-  <p class="meta">${v.address}</p>
-  <p class="meta">${plural(n, 'night')}</p>
-</div></article>`;
-  })}</div>
-${legacy?.blocks.length ? section('From the TAM archive', h`<div class="prose narrow-left">${blocksHtml(legacy.blocks)}</div>`) : ''}
-${section('Further afield', h`<ul class="plain link-list">${c.legacy.filter((p) => p.path.startsWith('/locations/austria')).map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`)}`;
-  return layout(ctx, { title: 'Locations', description: 'TAM venues in London: Elephant & Castle, Canary Wharf, Smithfield, Dalston and Mayfair.', path: '/locations', body, ld: c.venues.map((v) => venueLD(c.site, v)) });
+${current.length > 1 ? h`<div class="grid grid-3">${current.map((v) => h`<article class="card"><div class="card-body"><h3><a href="${paths.venue(v.slug)}">${v.name}</a></h3><p class="meta">${v.address}</p></div></article>`)}</div>` : ''}
+${c.site.hours?.length ? section('Opening times', h`<ul class="plain hours">${c.site.hours.map((l) => h`<li>${l}</li>`)}</ul>`) : ''}
+${homeLegacy && current.includes(home) ? h`<section class="section"><div class="prose narrow-left">${blocksHtml(venueBlocks(homeLegacy.blocks))}</div><p><a class="btn btn-ghost" href="${paths.venue(home.slug)}">More about ${home.name}</a></p></section>` : ''}
+${before.length ? section('Where TAM has been', h`<ul class="plain link-list">${before.map((v) => h`<li><a href="${paths.venue(v.slug)}">${v.name}</a> <span class="meta">${v.place}</span></li>`)}</ul>`) : ''}
+${section('Beyond London', h`<ul class="plain link-list">${c.legacy.filter((p) => p.path.startsWith('/locations/austria')).map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`)}`;
+  return layout(ctx, { title: 'Find us', description: `Find TAM, the Temple of Art and Music: ${home?.address || 'London'}.`, path: '/locations', body, ld: current.map((v) => venueLD(c.site, v)) });
 }
 
 export function venuePage(ctx, v) {
@@ -574,58 +546,68 @@ export function venuePage(ctx, v) {
   const legacy = v.legacy ? q.legacy(v.legacy) : null;
   const nights = q.eventsAtVenue(v.slug);
   const upcoming = nights.filter((e) => !q.isPast(e));
-  const counts = new Map();
-  for (const e of nights) for (const p of e.performers) counts.set(p, (counts.get(p) || 0) + 1);
-  const regulars = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([x]) => q.artist(x)).filter(Boolean);
+  const current = upcoming.length > 0;
   const body = h`
 <header class="page-head">
-  <p class="eyebrow"><a href="/locations">Locations</a> · ${v.place}</p>
+  <p class="eyebrow"><a href="/locations">Find us</a> · ${v.place}</p>
   <h1>${v.name}</h1>
-  <p class="lede">${v.address}. ${plural(nights.length, 'night')} of live music since ${nights[0]?.date.slice(0, 4) || '—'}.</p>
+  <p class="lede">${v.address}.${current ? '' : ' TAM doesn’t currently run nights here; this is the history.'}</p>
 </header>
 ${legacy ? h`<section class="section split">
-  <div class="prose">${blocksHtml(legacy.blocks)}</div>
+  <div class="prose">${current && c.site.hours?.length ? h`<h2>Opening times</h2><ul class="plain hours">${c.site.hours.map((l) => h`<li>${l}</li>`)}</ul>` : ''}${blocksHtml(venueBlocks(legacy.blocks))}</div>
   <div>${legacyImages(legacy.images, v.name)}</div>
 </section>` : ''}
 ${upcoming.length ? section('Coming up here', h`<div class="grid grid-3">${upcoming.map((e) => eventCard(ctx, e))}</div>`) : ''}
-${regulars.length ? section(`Regulars at ${v.name}`, h`<div class="grid grid-4">${regulars.map(artistCard)}</div>`) : ''}
-${section('Recent nights', eventList(ctx, nights.filter((e) => q.isPast(e)).reverse().slice(0, 40)))}`;
-  return layout(ctx, { title: `${v.name}, London`, description: `Live music at ${v.name} (${v.place}), ${v.address}. What’s on, the regulars and ${nights.length} nights of history.`, path: paths.venue(v.slug), body, ld: [venueLD(c.site, v)] });
+${section(current ? 'Recent nights' : 'Nights at TAM here', h`${eventList(ctx, nights.filter((e) => q.isPast(e)).reverse().slice(0, 40))}<p class="muted small">${SOURCE_NOTE}</p>`)}`;
+  return layout(ctx, { title: `${v.name}, London`, description: `${v.name} (${v.place}), ${v.address}.`, path: paths.venue(v.slug), body, ld: [venueLD(c.site, v)] });
 }
 
 // ---------------------------------------------------------------- TV
 
+const tvCard = (v) => h`<article class="card video-card">
+  <a href="https://www.youtube.com/watch?v=${v.youtubeId}" class="card-art video-thumb" rel="noopener" data-play="${v.youtubeId}" data-title="${v.title}">
+    <img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+    <span class="play" aria-hidden="true">▶</span>
+  </a>
+  <div class="card-body">
+    <p class="eyebrow">${v.published ? fmtDate(v.published, { day: 'numeric', month: 'short', year: 'numeric' }) : 'TAM TV'}</p>
+    <h3>${v.title}</h3>
+  </div>
+</article>`;
+
 export function tv(ctx) {
-  const { c, q } = ctx;
-  const legacy = q.legacy('/tv');
-  const shows = c.videos.filter((v) => v.show);
-  const others = c.videos.filter((v) => !v.show);
+  const { c } = ctx;
+  const list = ctx.tv || [];
+  const [latest, ...rest] = list;
+  const channel = c.site.socials.youtube;
   const body = h`
 <header class="page-head">
   <p class="eyebrow">TAM TV</p>
-  <h1>Watch the best of live music at TAM.</h1>
-  <p class="lede">Performances, birthdays, SXSW, Eurovision parties and Dana Gillespie’s chat show. <a href="${c.site.socials.youtube}" rel="noopener">Subscribe on YouTube</a>.</p>
+  <h1>TAM TV</h1>
+  <p class="lede">The latest from TAM’s YouTube channel, updated as new films go up.</p>
+  <p class="cta-row"><a class="btn" href="${channel}?sub_confirmation=1" rel="noopener">Subscribe on YouTube</a> <a class="btn btn-ghost" href="${channel}/videos" rel="noopener">All videos on YouTube</a></p>
 </header>
-${others.length ? section('Performances', h`<div class="grid grid-3">${others.map(videoCard)}</div>`) : ''}
-${shows.length ? section('Globetrotting With Gillespie', h`<div class="grid grid-3">${shows.map(videoCard)}</div>`) : ''}
-${legacy?.blocks.length ? section('About TAM TV', h`<div class="prose narrow-left">${blocksHtml(legacy.blocks)}</div>`) : ''}`;
-  return layout(ctx, { title: 'TAM TV', description: 'TAM TV: live performances from the Temple of Art and Music in London, and Globetrotting With Gillespie, Dana Gillespie’s show with guests like Nick Mason, Sir Tim Rice and Marc Almond.', path: '/tv', body, ld: c.videos.map((v) => videoLD(c.site, v, q)) });
+${latest ? h`<section class="section tv-latest">
+  <div class="player" data-player>${embed(latest.youtubeId, latest.title)}</div>
+  <h2 data-player-title>${latest.title}</h2>
+</section>` : ''}
+${rest.length ? section('More from TAM TV', h`<div class="grid grid-3">${rest.map(tvCard)}</div>`, { href: `${channel}/videos`, more: 'Everything on YouTube →' }) : ''}`;
+  return layout(ctx, { title: 'TAM TV', description: 'TAM TV: live performances and films from the Temple of Art and Music in London, straight from TAM’s YouTube channel.', path: '/tv', body, ld: list.slice(0, 15).map((v) => videoLD(c.site, { ...v, slug: v.slug || v.youtubeId, artists: v.artists || [] }, ctx.q)) });
 }
 
 export function videoPage(ctx, v) {
   const { q, c } = ctx;
   const people = v.artists.map(q.artist).filter(Boolean);
-  const more = c.videos.filter((x) => x.slug !== v.slug && (x.show === v.show || x.artists.some((a) => v.artists.includes(a)))).slice(0, 6);
   const body = h`
 <article class="video-detail">
   ${embed(v.youtubeId, v.title)}
   <div class="detail-copy narrow">
-    <p class="eyebrow">${v.show ? 'Globetrotting With Gillespie' : 'TAM TV'}</p>
+    <p class="eyebrow"><a href="/tv">TAM TV</a></p>
     <h1>${v.title}</h1>
     <p class="cta-row">${people.map((a) => h`<a class="btn btn-ghost btn-small" href="${paths.artist(a.slug)}">${a.name}</a>`)} <a class="btn btn-ghost btn-small" href="https://www.youtube.com/watch?v=${v.youtubeId}" rel="noopener">Watch on YouTube</a></p>
   </div>
 </article>
-${more.length ? section('More to watch', h`<div class="grid grid-3">${more.map(videoCard)}</div>`, { href: '/tv' }) : ''}`;
+${section('More from TAM TV', h`<div class="grid grid-3">${(ctx.tv || []).filter((x) => x.youtubeId !== v.youtubeId).slice(0, 6).map(tvCard)}</div>`, { href: '/tv' })}`;
   return layout(ctx, { title: v.title, description: `${v.title}, on TAM TV from the Temple of Art and Music, London.`, path: paths.video(v.slug), body, ld: [videoLD(c.site, v, q)], ogType: 'video.other', image: `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg` });
 }
 
@@ -697,34 +679,44 @@ ${people.length ? section('In this story', h`<div class="grid grid-4">${people.m
   return layout(ctx, { title: s.title, description: s.dek, path: paths.story(s.slug), body, ld: [storyLD(ctx.c.site, s)], ogType: 'article' });
 }
 
+const ACADEMY_RX = /academy|junior|youth|young (?:talent|artists|bloods)|in the loop/i;
+
 export function about(ctx) {
-  const { q } = ctx;
-  const legacy = q.legacy('/about');
-  const s = q.stats();
   const body = h`
-<header class="page-head">
+<header class="page-head narrow">
   <p class="eyebrow">About TAM</p>
-  <h1>TAM isn’t leaving the venue. It’s leaving the limitations of the venue behind.</h1>
-  <p class="lede">Since ${s.since}, the Temple of Art and Music has put on ${num(s.nights)} nights of live music in ${s.venues} London rooms, with ${num(s.artists)} named artists, from first gigs to cult legends. TAM.TV keeps every one of them, and makes TAM location-independent while keeping the live night at its heart.</p>
+  <h1>The Temple of Art and Music</h1>
 </header>
-${legacy?.blocks.length ? h`<section class="section split">
-  <div class="prose">${blocksHtml(legacy.blocks)}</div>
-  <div>${legacyImages(legacy.images, 'TAM')}</div>
-</section>` : ''}
 <section class="section split">
-  <div class="logo-demo"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 380 }))}</div></div>
-  <div>
-    <h2>The Temple of Art and Music</h2>
-    <p>The TAM mark is four letters sharing one circle: T, A and two Ms. It appears on TAM.TV exactly as drawn, and never altered.</p>
-    <ul>
-      <li><strong>The light around it keeps London time.</strong> The halo behind the logo and the gold of the site move from rose-gold dawn to bright day, amber dusk and a slow-breathing night.</li>
-      <li><strong>The TAM 108 fall behind every page.</strong> 108 songs drop down the background: their titles, and for songs in the public domain their choruses.</li>
-      <li><strong>Every artist, night and film gets its own coloured vinyl</strong>, pressed from its name in one of 24 rare colourways. Cult legends get a gold-foil Legend Edition.</li>
-    </ul>
+  <div class="prose">
+    <p class="lede">TAM is a home for live music in Elephant &amp; Castle, London.</p>
+    <p>We are committed to nurturing new artists and musicians, while also relaunching those who don’t get the exposure they deserve. Ticket and bar sales help to support our artists.</p>
+    <p>Looking ahead, TAM is putting more into the <a href="/academy">TAM Academy</a>, where Dana Gillespie passes on what she has learned to younger generations of artists.</p>
+    <p class="cta-row"><a class="btn" href="/whats-on">What’s on</a> <a class="btn btn-ghost" href="/locations">Find us</a></p>
   </div>
+  <div class="logo-demo"><div class="logo-frame"><div class="halo" aria-hidden="true"></div><div class="logo-backing" aria-hidden="true"></div>${raw(logo('full', { width: 380 }))}</div></div>
 </section>
-${section('More from the TAM archive', h`<ul class="plain link-list">${ctx.c.legacy.filter((p) => /^\/(about\/|private-parties|singers|made-in-london|karaoke|festivals|tom|nft|eao|the-best-christmas-ever|dana-and-the-tam)/.test(p.path)).map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`)}`;
-  return layout(ctx, { title: 'About', description: `The Temple of Art and Music: ${num(s.nights)} nights of live music in London since ${s.since}, and the move from a venue to a live music and media network.`, path: '/about', body });
+${section('From the TAM archive', h`<ul class="plain link-list">${ctx.c.legacy.filter((p) => /^\/(about\/|private-parties|singers|made-in-london|karaoke|tom|dana-and-the-tam|the-best-christmas-ever)/.test(p.path)).map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`)}`;
+  return layout(ctx, { title: 'About', description: 'The Temple of Art and Music (TAM): a home for live music in Elephant & Castle, London, nurturing new artists and relaunching those who deserve more exposure.', path: '/about', body });
+}
+
+export function academy(ctx) {
+  const { q, c } = ctx;
+  const upcoming = q.upcoming().filter((e) => ACADEMY_RX.test(e.title) || e.series === 'junior-open-mic' || e.series === 'tam-summer-academy');
+  const past = q.past().filter((e) => ACADEMY_RX.test(e.title) || e.series === 'junior-open-mic' || e.series === 'tam-summer-academy').slice(0, 20);
+  const pages = c.legacy.filter((p) => p.path.startsWith('/tom') || p.path === '/whats-on/junior-open-mic');
+  const dana = q.artist('danagillespie');
+  const body = h`
+<header class="page-head narrow">
+  <p class="eyebrow">The TAM Academy</p>
+  <h1>Passing it on.</h1>
+  <p class="lede">At the TAM Academy, Dana Gillespie and the musicians around TAM share what they have learned with the next generation of artists.</p>
+  <p class="cta-row"><a class="btn" href="#footer-signup">Hear about Academy dates</a> ${dana ? h`<a class="btn btn-ghost" href="${paths.artist(dana.slug)}">About Dana Gillespie</a>` : ''}</p>
+</header>
+${upcoming.length ? section('Coming up', h`<div class="grid grid-3">${upcoming.map((e) => eventCard(ctx, e))}</div>`) : ''}
+${pages.length ? section('From the TAM Open Music Academy', h`<ul class="plain link-list">${pages.map((p) => h`<li><a href="${p.path}">${p.title}</a></li>`)}</ul>`) : ''}
+${past.length ? section('Past Academy and young-artist nights', eventList(ctx, past)) : ''}`;
+  return layout(ctx, { title: 'The TAM Academy', description: 'The TAM Academy: Dana Gillespie and the musicians around the Temple of Art and Music passing on what they have learned to the next generation of artists.', path: '/academy', body });
 }
 
 export function submit(ctx, { values = {}, errors = {}, done = false } = {}) {
@@ -792,6 +784,8 @@ export function privacy(ctx) {
   <p><button class="btn btn-small" data-consent="denied">Withdraw analytics consent</button> <button class="btn btn-small btn-ghost" data-consent="granted">Allow analytics</button></p>
   <h2>“Bring them back” and “I was there”</h2>
   <p>When you press one of these we record the press, which artist or night it was for, and the time. Totals are shown publicly. If you also give your email and tick the box, we keep it to tell you about that artist or night; it is never shown or shared.</p>
+  <h2>Tickets</h2>
+  <p>When you book, we keep your name, email and booking so we can admit you and contact you about that night. Card payments are handled by Stripe; TAM never sees your card details.</p>
   <h2>Newsletter and submissions</h2>
   <p>If you join the list or send a Play TAM proposal, we keep what you give us to reply to you and, if you ask, to send you TAM news. Email us to see, correct or delete your data.</p>
   <h2>Embedded content</h2>
@@ -831,3 +825,129 @@ export function notFound(ctx) {
   return layout(ctx, { title: 'Not found', path: ctx.path, body, noindex: true });
 }
 
+
+// ---------------------------------------------------------------- tickets
+
+const money = (pence) => (pence === 0 ? 'Free' : `£${(pence / 100).toFixed(pence % 100 ? 2 : 0)}`);
+
+// The booking form shown on an upcoming night that's on sale at TAM.
+export function ticketForm(ctx, e, offer, { error, values = {} } = {}) {
+  if (offer.soldOut) return h`<div class="tickets"><h2>Tickets</h2><p class="sold-out">Sold out.</p></div>`;
+  const firstAvailable = offer.types.find((t) => t.left > 0);
+  const checked = values.type || firstAvailable?.id;
+  return h`<form class="tickets" method="post" action="${paths.event(e.slug)}/book" id="book">
+  <h2>Book tickets</h2>
+  ${error ? h`<p class="error-summary" role="alert">${error}</p>` : ''}
+  <fieldset class="field ticket-types"><legend>Ticket</legend>
+    ${offer.types.map((t) => h`<label class="ticket-type${t.left <= 0 ? ' is-out' : ''}">
+      <input type="radio" name="type" value="${t.id}"${t.id === checked ? raw(' checked') : ''}${t.left <= 0 ? raw(' disabled') : ''} required>
+      <span class="tt-name">${t.name}</span>
+      <span class="tt-price">${money(t.price)}</span>
+      <span class="meta">${t.left <= 0 ? 'Sold out' : t.left <= 20 ? `${t.left} left` : ''}</span>
+    </label>`)}
+  </fieldset>
+  <div class="field-row">
+    <div class="field"><label for="t-qty">How many</label><select id="t-qty" name="qty">${Array.from({ length: 8 }, (_, i) => i + 1).map((n) => h`<option${String(n) === String(values.qty || 1) ? raw(' selected') : ''}>${n}</option>`)}</select></div>
+    <div class="field"><label for="t-name">Name for the door</label><input id="t-name" name="name" required autocomplete="name" value="${values.name || ''}"></div>
+  </div>
+  <div class="field"><label for="t-email">Email</label><input id="t-email" type="email" name="email" required autocomplete="email" value="${values.email || ''}"></div>
+  <label class="check"><input type="checkbox" name="marketing"${values.marketing ? raw(' checked') : ''}> Tell me about other nights at TAM.</label>
+  <label class="check"><input type="checkbox" name="terms" required> I’ve read the <a href="/privacy">privacy notice</a>.</label>
+  <button class="btn" type="submit">Continue</button>
+  <p class="muted small">Paid tickets are paid securely on Stripe. Your ticket and QR code appear straight after.</p>
+</form>`;
+}
+
+export function ticketPage(ctx, o, e, { qr, message, paymentsEnabled }) {
+  const v = e && ctx.q.venue(e.venue);
+  const ok = o.status === 'paid' || o.status === 'confirmed';
+  const pending = o.status === 'pending';
+  const body = h`
+<article class="ticket-page narrow">
+  <header class="page-head">
+    <p class="eyebrow">${ok ? 'Your ticket' : pending ? 'Almost there' : 'Booking'}</p>
+    <h1>${e ? e.title : 'TAM'}</h1>
+    ${e ? h`<p class="meta big">${longDay(e)} · ${fmtTime(e.start)}</p><p class="meta">${v ? `${v.name}, ${v.address}` : e.venueName || ''}</p>` : ''}
+  </header>
+  ${message ? h`<p class="notice" role="status">${message}</p>` : ''}
+  <div class="ticket${ok ? '' : ' is-pending'}">
+    <div class="ticket-qr">${ok ? raw(qr) : h`<p>${pending ? 'Waiting for payment' : `This booking is ${o.status}.`}</p>`}</div>
+    <dl class="ticket-facts">
+      <div><dt>Name</dt><dd>${o.name}</dd></div>
+      <div><dt>Ticket</dt><dd>${o.qty} × ${o.typeName}</dd></div>
+      <div><dt>Total</dt><dd>${money(o.total)}</dd></div>
+      <div><dt>Code</dt><dd class="code">${o.code}</dd></div>
+      ${o.checkedIn ? h`<div><dt>Checked in</dt><dd>${o.checkedIn} of ${o.qty}</dd></div>` : ''}
+    </dl>
+  </div>
+  ${ok ? h`<p>Show this QR code (or the code above) at the door. Bookmark this page, or save it to your phone: it’s your ticket.</p>
+  <p class="cta-row">${e ? h`<a class="btn btn-ghost" href="${paths.event(e.slug)}.ics">Add to calendar</a>` : ''} <button class="btn btn-ghost" type="button" data-print>Print</button></p>` : ''}
+  ${pending && paymentsEnabled ? h`<form method="post" action="/tickets/${o.code}/pay"><button class="btn" type="submit">Pay ${money(o.total)}</button></form><p class="muted small">Tickets are held for 30 minutes.</p>` : ''}
+</article>`;
+  return layout(ctx, { title: 'Your ticket', path: `/tickets/${o.code}`, body, noindex: true });
+}
+
+// ---- box office (staff only)
+
+const boLayout = (ctx, title, body) => layout(ctx, { title: `Box office · ${title}`, path: '/box-office', body: h`<div class="box-office">${body}</div>`, noindex: true });
+
+export function boxOfficeLogin(ctx, { error } = {}) {
+  return boLayout(ctx, 'Sign in', h`<header class="page-head narrow"><p class="eyebrow">TAM box office</p><h1>Sign in</h1></header>
+<form class="form narrow" method="post" action="/box-office/login">
+  ${error ? h`<p class="error-summary" role="alert">${error}</p>` : ''}
+  <div class="field"><label for="bo-token">Box office token</label><input id="bo-token" name="token" type="password" required autocomplete="current-password"></div>
+  <button class="btn" type="submit">Sign in</button>
+</form>`);
+}
+
+export function boxOfficeHome(ctx, { office, paymentsEnabled, error }) {
+  const upcoming = ctx.q.upcoming();
+  return boLayout(ctx, 'Nights', h`<header class="page-head"><p class="eyebrow">TAM box office</p><h1>Upcoming nights</h1>
+  ${error ? h`<p class="error-summary" role="alert">${error}</p>` : ''}
+  ${paymentsEnabled ? '' : h`<p class="notice">Card payments are off: set <code>STRIPE_SECRET_KEY</code> (and <code>STRIPE_WEBHOOK_SECRET</code>) to sell paid tickets. Free tickets work now.</p>`}
+  <form class="inline-field checkin-form" method="post" action="/box-office/checkin"><label class="sr" for="ci">Ticket code</label><input id="ci" name="code" placeholder="Check in a ticket code, e.g. TAM-ABCDE-FGHJK" autocomplete="off"><input type="hidden" name="back" value="/box-office"><button class="btn btn-small" type="submit">Check in</button></form>
+</header>
+<table class="bo-table"><thead><tr><th>Night</th><th>Tickets</th><th>Booked</th><th></th></tr></thead><tbody>
+${upcoming.map((e) => {
+    const cfg = office.config(e.slug);
+    return h`<tr><td><strong>${e.title}</strong><br><span class="meta">${longDay(e)} · ${fmtTime(e.start)}</span></td>
+    <td>${cfg?.open ? h`<span class="chip chip-on">On sale at TAM</span>` : cfg ? h`<span class="chip">Closed</span>` : h`<span class="meta">Eventbrite only</span>`}</td>
+    <td>${cfg ? office.taken(e.slug) : '—'}</td>
+    <td><a class="btn btn-small btn-ghost" href="/box-office/e/${e.slug}">Manage</a></td></tr>`;
+  })}
+</tbody></table>`);
+}
+
+export function boxOfficeEvent(ctx, e, { office, paymentsEnabled, message, error }) {
+  const cfg = office.config(e.slug) || { open: false, capacity: null, types: [{ id: 'ga', name: 'General admission', price: 0, capacity: null }] };
+  const rows = [...cfg.types, ...Array.from({ length: Math.max(0, 4 - cfg.types.length) }, () => ({ id: '', name: '', price: '', capacity: null }))];
+  const orders = office.ordersFor(e.slug);
+  const admitted = orders.reduce((n, o) => n + (o.checkedIn || 0), 0);
+  return boLayout(ctx, e.title, h`<header class="page-head"><p class="eyebrow"><a href="/box-office">Box office</a></p><h1>${e.title}</h1>
+  <p class="meta big">${longDay(e)} · ${fmtTime(e.start)} · <a href="${paths.event(e.slug)}">public page</a></p>
+  ${message ? h`<p class="notice" role="status">${message}</p>` : ''}${error ? h`<p class="error-summary" role="alert">${error}</p>` : ''}
+</header>
+<section class="section split">
+<form class="form" method="post" action="/box-office/e/${e.slug}/config">
+  <h2>Ticket sales</h2>
+  <label class="check"><input type="checkbox" name="open"${cfg.open ? raw(' checked') : ''}> On sale on TAM.TV (replaces the Eventbrite button on the night’s page)</label>
+  <div class="field"><label for="cap">Room capacity (all ticket types, optional)</label><input id="cap" name="capacity" inputmode="numeric" value="${cfg.capacity ?? ''}"></div>
+  <table class="bo-types"><thead><tr><th>Ticket type</th><th>Price £</th><th>Limit</th></tr></thead><tbody>
+  ${rows.map((t, i) => h`<tr><td><input name="type${i}_name" value="${t.name}" placeholder="${i ? '' : 'General admission'}"><input type="hidden" name="type${i}_id" value="${t.id}"></td><td><input name="type${i}_price" inputmode="decimal" value="${t.price === '' ? '' : (t.price / 100).toFixed(2)}" placeholder="0"></td><td><input name="type${i}_capacity" inputmode="numeric" value="${t.capacity ?? ''}"></td></tr>`)}
+  </tbody></table>
+  ${paymentsEnabled ? '' : h`<p class="muted small">Paid types stay hidden from the public until Stripe is set up.</p>`}
+  <button class="btn" type="submit">Save</button>
+</form>
+<div>
+  <h2>At the door</h2>
+  <p class="meta">${office.taken(e.slug)} booked · ${admitted} checked in</p>
+  <form class="inline-field checkin-form" method="post" action="/box-office/checkin"><label class="sr" for="ci2">Ticket code</label><input id="ci2" name="code" placeholder="TAM-ABCDE-FGHJK" autocomplete="off" autofocus><input type="hidden" name="back" value="/box-office/e/${e.slug}"><button class="btn btn-small" type="submit">Check in</button></form>
+  <p><a href="/box-office/e/${e.slug}.csv">Download guest list (CSV)</a></p>
+</div>
+</section>
+${section('Bookings', orders.length ? h`<table class="bo-table"><thead><tr><th>Name</th><th>Tickets</th><th>Status</th><th>In</th><th></th></tr></thead><tbody>
+${orders.slice().reverse().map((o) => h`<tr class="${office.isLive(o) ? '' : 'is-dead'}"><td><strong>${o.name}</strong><br><span class="meta">${o.email} · ${o.code}</span></td><td>${o.qty} × ${o.typeName}<br><span class="meta">${money(o.total)}</span></td><td>${office.isLive(o) || o.status !== 'pending' ? o.status : 'expired'}</td><td>${o.checkedIn}/${o.qty}</td>
+<td>${(o.status === 'paid' || o.status === 'confirmed') && o.checkedIn < o.qty ? h`<form method="post" action="/box-office/checkin"><input type="hidden" name="code" value="${o.code}"><input type="hidden" name="back" value="/box-office/e/${e.slug}"><button class="btn btn-small" type="submit">Check in</button></form>` : ''}
+${o.status !== 'cancelled' ? h`<form method="post" action="/box-office/orders/${o.id}/cancel" data-confirm="Cancel this booking? Refund any payment in Stripe separately."><input type="hidden" name="back" value="/box-office/e/${e.slug}"><button class="link-button" type="submit">Cancel</button></form>` : ''}</td></tr>`)}
+</tbody></table>` : h`<p class="muted">No bookings yet.</p>`)}`);
+}

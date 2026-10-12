@@ -6,16 +6,11 @@ TAM.TV is the digital home of TAM (Temple of Art and Music) and TAM Festival, wh
 
 ## What it is
 
-**The complete, living record of a London music venue.** Every night TAM has put on since 2020 (1,572 of them, imported from Eventbrite) has its own page. So does every artist who has played (287), every regular night (29), every venue (6) and every year. They're all linked to each other and published as structured data for search engines and AI assistants. On top of that sit two data loops:
+The home of the Temple of Art and Music on the web: what's on, **tickets sold by TAM itself**, TAM TV (live from the YouTube channel), the TAM Academy, a page for every artist who has played TAM, and an archive of past nights taken from TAM's Eventbrite listings. Every old `www.tam.tv` URL still works.
 
-- **"Bring them back"** on every artist page: fans tell TAM who to book next and can leave an email to hear when that artist is announced.
-- **"I was there"** on every past night: the audience adds itself to the archive, building a first-party map of who came to what.
+Two data loops collect first-party data: **"Bring them back"** on artist pages (who fans want booked next) and **"I was there"** on past nights. Both are logged in `data/demand.jsonl`.
 
-Every press is logged (`data/demand.jsonl`) and its total is shown publicly. Together they're the first version of the brief's pledge engine.
-
-```
-EVENT → CONTENT → DISTRIBUTION → DISCOVERY → AUDIENCE → DATA → NEXT EVENT
-```
+**No unverifiable numbers.** The archive comes from Eventbrite and misses some nights, so the site doesn't publish totals: no night counts, no artist counts, no "most played". Pages that list past nights say they come from Eventbrite listings and may be incomplete.
 
 ## Run it
 
@@ -31,18 +26,33 @@ Node 20 or newer. CI runs the tests on Node 20 and 22.
 
 | | |
 |---|---|
-| `/` | Next night with countdown, coming up, **On this day at TAM**, cult legends, regulars, TAM TV, the archive rings |
-| `/whats-on` | Every upcoming night (from Eventbrite), grouped by day |
-| `/artists`, `/artists/:slug` | All 287 artists: cult legends, most-played, A–Z. Each page lists every night they played, who they shared the bill with, where, their TAM TV films, and the "Bring them back" button |
-| `/events/:slug` (+ `.ics`) | Each of the 1,572 nights: line-up, venue, series, Eventbrite link, "I was there" |
-| `/archive`, `/archive/:year` | The archive by year and month |
-| `/series`, `/series/:slug` | Regular nights (Great British Blues Jam, Singers @ Sunday Spot, Word of Mouth…) |
-| `/genres`, `/genres/:genre` | Blues, jazz, soul, funk, rock, folk, latin… in London |
-| `/locations`, `/locations/:venue` | Elephant & Castle, Canary Wharf (TAM's Vineyard & Jazz Club), Smithfield, Dalston, Mayfair, Elephant Park |
-| `/tv`, `/tv/:slug` | TAM TV films and *Globetrotting With Gillespie* |
-| every old `www.tam.tv` URL | See below |
-| `/submit`, `/studio`, `/stories`, `/listen`, `/about`, `/privacy` | As before |
-| `/sitemap.xml`, `/llms.txt`, `/graph.json`, `/robots.txt` | Discovery |
+| `/` | Next night, coming up, the TAM Academy, cult legends, regulars, latest TAM TV, on this day at TAM |
+| `/whats-on` | Upcoming nights (from Eventbrite), grouped by day |
+| `/events/:slug` (+ `.ics`) | A night: booking (when on sale at TAM) or the Eventbrite link, the line-up, and "I was there" for past nights |
+| `/tickets/:code` | A buyer's ticket, with its QR code |
+| `/box-office` | Staff only: open sales, ticket types and prices, bookings, door check-in, guest-list CSV |
+| `/artists`, `/artists/:slug` | Cult legends and A–Z; each artist's nights at TAM, who they shared bills with, TAM TV films, "Bring them back" |
+| `/tv` | TAM TV, live from the YouTube channel |
+| `/academy` | The TAM Academy |
+| `/archive`, `/archive/:year` | Past nights by year |
+| `/series/:slug`, `/genres/:genre`, `/locations/:venue` | Regular nights, genres, venues (past ones say so) |
+| `/locations` | Find us |
+| `/about`, `/submit`, `/stories`, `/listen`, `/privacy` | |
+
+## Tickets
+
+TAM sells its own tickets. Eventbrite stays the default: a night only sells on TAM.TV once staff open it in the box office.
+
+1. Set `ADMIN_TOKEN`, then sign in at `/box-office` with it.
+2. Open a night. Tick **On sale**, set up to four ticket types (name, price, optional limit) and an optional room capacity, then save. The night's page swaps the Eventbrite button for a booking form.
+3. **Free tickets** are issued at once. **Paid tickets** go through Stripe Checkout and need `STRIPE_SECRET_KEY`. Until it's set, paid types stay hidden from the public. Seats are held for 30 minutes while the buyer pays. Payment is confirmed when they return to the site, and also by Stripe's webhook if they close the tab. To set up the webhook, point a Stripe endpoint at `https://<site>/api/stripe/webhook` for `checkout.session.completed` and set `STRIPE_WEBHOOK_SECRET`.
+4. Each booking has a ticket page with a QR code and a code like `TAM-ABCDE-FGHJK`. At the door, staff type or scan the code into the box office to check people in. Each night has a guest-list CSV.
+
+Bookings are an append-only log (`data/orders.jsonl`) and settings live in `data/box-office.json`, so both need the Railway volume. Not built yet: emailing tickets (buyers get their ticket page straight away, so they should bookmark it) and automatic refunds (cancel the booking in the box office, then refund it in Stripe).
+
+## TAM TV
+
+`/tv` reads TAM's YouTube channel feed (`youtubeChannelId` in `content/site.json`), refreshes it every 30 minutes and plays films in the page. If YouTube can't be reached, it shows the films archived in `content/videos.json`.
 
 ## Keeping the old site's search value
 
@@ -79,7 +89,6 @@ All the movement happens *around* the logo:
 - **London time.** A halo behind the logo, and the gold used across the site, shift from rose-gold dawn to bright day, amber dusk and a slow-breathing glow at night.
 - **The TAM 108.** Behind every page, 108 songs fall from the top of the screen (`content/chorus.json`). Each one shows its title and artist. Choruses appear only for the 12 public-domain songs, because song lyrics are copyright. You can add a chorus for any other song once TAM holds a lyric licence for it, or has permission from the artist (e.g. TAM's own artists). Set `"licensed": true` on that song; the content check refuses unlicensed lyrics. Visitors can pause the rain from the footer, and it stays still for anyone whose system asks for reduced motion.
 - **Coloured vinyl.** Every artist and night gets its own vinyl record (`/art/<slug>.svg`) until real photography exists. Its name picks one of 24 rare colourways and one of 7 pressing styles. The colourways are borrowed from minerals, deep-sea light, iridescence and astronomy: Opal Fire, Bioluminescence, Labradorite, Ammolite, Hummingbird Throat, Cosmic Latte (the average colour of the universe)… The styles are marble, splatter, galaxy, colour-in-colour, split, pinwheel and smoke. The same name always gets the same record. Records spin on hover, and artist pages say what the record is pressed on. The palettes are in `src/lib/vinyl.js`. The record deliberately doesn't use the TAM mark.
-- **Six years, six rings.** On `/about` the archive is drawn as one ring per year around the untouched mark, growing as each year's material is added.
 
 To regenerate the logo files: `python3 scripts/extract_logo.py` (needs Pillow and NumPy).
 
@@ -89,7 +98,7 @@ To regenerate the logo files: `python3 scripts/extract_logo.py` (needs Pillow an
 
 ## Cult legends
 
-Artists marked `!legend` in `scripts/sources/performers.txt` (or `"legend": true` in `content/artists.json`) are listed first on `/artists`, appear in the homepage's legends row, get a gold **Cult legend** badge and are pressed as a **Legend Edition** record. The current list is a conservative first pass: Dana Gillespie, Hans Theessink, Holly Penfield, Todd Sharpville, Osibisa, Keith West, Ian Siegal, Jimmy Carpenter, Big Joe Louis, Earl Okin and Keith Shocklee. Edit it freely.
+Artists marked `!legend` in `scripts/sources/performers.txt` (or `"legend": true` in `content/artists.json`) get a gold **Cult legend** badge, appear first on `/artists`, and are pressed as a **Legend Edition** record. The current list (Dana Gillespie, Holly Penfield, Todd Sharpville, Osibisa, Keith West, Ian Siegal, Jimmy Carpenter, Big Joe Louis, Earl Okin, Keith Shocklee) needs TAM's review. Only artists who appear in TAM's Eventbrite listings are listed as having played TAM. Old-site pages for anyone else (e.g. Hans Theessink) stay at their URLs as archive pages.
 
 ## Content
 
@@ -101,7 +110,9 @@ Everything lives in `content/` as JSON and is validated when the server starts (
 
 - `SITE_URL`: the public URL, used for canonical links, the sitemap and structured data
 - `DATA_DIR`: point it at a mounted Railway volume (e.g. `/data`) so submissions, sign-ups and analytics survive redeploys
-- `ANTHROPIC_API_KEY` and `ADMIN_TOKEN`: optional, enable the Production Agent
+- `ADMIN_TOKEN`: signs staff into `/box-office` (and `/studio`)
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: paid tickets
+- `ANTHROPIC_API_KEY`: optional, enables the Production Agent
 
 ## Architecture
 
@@ -114,6 +125,9 @@ src/lib/seo.js         JSON-LD, sitemap, llms.txt, knowledge graph
 src/lib/brand.js       logo (original artwork only), archive rings
 src/lib/vinyl.js       coloured vinyl artwork (24 colourways x 7 pressings)
 src/lib/store.js       first-party data: submissions, sign-ups, demand, analytics (JSONL)   ← swap for Postgres later
+src/lib/tickets.js     the box office: ticket types, capacity, orders, check-in
+src/lib/stripe.js      Stripe Checkout + webhook verification (no SDK)
+src/lib/youtube.js     TAM TV's live YouTube feed
 src/lib/ai.js          Production Agent (Claude)
 public/                CSS, client JS, images
 content/               the site's content: archive/ (Eventbrite), legacy/ (old site), videos, chorus.json (the TAM 108)
