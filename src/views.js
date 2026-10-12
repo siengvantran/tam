@@ -369,6 +369,16 @@ export function eventPage(ctx, e, { counts, ticketing, ladder }) {
     ${past ? demandForm(ctx, { type: 'was-there', target: e.slug, count: there, label: 'I was there', ask: 'Were you there? Add yourself to the night.' }) : ''}
   </div>
 </article>
+${e.highlights?.length && !past ? h`<section class="section highlights" aria-labelledby="hl-h">
+  <div class="section-head"><h2 id="hl-h">Why you’ll want to be there</h2></div>
+  <div class="grid grid-3">${e.highlights.map((x, i) => h`<article class="card highlight"><div class="card-body">
+    <p class="highlight-n">${String(i + 1).padStart(2, '0')}</p>
+    <h3>${x.title}</h3>
+    <p>${x.text}</p>
+    ${x.links?.length ? h`<p class="meta">${x.links.map(([label, href], j) => h`${j ? ' · ' : ''}<a href="${href}">${label}</a>`)}</p>` : ''}
+  </div></article>`)}</div>
+  <p class="cta-row highlights-cta">${ticketing ? h`<a class="btn" href="#book">${ladder?.current ? `Book now at ${money(ladder.current.price)}` : 'Book tickets'}</a>` : ladder ? h`<a class="btn" href="#ladder-h">See ticket prices</a>` : ''}${ladder?.current && ladder.door != null && ladder.door > ladder.current.price ? h` <span class="meta">Save ${money(ladder.door - ladder.current.price)} on the door price by booking now.</span>` : ''}</p>
+</section>` : ''}
 ${festival ? section(`The ${festival.name}`, h`${festivalMore.length ? eventList(ctx, festivalMore) : h`<p>${e.title} is part of the ${festival.name}. <a href="${festival.path}">See every show and play “${festival.song?.title || festival.title}”.</a></p>`}`, { href: festival.path, more: `${festival.title} →` }) : ''}
 ${nearby.length ? section(`More ${series.name}`, eventList(ctx, nearby), { href: paths.series(series.slug) }) : ''}
 ${alsoBy.length ? section(lineup.length === 1 ? `More from ${lineup[0].name}` : 'More from these artists', eventList(ctx, alsoBy)) : ''}`;
