@@ -34,6 +34,7 @@ Node 20 or newer. CI runs the tests on Node 20 and 22.
 | `/artists`, `/artists/:slug` | Cult legends and A–Z; each artist's nights at TAM, who they shared bills with, TAM TV films, "Bring them back" |
 | `/tv` | TAM TV, live from the YouTube channel |
 | `/academy` | The TAM Academy |
+| `/tech-nights` | Tech nights for AI companies and crypto communities: formats, what hosts get, 21 crypto communities with "I'd come" votes, past tech nights, a sponsor enquiry form |
 | `/the-best-christmas-ever` | The TAM Christmas Festival: its shows, the song player, past Christmas nights at TAM |
 | `/archive`, `/archive/:year` | Past nights by year |
 | `/series/:slug`, `/genres/:genre`, `/locations/:venue` | Regular nights, genres, venues (past ones say so) |
@@ -71,6 +72,10 @@ Dana Gillespie's Best Christmas Ever (16 Dec 2026) is set up like this:
 | Final week | £30 | from Wed 9 Dec, and £30 on the door |
 
 A scheduled night goes on sale by itself (`"onSale": true`) once Stripe is set up; until then it shows the ladder and "Tickets soon". In the box office, staff can still close sales or set a room capacity, and they can see how many tickets each tier has sold.
+
+## Tech nights
+
+`/tech-nights` is the page for sponsors: AI companies, blockchains, developer tools. Its text, formats and the list of communities are in `content/tech-nights.json`. The page is seeded with 21 of the biggest crypto communities, each with an official link. Visitors tap **I'd come** on the ones they want, and the most-wanted move to the top. The votes are logged in `data/demand.jsonl` as `want-community`, so TAM knows which communities to approach first. Sponsor enquiries go to `data/tech-enquiries.jsonl`. Past tech nights are found in the archive by title, and a new tech night just needs `"tech": true` in `content/events.json`. The page says plainly that the listed communities are not sponsors or partners unless a night says so.
 
 ## TAM TV
 

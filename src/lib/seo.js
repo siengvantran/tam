@@ -183,7 +183,7 @@ export function jsonLdTag(...nodes) {
 
 export function allPaths(c, q) {
   return [...new Set([
-    '/', '/whats-on', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/academy', '/listen', '/stories', '/about', '/submit', '/privacy',
+    '/', '/whats-on', '/tech-nights', '/artists', '/archive', '/series', '/genres', '/locations', '/tv', '/academy', '/listen', '/stories', '/about', '/submit', '/privacy',
     ...c.legacy.map((p) => p.path).filter((p) => p !== '/home'),
     ...c.artists.map((a) => paths.artist(a.slug)),
     ...c.events.map((e) => paths.event(e.slug)),
@@ -234,6 +234,7 @@ export function llmsTxt(c, q) {
     '',
     '## Also',
     line('The TAM Academy', '/academy'),
+    line('TAM Tech Nights', '/tech-nights', 'meetups, demo nights and build nights for AI companies and crypto communities; how to host one'),
     line('TAM TV', '/tv', 'films from TAM\'s YouTube channel'),
     '',
   ].join('\n');

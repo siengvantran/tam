@@ -7,6 +7,7 @@
 //   videos.json   TAM TV's YouTube films
 //   artists.json  editorial overrides for artists (bio, links, legend)
 //   events.json   hand-made events that aren't on Eventbrite
+//   tech-nights.json the Tech Nights landing page and the communities on it
 //   festivals.json festivals (e.g. the TAM Christmas Festival); events join one with "festival"
 //   stories.json, listen.json, site.json, chorus.json
 //
@@ -71,6 +72,7 @@ export function loadContent() {
   const c = {
     site, venues, series, legacy, legacyBy, events, artists, videos, removed,
     festivals: read('festivals'),
+    techNights: read('tech-nights'),
     stories: read('stories').sort((a, b) => b.published.localeCompare(a.published)),
     listen: read('listen'),
     chorus: read('chorus'),
@@ -98,6 +100,8 @@ export function validate(c) {
   const series = uniq('series', c.series);
   const venues = uniq('venues', c.venues);
   const festivals = uniq('festivals', c.festivals);
+  uniq('communities', c.techNights.communities);
+  for (const x of c.techNights.communities) if (!/^https:\/\//.test(x.url || '')) errors.push(`community ${x.slug}: url must be https`);
   for (const f of c.festivals) {
     if (!/^\/[a-z0-9/-]+$/.test(f.path || '')) errors.push(`festival ${f.slug}: bad path`);
     if (f.song && !/^[\w-]{11}$/.test(f.song.youtubeId || '')) errors.push(`festival ${f.slug}: bad song youtubeId`);
@@ -166,6 +170,7 @@ function buildIndex(c) {
     series: by(c.series),
     venue: by(c.venues),
     festival: by(c.festivals),
+    community: by(c.techNights.communities),
     festivalByPath: new Map(c.festivals.map((f) => [f.path, f])),
     eventsByFestival: group(c.events, (e) => e.festival),
     eventsByArtist,
@@ -194,6 +199,12 @@ export function queries(c, now = new Date()) {
     venue: (s) => ix.venue.get(s),
     legacy: (p) => c.legacyBy[p],
     festival: (s) => ix.festival.get(s),
+    community: (s) => ix.community.get(s),
+    // Tech nights: marked "tech": true, or found in the archive by title.
+    techEvents: () => {
+      const rx = new RegExp(c.techNights.pastPattern, 'i');
+      return c.events.filter((e) => e.tech || rx.test(e.title));
+    },
     festivalAt: (p) => ix.festivalByPath.get(p),
     eventsInFestival: (f) => ix.eventsByFestival.get(f) || [],
     isPast,

@@ -557,3 +557,40 @@ test('the Christmas show sells itself: highlights about Dana and the band, every
   assert.match(html, /Andy Warhol/);
   assert.match(html, /href="#book">Book now at £15/);
 });
+
+test('tech nights: a landing page for sponsors, seeded with 21 crypto communities', async () => {
+  const res = await get('/tech-nights');
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  assert.equal(c.techNights.communities.length, 21);
+  for (const x of c.techNights.communities) assert.ok(html.includes(`id="c-${x.slug}"`), x.slug);
+  assert.match(html, /21 crypto communities/);
+  assert.match(html, /not sponsors or partners of TAM/);
+  assert.match(html, /Networkverse- NFT &amp; Web3/, 'past tech nights from the archive');
+  const list = ldOf(html).find((n) => n['@type'] === 'ItemList');
+  assert.equal(list.itemListElement.length, 21);
+  assert.match(await (await get('/sitemap.xml')).text(), /\/tech-nights</);
+});
+
+test('tech nights: "I’d come" votes put the most wanted communities first', async () => {
+  const vote = (target) => form('/demand', { type: 'want-community', target }, { accept: 'application/json', 'user-agent': `voter-${Math.random()}` });
+  assert.equal((await vote('algorand')).status, 200);
+  assert.equal((await vote('nope')).status, 422);
+  const html = await (await get('/tech-nights')).text();
+  assert.ok(html.indexOf('id="c-algorand"') < html.indexOf('id="c-bitcoin"'), 'the voted community moves up');
+  assert.match(html, /<strong>1<\/strong> person wants this at TAM/);
+});
+
+test('tech nights: sponsor enquiries are validated and stored', async () => {
+  let res = await form('/tech-nights', { name: 'Ada', email: 'bad' });
+  assert.equal(res.status, 422);
+  assert.match(await res.text(), /We need a valid email/);
+  res = await form('/tech-nights', { name: 'Ada', email: 'ada@example.com', organisation: 'Example Labs', community: 'solana', format: 'Demo nights', message: 'A demo night for London builders, with drinks after.', privacy: 'on' });
+  assert.equal(res.status, 303);
+  assert.equal(res.headers.get('location'), '/tech-nights?thanks#enquire');
+  const rows = readFileSync(path.join(dataDir, 'tech-enquiries.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+  assert.equal(rows.at(-1).organisation, 'Example Labs');
+  assert.equal(rows.at(-1).community, 'solana');
+  // Linked from a community card, the form comes pre-filled.
+  assert.match(await (await get('/tech-nights?community=base')).text(), /<option value="base" selected>/);
+});

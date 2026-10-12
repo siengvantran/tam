@@ -1,0 +1,43 @@
+{
+  "path": "/tech-nights",
+  "name": "TAM Tech Nights",
+  "title": "Tech nights at the Temple of Art and Music",
+  "lede": "Meetups, demo nights and build nights for AI companies, crypto chains and the communities around them, in a live music venue in Elephant & Castle, London. Talks first, then the stage is handed to the band.",
+  "pastPattern": "\\b(AI|crypto|web3|blockchain|bitcoin|ethereum|hackathon|tech talk|NFTs?|metaverse)\\b",
+  "formats": [
+    { "title": "Meetups and talks", "text": "Your community, your speakers, a stage, a PA and a screen. Then drinks, and live music to finish." },
+    { "title": "Demo nights", "text": "Founders and builders show what they’ve made, to a room that isn’t only developers." },
+    { "title": "Build nights and hackathons", "text": "Bring the laptops. Build through the evening, demo at the end, celebrate on the dance floor." },
+    { "title": "AI and music", "text": "Where tech meets TAM’s artists: AI songwriting, new tools for musicians and live performance. TAM has done it before, with AI by Casperaki at its 16th anniversary." }
+  ],
+  "offer": [
+    { "title": "A venue with a stage", "text": "A live music room in Elephant & Castle, London, with a stage, sound and a bar." },
+    { "title": "Tickets and RSVPs", "text": "Free or paid tickets through TAM’s own box office, with QR codes at the door and a guest list you can download." },
+    { "title": "A page that lasts", "text": "Every night gets its own page on TAM.TV, written for search engines and AI assistants, so people can still find it afterwards." },
+    { "title": "Live music and TAM TV", "text": "Close the night with TAM’s artists. Ask about filming the talks or the night for TAM TV." }
+  ],
+  "sponsors": ["AI companies and labs", "Blockchains and crypto foundations", "Developer tools", "Fintech and payments", "Music tech"],
+  "communities": [
+    { "slug": "bitcoin", "name": "Bitcoin", "kind": "Layer 1", "text": "The first cryptocurrency, running since 2009.", "url": "https://bitcoin.org/" },
+    { "slug": "ethereum", "name": "Ethereum", "kind": "Layer 1", "text": "The smart-contract platform that most of Web3 is built on, running since 2015.", "url": "https://ethereum.org/" },
+    { "slug": "solana", "name": "Solana", "kind": "Layer 1", "text": "A high-throughput blockchain with a big developer and consumer-app scene.", "url": "https://solana.com/" },
+    { "slug": "bnb-chain", "name": "BNB Chain", "kind": "Layer 1", "text": "The blockchain ecosystem around BNB, one of the largest by users.", "url": "https://www.bnbchain.org/" },
+    { "slug": "xrp-ledger", "name": "XRP Ledger", "kind": "Layer 1", "text": "An open-source ledger for payments and tokens, running since 2012.", "url": "https://xrpl.org/" },
+    { "slug": "cardano", "name": "Cardano", "kind": "Layer 1", "text": "A research-driven proof-of-stake blockchain with a strong grassroots community.", "url": "https://cardano.org/" },
+    { "slug": "avalanche", "name": "Avalanche", "kind": "Layer 1", "text": "A fast blockchain platform where projects can launch their own chains.", "url": "https://www.avax.network/" },
+    { "slug": "ton", "name": "TON", "kind": "Layer 1", "text": "The Open Network, the blockchain built into Telegram’s mini apps and wallet.", "url": "https://ton.org/" },
+    { "slug": "polkadot", "name": "Polkadot", "kind": "Layer 0", "text": "A network that connects many specialised blockchains.", "url": "https://polkadot.com/" },
+    { "slug": "chainlink", "name": "Chainlink", "kind": "Oracle network", "text": "Connects blockchains to real-world data and to each other.", "url": "https://chain.link/" },
+    { "slug": "polygon", "name": "Polygon", "kind": "Ethereum scaling", "text": "A network for fast, cheap payments and apps, connected to Ethereum.", "url": "https://polygon.technology/" },
+    { "slug": "near", "name": "NEAR", "kind": "Layer 1", "text": "A blockchain focused on usability and on AI.", "url": "https://near.org/" },
+    { "slug": "sui", "name": "Sui", "kind": "Layer 1", "text": "A newer blockchain built on the Move language, launched in 2023.", "url": "https://www.sui.io/" },
+    { "slug": "aptos", "name": "Aptos", "kind": "Layer 1", "text": "A blockchain built on the Move language, launched in 2022.", "url": "https://aptosfoundation.org/" },
+    { "slug": "arbitrum", "name": "Arbitrum", "kind": "Ethereum layer 2", "text": "A rollup that makes Ethereum faster and cheaper to use.", "url": "https://arbitrum.io/" },
+    { "slug": "optimism", "name": "Optimism", "kind": "Ethereum layer 2", "text": "The rollup behind the OP Stack and the Superchain of networks built on it.", "url": "https://optimism.io/" },
+    { "slug": "base", "name": "Base", "kind": "Ethereum layer 2", "text": "An Ethereum layer 2 incubated by Coinbase and built on the OP Stack.", "url": "https://www.base.org/" },
+    { "slug": "cosmos", "name": "Cosmos", "kind": "Interchain", "text": "The ‘internet of blockchains’: independent chains that talk to each other.", "url": "https://cosmos.network/" },
+    { "slug": "stellar", "name": "Stellar", "kind": "Layer 1", "text": "An open network for payments and issuing digital assets, running since 2014.", "url": "https://stellar.org/" },
+    { "slug": "hedera", "name": "Hedera", "kind": "Public ledger", "text": "A public ledger built on hashgraph and governed by a council of organisations.", "url": "https://hedera.com/" },
+    { "slug": "algorand", "name": "Algorand", "kind": "Layer 1", "text": "A pure proof-of-stake blockchain, running since 2019.", "url": "https://algorand.co/" }
+  ]
+}

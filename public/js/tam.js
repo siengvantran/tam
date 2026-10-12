@@ -182,17 +182,18 @@
     if (pressed.get(key)) done();
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (form.classList.contains('is-done') && !form.elements.email.value) return;
+      if (form.classList.contains('is-done') && !form.elements.email?.value) return;
       button.disabled = true;
       try {
         const res = await fetch('/demand', { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)) });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
-        const [one, many] = form.elements.type.value === 'was-there' ? ['person was there', 'people were there'] : ['person wants them back at TAM', 'people want them back at TAM'];
+        const countEl = form.querySelector('[data-demand-count]');
+        const [one, many] = countEl.dataset.one ? [countEl.dataset.one, countEl.dataset.many] : form.elements.type.value === 'was-there' ? ['person was there', 'people were there'] : ['person wants them back at TAM', 'people want them back at TAM'];
         form.querySelector('[data-demand-count]').innerHTML = `<strong>${Number(data.count).toLocaleString('en-GB')}</strong> ${data.count === 1 ? one : many}`;
         pressed.set(key);
         done();
-        if (form.elements.email.value) { form.elements.email.value = ''; form.elements.consent.checked = false; form.querySelector('[data-demand-count]').insertAdjacentHTML('beforeend', ' · We’ll be in touch.'); }
+        if (form.elements.email?.value) { form.elements.email.value = ''; form.elements.consent.checked = false; form.querySelector('[data-demand-count]').insertAdjacentHTML('beforeend', ' · We’ll be in touch.'); }
         track('click', { path: `${location.pathname}#${form.elements.type.value}` });
       } catch (err) {
         form.querySelector('[data-demand-count]').textContent = err.message || 'Something went wrong. Try again?';

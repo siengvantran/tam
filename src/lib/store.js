@@ -3,6 +3,7 @@
 // what matters, so moving to Postgres later is a straight import.
 //
 //   submissions.jsonl  "Play TAM" artist/event proposals
+//   tech-enquiries.jsonl  "Host a tech night" enquiries
 //   signups.jsonl      newsletter sign-ups (explicit consent recorded)
 //   events.jsonl       consented analytics: page views and interactions
 
@@ -62,6 +63,29 @@ export function validateSubmission(body) {
   return { value: s, errors, ok: Object.keys(errors).length === 0 };
 }
 
+// "Host a tech night" enquiries from sponsors and communities.
+export function validateTechEnquiry(body, communities = []) {
+  const s = {
+    name: str(body.name, 120),
+    email: str(body.email, 254).toLowerCase(),
+    organisation: str(body.organisation, 120),
+    community: str(body.community, 60),
+    format: str(body.format, 60),
+    when: str(body.when, 60),
+    guests: str(body.guests, 20),
+    message: str(body.message, 3000),
+    newsletter: body.newsletter === 'on' || body.newsletter === true,
+  };
+  if (s.community && s.community !== 'other' && !communities.includes(s.community)) s.community = '';
+  const errors = {};
+  if (!s.name) errors.name = 'Tell us your name.';
+  if (!EMAIL.test(s.email)) errors.email = 'We need a valid email to reply.';
+  if (!s.organisation) errors.organisation = 'Which company or community is this for?';
+  if (s.message.length < 20) errors.message = 'Tell us a little about the night (a sentence or two).';
+  if (body.privacy !== 'on' && body.privacy !== true) errors.privacy = 'Please confirm you have read the privacy notice.';
+  return { value: s, errors, ok: Object.keys(errors).length === 0 };
+}
+
 export function validateSignup(body) {
   const email = str(body.email, 254).toLowerCase();
   const interests = [].concat(body.interests || []).map((x) => str(x, 40)).filter(Boolean).slice(0, 10);
@@ -75,7 +99,7 @@ export function validateSignup(body) {
 // Every press is a first-party signal: who people want to see again, and which
 // nights people actually went to. Counts are public; emails never are.
 
-export const DEMAND_TYPES = { 'bring-back': 'artist', 'was-there': 'event' };
+export const DEMAND_TYPES = { 'bring-back': 'artist', 'was-there': 'event', 'want-community': 'community' };
 
 export function validateDemand(body, exists) {
   const type = str(body.type, 20);
