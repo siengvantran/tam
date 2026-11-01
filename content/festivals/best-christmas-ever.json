@@ -1,0 +1,226 @@
+{
+  "slug": "best-christmas-ever",
+  "name": "The Best Christmas Ever",
+  "path": "/the-best-christmas-ever",
+  "season": "Christmas 2026",
+  "theme": "christmas",
+  "venue": "elephant-castle",
+  "label": "TAM presents a festival of live music",
+  "lede": "Live music, scene takeovers and the young artists of TAM Open Music Academy, all under the stained-glass glow of our Shard Christmas tree at Mercato Metropolitano.",
+  "lockup": "/img/christmas/title-lockup.png",
+  "heroArt": "/img/christmas/shard-tree.png",
+  "og": "/img/christmas/og.jpg",
+  "dates": {
+    "from": "2026-12-04",
+    "to": "2026-12-29",
+    "doors": "19:00",
+    "ends": "23:00"
+  },
+  "closed": [
+    "2026-12-24",
+    "2026-12-25",
+    "2026-12-26",
+    "2026-12-27",
+    "2026-12-28"
+  ],
+  "datesNote": "Twenty-one nights, opening on Friday 4 December. We close from Christmas Eve to the 28th, then come back on Tuesday 29 December for One More Christmas.",
+  "nightLabels": {
+    "2026-12-04": "Big Christmas Hootenanny",
+    "2026-12-16": "Dana Gillespie live",
+    "2026-12-29": "One More Christmas"
+  },
+  "song": {
+    "youtubeId": "cXdu_jnTcPI",
+    "title": "The Best Christmas Ever",
+    "artist": "danagillespie",
+    "stories": "dana-gillespie",
+    "about": "The festival takes its name from Dana Gillespie's song, written for nights exactly like these. Dana is TAM's Mentor in Residence, and the song sets the tone for the whole season: loud, warm and built for a room full of people.",
+    "bpm": 110,
+    "bars": [
+      7,
+      4,
+      0,
+      2
+    ]
+  },
+  "ticker": [
+    "LIVE MUSIC",
+    "TAKEOVERS",
+    "YOUNG ARTISTS",
+    "FESTIVE NIGHTS",
+    "4–29 DEC",
+    "THE BEST CHRISTMAS EVER"
+  ],
+  "programme": [
+    {
+      "title": "Live Music",
+      "text": "Bands and artists on TAM's stage across the whole run, from first chord to last orders.",
+      "image": "/img/christmas/shard-pop-0.png"
+    },
+    {
+      "title": "Takeovers",
+      "text": "London collectives and scenes take over the room and curate the night their way.",
+      "image": "/img/christmas/shard-pop-1.png"
+    },
+    {
+      "title": "Young Artists",
+      "text": "Rising voices from TAM Open Music Academy, on the same stage as the headliners.",
+      "image": "/img/christmas/shard-pop-2.png"
+    },
+    {
+      "title": "Festive Nights",
+      "text": "Nights made for gathering your friends, your family and your whole crew.",
+      "image": "/img/christmas/shard-pop-3.png"
+    }
+  ],
+  "features": {
+    "countdown": true,
+    "ambient": "snow",
+    "tamalume": true,
+    "cards": true,
+    "teamTables": true,
+    "partyWall": true,
+    "sponsorship": true,
+    "donation": true,
+    "raffle": true,
+    "invites": true
+  },
+  "pricing": {
+    "nightPrices": {
+      "weekday": 2200,
+      "weekend": 2800,
+      "special": 3500
+    },
+    "special": [
+      "2026-12-04",
+      "2026-12-29"
+    ],
+    "flat": {
+      "price": 1000,
+      "except": [
+        "2026-12-16"
+      ]
+    },
+    "groupTiers": [
+      {
+        "min": 20,
+        "off": 0.15,
+        "label": "Group of 20+"
+      },
+      {
+        "min": 10,
+        "off": 0.1,
+        "label": "Group of 10+"
+      },
+      {
+        "min": 6,
+        "off": 0.05,
+        "label": "Group of 6+"
+      }
+    ],
+    "packs": [
+      {
+        "id": "startup",
+        "name": "Startup pack",
+        "min": 4,
+        "max": 15,
+        "off": 0.2,
+        "needsTeam": true,
+        "blurb": "For small teams. Minimum 4 people."
+      }
+    ],
+    "capacity": 250,
+    "maxPerBooking": 60
+  },
+  "teamTables": {
+    "seats": 20,
+    "maxTeam": 15
+  },
+  "donation": {
+    "label": "Donate to Guy’s & St Thomas’ Charity",
+    "blurb": "Every penny goes to Guy’s & St Thomas’ Charity, who supported Tam through his battle with brain cancer.",
+    "charity": {
+      "name": "Guy’s & St Thomas’ Charity",
+      "url": "https://donate.gsttcharity.org.uk/"
+    },
+    "intro": "Guy’s & St Thomas’ Charity supported Tam through his battle with brain cancer. This Christmas we want to give something back. Add a donation when you book your tickets, or give to the charity directly.",
+    "presets": [
+      300,
+      500,
+      1000
+    ],
+    "max": 50000
+  },
+  "raffle": {
+    "price": 200,
+    "deal": {
+      "count": 3,
+      "price": 500
+    },
+    "maxPerSale": 50,
+    "draw": "Drawn on the night, before the end of the show",
+    "prizes": [],
+    "prizesNote": "Limited edition memorabilia, announced soon."
+  },
+  "sponsorship": {
+    "intro": "Bring the whole company, put your name on the festival and send every guest home with a TAM Christmas Box.",
+    "gift": "The TAM Christmas Box comes with every sponsorship package, one for each of your guests.",
+    "packages": [
+      {
+        "id": "bauble",
+        "name": "Bauble",
+        "price": 75000,
+        "tickets": 10,
+        "perks": [
+          "10 tickets on the night of your choice",
+          "10 TAM Christmas Boxes",
+          "Gold featured pin on the Party Wall"
+        ]
+      },
+      {
+        "id": "star",
+        "name": "Star",
+        "price": 200000,
+        "tickets": 25,
+        "perks": [
+          "25 tickets on the night of your choice",
+          "25 TAM Christmas Boxes",
+          "Gold featured pin on the Party Wall",
+          "Your logo on the festival sponsor strip",
+          "A shout-out from the stage on your night"
+        ]
+      },
+      {
+        "id": "shard",
+        "name": "Shard",
+        "price": 500000,
+        "tickets": 60,
+        "perks": [
+          "60 tickets and a reserved area for your party",
+          "60 TAM Christmas Boxes",
+          "Name the night: “The Best Christmas Ever, with you”",
+          "Gold featured pin and sponsor strip logo",
+          "Your brand in the festival socials"
+        ]
+      }
+    ]
+  },
+  "cards": {
+    "fx": [
+      "snow",
+      "sparkle",
+      "glow",
+      "pop",
+      "leaks",
+      "pulse"
+    ],
+    "polaroids": true,
+    "maxPolaroids": 4,
+    "maxOwnPhotos": 3,
+    "heading": "Make it your Christmas card",
+    "blurb": "Add effects and Dana's Polaroids (or your own photos) over the song, write a message, and send your own version of The Best Christmas Ever.",
+    "placeholder": "Have the best Christmas ever!"
+  },
+  "collection": "dana-108",
+  "pastPattern": "christmas"
+}

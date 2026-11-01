@@ -1,0 +1,128 @@
+[
+  {
+    "id": "bowie-1",
+    "src": "/img/polaroids/bowie-1.jpg",
+    "thumb": "/img/polaroids/bowie-1-t.jpg",
+    "caption": "Bowie",
+    "alt": "Dana's Polaroid of a young, shirtless David Bowie",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "bowie-2",
+    "src": "/img/polaroids/bowie-2.jpg",
+    "thumb": "/img/polaroids/bowie-2-t.jpg",
+    "caption": "Bowie",
+    "alt": "Dana's Polaroid of David Bowie in an open denim jacket, hands behind his head",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "bowie-3",
+    "src": "/img/polaroids/bowie-3.jpg",
+    "thumb": "/img/polaroids/bowie-3-t.jpg",
+    "caption": "Bowie",
+    "alt": "Dana's close-up Polaroid of David Bowie",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "david-bowie",
+    "src": "/img/polaroids/david-bowie.jpg",
+    "thumb": "/img/polaroids/david-bowie-t.jpg",
+    "caption": "David Bowie",
+    "alt": "Dana's Polaroid of David Bowie in a hat",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "david-angie",
+    "src": "/img/polaroids/david-angie.jpg",
+    "thumb": "/img/polaroids/david-angie-t.jpg",
+    "caption": "David & Angie",
+    "alt": "Dana's Polaroid of David and Angie Bowie lounging",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "david-jack",
+    "src": "/img/polaroids/david-jack.jpg",
+    "thumb": "/img/polaroids/david-jack-t.jpg",
+    "caption": "David & Jack",
+    "alt": "Dana's Polaroid of David Bowie with friends",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "bowies-piano",
+    "src": "/img/polaroids/bowies-piano.jpg",
+    "thumb": "/img/polaroids/bowies-piano-t.jpg",
+    "caption": "Propping up Bowie's piano",
+    "alt": "Dana in a red dress leaning on Bowie's grand piano",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "bolan-angie",
+    "src": "/img/polaroids/bolan-angie.jpg",
+    "thumb": "/img/polaroids/bolan-angie-t.jpg",
+    "caption": "Bolan & Angie",
+    "alt": "Marc Bolan and Angie Bowie",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "angie",
+    "src": "/img/polaroids/angie.jpg",
+    "thumb": "/img/polaroids/angie-t.jpg",
+    "caption": "Angie",
+    "alt": "Dana's Polaroid of Angie Bowie",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "bowie-jacket",
+    "src": "/img/polaroids/bowie-jacket.jpg",
+    "thumb": "/img/polaroids/bowie-jacket-t.jpg",
+    "caption": "Bowie",
+    "alt": "Dana's Polaroid of David Bowie in a cream jacket against a green wall",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "zowie",
+    "src": "/img/polaroids/zowie.jpg",
+    "thumb": "/img/polaroids/zowie-t.jpg",
+    "caption": "Zowie in New York",
+    "alt": "Dana's Polaroid of Zowie Bowie, aged three, in New York",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "geoff-david-angie",
+    "src": "/img/polaroids/geoff-david-angie.jpg",
+    "thumb": "/img/polaroids/geoff-david-angie-t.jpg",
+    "caption": "Geoff, David & Angie",
+    "alt": "Dana's Polaroid of Geoff MacCormack, David and Angie Bowie backstage",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "dean-angie",
+    "src": "/img/polaroids/dean-angie.jpg",
+    "thumb": "/img/polaroids/dean-angie-t.jpg",
+    "caption": "Me, Dean S. & Angie",
+    "alt": "Dana, Dean Stockwell and Angie Bowie in Hollywood",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  },
+  {
+    "id": "defries-ronno",
+    "src": "/img/polaroids/defries-ronno.jpg",
+    "thumb": "/img/polaroids/defries-ronno-t.jpg",
+    "caption": "Defries, Dana & Ronno",
+    "alt": "Tony Defries, Dana and Mick Ronson at dinner, 1973",
+    "owner": "danagillespie",
+    "credit": "© Dana Gillespie"
+  }
+]

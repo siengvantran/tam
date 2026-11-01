@@ -1,123 +1,53 @@
-// First-party data. Append-only JSON Lines files in DATA_DIR (mount a Railway
-// volume there in production). Simple on purpose: the shape of each record is
-// what matters, so moving to Postgres later is a straight import.
-//
-//   submissions.jsonl  "Play TAM" artist/event proposals
-//   tech-enquiries.jsonl  "Host a tech night" enquiries
-//   signups.jsonl      newsletter sign-ups (explicit consent recorded)
-//   events.jsonl       consented analytics: page views and interactions
+// First-party data: one JSON file of collections in DATA_DIR, plus uploaded
+// images. Writes are atomic (temp file + rename) and run one at a time, so a
+// crash never leaves a half-written file. Swap for Postgres when it outgrows this.
 
-import { appendFile, mkdir, readFile } from 'node:fs/promises';
+import fs from 'node:fs/promises';
+import fss from 'node:fs';
 import path from 'node:path';
-import { randomUUID } from 'node:crypto';
 
-export const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+export const COLLECTIONS = [
+  'bookings', 'tables', 'pins', 'cards', 'sponsors', 'orders', 'follows',
+  'raffleSales', 'raffleDraws', 'visits', 'mailings', 'demand',
+];
 
-export async function append(file, record) {
-  await mkdir(DATA_DIR, { recursive: true });
-  const row = { id: randomUUID(), at: new Date().toISOString(), ...record };
-  await appendFile(path.join(DATA_DIR, file), `${JSON.stringify(row)}\n`, 'utf8');
-  return row;
-}
+export async function openStore(dir) {
+  const file = path.join(dir, 'db.json');
+  const uploads = path.join(dir, 'uploads');
+  await fs.mkdir(uploads, { recursive: true });
 
-export async function readAll(file) {
-  try {
-    const text = await readFile(path.join(DATA_DIR, file), 'utf8');
-    return text.split('\n').filter(Boolean).map((l) => JSON.parse(l));
-  } catch (err) {
-    if (err.code === 'ENOENT') return [];
-    throw err;
+  let db = {};
+  if (fss.existsSync(file)) db = JSON.parse(await fs.readFile(file, 'utf8'));
+  for (const c of COLLECTIONS) if (!Array.isArray(db[c])) db[c] = [];
+  if (!db.meta || typeof db.meta !== 'object') db.meta = {};
+
+  let chain = Promise.resolve();
+  let dirty = false;
+
+  function save() {
+    dirty = true;
+    chain = chain.then(async () => {
+      if (!dirty) return;
+      dirty = false;
+      const tmp = `${file}.${process.pid}.tmp`;
+      await fs.writeFile(tmp, JSON.stringify(db));
+      await fs.rename(tmp, file);
+    }).catch((e) => console.error(`Saving data failed: ${e.message}`));
+    return chain;
   }
-}
 
-const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
-const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
-const url = (v) => {
-  const s = str(v, 500);
-  if (!s) return '';
-  try {
-    const u = new URL(s);
-    return ['http:', 'https:'].includes(u.protocol) ? u.toString() : '';
-  } catch { return ''; }
-};
-
-export function validateSubmission(body) {
-  const s = {
-    name: str(body.name, 120),
-    email: str(body.email, 254).toLowerCase(),
-    act: str(body.act, 120),
-    genre: str(body.genre, 60),
-    location: str(body.location, 120),
-    links: [body.link1, body.link2, body.link3].map(url).filter(Boolean),
-    proposal: str(body.proposal, 3000),
-    strand: str(body.strand, 60),
-    newsletter: body.newsletter === 'on' || body.newsletter === true,
-  };
-  const errors = {};
-  if (!s.name) errors.name = 'Tell us your name.';
-  if (!EMAIL.test(s.email)) errors.email = 'We need a valid email to reply.';
-  if (!s.act) errors.act = 'What is the act called?';
-  if (s.proposal.length < 20) errors.proposal = 'Tell us a little more (at least a sentence or two).';
-  if (!s.links.length) errors.link1 = 'Add at least one link to your music or video.';
-  if (body.privacy !== 'on' && body.privacy !== true) errors.privacy = 'Please confirm you have read the privacy notice.';
-  return { value: s, errors, ok: Object.keys(errors).length === 0 };
-}
-
-// "Host a tech night" enquiries from sponsors and communities.
-export function validateTechEnquiry(body, communities = []) {
-  const s = {
-    name: str(body.name, 120),
-    email: str(body.email, 254).toLowerCase(),
-    organisation: str(body.organisation, 120),
-    community: str(body.community, 60),
-    format: str(body.format, 60),
-    when: str(body.when, 60),
-    guests: str(body.guests, 20),
-    message: str(body.message, 3000),
-    newsletter: body.newsletter === 'on' || body.newsletter === true,
-  };
-  if (s.community && s.community !== 'other' && !communities.includes(s.community)) s.community = '';
-  const errors = {};
-  if (!s.name) errors.name = 'Tell us your name.';
-  if (!EMAIL.test(s.email)) errors.email = 'We need a valid email to reply.';
-  if (!s.organisation) errors.organisation = 'Which company or community is this for?';
-  if (s.message.length < 20) errors.message = 'Tell us a little about the night (a sentence or two).';
-  if (body.privacy !== 'on' && body.privacy !== true) errors.privacy = 'Please confirm you have read the privacy notice.';
-  return { value: s, errors, ok: Object.keys(errors).length === 0 };
-}
-
-export function validateSignup(body) {
-  const email = str(body.email, 254).toLowerCase();
-  const interests = [].concat(body.interests || []).map((x) => str(x, 40)).filter(Boolean).slice(0, 10);
-  const errors = {};
-  if (!EMAIL.test(email)) errors.email = 'Please enter a valid email.';
-  if (body.consent !== 'on' && body.consent !== true) errors.consent = 'Tick the box so we know you want emails from TAM.';
-  return { value: { email, interests, consent: true }, errors, ok: !Object.keys(errors).length };
-}
-
-// ---- Demand: "Bring them back" (artists) and "I was there" (past nights) ----
-// Every press is a first-party signal: who people want to see again, and which
-// nights people actually went to. Counts are public; emails never are.
-
-export const DEMAND_TYPES = { 'bring-back': 'artist', 'was-there': 'event', 'want-community': 'community' };
-
-export function validateDemand(body, exists) {
-  const type = str(body.type, 20);
-  const target = str(body.target, 120);
-  const email = str(body.email, 254).toLowerCase();
-  const errors = {};
-  if (!DEMAND_TYPES[type]) errors.type = 'Unknown action.';
-  else if (!exists(DEMAND_TYPES[type], target)) errors.target = 'Unknown artist or night.';
-  if (email && !EMAIL.test(email)) errors.email = 'That email doesn’t look right.';
-  if (email && body.consent !== 'on' && body.consent !== true) errors.consent = 'Tick the box so we can email you.';
-  return { value: { type, target, ...(email ? { email, consent: true } : {}) }, errors, ok: !Object.keys(errors).length };
-}
-
-export async function demandCounts() {
-  const counts = new Map();
-  for (const r of await readAll('demand.jsonl')) {
-    const k = `${r.type}:${r.target}`;
-    counts.set(k, (counts.get(k) || 0) + 1);
+  // Images arrive as data: URLs already shrunk in the browser.
+  async function saveImage(dataUrl, name, { maxKB = 500, what = 'Images' } = {}) {
+    if (!dataUrl) return '';
+    const m = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUrl));
+    if (!m) throw Object.assign(new Error(`${what} must be PNG, JPG or WebP.`), { status: 400 });
+    const buf = Buffer.from(m[2], 'base64');
+    if (buf.length > maxKB * 1024) throw Object.assign(new Error(`${what} must be under ${maxKB} KB.`), { status: 400 });
+    const ext = m[1] === 'jpeg' ? 'jpg' : m[1];
+    const fileName = `${name.replace(/[^A-Za-z0-9_-]/g, '')}.${ext}`;
+    await fs.writeFile(path.join(uploads, fileName), buf);
+    return `/uploads/${fileName}`;
   }
-  return counts;
+
+  return { db, save, flush: () => chain, saveImage, uploads, file };
 }

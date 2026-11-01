@@ -1,55 +1,2679 @@
 [
   {
-    "slug": "tam-began-as-a-place",
-    "title": "TAM began as a place. TAM is becoming a network.",
-    "dek": "Why TAM.TV exists, and what happens to a music venue when it stops being tied to one building.",
-    "pillar": "Stories",
-    "published": "2026-10-08",
-    "author": "TAM",
-    "body": [
-      "For six years TAM has been a room in Elephant & Castle where live music happened. Over that time it built something harder to see than a stage: relationships with artists and musicians, an audience, and an archive of nights that mattered to the people who were there.",
-      "The building is one part of TAM. The larger asset is the community, the content, the relationships and the cultural memory being made around it.",
-      "TAM.TV is where that continues. Every TAM Festival event now creates a set of things that last: a performance film, clips, an interview, photographs, a written profile and a permanent artist page. The live night is the raw material. TAM.TV turns it into media that can be found, shared and returned to.",
-      "TAM isn't leaving the venue. It's leaving the limitations of the venue behind."
-    ],
-    "related": {
-      "artists": [],
-      "events": []
-    }
-  },
-  {
-    "slug": "how-one-night-becomes-a-dozen-stories",
-    "title": "How one night becomes a dozen stories",
-    "dek": "The TAM loop: event, content, distribution, discovery, audience, and the next event.",
-    "pillar": "Festival",
-    "published": "2026-10-06",
-    "author": "TAM",
-    "body": [
-      "An emerging artist plays TAM. That single set can become a full performance film, three to ten short clips, an interview, backstage footage, a photographer's gallery, a written profile, a radio segment and a searchable artist page.",
-      "Social platforms carry the clips. Every clip points back to TAM.TV, where the artist's page links their music, their performances and their next appearance.",
-      "Instead of event, finished, it becomes event, content, distribution, discovery, audience, data, next event."
-    ],
-    "related": {
-      "artists": [],
-      "events": []
-    }
-  },
-  {
-    "slug": "danas-documentary",
-    "title": "Project: Dana's documentary",
-    "dek": "A long-running TAM project in development. This page will collect interviews, clips and archive material as the film takes shape.",
-    "pillar": "Projects",
-    "published": "2026-10-02",
-    "author": "TAM",
-    "body": [
-      "Some TAM stories are longer than a single night. Dana's documentary is one of them: a film in development that draws on TAM's people, performances and archive.",
-      "As the project develops, this page will gather the interviews, clips, archival material and articles it produces, so the story can be followed while it is being made."
-    ],
-    "related": {
-      "artists": [
-        "danagillespie"
-      ],
-      "events": []
-    }
+    "id": "dana-gillespie",
+    "artist": "danagillespie",
+    "title": "Dana’s stories",
+    "source": "Weren’t Born a Man (Hawksmoor, 2020), its draft I Rest My Case, and What Memories We Make (Hawksmoor, 2026)",
+    "themes": [
+      {
+        "id": "highlights",
+        "name": "Highlights",
+        "blurb": "The best of Dana: Bowie, Superstar, the blues",
+        "stories": [
+          {
+            "kicker": "Meet Dana Gillespie",
+            "text": "Singer, songwriter, actor and blues legend."
+          },
+          {
+            "kicker": "Before the music",
+            "text": "British Junior Water-Skiing Champion."
+          },
+          {
+            "kicker": "The Marquee, 1964",
+            "text": "A teenage Dana meets a young David Bowie. He gives her her first guitar lessons."
+          },
+          {
+            "quote": true,
+            "text": "“Dana is a very, very, very, very, very, very excellent songwriter.”",
+            "by": "David Bowie, BBC John Peel session, June 1971"
+          },
+          {
+            "kicker": "Written for her",
+            "text": "Bowie wrote “Andy Warhol” for Dana, and she sang on Ziggy Stardust."
+          },
+          {
+            "kicker": "West End",
+            "text": "Mary Magdalene in the original London Jesus Christ Superstar."
+          },
+          {
+            "kicker": "The blues",
+            "text": "Over seventy albums, and twenty years of her own blues festival on Mustique."
+          },
+          {
+            "kicker": "Now",
+            "text": "TAM’s Mentor in Residence. She wrote The Best Christmas Ever for nights like these.",
+            "photo": "/img/dana/wmwm/tam-london.jpg",
+            "alt": "Dana, in black with red pockets, stands between David Shasha and Phill Brown at the Temple of Art and Music."
+          }
+        ]
+      },
+      {
+        "id": "christmas",
+        "name": "Christmas",
+        "blurb": "Christmases past, from a pony under the tree to panto",
+        "stories": [
+          {
+            "kicker": "Thirty for Christmas lunch",
+            "text": "Dana’s mother’s clan was so close that thirty or more often sat down for Christmas lunch, with cousins popping up from all over the world."
+          },
+          {
+            "kicker": "Lebkuchen on the tree",
+            "text": "Dana’s childhood Christmas tree was hung with marvellous lebkuchen from Schmidts, the German food shop she visited with her grandmother Oma."
+          },
+          {
+            "kicker": "A pony under the tree",
+            "text": "One childhood Christmas, Nixi got a bicycle from her godfather, and little Dana got a pony called Rusty from her godmother, Jean Buxton."
+          },
+          {
+            "kicker": "Christmas on December 19th",
+            "text": "Dana’s family opened Christmas presents by the tree around December 19th, then took off to the Alps to ski in Klosters."
+          },
+          {
+            "kicker": "Alf Garnett meets Superstar",
+            "text": "While Dana played Mary Magdalene, a Christmas episode of Till Death Us Do Part was filmed in the Coach and Horses, the Superstar cast’s pub."
+          },
+          {
+            "kicker": "Paler than when he came",
+            "text": "Offered a Mustique house over Christmas, Dana invited loads of friends. Lionel Bart came, and slept so much he left paler than he arrived!"
+          },
+          {
+            "kicker": "Dandini in Eastbourne",
+            "text": "For Christmas 1979 Dana played Principal Boy Dandini in ‘Cinderella’ in a freezing Eastbourne, belting ‘Don’t Rain on my Parade’ every night.",
+            "said": "“It was all utterly dreadful”"
+          },
+          {
+            "kicker": "Panto? Only with Julian",
+            "text": "After her chilly Eastbourne panto, Dana vowed never to do panto again, unless it’s with Julian Clary, whose camping it up would make it bearable."
+          },
+          {
+            "kicker": "Sneezi in Eastbourne",
+            "text": "In a freezing, rainy Eastbourne for panto, Dana’s only friend and consolation was her dog Sneezi, braving the arctic daily walks with her."
+          },
+          {
+            "kicker": "Sleighbells in Davos",
+            "text": "Dana loved sleigh rides with her father in Davos, under a huge fur rug, up to Certig for lunch, then back drowsy to the sound of the sleighbells.",
+            "photo": "/img/dana/wmwm/davos-snow-father.jpg",
+            "alt": "Dana and her father in fur coats and wide black hats standing in falling snow among snowy fir trees."
+          },
+          {
+            "kicker": "Christmas in Darjeeling",
+            "text": "Dana sang over Christmas and New Year at Darjeeling’s Hotel Windemere, where the sun would burst through to reveal Kanchenchunga, Tiger Mountain."
+          },
+          {
+            "kicker": "Boxing Day at Kimberley",
+            "text": "Every year Dana and her mother joined the many Buxton relations at Kimberley Hall in Norfolk for a huge Boxing Day family lunch."
+          }
+        ]
+      },
+      {
+        "id": "bowie",
+        "name": "Bowie fans",
+        "blurb": "Every Bowie story from her memoir and picture book",
+        "stories": [
+          {
+            "kicker": "Writing to John Bloom",
+            "text": "In 1964 young David Jones wrote to John Bloom asking support for his band, The King Bees. It led to his first manager, and his first single."
+          },
+          {
+            "kicker": "The Marquee",
+            "text": "After his set, lemon-haired Davie Jones of the Manish Boys took the brush from Dana’s hand and carried on brushing her waist-length hair.",
+            "photo": "/img/dana/wmwm/bowie/gered-blonde-marquee-era.jpg",
+            "alt": "Black and white portrait of a young Dana with long peroxide-blonde hair, wrapped in a fur coat, by Gered Mankowitz"
+          },
+          {
+            "kicker": "Next morning",
+            "text": "When Dana brought David downstairs, her father thought she’d had a girlfriend with her. David’s long lemon-yellow hair was misleading!"
+          },
+          {
+            "kicker": "Carrying her ballet shoes",
+            "text": "Young David Jones would pick Dana up from school and carry her ballet shoes home, or wait outside until her drama lesson was over."
+          },
+          {
+            "kicker": "Tin Pan Alley",
+            "text": "David taught Dana ‘Love is Strange’ on guitar, and took her to a listening booth to hear his first single, ‘I Pity the Fool’."
+          },
+          {
+            "kicker": "Songs, not stardom",
+            "text": "David and Dana spent hours at the Gioconda café on Tin Pan Alley over one cup of tea. Neither dreamed of fame: they just wanted their songs published."
+          },
+          {
+            "kicker": "Carnaby Street",
+            "text": "Even then, David dressed to be noticed. He and Dana went down to Carnaby Street, where he had outfits tailor-made, and heads turned when he walked by."
+          },
+          {
+            "kicker": "Long-haired men",
+            "text": "David’s first TV interview was for ‘The Society for the Protection of Long-haired Men’. In the clip, the twinkle in his eye says he’s having a laugh."
+          },
+          {
+            "kicker": "The ’64-’67 songs",
+            "text": "On Pinups, Bowie covered favourites from the years he and Dana spent hours in Soho coffee bars listening to the latest hits. His sleeve note said it:",
+            "said": "“These songs are among my favourites from the ’64-’67 period of London”"
+          },
+          {
+            "kicker": "Ready Steady Go",
+            "text": "David and Dana would head straight for the Green Room at ‘Ready Steady Go’ to network with the music business and the music press."
+          },
+          {
+            "kicker": "TV with David",
+            "text": "If a programme on mime artist Marcel Marceau came on, David would insist. He never watched brainless rubbish, he had a bright brain.",
+            "said": "“We must watch this”"
+          },
+          {
+            "kicker": "Goodbye, Davie Jones",
+            "text": "With Davy Jones of the Monkees on TV, David told Dana he would now be called David Bowie. But it was only ever a stage name.",
+            "said": "“He was David Jones all his life”"
+          },
+          {
+            "kicker": "His first album",
+            "text": "Both on Decca, David and Dana shared a producer: the late Mike Vernon made David’s first album. The less said about ‘The Laughing Gnome’, the better!"
+          },
+          {
+            "kicker": "A song David taught her",
+            "text": "On ‘Ready Steady Goes Live’, sixteen-year-old Dana sang ‘Love is Strange’, the song Bowie had taught her, with the Les Reed orchestra."
+          },
+          {
+            "kicker": "Still the same David",
+            "text": "Dana and David moved in and out of each other’s lives for ten years. Even when he became an icon, she never saw him as ‘David Bowie, the star’.",
+            "said": "“He was my mate David Jones”",
+            "photo": "/img/dana/bowie4.jpg",
+            "alt": "Polaroid of David Bowie in a hat, captioned David Bowie in Dana's hand"
+          },
+          {
+            "kicker": "First to hear Space Oddity",
+            "text": "David Bowie phoned Dana with a song he’d written half an hour before and came straight round to play it. It was ‘Space Oddity’, his first big hit.",
+            "said": "“I’ve just written this song half an hour ago”"
+          },
+          {
+            "kicker": "Angie names the Bunker",
+            "text": "David brought Angie round to meet Dana and they instantly hit it off. Soon after, Angie renamed Dana’s flat ‘The Bunker’, and the name stuck.",
+            "photo": "/img/dana/wmwm/bowie/the-bunker.jpg",
+            "alt": "Dana in a satin gown in her basement flat, The Bunker, full of rugs, books and a piano"
+          },
+          {
+            "kicker": "Haddon Hall",
+            "text": "From 1969 David and Angie lived in Gothic Haddon Hall, Beckenham, for about £7 a month. The band slept on mattresses up on the minstrels’ gallery."
+          },
+          {
+            "kicker": "Quick, it’s on!",
+            "text": "At Haddon Hall, if something like Japanese kabuki came on TV, Bowie would call everyone and they’d all climb onto his bed to watch.",
+            "said": "“Quick, it’s on!”"
+          },
+          {
+            "kicker": "Rejected together",
+            "text": "Dana and David Bowie both auditioned for the stage show of ‘Hair’, on different days. Neither of them got chosen!"
+          },
+          {
+            "kicker": "The Mainman family",
+            "text": "Bowie introduced Dana to manager Tony Defries. Soon David, Angie, Mick Ronson and Dana were like a family, with Defries as father figure.",
+            "photo": "/img/dana/wmwm/bowie/defries-dana-ronno.jpg",
+            "alt": "Polaroid captioned Defries, Dana and Ronno at a dinner table, 1973"
+          },
+          {
+            "kicker": "A midnight call",
+            "text": "Phoning Angie and Dana at midnight from America, Bowie raved about Roswell and aliens. His enthusiasm was so catching they both believed him!",
+            "said": "“You know it’s happened, it’s true, the aliens exist”",
+            "photo": "/img/dana/wmwm/bowie/angie-and-dana.jpg",
+            "alt": "Dana and Angie Bowie, with spiky platinum hair, sitting close together"
+          },
+          {
+            "kicker": "A song from David",
+            "text": "Bowie wrote ‘Andy Warhol’ for Dana. She sang it on the John Peel Show in June 1971, and after hearing it with Ronno on guitar he recorded it himself.",
+            "photo": "/img/dana/wmwm/bowie/andy-warhol-single.jpg",
+            "alt": "Sleeve of Dana's Andy Warhol and Dizzy Heights single"
+          },
+          {
+            "kicker": "An astonishing number",
+            "text": "At Bowie’s 1971 John Peel session, Dana sang alongside him and the future Spiders from Mars. John Peel’s introduction said it all.",
+            "said": "“David Bowie and an astonishing number of friends”",
+            "photo": "/img/dana/wmwm/bowie/bbc-peel-contract-1971.jpg",
+            "alt": "A typed BBC contract form for the 1971 John Peel session"
+          },
+          {
+            "kicker": "The BOWPROMO album",
+            "text": "In 1971 Bowie and Dana shared a demo album, his songs on one side, hers on the other. Only 500 were pressed. It’s now a priceless Bowie collectable.",
+            "said": "“I’m sure he regrets that now”"
+          },
+          {
+            "quote": true,
+            "text": "“Dana is a very, very, very, very, very, very excellent songwriter.”",
+            "by": "David Bowie, BBC John Peel session, June 1971"
+          },
+          {
+            "kicker": "Sunrise at Glastonbury",
+            "text": "Dana walked to Glastonbury 1971 with Bowie. He finally played at 5am, and as he sang ‘Memory of a Free Festival’, the sun itself appeared."
+          },
+          {
+            "kicker": "A cover by accident",
+            "text": "At the end of a 1971 photo shoot with Dana, the photographer asked Bowie for a few shots. Beret off, hair back: one became the Hunky Dory cover.",
+            "photo": "/img/dana/wmwm/bowie/hunky-dory-session.jpg",
+            "alt": "David Bowie in a beret hugs Dana from behind in a studio photo session, 1971"
+          },
+          {
+            "kicker": "Dudley for Bowie?",
+            "text": "Dana suggested Dudley Moore play piano for Bowie, but Dudley didn’t turn up for the audition, so Rick Wakeman got the gig.",
+            "said": "“I wonder what ‘Life on Mars’ would have sounded like”"
+          },
+          {
+            "kicker": "Weren’t Born a Man",
+            "text": "Bowie meant to produce Dana’s album ‘Weren’t Born a Man’, but his career took off, so Mick Ronson produced it, with Rick Wakeman on piano.",
+            "photo": "/img/dana/wmwm/salford-1973.jpg",
+            "alt": "Dana on stage in a red dress, singing into a handheld microphone under warm stage light."
+          },
+          {
+            "kicker": "Ahead of his time",
+            "text": "Dana wrote ‘Dizzy Heights’ about Bowie, the B-side of ‘Andy Warhol’, calling him “a carnival queen”, “a rock ‘n’ roll lady” and “ahead of his time”.",
+            "said": "“Not bad for a lyric written in 1972!”",
+            "photo": "/img/dana/wmwm/bowie/dizzy-heights-sleeves.jpg",
+            "alt": "Three international sleeves of the Andy Warhol and Dizzy Heights single"
+          },
+          {
+            "kicker": "No beer for Dana",
+            "text": "Dana and Angie Bowie toured Britain’s radio stations promoting ‘Andy Warhol’. Someone put a beer in Dana’s hand, but she’s always loathed alcohol.",
+            "said": "“I definitely didn’t drink it”",
+            "photo": "/img/dana/wmwm/bowie/angie-beer-bottle.jpg",
+            "alt": "Dana lounging on a bed holding a beer bottle, with Angie Bowie laughing beside her"
+          },
+          {
+            "kicker": "A song called ‘For David’",
+            "text": "Dana’s album ‘Box of Surprises’ had a song about Bowie, ‘For David, The Next Day’. In 2013 he released an album called ‘The Next Day’. A message?",
+            "said": "“Who knows? Probably not”"
+          },
+          {
+            "kicker": "Bowie left at the interval",
+            "text": "Dana told the whole Superstar cast David Bowie was in the audience. To her horror, David and Angie left at the interval!",
+            "photo": "/img/dana/david-angie.jpg",
+            "alt": "Polaroid of David and Angie Bowie lounging"
+          },
+          {
+            "kicker": "A weekend at the Château",
+            "text": "In 1973 Dana and Angie flew to France on a Sunday to see Ronno at the Château d’Hérouville, where Bowie made Pinups. Back for Monday’s Superstar!",
+            "photo": "/img/dana/wmwm/bowie/ronno-chateau.jpg",
+            "alt": "Black and white photo of Mick Ronson in a straw hat beside Dana at the Château d'Hérouville"
+          },
+          {
+            "kicker": "Ziggy’s secret",
+            "text": "Dana was with Bowie the day before Hammersmith, 3rd July 1973, so she knew in advance he was going to kill off Ziggy Stardust.",
+            "photo": "/img/dana/wmwm/bowie-cafe-royal.jpg",
+            "alt": "Dana at a crowded party table with David Bowie, Jeff Beck and Mick Ronson at the Café Royal, 1973."
+          },
+          {
+            "kicker": "A cover by Warhol",
+            "text": "Through the Pork crowd at Mainman, Andy Warhol’s Factory made the cover of Dana’s fourth LP, ‘Ain’t Gonna Play No Second Fiddle’.",
+            "photo": "/img/dana/wmwm/bowie/warhol-screenprint.jpg",
+            "alt": "Andy Warhol Factory screen print of Dana's face in pink, orange and black"
+          },
+          {
+            "kicker": "Piano with Jagger",
+            "text": "At the Sherry Netherland in New York, Bowie played guitar one night while Dana and Mick Jagger duetted on piano until dawn.",
+            "photo": "/img/dana/bowies-piano.jpg",
+            "alt": "Dana in a red dress leaning on Bowie's grand piano"
+          },
+          {
+            "kicker": "Jagger drops by",
+            "text": "In 1974 Dana photographed Mick Jagger visiting Bowie’s suite at the Sherry-Netherland. The picture went missing for her memoirs, but it’s back.",
+            "photo": "/img/dana/bowie-jagger.jpg",
+            "alt": "David Bowie and Mick Jagger reclining on a sofa, 1974, photographed by Dana"
+          },
+          {
+            "kicker": "Zowie, aged three",
+            "text": "David and Angie’s son Zowie was three when they all lived together in New York in 1974. He’s now film director Duncan Jones, his real name.",
+            "photo": "/img/dana/wmwm/bowie/zowie-new-york.jpg",
+            "alt": "Polaroid captioned Zowie in New York of a small blond child in a green cardigan"
+          },
+          {
+            "kicker": "Stars at Reno Sweeney’s",
+            "text": "At Dana’s 1974 show at Reno Sweeney’s in New York, the crowd included Tom Waits, Bowie, Bette Midler and Raquel Welch. Dylan kept a low profile.",
+            "photo": "/img/dana/wmwm/bowie/reno-sweeneys-bowie.jpg",
+            "alt": "Tom Waits, David Bowie and Bette Midler at a crowded table at Reno Sweeney's, 1974"
+          },
+          {
+            "kicker": "Diamond Dogs",
+            "text": "As Bowie sang ‘Space Oddity’ from a capsule over the Diamond Dogs crowd, Angie clutched Dana’s hand. A wonderful, moving show.",
+            "said": "“Tell my wife I love her very much”",
+            "photo": "/img/dana/wmwm/bowie/angie-kamen-montreal.jpg",
+            "alt": "Michael Kamen and Angie Bowie on the Diamond Dogs stage at soundcheck in Montreal"
+          },
+          {
+            "kicker": "Night rides with David",
+            "text": "On the Diamond Dogs tour David wouldn’t fly, so he was driven through the night by limo. Sometimes Dana rode along to keep him company.",
+            "photo": "/img/dana/wmwm/bowie/geoff-david-angie-ny.jpg",
+            "alt": "Polaroid of Geoff MacCormack, Angie and David Bowie backstage in New York"
+          },
+          {
+            "kicker": "The Marc Bohan suite",
+            "text": "On the Diamond Dogs tour Mainman took over the Beverly Wilshire. Defries had the Christian Dior suite, and Marc Bolan got the Marc Bohan suite!",
+            "photo": "/img/dana/wmwm/bowie/dana-dean-angie.jpg",
+            "alt": "Polaroid of Dana, Dean Stockwell in a cowboy hat and Angie Bowie in Hollywood"
+          },
+          {
+            "kicker": "A call from paradise",
+            "text": "Dana was with Tony Defries on Mustique when he made his final phone call to Bowie, telling him it just couldn’t go on anymore.",
+            "photo": "/img/dana/wmwm/bowie/defries-and-dana.jpg",
+            "alt": "Tony Defries, bearded and smiling, with his arm around Dana"
+          },
+          {
+            "kicker": "The Ronson tribute",
+            "text": "In 1994 Dana and The London Blues Band played the Mick Ronson memorial concert at the Hammersmith Odeon, alongside Roger Daltrey and Roger Taylor.",
+            "photo": "/img/dana/wmwm/bowie/ronno-chateau.jpg",
+            "alt": "Black and white photo of Mick Ronson in a straw hat beside Dana at the Château d'Hérouville"
+          },
+          {
+            "kicker": "The folly of follies",
+            "text": "Bowie built a Balinese house on Mustique but was hardly there. Its next owner found packing cases of Balinese statues Bowie never unpacked.",
+            "photo": "/img/dana/wmwm/bowie/bowie-mustique-house.jpg",
+            "alt": "Wooden verandas of Bowie's Balinese-style house overlooking the sea on Mustique"
+          },
+          {
+            "kicker": "Bowie’s old house",
+            "text": "In 1994 Felix Dennis bought David Bowie’s Balinese-style house on Mustique and built a music room, where Dana’s band rehearsed with Mick Jagger.",
+            "photo": "/img/dana/wmwm/bowie/bowie-mustique-house.jpg",
+            "alt": "Wooden verandas of Bowie's Balinese-style house overlooking the sea on Mustique"
+          },
+          {
+            "kicker": "January 2016",
+            "text": "Twenty days after a knee operation, Dana hobbled into the BBC on a stick to remember Bowie, who released a great new album three days before he died.",
+            "said": "“Good on you, David, it’s how you would have wanted to go”",
+            "photo": "/img/dana/wmwm/bowie/bowie-closeup.jpg",
+            "alt": "Close-up of David Bowie's face, pale with orange hair, photographed by Dana"
+          },
+          {
+            "kicker": "Bowie in Rome, 2020",
+            "text": "Dana began 2020 singing in Rome at an event for Bowie’s birthday and anniversary, with dancers recreating Lindsay Kemp’s Ziggy-era moves.",
+            "photo": "/img/dana/wmwm/bowie/rome-2020.jpg",
+            "alt": "Dana on stage at a Bowie tribute night in Rome, Lindsay Kemp on the screen behind"
+          },
+          {
+            "kicker": "Andy Warhol, fifty years on",
+            "text": "In 1974 Dana filmed ‘Andy Warhol’ for Dutch TV show TopPop. In 2024 she recorded an updated version for Bowie’s 78th birthday in 2025.",
+            "photo": "/img/dana/wmwm/bowie/toppop-1974.jpg",
+            "alt": "Dana with dark curls and red lips in a gold corset against a red background, TopPop 1974"
+          },
+          {
+            "kicker": "The lost first take",
+            "text": "Producer Tris Penna found the very first recording Dana made of ‘Andy Warhol’, with Bowie on guitar. It’s on the compilation What Memories We Make.",
+            "photo": "/img/dana/wmwm/bowie/mainman-gered.jpg",
+            "alt": "Moody black and white shot of Dana in a lit alcove, by Gered Mankowitz"
+          },
+          {
+            "kicker": "Named after a Bowie song",
+            "text": "Dana named this photo book after a song on the record she made with Bowie in 1973. It’s a ‘coffee table book’, though she has no such table.",
+            "said": "“I don’t have such a table”",
+            "photo": "/img/dana/wmwm/bowie-favourite.jpg",
+            "alt": "Dana, with long dark hair, sits at a table beside David Bowie, who rests his chin on his hand and gazes at her."
+          },
+          {
+            "kicker": "Still her old pals",
+            "text": "Did Dana know Bowie and Elton were destined for megastardom? No. Bowie was a mate, Elton a guy she’d see at the Cromwellian.",
+            "said": "“Even when they became huge, to me they were still my old pals”",
+            "photo": "/img/dana/wmwm/bowie/bowie-jacket-polaroid.jpg",
+            "alt": "Polaroid by Dana of David Bowie in a cream double-breasted jacket against a green wall"
+          },
+          {
+            "kicker": "Made up by Pierre",
+            "text": "Pierre LaRoche created Bowie’s Aladdin Sane lightning bolt and did Mick Jagger’s make-up. He once ‘did’ Dana too, and made her look wonderful."
+          },
+          {
+            "kicker": "Elton’s château",
+            "text": "In 1973 Dana stayed with Bowie at the Château d’Hérouville near Paris, where Elton recorded several albums, including ‘Goodbye Yellow Brick Road’."
+          },
+          {
+            "kicker": "Borrowed from Mick",
+            "text": "Mick Jagger showed Bowie the work of Guy Peellaert, booked for a Stones cover. David nicked the idea for his half-man, half-dog ‘Diamond Dogs’ cover."
+          },
+          {
+            "kicker": "Double Fantasy guitarist",
+            "text": "Earl Slick played in Dana’s band in 1974, when he wasn’t on Bowie’s Diamond Dogs tour, and later on John Lennon’s ‘Double Fantasy’ album."
+          }
+        ]
+      },
+      {
+        "id": "davyjones",
+        "name": "The Davy Jones years",
+        "blurb": "Bowie before he was famous, 1964 to 1969",
+        "stories": [
+          {
+            "kicker": "Writing to John Bloom",
+            "text": "In 1964 young David Jones wrote to John Bloom asking support for his band, The King Bees. It led to his first manager, and his first single."
+          },
+          {
+            "kicker": "The Marquee",
+            "text": "After his set, lemon-haired Davie Jones of the Manish Boys took the brush from Dana’s hand and carried on brushing her waist-length hair.",
+            "photo": "/img/dana/wmwm/bowie/gered-blonde-marquee-era.jpg",
+            "alt": "Black and white portrait of a young Dana with long peroxide-blonde hair, wrapped in a fur coat, by Gered Mankowitz"
+          },
+          {
+            "kicker": "Next morning",
+            "text": "When Dana brought David downstairs, her father thought she’d had a girlfriend with her. David’s long lemon-yellow hair was misleading!"
+          },
+          {
+            "kicker": "Carrying her ballet shoes",
+            "text": "Young David Jones would pick Dana up from school and carry her ballet shoes home, or wait outside until her drama lesson was over."
+          },
+          {
+            "kicker": "Tin Pan Alley",
+            "text": "David taught Dana ‘Love is Strange’ on guitar, and took her to a listening booth to hear his first single, ‘I Pity the Fool’."
+          },
+          {
+            "kicker": "Songs, not stardom",
+            "text": "David and Dana spent hours at the Gioconda café on Tin Pan Alley over one cup of tea. Neither dreamed of fame: they just wanted their songs published."
+          },
+          {
+            "kicker": "Carnaby Street",
+            "text": "Even then, David dressed to be noticed. He and Dana went down to Carnaby Street, where he had outfits tailor-made, and heads turned when he walked by."
+          },
+          {
+            "kicker": "The ’64-’67 songs",
+            "text": "On Pinups, Bowie covered favourites from the years he and Dana spent hours in Soho coffee bars listening to the latest hits. His sleeve note said it:",
+            "said": "“These songs are among my favourites from the ’64-’67 period of London”"
+          },
+          {
+            "kicker": "Long-haired men",
+            "text": "David’s first TV interview was for ‘The Society for the Protection of Long-haired Men’. In the clip, the twinkle in his eye says he’s having a laugh."
+          },
+          {
+            "kicker": "TV with David",
+            "text": "If a programme on mime artist Marcel Marceau came on, David would insist. He never watched brainless rubbish, he had a bright brain.",
+            "said": "“We must watch this”"
+          },
+          {
+            "kicker": "Ready Steady Go",
+            "text": "David and Dana would head straight for the Green Room at ‘Ready Steady Go’ to network with the music business and the music press."
+          },
+          {
+            "kicker": "A song David taught her",
+            "text": "On ‘Ready Steady Goes Live’, sixteen-year-old Dana sang ‘Love is Strange’, the song Bowie had taught her, with the Les Reed orchestra."
+          },
+          {
+            "kicker": "Goodbye, Davie Jones",
+            "text": "With Davy Jones of the Monkees on TV, David told Dana he would now be called David Bowie. But it was only ever a stage name.",
+            "said": "“He was David Jones all his life”"
+          },
+          {
+            "kicker": "His first album",
+            "text": "Both on Decca, David and Dana shared a producer: the late Mike Vernon made David’s first album. The less said about ‘The Laughing Gnome’, the better!"
+          },
+          {
+            "kicker": "Pierrot in Turquoise",
+            "text": "In March 1968 David asked Dana to see him perform with mime artist Lindsay Kemp at the tiny Mercury Theatre in Notting Hill. It held about 30 people."
+          },
+          {
+            "kicker": "First to hear Space Oddity",
+            "text": "David Bowie phoned Dana with a song he’d written half an hour before and came straight round to play it. It was ‘Space Oddity’, his first big hit.",
+            "said": "“I’ve just written this song half an hour ago”"
+          },
+          {
+            "kicker": "Angie names the Bunker",
+            "text": "David brought Angie round to meet Dana and they instantly hit it off. Soon after, Angie renamed Dana’s flat ‘The Bunker’, and the name stuck.",
+            "photo": "/img/dana/wmwm/bowie/the-bunker.jpg",
+            "alt": "Dana in a satin gown in her basement flat, The Bunker, full of rugs, books and a piano"
+          },
+          {
+            "kicker": "Haddon Hall",
+            "text": "From 1969 David and Angie lived in Gothic Haddon Hall, Beckenham, for about £7 a month. The band slept on mattresses up on the minstrels’ gallery."
+          },
+          {
+            "kicker": "Quick, it’s on!",
+            "text": "At Haddon Hall, if something like Japanese kabuki came on TV, Bowie would call everyone and they’d all climb onto his bed to watch.",
+            "said": "“Quick, it’s on!”"
+          },
+          {
+            "kicker": "Still the same David",
+            "text": "Dana and David moved in and out of each other’s lives for ten years. Even when he became an icon, she never saw him as ‘David Bowie, the star’.",
+            "said": "“He was my mate David Jones”",
+            "photo": "/img/dana/bowie4.jpg",
+            "alt": "Polaroid of David Bowie in a hat, captioned David Bowie in Dana's hand"
+          }
+        ]
+      },
+      {
+        "id": "dylan",
+        "name": "Bob Dylan",
+        "blurb": "From the Savoy in 1965 to opening his 1997 tour",
+        "stories": [
+          {
+            "kicker": "The Savoy, April 1965",
+            "text": "At 16, Dana found her way into Bob Dylan’s press reception at the Savoy. Once the press had gone, he came over and they talked for 20 minutes.",
+            "said": "“There was definitely some sort of spark between us”"
+          },
+          {
+            "kicker": "Gatecrashing Dylan, 1965",
+            "text": "No ticket for the CBS party at the Dorchester? Dana followed a canapé waiter through staff corridors and emerged via a hidden mirrored door."
+          },
+          {
+            "kicker": "Knight in shining armour",
+            "text": "Bouncers charged through the crowd to throw Dana out, but Bob Dylan stepped forward to kiss her hello and the bouncers retreated."
+          },
+          {
+            "kicker": "A call after school",
+            "text": "The day after the Dorchester party, Dana came home from school to hear Bob Dylan was on the phone. She dropped everything and went to his hotel."
+          },
+          {
+            "kicker": "Don’t Look Back",
+            "text": "Dana appears in ‘Don’t Look Back’, waiting in an empty Albert Hall. Manager Al Grossman reckoned she sang while surfing. It was water skiing.",
+            "said": "“Al Grossman says she sings while surfing”"
+          },
+          {
+            "kicker": "Dylan’s flowery flares",
+            "text": "Dana gave Dylan her flowery bellbottoms, he wore them filming, and she was left with nothing much to wear, stuck in the hotel till he got back."
+          },
+          {
+            "kicker": "Is Dana here?, 1966",
+            "text": "At a dull 1966 London press conference, someone mentioned Dana. The NME said Dylan brightened visibly and practically tore his face in half smiling.",
+            "said": "“Bring her out. I got some baskets for her”"
+          },
+          {
+            "kicker": "A Dylan song for Dana",
+            "text": "In 1966 Dylan told Dana he’d like her to record one of his songs, backed by Manfred Mann, who were having hits with his songs. It never happened.",
+            "said": "“Sadly, nothing ever came of this suggestion”"
+          },
+          {
+            "kicker": "Lennon passes out",
+            "text": "Beatles and Stones played new tracks in Dylan’s suite; John Lennon passed out on the bed Dana was sleeping in. She was in it, he was on it."
+          },
+          {
+            "kicker": "Booed at the Albert Hall",
+            "text": "Dana saw Dylan’s first ‘electric’ tour at the Royal Albert Hall in 1966. When the crowd booed, he just rocked louder. Afterwards they talked it over."
+          },
+          {
+            "kicker": "Reno Sweeneys, 1974",
+            "text": "Dana’s minder John Bindon, not recognising the scruffy visitor, told Bob Dylan to get lost at her New York show. Poor Bindon later felt awful."
+          },
+          {
+            "kicker": "Stars at Reno Sweeney’s",
+            "text": "At Dana’s 1974 show at Reno Sweeney’s in New York, the crowd included Tom Waits, Bowie, Bette Midler and Raquel Welch. Dylan kept a low profile.",
+            "photo": "/img/dana/wmwm/bowie/reno-sweeneys-bowie.jpg",
+            "alt": "Tom Waits, David Bowie and Bette Midler at a crowded table at Reno Sweeney's, 1974"
+          },
+          {
+            "kicker": "A gift for his 50th",
+            "text": "For Dylan’s 50th birthday in 1991 a paper asked his friends for gift ideas. Dana’s: a ticket to India, to show him a good time so he’d smile more."
+          },
+          {
+            "kicker": "Opening for Dylan, 1997",
+            "text": "Dylan asked for Dana as opening act on his 1997 British tour. Two days before, he turned up at her door and they drank fennel tea."
+          },
+          {
+            "kicker": "Why Dana?",
+            "text": "Why ask for Dana in 1997, after all those years? Dylan had seen a good review of one of her Blues albums in Billboard, and it jogged his memory.",
+            "said": "“He said this reminded him how nice I was”"
+          },
+          {
+            "kicker": "Fennel tea and a secret",
+            "text": "Feet up on Dana’s sofa, Dylan told her how he nearly quit his 1987 tour with the Grateful Dead, till a singer in a little bar restored his confidence.",
+            "said": "“What a legend!”"
+          },
+          {
+            "kicker": "His Bobness approves",
+            "text": "Before the tour Dylan told Dana he liked her songwriting, especially ‘Blue Temptation’, and at Wembley he listened to her whole set.",
+            "said": "“This was high praise indeed from His Bobness”"
+          },
+          {
+            "kicker": "Mirrors of Love",
+            "text": "Dylan browsed Dana’s bookshelves and took a book of quotations from world religions. It inspired her own book and CD, ‘Mirrors of Love’."
+          },
+          {
+            "kicker": "Dylan knew all about Him",
+            "text": "Seeing Sai Baba’s photo on Dana’s wall, Bob Dylan laughed. George Harrison had told him all about Him.",
+            "said": "“That’s the guy who materialises jewellery”"
+          },
+          {
+            "kicker": "A gift for George",
+            "text": "Leaving Dana’s in 1997, Dylan said he was visiting George Harrison the next day. So Dana gave him some of her Sanskrit albums to pass on to George."
+          },
+          {
+            "kicker": "Roger Taylor on drums",
+            "text": "Needing a drummer at three days’ notice for Wembley with Dylan, Dana rang Queen’s Roger Taylor. He said yes and refused the paltry fee.",
+            "said": "“He was an absolute angel”"
+          },
+          {
+            "kicker": "Singing Bob",
+            "text": "After 70-plus albums, Dana’s First Love was mostly covers, including songs by two well-known men in her life: Bob Dylan and David Bowie."
+          }
+        ]
+      },
+      {
+        "id": "superstar",
+        "name": "Jesus Christ Superstar",
+        "blurb": "The first London Mary Magdalene",
+        "stories": [
+          {
+            "kicker": "A letter to Tim Rice",
+            "text": "Dana wrote to the then little-known Tim Rice and Andrew Lloyd Webber: she should be their Mary Magdalene. They’d cast Yvonne Elliman the day before."
+          },
+          {
+            "kicker": "Singing ‘Get Back’",
+            "text": "At the open audition for Superstar at the Palace Theatre, Dana wore skin-tight jeans and a T-shirt with a huge fist, and sang The Beatles’ ‘Get Back’."
+          },
+          {
+            "kicker": "Only in the chorus",
+            "text": "Auditioning before Andrew Lloyd Webber, Tim Rice and Robert Stigwood, Dana was only trying for the chorus. Weeks later she opened as Mary Magdalene.",
+            "said": "“I always knew that I would be Mary Magdalene”"
+          },
+          {
+            "kicker": "Six days to learn it",
+            "text": "Dana sang ‘I Don’t Know How To Love Him’ with tears in her eyes. The director told her friend Jean she’d be understudy, then turned to Dana.",
+            "said": "“You will be the new Mary”"
+          },
+          {
+            "kicker": "Front-page news",
+            "text": "Hours later, Dana took the tube back to the Palace Theatre. The train was full of people reading evening papers with her name in the headlines."
+          },
+          {
+            "kicker": "Straight from Jerusalem",
+            "text": "With no costume to fit her, Dana played Mary in a long white caftan she had bought in Jerusalem years before. It had come from the Holy Land!",
+            "said": "“It was very appropriate when you think about it”"
+          },
+          {
+            "kicker": "The Archbishop approves",
+            "text": "Protesters, nuns among them, picketed Superstar as blasphemous, until the Archbishop of Canterbury saw it on opening night and gave it a thumbs up."
+          },
+          {
+            "kicker": "Eyes on their feet",
+            "text": "Dana and the late Richard Barnes often sang ‘Could we start again please’ looking at each other’s feet, so as not to burst out laughing."
+          },
+          {
+            "kicker": "Herod wrote a hit",
+            "text": "King Herod was Paul Jabara, a hoot who brought the house down every night. He also wrote ‘It’s Raining Men’ for The Weather Girls."
+          },
+          {
+            "kicker": "Stars in the chorus",
+            "text": "Elaine Paige, later of Evita and Cats, began in Superstar’s chorus. So did Richard O’Brien, who walked out and wrote ‘The Rocky Horror Picture Show’."
+          },
+          {
+            "kicker": "A bed backstage",
+            "text": "Offered anything for her dressing room, Dana asked for a bed. While Jesus was betrayed and tried, Mary was offstage for ages, so she had a lie-down!",
+            "said": "“It’s not what it sounds like”"
+          },
+          {
+            "kicker": "The best thing that happened",
+            "text": "When the famous Palace Theatre stage doorman Charles retired, the Evening Standard asked his best memory of all his years there.",
+            "said": "“Whenever Dana Gillespie came in”"
+          },
+          {
+            "kicker": "Rave reviews",
+            "text": "Superstar was Dana’s big breakthrough. Melody Maker called her the big surprise of the show, and The Times gave her the honours.",
+            "said": "“For musical pleasure, the honours go to Dana Gillespie’s Magdalene”"
+          },
+          {
+            "kicker": "Alf Garnett meets Superstar",
+            "text": "While Dana played Mary Magdalene, a Christmas episode of Till Death Us Do Part was filmed in the Coach and Horses, the Superstar cast’s pub."
+          },
+          {
+            "kicker": "Bowie left at the interval",
+            "text": "Dana told the whole Superstar cast David Bowie was in the audience. To her horror, David and Angie left at the interval!",
+            "photo": "/img/dana/david-angie.jpg",
+            "alt": "Polaroid of David and Angie Bowie lounging"
+          },
+          {
+            "kicker": "A weekend at the Château",
+            "text": "In 1973 Dana and Angie flew to France on a Sunday to see Ronno at the Château d’Hérouville, where Bowie made Pinups. Back for Monday’s Superstar!",
+            "photo": "/img/dana/wmwm/bowie/ronno-chateau.jpg",
+            "alt": "Black and white photo of Mick Ronson in a straw hat beside Dana at the Château d'Hérouville"
+          },
+          {
+            "kicker": "A 16-year-old drummer",
+            "text": "Superstar’s drummer was 16-year-old Simon Phillips. When Dana left, so did he, to join her band. He went on to play with everyone from Asia to Zappa."
+          },
+          {
+            "kicker": "Thirteen months as Mary",
+            "text": "Her injured knee got so bad that Dana sang from the side of the stage. After 13 months as Mary she handed in her notice and went for an operation."
+          },
+          {
+            "kicker": "A song called ‘Magdalena’",
+            "text": "Later Dana recorded a duet with Tony Christie, ‘Magdalena’, written by Tim Rice and Andrew Lloyd Webber as a standalone single. Sadly, it got nowhere."
+          }
+        ]
+      },
+      {
+        "id": "stardom",
+        "name": "One foot from stardom",
+        "blurb": "How close she was to today’s legends",
+        "stories": [
+          {
+            "kicker": "The Marquee Club",
+            "text": "At the Marquee in Wardour Street, Dana tried never to miss the Yardbirds. Eric Clapton was her favourite: he played straight from the heart."
+          },
+          {
+            "kicker": "The Marquee",
+            "text": "After his set, lemon-haired Davie Jones of the Manish Boys took the brush from Dana’s hand and carried on brushing her waist-length hair.",
+            "photo": "/img/dana/wmwm/bowie/gered-blonde-marquee-era.jpg",
+            "alt": "Black and white portrait of a young Dana with long peroxide-blonde hair, wrapped in a fur coat, by Gered Mankowitz"
+          },
+          {
+            "kicker": "The Yardbirds’ manager",
+            "text": "At 15 Dana was offered a management and recording contract by Giorgio Gomelsky, manager of The Yardbirds. She never got round to signing it.",
+            "said": "“Sometimes, I wonder how my career would have developed”"
+          },
+          {
+            "kicker": "Clapton’s letter",
+            "text": "Eric Clapton was lined up as her guitar teacher, until ‘For Your Love’ hit the charts. He wrote to postpone, in perfect Italic handwriting."
+          },
+          {
+            "kicker": "Donovan on guitar",
+            "text": "Donovan played guitar on Dana’s first single, ‘Donna Donna’, in 1965. Weeks later ‘Catch the Wind’ was a hit, and Donovan was a star."
+          },
+          {
+            "kicker": "A Hollies song",
+            "text": "Dana supported The Hollies on Britannia Pier while they rode high in the charts, and her next single was a Hollies song, ‘Pay You Back With Interest’."
+          },
+          {
+            "kicker": "Drop the glass!",
+            "text": "At 16 Dana cruised the Thames with the Rolling Stones for a stunt. Her job: look amazed, then drop her champagne glass. It made British Pathé News.",
+            "photo": "/img/dana/wmwm/stones-boat-1965.jpg",
+            "alt": "Black and white photo of teenage Dana with long fair hair, shading her eyes with her hand on a boat on the Thames."
+          },
+          {
+            "kicker": "Paul Simon packs his bags",
+            "text": "Paul Simon lived round the corner. Dana arrived to find him packing: ‘Sound of Silence’ had become a freak Number One in America."
+          },
+          {
+            "kicker": "Her local club",
+            "text": "The Cromwellian, three minutes’ walk from Dana’s home, hosted one of Jimi Hendrix’s first London shows. Rod Stewart and Ronnie Wood played there too."
+          },
+          {
+            "kicker": "A Dylan song for Dana",
+            "text": "In 1966 Dylan told Dana he’d like her to record one of his songs, backed by Manfred Mann, who were having hits with his songs. It never happened.",
+            "said": "“Sadly, nothing ever came of this suggestion”"
+          },
+          {
+            "kicker": "Jimmy Page on guitar",
+            "text": "John Paul Jones and Jimmy Page, later Led Zeppelin, played on Dana’s Decca sessions. Jimmy produced her single ‘You Just Gotta Know My Mind’."
+          },
+          {
+            "kicker": "Pierrot in Turquoise",
+            "text": "In March 1968 David asked Dana to see him perform with mime artist Lindsay Kemp at the tiny Mercury Theatre in Notting Hill. It held about 30 people."
+          },
+          {
+            "kicker": "First to hear Space Oddity",
+            "text": "David Bowie phoned Dana with a song he’d written half an hour before and came straight round to play it. It was ‘Space Oddity’, his first big hit.",
+            "said": "“I’ve just written this song half an hour ago”"
+          },
+          {
+            "kicker": "Singing with Reg Dwight",
+            "text": "On cheap ‘Top of the Pops’ cover LPs Dana sang beside Reg Dwight, who told them he’d changed his name to Elton John.",
+            "said": "“It was one of the best moves he ever made”"
+          },
+          {
+            "kicker": "Rejected together",
+            "text": "Dana and David Bowie both auditioned for the stage show of ‘Hair’, on different days. Neither of them got chosen!"
+          },
+          {
+            "kicker": "A letter to Tim Rice",
+            "text": "Dana wrote to the then little-known Tim Rice and Andrew Lloyd Webber: she should be their Mary Magdalene. They’d cast Yvonne Elliman the day before."
+          },
+          {
+            "kicker": "The BOWPROMO album",
+            "text": "In 1971 Bowie and Dana shared a demo album, his songs on one side, hers on the other. Only 500 were pressed. It’s now a priceless Bowie collectable.",
+            "said": "“I’m sure he regrets that now”"
+          },
+          {
+            "kicker": "Dudley for Bowie?",
+            "text": "Dana suggested Dudley Moore play piano for Bowie, but Dudley didn’t turn up for the audition, so Rick Wakeman got the gig.",
+            "said": "“I wonder what ‘Life on Mars’ would have sounded like”"
+          },
+          {
+            "kicker": "A cover by accident",
+            "text": "At the end of a 1971 photo shoot with Dana, the photographer asked Bowie for a few shots. Beret off, hair back: one became the Hunky Dory cover.",
+            "photo": "/img/dana/wmwm/bowie/hunky-dory-session.jpg",
+            "alt": "David Bowie in a beret hugs Dana from behind in a studio photo session, 1971"
+          },
+          {
+            "kicker": "Stars in the chorus",
+            "text": "Elaine Paige, later of Evita and Cats, began in Superstar’s chorus. So did Richard O’Brien, who walked out and wrote ‘The Rocky Horror Picture Show’."
+          },
+          {
+            "kicker": "A 16-year-old drummer",
+            "text": "Superstar’s drummer was 16-year-old Simon Phillips. When Dana left, so did he, to join her band. He went on to play with everyone from Asia to Zappa."
+          },
+          {
+            "kicker": "Almost a Superman villain",
+            "text": "Dana and her co-star Sarah Douglas both screen-tested for the villain Ursa in the second Superman film. Sarah won, but Dana’s test is on a DVD."
+          },
+          {
+            "kicker": "Still her old pals",
+            "text": "Did Dana know Bowie and Elton were destined for megastardom? No. Bowie was a mate, Elton a guy she’d see at the Cromwellian.",
+            "said": "“Even when they became huge, to me they were still my old pals”",
+            "photo": "/img/dana/wmwm/bowie/bowie-jacket-polaroid.jpg",
+            "alt": "Polaroid by Dana of David Bowie in a cream double-breasted jacket against a green wall"
+          }
+        ]
+      },
+      {
+        "id": "jimmypage",
+        "name": "Jimmy Page & Led Zeppelin",
+        "blurb": "The guitar god who played on and produced her first records",
+        "stories": [
+          {
+            "kicker": "Heartbreak Man, 1965",
+            "text": "In 1965 Dana sang ‘You’re a Heartbreak Man’, a single produced by Jimmy Page, on a Belgian TV special."
+          },
+          {
+            "kicker": "Tea with the Yardbirds",
+            "text": "When Jimmy Page took over from Eric Clapton in Dana’s favourite band, The Yardbirds, he and Jeff Beck would sometimes come round to see her together."
+          },
+          {
+            "kicker": "Jimmy Page on guitar",
+            "text": "John Paul Jones and Jimmy Page, later Led Zeppelin, played on Dana’s Decca sessions. Jimmy produced her single ‘You Just Gotta Know My Mind’."
+          },
+          {
+            "kicker": "Ravi Shankar nights",
+            "text": "Dana and Jimmy Page shared a love of Indian music, and would sometimes go together to see Ustad Vilayat Khan or Ravi Shankar in concert."
+          },
+          {
+            "kicker": "Dressed in black",
+            "text": "Black hair, dark eyes, always in black: Jimmy cut a striking figure. Dana remembers a nice, polite, gentle, lovely fellow, and a fabulous guitarist.",
+            "said": "“Jimmy was devastatingly good looking”"
+          },
+          {
+            "kicker": "Foolish Seasons",
+            "text": "Jimmy Page played guitar on most of the songs on Dana’s first album, ‘Foolish Seasons’, produced by Wayne Bickerton."
+          },
+          {
+            "kicker": "Lost in translation",
+            "text": "In France, Jimmy’s single ‘You Just Gotta Know My Mind’ came out as ‘You Really Haven’t Changed’. The label couldn’t even spell Donovan’s name!"
+          },
+          {
+            "kicker": "Her calling card",
+            "text": "Dana wrote to Tim Rice and Andrew Lloyd Webber saying she should play Mary Magdalene, and enclosed her Jimmy Page-produced single."
+          },
+          {
+            "kicker": "Zeppelin backstage",
+            "text": "Jimmy Page and Robert Plant came to see Dana in her dressing room at Vienna’s English Theatre after her show."
+          },
+          {
+            "kicker": "Special delivery",
+            "text": "Jimmy invited Dana to Led Zeppelin’s 2007 O2 reunion. She couldn’t collect the tickets, so Jimmy himself knocked on her door with them."
+          },
+          {
+            "kicker": "The gig of the century",
+            "text": "Over a million people applied for 20,000 seats. Dana sat in the VIP area near Jeff Beck and Lulu, with her guitarist Jake Zaitz over the moon."
+          },
+          {
+            "kicker": "Jimmy’s in the house",
+            "text": "Jimmy has come to see Dana and The London Blues Band at the 606 Club in Chelsea, and the band always buzz when they know he’s in the audience."
+          },
+          {
+            "kicker": "Lutyens lovers",
+            "text": "Dana spent her first ten years at Fishers Hill, a house built by Sir Edwin Lutyens. Jimmy Page loves Lutyens too: he has owned at least two."
+          },
+          {
+            "kicker": "Never changed by fame",
+            "text": "Jimmy played on everybody’s records long before Led Zeppelin. To Dana he hasn’t changed at all, and more than 50 years on they are still friends.",
+            "said": "“Jimmy didn’t find fame suddenly”"
+          }
+        ]
+      },
+      {
+        "id": "elton",
+        "name": "Elton John",
+        "blurb": "When Elton was still shy Reg Dwight",
+        "stories": [
+          {
+            "kicker": "Bluesology nights",
+            "text": "At the Cromwellian, Dana’s local club, Long John Baldry’s band Bluesology had a young piano player called Reg Dwight, now better known as Elton John."
+          },
+          {
+            "kicker": "A funny little chap",
+            "text": "On cover-record sessions Dana met Reg Dwight: slightly chubby, with glasses and a schoolboy blazer with piping, and able to cover the big hits.",
+            "said": "“He was quite shy, but had a fabulous voice”"
+          },
+          {
+            "kicker": "See you at the studio",
+            "text": "Dana would bump into Reg at the Cromwellian and they’d say ‘See you at the studio’: Pye studios by Marble Arch, where the cover records were made."
+          },
+          {
+            "kicker": "Singing with Reg Dwight",
+            "text": "On cheap ‘Top of the Pops’ cover LPs Dana sang beside Reg Dwight, who told them he’d changed his name to Elton John.",
+            "said": "“It was one of the best moves he ever made”"
+          },
+          {
+            "kicker": "Elton plus John",
+            "text": "Reg took his new name from Bluesology’s sax player Elton Dean and singer Long John Baldry. Could he have been a superstar as Reginald Dwight?",
+            "said": "“It was one of the best moves he ever made”"
+          },
+          {
+            "kicker": "Weeping with laughter",
+            "text": "In his autobiography ‘Me’, Elton recalls wailing through a Robin Gibb song while fellow session singers David Byron and Dana wept with laughter."
+          },
+          {
+            "kicker": "The whole England squad",
+            "text": "Covering ‘Back Home’, Elton John, David Byron and Dana had to sing as the entire 30-man England World Cup squad, and couldn’t stop giggling."
+          },
+          {
+            "kicker": "Covers after ‘Your Song’",
+            "text": "Elton kept singing on cheap cover albums even after his first big UK hit, ‘Your Song’. Always professional in the studio, he could be hilarious too."
+          },
+          {
+            "kicker": "Diamante before Elton",
+            "text": "Dana started collecting diamante sunglasses in 1970, even before Elton! She wore them on Mustique in her Blues Festival days."
+          },
+          {
+            "kicker": "Elton’s right-hand men",
+            "text": "On ‘Weren’t Born a Man’ Dana had Ray Cooper, Elton’s percussionist for nearly 50 years. Arranger Paul Buckmaster was too busy with Elton’s stuff."
+          },
+          {
+            "kicker": "Elton’s château",
+            "text": "In 1973 Dana stayed with Bowie at the Château d’Hérouville near Paris, where Elton recorded several albums, including ‘Goodbye Yellow Brick Road’."
+          },
+          {
+            "kicker": "Elton’s big boots",
+            "text": "Dana’s film ‘Mahler’ was soon overshadowed by Ken Russell’s next, ‘Tommy’, with Elton in his big boots and Ann-Margret in a sea of baked beans."
+          },
+          {
+            "kicker": "Still her old pals",
+            "text": "Did Dana know Bowie and Elton were destined for megastardom? No. Bowie was a mate, Elton a guy she’d see at the Cromwellian.",
+            "said": "“Even when they became huge, to me they were still my old pals”",
+            "photo": "/img/dana/wmwm/bowie/bowie-jacket-polaroid.jpg",
+            "alt": "Polaroid by Dana of David Bowie in a cream double-breasted jacket against a green wall"
+          },
+          {
+            "kicker": "Not his cup of tea",
+            "text": "Elton’s assistant Mike Hewitson played him one of Dana’s Sanskrit albums. His verdict? Dana can’t blame him: Sanskrit music isn’t to everyone’s taste.",
+            "said": "“Oh, I don’t like that at all”"
+          },
+          {
+            "kicker": "Thanks for Dave",
+            "text": "Elton once said his first band-pianist inspiration was Dave Rowberry. At a party Elton threw, Dana thanked him: Dave had spent years in her band."
+          },
+          {
+            "kicker": "Elton remembers",
+            "text": "Sir Elton John says spending time with Dana was very special: she was magical, and her laughter and kindness helped him overcome his shyness.",
+            "said": "“She knew my story before I did!”"
+          }
+        ]
+      },
+      {
+        "id": "stones",
+        "name": "The Rolling Stones",
+        "blurb": "Mick, Keith, Ronnie and a Thames boat trip",
+        "stories": [
+          {
+            "kicker": "The Stones that got away",
+            "text": "Yardbirds manager Giorgio Gomelsky looked after the Stones but never had them under contract. Andrew Loog Oldham stole them from under his nose."
+          },
+          {
+            "kicker": "Seen the real thing",
+            "text": "Dana saw Brian Jones’s chaotic little house, where Keith and Mick were dossing too. Asked to see its recreation at a Stones exhibition, she said no.",
+            "said": "“I had seen the real thing, and had no need to see it again!”"
+          },
+          {
+            "kicker": "Drop the glass!",
+            "text": "At 16 Dana cruised the Thames with the Rolling Stones for a stunt. Her job: look amazed, then drop her champagne glass. It made British Pathé News.",
+            "photo": "/img/dana/wmwm/stones-boat-1965.jpg",
+            "alt": "Black and white photo of teenage Dana with long fair hair, shading her eyes with her hand on a boat on the Thames."
+          },
+          {
+            "kicker": "Ronnie’s 1965 diary",
+            "text": "Ronnie Wood, then in The Artwoods, was a regular at Dana’s basement flat. His 1965 diary describes their get-togethers, often in the local Wimpy Bar."
+          },
+          {
+            "kicker": "Dinner with Mick",
+            "text": "After seeing Marianne Faithfull in Chekhov’s ‘Three Sisters’, Dana and Gered Mankowitz met her backstage, and Mick Jagger joined them for Chinese."
+          },
+          {
+            "kicker": "Writing for Immediate",
+            "text": "Dana signed as a songwriter to Immediate Records, the label of Stones manager Andrew Loog Oldham, and recorded demos of her new songs once a month."
+          },
+          {
+            "kicker": "Bobby Keyes on sax",
+            "text": "On ‘Weren’t Born a Man’ Dana had Bobby Keyes on sax, best known for touring with the Rolling Stones and playing the sax solo on ‘Brown Sugar’."
+          },
+          {
+            "kicker": "Mick Taylor calls by",
+            "text": "Dana snapped Rolling Stone Mick Taylor on her Polaroid when he came round to The Bunker to collect his wife Rose, Dana’s friend."
+          },
+          {
+            "kicker": "Made up by Pierre",
+            "text": "Pierre LaRoche created Bowie’s Aladdin Sane lightning bolt and did Mick Jagger’s make-up. He once ‘did’ Dana too, and made her look wonderful."
+          },
+          {
+            "kicker": "The Last Supper",
+            "text": "At the Café Royal party for Ziggy’s 1973 ‘retirement’, the guests included the McCartneys. Dana sat with Mick Jagger, Lou Reed, Bowie and Ronno."
+          },
+          {
+            "kicker": "Piano with Jagger",
+            "text": "At the Sherry Netherland in New York, Bowie played guitar one night while Dana and Mick Jagger duetted on piano until dawn.",
+            "photo": "/img/dana/bowies-piano.jpg",
+            "alt": "Dana in a red dress leaning on Bowie's grand piano"
+          },
+          {
+            "kicker": "Jagger drops by",
+            "text": "In 1974 Dana photographed Mick Jagger visiting Bowie’s suite at the Sherry-Netherland. The picture went missing for her memoirs, but it’s back.",
+            "photo": "/img/dana/bowie-jagger.jpg",
+            "alt": "David Bowie and Mick Jagger reclining on a sofa, 1974, photographed by Dana"
+          },
+          {
+            "kicker": "Borrowed from Mick",
+            "text": "Mick Jagger showed Bowie the work of Guy Peellaert, booked for a Stones cover. David nicked the idea for his half-man, half-dog ‘Diamond Dogs’ cover."
+          },
+          {
+            "kicker": "Good enough for Mick",
+            "text": "Mick Jagger bought land on Mustique early on. Bowie reckoned if it was good enough for Mick, it was good enough for him, and built a house there too."
+          },
+          {
+            "kicker": "Keith and Leonardo",
+            "text": "Visiting Keith Richards in the late nineties, Dana heard how he climbed library steps for a Leonardo da Vinci book, went flying and broke two ribs."
+          },
+          {
+            "kicker": "Mick takes the mic",
+            "text": "In 2005 Mick Jagger sang ‘Dust My Broom’ and ‘Going Down’ at the Mustique Blues Festival with Dana’s London Blues Band. The bar was packed!"
+          },
+          {
+            "kicker": "The wrong King",
+            "text": "Mick Jagger called ‘Going Down’ an Albert King song. It was Freddie King’s, but Dana’s band didn’t tell him. They learned it in ten minutes."
+          },
+          {
+            "kicker": "Not quite the Blues",
+            "text": "Mick also sang ‘Honky Tonk Women’ at the 2005 Mustique Blues Festival, but Dana left it off the CD: not quite the right style for a Blues album!"
+          },
+          {
+            "kicker": "Doris in the crowd",
+            "text": "At the Stones’ 2006 Twickenham show, as Keith Richards stepped forward for a solo, the lady sitting behind Dana leant forward proudly.",
+            "said": "“That’s my son up there”"
+          },
+          {
+            "kicker": "Breakfast at nine?",
+            "text": "Ronnie Wood told Dana he left Necker Island because every day was planned for him. Mustique was far more relaxed.",
+            "said": "“You can’t tell a Rolling Stone to have breakfast at 9 o’clock!”"
+          }
+        ]
+      },
+      {
+        "id": "beatles",
+        "name": "The Beatles",
+        "blurb": "In Dylan’s hotel suite with the Fab Four",
+        "stories": [
+          {
+            "kicker": "Longer than the Beatles",
+            "text": "In 1964 the press complained about the Beatles’ hair, but at the Marquee Dana spotted a singer whose lemon-yellow hair was far longer: Davie Jones."
+          },
+          {
+            "kicker": "Alone with the Beatles",
+            "text": "At 16, Dana found herself in Bob Dylan’s hotel suite with the Beatles, then unquestionably the most famous group in the world.",
+            "said": "“That could only have happened in the Sixties”"
+          },
+          {
+            "kicker": "Tomorrow Never Knows",
+            "text": "One night in Dylan’s suite, John Lennon put on a test pressing of a brand-new Beatles track, ‘Tomorrow Never Knows’, the final song on ‘Revolver’."
+          },
+          {
+            "kicker": "Cups of tea and things",
+            "text": "When the Beatles brought Cynthia, Jane Asher, Maureen and Patti Boyd to Dylan’s suite, Dana went back and forth making sure everyone got cups of tea."
+          },
+          {
+            "kicker": "Lennon passes out",
+            "text": "Beatles and Stones played new tracks in Dylan’s suite; John Lennon passed out on the bed Dana was sleeping in. She was in it, he was on it."
+          },
+          {
+            "kicker": "Paul gets Jane home",
+            "text": "Paul McCartney left early because he had to get Jane Asher home. Dana found him always really well behaved, and Ringo too."
+          },
+          {
+            "kicker": "George calls them idiots",
+            "text": "The Beatles were at one of Dylan’s 1966 Albert Hall shows. When angry fans heckled his new electric sound, George Harrison called them ‘idiots’."
+          },
+          {
+            "kicker": "The man who said no",
+            "text": "Decca boss Dick Rowe was famous as the man who turned down The Beatles, so it was only natural that he offered Dana a contract for two albums!"
+          },
+          {
+            "kicker": "No Maharishi for Dana",
+            "text": "While the Beatles were hanging out with the Maharishi in the Sixties, Dana never got the chance to go to India. She finally went in the mid-seventies."
+          },
+          {
+            "kicker": "Singing ‘Get Back’",
+            "text": "At the open audition for Superstar at the Palace Theatre, Dana wore skin-tight jeans and a T-shirt with a huge fist, and sang The Beatles’ ‘Get Back’."
+          },
+          {
+            "kicker": "Everyone was there",
+            "text": "At a party at Dave Clark’s flat over the Curzon cinema, everyone was there: Paul McCartney, Ringo Starr, Tony Curtis, Dusty Springfield, Nina Simone."
+          },
+          {
+            "kicker": "The Last Supper",
+            "text": "At the Café Royal party for Ziggy’s 1973 ‘retirement’, the guests included the McCartneys. Dana sat with Mick Jagger, Lou Reed, Bowie and Ronno."
+          },
+          {
+            "kicker": "Double Fantasy guitarist",
+            "text": "Earl Slick played in Dana’s band in 1974, when he wasn’t on Bowie’s Diamond Dogs tour, and later on John Lennon’s ‘Double Fantasy’ album."
+          },
+          {
+            "kicker": "George on set",
+            "text": "George Harrison’s Handmade Films produced ‘Scrubbers’. Whenever he came to watch, there was a buzz. Dana found him so polite and decent."
+          },
+          {
+            "kicker": "Dylan knew all about Him",
+            "text": "Seeing Sai Baba’s photo on Dana’s wall, Bob Dylan laughed. George Harrison had told him all about Him.",
+            "said": "“That’s the guy who materialises jewellery”"
+          },
+          {
+            "kicker": "A gift for George",
+            "text": "Leaving Dana’s in 1997, Dylan said he was visiting George Harrison the next day. So Dana gave him some of her Sanskrit albums to pass on to George."
+          }
+        ]
+      },
+      {
+        "id": "royals",
+        "name": "Royals & Aristocrats",
+        "blurb": "Princess Margaret, maharajahs and a Baroness for a night",
+        "stories": [
+          {
+            "kicker": "On the five-pound note",
+            "text": "Dana’s ancestors include Sir Thomas Fowell Buxton, who fought slavery with William Wilberforce, and Elizabeth Fry. Both appeared on the old £5 note."
+          },
+          {
+            "kicker": "A gipsy princess’s name",
+            "text": "Dana was born Richenda, said to be the name of a Romany gipsy princess, gifted to her kindly ancestors by a gipsy mother selling clothes pegs."
+          },
+          {
+            "kicker": "Bedtime, about age 7",
+            "text": "Tucked into the Fishers Hill nursery, little Dana asked her mother a big question: “What are we?” The answer still makes her smile.",
+            "said": "“We are Aristocrats”"
+          },
+          {
+            "kicker": "The family crest",
+            "text": "Dana’s father stitched the family crest on the piano stool himself: a stag’s head rising out of a crown, with the motto ‘Qui va piano va sano’."
+          },
+          {
+            "kicker": "Windsor polo",
+            "text": "While her parents watched Prince Philip play polo, Dana watched the Maharajah and Maharani of Jaipur. It sparked her lifelong pull to India."
+          },
+          {
+            "kicker": "A Palace garden party",
+            "text": "Dana’s mother and father were photographed on their way to a garden party at Buckingham Palace, dressed elegantly as always."
+          },
+          {
+            "kicker": "Her first Sai Baba book",
+            "text": "A sister of the Jam Saheb of Jamnagar met Dana’s father at a London club about 50 years ago. She gave Dana her first book about Sai Baba."
+          },
+          {
+            "kicker": "The Archbishop approves",
+            "text": "Protesters, nuns among them, picketed Superstar as blasphemous, until the Archbishop of Canterbury saw it on opening night and gave it a thumbs up."
+          },
+          {
+            "kicker": "The King of Mustique",
+            "text": "Colin Tennant, Lord Glenconner, bought Mustique in the fifties and gave Princess Margaret land there as a wedding present. For years he was its King."
+          },
+          {
+            "kicker": "Ready for bed",
+            "text": "Dana met Colin Tennant on the Cotton House steps in a striped pyjama suit. ‘You look ready for bed,’ she said. ‘And so do you!’ he laughed."
+          },
+          {
+            "kicker": "Her Royal favourite",
+            "text": "At the Cotton House, Princess Margaret would ask Dana to play ‘What Memories We Make’, from ‘Weren’t Born a Man’, calling it one of her favourites."
+          },
+          {
+            "kicker": "A golden birthday",
+            "text": "For Colin Tennant’s fiftieth on Macaroni beach the palm trees were painted gold. Princess Margaret, in silver, was the star of the show."
+          },
+          {
+            "kicker": "Rhymes with spam",
+            "text": "At a Macaroni Beach lunch with Dana’s house party, Princess Margaret set one guest straight on how to address her.",
+            "said": "“You must call me Ma’am, which rhymes with spam”"
+          },
+          {
+            "kicker": "Swimming like a swan",
+            "text": "At a Macaroni Beach lunch, Princess Margaret went for a dip in a floral swimming costume, keeping her head out of the water. She swam like a swan."
+          },
+          {
+            "kicker": "Baroness for a night",
+            "text": "Told Istanbul’s Pera Palas Hotel was full, Dana rang straight back with a new name. They found her a double room right away."
+          },
+          {
+            "kicker": "A royal singalong",
+            "text": "On Mustique, Dana saw Princess Margaret mouthing the words to the saucy ‘King Size Papa’. Her secret? Her father, the King, used to sing it to her."
+          },
+          {
+            "kicker": "Far nicer than in books",
+            "text": "Dana knew Princess Margaret on Mustique for years, and gets very upset when she reads the negative things written about her.",
+            "said": "“She was always far nicer than she is ever portrayed in books”"
+          },
+          {
+            "kicker": "Toffstock",
+            "text": "Every July Dana’s Buxton cousins threw a private three-day party at Kimberley Hall, dubbed ‘Toffstock’. Dana and her band played every Saturday night."
+          },
+          {
+            "kicker": "William lifts Kate",
+            "text": "On Mustique Dana watched Prince William and Kate, now the Prince and Princess of Wales, dancing in Basil’s Bar. Once he lifted her right up!"
+          },
+          {
+            "kicker": "Make it a slow one",
+            "text": "When Basil asked Kate Middleton, now Princess of Wales, to dance, Dana’s guitarist Jake whispered a change of plan, and the band slowed right down.",
+            "said": "“He owes me one!”"
+          }
+        ]
+      },
+      {
+        "id": "animals",
+        "name": "Animal Magic",
+        "blurb": "Ponies, cats, lion cubs and a goldfish called Mrs Perkins",
+        "stories": [
+          {
+            "kicker": "Dadster’s elephant",
+            "text": "Dana’s father loved to tell how his grandmother ordered an elephant from India, then rode it around the Austrian countryside and into Vienna."
+          },
+          {
+            "kicker": "Age 3",
+            "text": "Her first newspaper appearance: winning a rosette at the local gymkhana, legs in a sideways splits on the saddle like a Thelwell cartoon."
+          },
+          {
+            "kicker": "Tonykins the cat",
+            "text": "After Sunday lunch, the family’s black cat Tonykins sat on Dana’s father’s stomach, slowly going up and down as he napped on the red velvet sofa."
+          },
+          {
+            "kicker": "A pony under the tree",
+            "text": "One childhood Christmas, Nixi got a bicycle from her godfather, and little Dana got a pony called Rusty from her godmother, Jean Buxton."
+          },
+          {
+            "kicker": "Mrs. Perkins the goldfish",
+            "text": "Dad installed a marble fountain trickling onto Dana’s goldfish, Mrs. Perkins, just to watch dinner guests give in and dash for the loo."
+          },
+          {
+            "kicker": "Sneezi, best friend",
+            "text": "Dana’s Norwich Terrier Sneezi was her best friend until she died aged 15. Boyfriends had to put up with her: love me, love my dog!",
+            "said": "“Sneezi and I were inseparable”"
+          },
+          {
+            "kicker": "Stuffed birds, real cats",
+            "text": "With no live animals but her dog at home, animal lover Dana made do with cases of stuffed birds and animals. Within a year she’d added two real cats."
+          },
+          {
+            "kicker": "First octopus, Eilat",
+            "text": "Visiting Israel over Christmas 1967, Dana dashed into the sparkling Red Sea at Eilat and came straight back out, face to face with an octopus.",
+            "said": "“I wasn’t expecting that!”"
+          },
+          {
+            "kicker": "Lost in Hollywood Hills",
+            "text": "Lost on horseback with Ashton, Gardner and Dyke, Dana headed for the nearest light. It was a funeral home, and they rode right in."
+          },
+          {
+            "kicker": "Sneezi in Eastbourne",
+            "text": "In a freezing, rainy Eastbourne for panto, Dana’s only friend and consolation was her dog Sneezi, braving the arctic daily walks with her."
+          },
+          {
+            "kicker": "Siamese cats",
+            "text": "Jorg’s Vienna flat was just like hers: oriental, full of art, smelling of incense. When his Siamese cats came out to greet him, Dana knew.",
+            "said": "“I knew I’d found a real home from home”"
+          },
+          {
+            "kicker": "Kissed by a lion cub",
+            "text": "Dana filmed the video with two lion cubs, Sheila and Georgie. One gave her a big kiss, and baby lion cubs, she says, smell delicious."
+          },
+          {
+            "kicker": "Stallone’s horse",
+            "text": "Singing in Eilat with the Joachim Palden Trio, Dana rode every morning on a horse reputedly once ridden by Sylvester Stallone. A perfect holiday!"
+          },
+          {
+            "kicker": "Camel? Pony!",
+            "text": "At a wedding in Cairo Dana booked a gentle dawn camel ride round the pyramids. The owner only had an over-sprightly Arab pony that wanted to gallop."
+          },
+          {
+            "kicker": "Sai Gita in the parade",
+            "text": "At Sai Baba’s 75th birthday, His elephant Sai Gita joined the procession, with flags from all over the world, Vedic chanters and marching bands."
+          },
+          {
+            "kicker": "Ticking off the birds",
+            "text": "At the Udai Bilas Palace in Dungarpur, one of Dana’s favourite hotels, every room has a list of local birds for guests to tick off."
+          },
+          {
+            "kicker": "Santosh the kitten",
+            "text": "Ill for ten days in Russia, Dana was nursed by a rescued black kitten who lay purring on her neck. She named him Santosh, meaning happiness."
+          },
+          {
+            "kicker": "Kittens between courses",
+            "text": "Dana loves the old Persian custom of passing round a basket of kittens to stroke between the courses of a long feast. She doubts it will catch on now!"
+          },
+          {
+            "kicker": "Lola, the Hairy One",
+            "text": "David Shasha’s dachshund Lola, known as ‘the Hairy One’, kept Dana company while they wrote both her books, with a little help from biscuits."
+          },
+          {
+            "kicker": "How rock ‘n’ roll",
+            "text": "These days Dana’s idea of bliss is a tapestry on her knee, a purring cat nearby and a bar of chocolate. She has made over one hundred cushions.",
+            "said": "“How Rock ‘n’ Roll is that!”"
+          }
+        ]
+      },
+      {
+        "id": "movies",
+        "name": "Movies",
+        "blurb": "Hammer horror, Ken Russell, Holmes and Watson",
+        "stories": [
+          {
+            "kicker": "Smoke over London",
+            "text": "Italians at the Cromwellian wanted groovy extras. Dana turned up with her guitar, white boots and mini skirt, and landed in ‘Fumo di Londra’.",
+            "said": "“Alberto was the biggest name in Italian film at the time”"
+          },
+          {
+            "kicker": "Windmill Girls, 1965",
+            "text": "At sixteen Dana wrote a song for ‘The Secrets of the Windmill Girls’ and foolishly sold it outright for £25, then sang it in the film."
+          },
+          {
+            "kicker": "Don’t Look Back",
+            "text": "Dana appears in ‘Don’t Look Back’, waiting in an empty Albert Hall. Manager Al Grossman reckoned she sang while surfing. It was water skiing.",
+            "said": "“Al Grossman says she sings while surfing”"
+          },
+          {
+            "kicker": "Extra at the Grand Prix",
+            "text": "In 1966 Dana was an extra in John Frankenheimer’s motor-racing movie ‘Grand Prix’, starring James Garner, Yves Montand and Eva Marie Saint."
+          },
+          {
+            "kicker": "Hammer comes calling",
+            "text": "Hammer Films, a British institution for horror and cave girl fantasies, gave Dana a non-speaking dance-floor part in ‘The Vengeance of She’."
+          },
+          {
+            "kicker": "21 days on lemon juice",
+            "text": "To win a Hammer Films part, Dana fasted 21 days on water and lemon juice. She got the role, then rediscovered the crew’s food trolley."
+          },
+          {
+            "kicker": "Walking on water",
+            "text": "Hammer cast Dana in ‘The Lost Continent’ because a waterski champion could spend a lot of time walking on the ‘sea’. It was three inches deep."
+          },
+          {
+            "kicker": "Blame the food trolley",
+            "text": "Bacon sandwiches all day! Dana looks thinner in some shots of ‘The Lost Continent’ and larger in others. Luckily her chamois costume stretched.",
+            "said": "“It wasn’t my fault; I blame the food trolley”"
+          },
+          {
+            "kicker": "The Lost Continent",
+            "text": "In ‘The Lost Continent’ Dana wore two huge balloons on her shoulders. Watching incognito in Fulham, she heard the audience fall about laughing.",
+            "said": "“Thank goodness no one recognised me on their way out”"
+          },
+          {
+            "kicker": "Co-starring de Gaulle",
+            "text": "In ‘Hold on: It’s the Dave Clark Five’ Dana shared the cast list with Lulu, Richard Chamberlain, Charles de Gaulle and Nikita Khrushchev!",
+            "said": "“Check it out if you don’t believe me!”"
+          },
+          {
+            "kicker": "Going for a Song, 1969",
+            "text": "At 20 Dana was a guest on BBC antiques quiz ‘Going for a Song’. That week it was all about silver, and she lost to DJ Mike Raven.",
+            "said": "“I don’t know my hallmarks”"
+          },
+          {
+            "kicker": "Alf Garnett meets Superstar",
+            "text": "While Dana played Mary Magdalene, a Christmas episode of Till Death Us Do Part was filmed in the Coach and Horses, the Superstar cast’s pub."
+          },
+          {
+            "kicker": "Sung, not spoken",
+            "text": "Reading Juno for Sir Peter Hall’s ‘The Tempest’, Dana was awful. Asked to sing the words instead, she invented a melody on the spot.",
+            "said": "“Right, the part is yours”"
+          },
+          {
+            "kicker": "The peacock throne",
+            "text": "Every night of ‘The Tempest’ Dana swayed high above Sir John Gielgud on a throne built like a huge peacock. And she hates heights!"
+          },
+          {
+            "kicker": "Mahler’s opera singer",
+            "text": "Ken Russell cast Dana as opera singer Anna von Mildenburg in ‘Mahler’ without an audition. She just went to his house for a chat."
+          },
+          {
+            "kicker": "Alma’s Song overnight",
+            "text": "Ken Russell gave Dana 24 hours to find a simpler tune for a scene in ‘Mahler’. She wrote ‘Alma’s Song’ that night. It still earns her royalties."
+          },
+          {
+            "kicker": "Tapestry between takes",
+            "text": "Filming meant hours of waiting, so on the ‘Mahler’ set Dana took up embroidering tapestries. Not very rock ‘n’ roll, but it passed the time."
+          },
+          {
+            "kicker": "The Film that People Forgot",
+            "text": "On La Palma Dana played Ajor in Hammer’s ‘The People That Time Forgot’, fighting prehistoric beasts with men hidden inside them."
+          },
+          {
+            "kicker": "Almost a Superman villain",
+            "text": "Dana and her co-star Sarah Douglas both screen-tested for the villain Ursa in the second Superman film. Sarah won, but Dana’s test is on a DVD."
+          },
+          {
+            "kicker": "Compere by the seaside",
+            "text": "Dana appeared three times on BBC’s ‘Seaside Special’, once as compere. A paper called her the female equivalent of Bruce Forsyth.",
+            "said": "“I don’t remember having to do a twirl!”"
+          },
+          {
+            "kicker": "Holmes, Watson and Dana",
+            "text": "‘The Hound of the Baskervilles’ had Peter Cook as Holmes, Dudley Moore as Watson, plus Terry-Thomas, Kenneth Williams and Spike Milligan.",
+            "said": "“What could possibly go wrong?”"
+          },
+          {
+            "kicker": "Like boiled lobsters",
+            "text": "For a swamp scene with Hugh Griffith, Dana stood neck-deep in heated water in a studio hole all day. They went redder and redder."
+          },
+          {
+            "kicker": "Dudley’s giggles",
+            "text": "Dudley Moore had the cast in fits on ‘The Hound of the Baskervilles’, so the make-up girl had to work overtime patching up their faces."
+          },
+          {
+            "kicker": "Bad Timing in Vienna",
+            "text": "Dana acted in Nicholas Roeg’s ‘Bad Timing’ with Art Garfunkel and Harvey Keitel, and recorded Blues for it. Filming took her to Vienna."
+          },
+          {
+            "kicker": "Warden Budd, 1982",
+            "text": "In Mai Zetterling’s ‘Scrubbers’ Dana played kindly warden Budd, alongside Kathy Burke, Miriam Margolyes and Robbie Coltrane."
+          },
+          {
+            "kicker": "George on set",
+            "text": "George Harrison’s Handmade Films produced ‘Scrubbers’. Whenever he came to watch, there was a buzz. Dana found him so polite and decent."
+          },
+          {
+            "kicker": "Bones, 1984",
+            "text": "In the crime movie ‘Bones’ Dana played Monika, alongside Bryan Brown, Cheri Lunghi, Tom Wilkinson and fellow Hammer star Ingrid Pitt."
+          },
+          {
+            "kicker": "Mahler, twice",
+            "text": "Dana played Mahler’s Anna von Mildenburg twice: for Ken Russell, and in an Austrian version, ‘To Live, I will Die’."
+          },
+          {
+            "kicker": "Strapless at Cannes",
+            "text": "David Hare’s ‘Strapless’, with Bruno Ganz, Bridget Fonda and Hugh Laurie, premiered at Cannes. Dana can’t remember a thing about her role!"
+          },
+          {
+            "kicker": "Byron’s Mine",
+            "text": "In ITV’s ‘Byron’s Mine’ Dana played a psychic medium opposite Leslie Phillips, and several of her Blues songs made the soundtrack."
+          }
+        ]
+      },
+      {
+        "id": "movebody",
+        "name": "Move Your Body Close To Me",
+        "blurb": "The story of her Austrian hit",
+        "stories": [
+          {
+            "kicker": "A hit from the sand",
+            "text": "An old man’s scratchy cassette in Dubai gave Dana a melody. It became ‘Move Your Body Close To Me’, which won the Golden Carinthia and hit the charts."
+          },
+          {
+            "kicker": "Rockin’ Pneumonia, 1982",
+            "text": "Dana sang lead on the Mojo Blues Band’s 1982 LP ‘Rockin’ Pneumonia and the Boogie Woogie Flu’. It sold well, and led to TV shows in three countries."
+          },
+          {
+            "kicker": "Hypnotic and oriental",
+            "text": "Dana persuaded Austrian label Bellaphon she had a hit. Recorded when synthesisers ruled, ‘Move Your Body Close To Me’ had a hypnotic, oriental feel."
+          },
+          {
+            "kicker": "Eleven months of dust",
+            "text": "Released in Austria, Germany and Switzerland, the single sat in the shops for 11 months. Nobody was buying it, but Dana still believed in it."
+          },
+          {
+            "kicker": "Mad to enter",
+            "text": "Everyone said Dana was mad to enter an oriental song in a pop festival for the Golden Carinthia, a gold statue of a singer holding a microphone."
+          },
+          {
+            "kicker": "Silver sequins win",
+            "text": "Dana in silver sequins and her long-haired band, the Cobras, looked and sounded like nobody else. They won the Golden Carinthia.",
+            "said": "“We were completely different to everyone else”"
+          },
+          {
+            "kicker": "A brand new nickname",
+            "text": "Once the win was on TV, the song was played everywhere. Austrian papers called her ‘Dana Move Your Body Close To Me Gillespie’ for years."
+          },
+          {
+            "kicker": "Top 10 company",
+            "text": "The song became a big hit in Austria, in a top 10 with Roy Orbison, U2, Marc Almond and Kylie and Jason, and charted in Switzerland and Germany."
+          },
+          {
+            "kicker": "Never released at home",
+            "text": "Dana told English record companies how well the song was selling in Europe, but none would release it in Britain."
+          },
+          {
+            "kicker": "Kissed by a lion cub",
+            "text": "Dana filmed the video with two lion cubs, Sheila and Georgie. One gave her a big kiss, and baby lion cubs, she says, smell delicious."
+          },
+          {
+            "kicker": "Drawn by Erik’s father",
+            "text": "The cover of the ‘Move Your Body Close To Me’ single was drawn by the father of Erik Trauner, founder of the Mojo Blues Band."
+          },
+          {
+            "kicker": "On the road with the Cobras",
+            "text": "The hit filled Dana’s diary, so she and the Cobras hit the road. The single went on the album ‘Solid Romance’, with its oriental, Arabic feel."
+          },
+          {
+            "kicker": "The tricky follow-up",
+            "text": "Next LP ‘It Belongs To Me’ kept the oriental sound but didn’t do as well. Mind you, Bowie took three years to follow up ‘Space Oddity’!"
+          },
+          {
+            "kicker": "Videos in Marrakesh",
+            "text": "In 1983 Dana filmed videos for ‘It Belongs To Me’ and ‘In Danger Tonight’ at Marrakesh’s Palais Badi. In local costume she felt at home.",
+            "said": "“Morocco is still one of my favourite countries on this planet”"
+          },
+          {
+            "kicker": "The Rock Me Amadeus label",
+            "text": "In Vienna Dana signed to Gig Records, whose boss Markus Spiegel had a smash with Falco’s ‘Rock Me Amadeus’. She made three LPs for him."
+          },
+          {
+            "kicker": "True to the Blues",
+            "text": "After the hit, Erik Trauner said Dana wasn’t being true to the Blues. It was just what she needed to hear, and she headed home to London."
+          },
+          {
+            "kicker": "Re-recorded, 2001",
+            "text": "Dana re-recorded her hit, working with keyboard player Tim Cross, for her 2001 album ‘In the Garden of Heavenly Peace’."
+          },
+          {
+            "kicker": "Thank you, Vienna",
+            "text": "Vienna made Dana strong again, and gave her good musicians and a great club in Jazzland. And it gave her a hit.",
+            "said": "“The city gave me a hit with ‘Move Your Body Close To Me’”"
+          }
+        ]
+      },
+      {
+        "id": "vienna",
+        "name": "Vienna",
+        "blurb": "Her second home, Jazzland and the Mojo Blues Band",
+        "stories": [
+          {
+            "kicker": "Dadster’s elephant",
+            "text": "Dana’s father loved to tell how his grandmother ordered an elephant from India, then rode it around the Austrian countryside and into Vienna."
+          },
+          {
+            "kicker": "Bad Timing in Vienna",
+            "text": "Dana acted in Nicholas Roeg’s ‘Bad Timing’ with Art Garfunkel and Harvey Keitel, and recorded Blues for it. Filming took her to Vienna."
+          },
+          {
+            "kicker": "A Ceiling and a Floor",
+            "text": "Mai Zetterling cast Dana in ‘Playthings’ at Vienna’s English Theatre in 1980. Every character was an object: Dana was a Ceiling and a Floor."
+          },
+          {
+            "kicker": "Zeppelin backstage",
+            "text": "Jimmy Page and Robert Plant came to see Dana in her dressing room at Vienna’s English Theatre after her show."
+          },
+          {
+            "kicker": "A café in Vienna",
+            "text": "Hearing bottleneck Blues across a crowded Vienna café, Dana sang her way through the crowd to the guitarist: Erik Trauner of the Mojo Blues Band."
+          },
+          {
+            "kicker": "Jazzland, Vienna",
+            "text": "After a few songs in the cellars of Jazzland, the late owner Axel Melhardt offered Dana a gig on the spot. Decades later she still goes back to sing."
+          },
+          {
+            "kicker": "Al Cook’s old Blues",
+            "text": "In Vienna in 1980 Dana met Al Cook, who only plays Blues from the twenties and thirties. Years later they recorded an album in his cellar studio."
+          },
+          {
+            "kicker": "Living the Blues",
+            "text": "For three years Dana stayed at Erik Trauner’s rooftop flat. They bought Blues LPs, talked Blues, learned Blues songs and went to Blues gigs."
+          },
+          {
+            "kicker": "Smarter than the audience",
+            "text": "Dana told Erik Trauner musicians must always look smarter than their audience. Slowly the scruffy Mojo Blues Band smartened up."
+          },
+          {
+            "kicker": "Rockin’ Pneumonia, 1982",
+            "text": "Dana sang lead on the Mojo Blues Band’s 1982 LP ‘Rockin’ Pneumonia and the Boogie Woogie Flu’. It sold well, and led to TV shows in three countries."
+          },
+          {
+            "kicker": "Supporting Chuck Berry",
+            "text": "In 1983 Dana and the Mojo Blues Band supported Chuck Berry in Austria and Belgium. He never rehearsed: every musician knew his songs."
+          },
+          {
+            "kicker": "A hit from the sand",
+            "text": "An old man’s scratchy cassette in Dubai gave Dana a melody. It became ‘Move Your Body Close To Me’, which won the Golden Carinthia and hit the charts."
+          },
+          {
+            "kicker": "Silver sequins win",
+            "text": "Dana in silver sequins and her long-haired band, the Cobras, looked and sounded like nobody else. They won the Golden Carinthia.",
+            "said": "“We were completely different to everyone else”"
+          },
+          {
+            "kicker": "Footprints in the snow",
+            "text": "Seeking a painter for an LP cover, Dana met artist Jorg Huber at the Metropole. At 2am she followed his footprints through the snow to his studio."
+          },
+          {
+            "kicker": "Siamese cats",
+            "text": "Jorg’s Vienna flat was just like hers: oriental, full of art, smelling of incense. When his Siamese cats came out to greet him, Dana knew.",
+            "said": "“I knew I’d found a real home from home”"
+          },
+          {
+            "kicker": "The Rock Me Amadeus label",
+            "text": "In Vienna Dana signed to Gig Records, whose boss Markus Spiegel had a smash with Falco’s ‘Rock Me Amadeus’. She made three LPs for him."
+          },
+          {
+            "kicker": "Mahler, twice",
+            "text": "Dana played Mahler’s Anna von Mildenburg twice: for Ken Russell, and in an Austrian version, ‘To Live, I will Die’."
+          },
+          {
+            "kicker": "Boogie Woogie Nights",
+            "text": "Dana and Viennese boogie-woogie pianist Joachim Palden recorded their first live album at Jazzland, December 7th to 9th 1990."
+          },
+          {
+            "kicker": "One letter out",
+            "text": "A misprint turned Dana’s song ‘Fine and Fancy Free’ into ‘Fine and Fanny Free’. Then the promo for her ‘Big Boy’ album called it ‘Bog Boy’!"
+          },
+          {
+            "kicker": "Visiting the Goddess",
+            "text": "Dana sold her beloved Citroën DS, ‘the Goddess’, to boogie-woogie pianist Joachim Palden. She visits it in Vienna, and wrote ‘Crazy ’Bout My DS’."
+          },
+          {
+            "kicker": "Blue Danube Radio",
+            "text": "Through most of the Nineties Dana hosted ‘Globetrotting with Gillespie’ on Vienna’s Blue Danube Radio: Indian, African, Arabic and Blues music."
+          },
+          {
+            "kicker": "Her Blue Period",
+            "text": "In 1995 Vienna’s Wolf Records asked Dana for an album. It grew to three, and every song title had the word ‘Blue’ in it.",
+            "said": "“I guess one can say I was going through my Blue Period!”"
+          },
+          {
+            "kicker": "Thank you, Vienna",
+            "text": "Vienna made Dana strong again, and gave her good musicians and a great club in Jazzland. And it gave her a hit.",
+            "said": "“The city gave me a hit with ‘Move Your Body Close To Me’”"
+          },
+          {
+            "kicker": "Why Vienna?",
+            "text": "Vienna is second only to London in Dana’s heart. She first went there broken and unhappy, and felt the city nurture her and make her strong.",
+            "said": "“Vienna is the place that has given me the most pleasure”"
+          }
+        ]
+      },
+      {
+        "id": "india",
+        "name": "India",
+        "blurb": "Rajasthan, Bombay, bhajans and the India Blues tour",
+        "stories": [
+          {
+            "kicker": "Windsor polo",
+            "text": "While her parents watched Prince Philip play polo, Dana watched the Maharajah and Maharani of Jaipur. It sparked her lifelong pull to India."
+          },
+          {
+            "kicker": "Dadster’s elephant",
+            "text": "Dana’s father loved to tell how his grandmother ordered an elephant from India, then rode it around the Austrian countryside and into Vienna."
+          },
+          {
+            "kicker": "Rajasthan at last",
+            "text": "In the mid-seventies Dana finally got to India, touring Rajasthan’s triangle of Jaipur, Jodhpur and Udaipur. She fell in love with the country."
+          },
+          {
+            "kicker": "Her first Sai Baba book",
+            "text": "A sister of the Jam Saheb of Jamnagar met Dana’s father at a London club about 50 years ago. She gave Dana her first book about Sai Baba."
+          },
+          {
+            "kicker": "Night-train book",
+            "text": "In the mid-eighties, with nothing to read on a night train from Davos, Dana borrowed ‘Man of Miracles’. By Vienna she knew she must go to India.",
+            "said": "“How little I knew”"
+          },
+          {
+            "kicker": "Bombay, then a bumpy taxi",
+            "text": "Soon after that night train, Dana flew to Bombay, then Bangalore, then rode a taxi five hours over bad roads to the village of Puttaparthi."
+          },
+          {
+            "kicker": "Songs from cheap cassettes",
+            "text": "Dana learned bhajans in Sanskrit and Hindi from cheap Indian cassettes that fell apart, then recorded her own under the name ‘Third Man’."
+          },
+          {
+            "kicker": "Top Bombay players",
+            "text": "At a Rippon Club concert Dana’s band had Ehsaan on guitar and Loy on keyboards, now of famous Indian trio Shankar-Ehsaan-Loy."
+          },
+          {
+            "kicker": "Living like Maharajahs",
+            "text": "Singing for the Taj Hotel Group with Joachim Palden paid little, but they stayed in five-star hotels and lived like kings, or Maharajahs."
+          },
+          {
+            "kicker": "Blues for Baba’s 70th",
+            "text": "For Sai Baba’s 70th birthday He asked for Dana’s Western music, so she sang the Blues to a stadium crowd, with songs like ‘I Sigh For You’."
+          },
+          {
+            "kicker": "Two Gillespies at the Taj",
+            "text": "At Bombay’s Taj Mahal Palace with the cricket teams, Dana’s calls kept going to Australian cricketer Jason Gillespie, and his to her!"
+          },
+          {
+            "kicker": "Jagjit Singh’s melody",
+            "text": "The hotel operator nearly fainted at the name. Indian superstar Jagjit Singh collected Dana from the Taj and let her write English words to his songs."
+          },
+          {
+            "kicker": "Bollywood Strings",
+            "text": "Dana sang a mantra with violinist Chandru’s Bollywood Strings Orchestra in London, then brought him to India for Baba’s 75th birthday."
+          },
+          {
+            "kicker": "India Blues tour",
+            "text": "Dana’s 2002 British Council tour of India covered eleven cities and twenty-two concerts, and not one bag was lost or one plane late."
+          },
+          {
+            "kicker": "Goa to Calcutta",
+            "text": "The 2002 Blues tour ran from Goa to Cochin, Bombay to Delhi and Calcutta, with Qawali music at Delhi’s Sufi shrine of Nizamuddin."
+          },
+          {
+            "kicker": "Christmas in Darjeeling",
+            "text": "Dana sang over Christmas and New Year at Darjeeling’s Hotel Windemere, where the sun would burst through to reveal Kanchenchunga, Tiger Mountain."
+          },
+          {
+            "kicker": "Singing for the nuns",
+            "text": "In Darjeeling at Christmas, Dana sang ‘It Ain’t Necessarily So’ to a room of nuns, then remembered the chorus line about the Bible."
+          },
+          {
+            "kicker": "A bowl of paysam",
+            "text": "As Sai Baba served the savoury food, Dana silently wished for dessert. Without turning round, He stirred a bowl of paysam and handed it to her."
+          },
+          {
+            "kicker": "A rainbow sari in the rain",
+            "text": "At Baba’s 80th birthday it drizzled, so Dana sang outside the tent, soaked. Her rainbow and gold sari, a gift from Baba, hid the rain."
+          },
+          {
+            "kicker": "Ticking off the birds",
+            "text": "At the Udai Bilas Palace in Dungarpur, one of Dana’s favourite hotels, every room has a list of local birds for guests to tick off."
+          },
+          {
+            "kicker": "King of the Mandolin",
+            "text": "In Puttaparthi Dana rang U. Srinivas, India’s most famous mandolin player, out of the blue. He said it would be an honour to play on her tracks."
+          },
+          {
+            "kicker": "Hotel India",
+            "text": "Mumbai’s Taj Mahal Palace is one of Dana’s favourite places on earth. In 2014 she sang its praises in BBC documentary ‘Hotel India’.",
+            "said": "“And as for the city, it really rocks”"
+          },
+          {
+            "kicker": "Sixty Songs in Mumbai",
+            "text": "Dana filmed an episode of ‘Around My World in Sixty Songs’ on Marine Drive in Mumbai, the city she still calls Bombay.",
+            "photo": "/img/dana/wmwm/mumbai-marine-drive.jpg",
+            "alt": "Dana, smiling in a red shirt, by the sea on Marine Drive in Mumbai with the city skyline behind her."
+          },
+          {
+            "kicker": "Dosa for breakfast",
+            "text": "A dosa: batter cooked very thin on a hot plate, then dipped into chutneys. It’s Dana’s perfect breakfast in Mumbai, or Bombay as she knows it.",
+            "said": "“This is my idea of a perfect breakfast in Mumbai”"
+          },
+          {
+            "kicker": "Coming home",
+            "text": "Sitting at Fatehpur Sikri, Dana feels what she always feels in India.",
+            "said": "“I always feel in my heart that I am coming home!”"
+          }
+        ]
+      },
+      {
+        "id": "mustique",
+        "name": "Mustique",
+        "blurb": "Island life, Princess Margaret and the blues festival",
+        "stories": [
+          {
+            "kicker": "Her Royal favourite",
+            "text": "At the Cotton House, Princess Margaret would ask Dana to play ‘What Memories We Make’, from ‘Weren’t Born a Man’, calling it one of her favourites."
+          },
+          {
+            "kicker": "Paler than when he came",
+            "text": "Offered a Mustique house over Christmas, Dana invited loads of friends. Lionel Bart came, and slept so much he left paler than he arrived!"
+          },
+          {
+            "kicker": "Swimming like a swan",
+            "text": "At a Macaroni Beach lunch, Princess Margaret went for a dip in a floral swimming costume, keeping her head out of the water. She swam like a swan."
+          },
+          {
+            "kicker": "Roger Taylor on drums",
+            "text": "Needing a drummer at three days’ notice for Wembley with Dylan, Dana rang Queen’s Roger Taylor. He said yes and refused the paltry fee.",
+            "said": "“He was an absolute angel”"
+          },
+          {
+            "kicker": "Ready for bed",
+            "text": "Dana met Colin Tennant on the Cotton House steps in a striped pyjama suit. ‘You look ready for bed,’ she said. ‘And so do you!’ he laughed."
+          },
+          {
+            "kicker": "Before the fame",
+            "text": "In the early 1970s Mustique had six or seven houses and dirt-track roads, and evenings at the Cotton House were often by candlelight."
+          },
+          {
+            "kicker": "A golden birthday",
+            "text": "For Colin Tennant’s fiftieth on Macaroni beach the palm trees were painted gold. Princess Margaret, in silver, was the star of the show."
+          },
+          {
+            "kicker": "Basil’s lucky day",
+            "text": "Basil Charles stepped onto Mustique just as Colin Tennant needed a barman for a lunch with Princess Margaret. It changed his life forever."
+          },
+          {
+            "kicker": "From shack to Basils Bar",
+            "text": "Dana’s old friend Basil Charles began selling drinks at the harbour. Basil’s Bar became world-famous, and the Queen awarded him the OBE in 2005."
+          },
+          {
+            "kicker": "The King of Mustique",
+            "text": "Colin Tennant, Lord Glenconner, bought Mustique in the fifties and gave Princess Margaret land there as a wedding present. For years he was its King."
+          },
+          {
+            "kicker": "A call from paradise",
+            "text": "Dana was with Tony Defries on Mustique when he made his final phone call to Bowie, telling him it just couldn’t go on anymore.",
+            "photo": "/img/dana/wmwm/bowie/defries-and-dana.jpg",
+            "alt": "Tony Defries, bearded and smiling, with his arm around Dana"
+          },
+          {
+            "kicker": "Rhymes with spam",
+            "text": "At a Macaroni Beach lunch with Dana’s house party, Princess Margaret set one guest straight on how to address her.",
+            "said": "“You must call me Ma’am, which rhymes with spam”"
+          },
+          {
+            "kicker": "Twenty Januaries",
+            "text": "For 20 years Dana and Basil Charles ran the Mustique Blues Festival. Her festival CDs raised money for children on neighbouring St. Vincent.",
+            "photo": "/img/dana/wmwm/mustique-blues-2025.jpg",
+            "alt": "Dana in a bright pink outfit singing on an outdoor stage beside guitarist Ian Siegal in a white suit and bandana."
+          },
+          {
+            "kicker": "Not his usual style",
+            "text": "Nigel Kennedy joined the London Blues Band at the Mustique Blues Festival: not his usual style! Ronnie Wood, a friend since the sixties, played too."
+          },
+          {
+            "kicker": "Two pairs of jeans",
+            "text": "Peter Golding, famous in Chelsea for stretch jeans when no one else had them, sang and played harmonica in Mustique. Dana still has two pairs."
+          },
+          {
+            "kicker": "Born the same year",
+            "text": "Big Jay McNeely turned professional on sax in 1949, the year Dana was born. They made a duets album, Cherry Pie, and his honking sax wowed Mustique.",
+            "photo": "/img/dana/wmwm/big-jay-mcneely.jpg",
+            "alt": "Dana and saxophonist Big Jay McNeely singing together into microphones on stage, a bass guitarist behind them."
+          },
+          {
+            "kicker": "Diamante since 1970",
+            "text": "Pictured on Mustique in her Blues Festival days, Dana has collected diamante sunglasses since 1970."
+          },
+          {
+            "kicker": "A royal singalong",
+            "text": "On Mustique, Dana saw Princess Margaret mouthing the words to the saucy ‘King Size Papa’. Her secret? Her father, the King, used to sing it to her."
+          },
+          {
+            "kicker": "Good enough for Mick",
+            "text": "Mick Jagger bought land on Mustique early on. Bowie reckoned if it was good enough for Mick, it was good enough for him, and built a house there too."
+          },
+          {
+            "kicker": "Far nicer than in books",
+            "text": "Dana knew Princess Margaret on Mustique for years, and gets very upset when she reads the negative things written about her.",
+            "said": "“She was always far nicer than she is ever portrayed in books”"
+          },
+          {
+            "kicker": "The folly of follies",
+            "text": "Bowie built a Balinese house on Mustique but was hardly there. Its next owner found packing cases of Balinese statues Bowie never unpacked.",
+            "photo": "/img/dana/wmwm/bowie/bowie-mustique-house.jpg",
+            "alt": "Wooden verandas of Bowie's Balinese-style house overlooking the sea on Mustique"
+          },
+          {
+            "kicker": "The wrong King",
+            "text": "Mick Jagger called ‘Going Down’ an Albert King song. It was Freddie King’s, but Dana’s band didn’t tell him. They learned it in ten minutes."
+          },
+          {
+            "kicker": "Breakfast at nine?",
+            "text": "Ronnie Wood told Dana he left Necker Island because every day was planned for him. Mustique was far more relaxed.",
+            "said": "“You can’t tell a Rolling Stone to have breakfast at 9 o’clock!”"
+          },
+          {
+            "kicker": "Not quite the Blues",
+            "text": "Mick also sang ‘Honky Tonk Women’ at the 2005 Mustique Blues Festival, but Dana left it off the CD: not quite the right style for a Blues album!"
+          },
+          {
+            "kicker": "Back for the 25th",
+            "text": "Dana ran the Mustique Blues Festival with Basil for 20 years, and went back in 2020 for its 25th anniversary with keyboard star Dino Baptiste."
+          },
+          {
+            "kicker": "Make it a slow one",
+            "text": "When Basil asked Kate Middleton, now Princess of Wales, to dance, Dana’s guitarist Jake whispered a change of plan, and the band slowed right down.",
+            "said": "“He owes me one!”"
+          },
+          {
+            "kicker": "William lifts Kate",
+            "text": "On Mustique Dana watched Prince William and Kate, now the Prince and Princess of Wales, dancing in Basil’s Bar. Once he lifted her right up!"
+          },
+          {
+            "kicker": "A festival is born",
+            "text": "After closing time at Basil’s Bar, Dana sang the Blues unaccompanied while Basil swung along. Together they dreamed up the Mustique Blues Festival."
+          },
+          {
+            "kicker": "A piano for paradise",
+            "text": "Basil flew to New York for a white upright piano. The next January, the first Mustique Blues Festival began, raising money for St. Vincent’s children."
+          },
+          {
+            "kicker": "Mick takes the mic",
+            "text": "In 2005 Mick Jagger sang ‘Dust My Broom’ and ‘Going Down’ at the Mustique Blues Festival with Dana’s London Blues Band. The bar was packed!"
+          },
+          {
+            "kicker": "Bowie’s old house",
+            "text": "In 1994 Felix Dennis bought David Bowie’s Balinese-style house on Mustique and built a music room, where Dana’s band rehearsed with Mick Jagger.",
+            "photo": "/img/dana/wmwm/bowie/bowie-mustique-house.jpg",
+            "alt": "Wooden verandas of Bowie's Balinese-style house overlooking the sea on Mustique"
+          }
+        ]
+      },
+      {
+        "id": "childhood",
+        "name": "Childhood",
+        "blurb": "Growing up, from Woking to the Marquee",
+        "stories": [
+          {
+            "kicker": "On the five-pound note",
+            "text": "Dana’s ancestors include Sir Thomas Fowell Buxton, who fought slavery with William Wilberforce, and Elizabeth Fry. Both appeared on the old £5 note."
+          },
+          {
+            "kicker": "Thirty for Christmas lunch",
+            "text": "Dana’s mother’s clan was so close that thirty or more often sat down for Christmas lunch, with cousins popping up from all over the world."
+          },
+          {
+            "kicker": "Lebkuchen on the tree",
+            "text": "Dana’s childhood Christmas tree was hung with marvellous lebkuchen from Schmidts, the German food shop she visited with her grandmother Oma."
+          },
+          {
+            "kicker": "A pony under the tree",
+            "text": "One childhood Christmas, Nixi got a bicycle from her godfather, and little Dana got a pony called Rusty from her godmother, Jean Buxton."
+          },
+          {
+            "kicker": "Dadster’s elephant",
+            "text": "Dana’s father loved to tell how his grandmother ordered an elephant from India, then rode it around the Austrian countryside and into Vienna."
+          },
+          {
+            "kicker": "Lutyens lovers",
+            "text": "Dana spent her first ten years at Fishers Hill, a house built by Sir Edwin Lutyens. Jimmy Page loves Lutyens too: he has owned at least two."
+          },
+          {
+            "kicker": "Tonykins the cat",
+            "text": "After Sunday lunch, the family’s black cat Tonykins sat on Dana’s father’s stomach, slowly going up and down as he napped on the red velvet sofa."
+          },
+          {
+            "kicker": "The family crest",
+            "text": "Dana’s father stitched the family crest on the piano stool himself: a stag’s head rising out of a crown, with the motto ‘Qui va piano va sano’."
+          },
+          {
+            "kicker": "A gipsy princess’s name",
+            "text": "Dana was born Richenda, said to be the name of a Romany gipsy princess, gifted to her kindly ancestors by a gipsy mother selling clothes pegs."
+          },
+          {
+            "kicker": "Christmas on December 19th",
+            "text": "Dana’s family opened Christmas presents by the tree around December 19th, then took off to the Alps to ski in Klosters."
+          },
+          {
+            "kicker": "Sneezi, best friend",
+            "text": "Dana’s Norwich Terrier Sneezi was her best friend until she died aged 15. Boyfriends had to put up with her: love me, love my dog!",
+            "said": "“Sneezi and I were inseparable”"
+          },
+          {
+            "kicker": "Woking, 1949",
+            "text": "Born Richenda Antoinette de Winterstein Gillespie on March 30th, 1949, at 12.15am in Woking Hospital, Surrey."
+          },
+          {
+            "kicker": "Age 10",
+            "text": "A milkman spotted her in cowboy boots and a Davy Crockett hat. At ten she told her mother everyone must call her Dana: she was going to be famous.",
+            "said": "“Here’s Dangerous Dana from Alabama”"
+          },
+          {
+            "kicker": "Bedtime, about age 7",
+            "text": "Tucked into the Fishers Hill nursery, little Dana asked her mother a big question: “What are we?” The answer still makes her smile.",
+            "said": "“We are Aristocrats”"
+          },
+          {
+            "kicker": "The Mau Mau",
+            "text": "The family called Dad’s Freemason nights “the Mau Mau”. Dana took it literally and insisted to her furious teacher her father was a member."
+          },
+          {
+            "kicker": "Age 3",
+            "text": "Her first newspaper appearance: winning a rosette at the local gymkhana, legs in a sideways splits on the saddle like a Thelwell cartoon."
+          },
+          {
+            "kicker": "Age 9",
+            "text": "Great Aunt Lucy took Dana to meet Sir Edmund Hillary, but all she really remembers is shaking hands with Sherpa Tensing."
+          },
+          {
+            "kicker": "Windsor polo",
+            "text": "While her parents watched Prince Philip play polo, Dana watched the Maharajah and Maharani of Jaipur. It sparked her lifelong pull to India."
+          },
+          {
+            "kicker": "First crush",
+            "text": "Her first crush was 13-year-old Laurie London on ‘6.5 Special’. Then came Elvis in ‘Love Me Tender’ at the local cinema in Woking."
+          },
+          {
+            "kicker": "Age 5, Eltville",
+            "text": "Falling from a goal post, Dana fractured her skull and felt a flash of light, as if she had seen the whole Universe in a single second."
+          },
+          {
+            "kicker": "Klosters, age 12",
+            "text": "Her first public singing: a talent contest backed by The Four Camillos, judged by Tarzan star Lex Barker, Jane Fonda and Roger Vadim."
+          },
+          {
+            "kicker": "Always the bridesmaid",
+            "text": "Dana was a bridesmaid five times, and never the bride, thank goodness. She never wanted to change her name for anyone.",
+            "said": "“I never wanted to change my name for anyone”",
+            "photo": "/img/dana/wmwm/bridesmaid-with-nixi.jpg",
+            "alt": "Black and white photo of two small girls in white bridesmaid dresses and bonnets, one holding flowers, petting a dachshund."
+          },
+          {
+            "kicker": "The dressing-up cupboard",
+            "text": "At three, Dana went to a fancy dress party with her sister Nixi. At home they had a huge dressing up cupboard full of interesting costumes."
+          },
+          {
+            "kicker": "Jazz, not classical",
+            "text": "At Francis Holland School, music teacher Miss Muriel Ashby bent the rules and let Dana play jazz on the piano instead of classical music."
+          },
+          {
+            "kicker": "Drop the glass!",
+            "text": "At 16 Dana cruised the Thames with the Rolling Stones for a stunt. Her job: look amazed, then drop her champagne glass. It made British Pathé News.",
+            "photo": "/img/dana/wmwm/stones-boat-1965.jpg",
+            "alt": "Black and white photo of teenage Dana with long fair hair, shading her eyes with her hand on a boat on the Thames."
+          },
+          {
+            "kicker": "13th birthday",
+            "text": "A yellow battery record player led to her big love: Bessie Smith’s ‘Empty Bed Blues’, played over and over in her top-floor room."
+          },
+          {
+            "kicker": "5.30am paper round",
+            "text": "Dana took a newspaper delivery boy’s job, saved every penny, and bought a plain white Ajax drum kit at Drum City on Shaftesbury Avenue."
+          },
+          {
+            "kicker": "Pea souper",
+            "text": "In thick London fog, Dana walked past Harrods with her skirt over her head, just so she could one day say she’d done it."
+          },
+          {
+            "kicker": "Rescued!",
+            "text": "Strapped on a sledge after the avalanche, Dana was asked what she wanted. Irwin Shaw piled Mars Bars on her chest. Her hands were strapped in!",
+            "said": "“Chocolate” I replied weakly”"
+          },
+          {
+            "kicker": "The Michelin Man",
+            "text": "British Junior Waterski champion for four years, Dana often skied in freezing water in a wetsuit that filled up and made her look like a Michelin Man!"
+          },
+          {
+            "kicker": "Packed for hospital",
+            "text": "On her way to have her appendix out, Dana took her guitar and a fluffy white seal for company. The photo later went on a 2018 album reissue."
+          },
+          {
+            "kicker": "The gorgeous folk singer",
+            "text": "At one of Dana’s first folk gigs, at The Tavern in East Dereham in 1965, Norfolk relatives came for moral support. The Continentals supported her!"
+          },
+          {
+            "kicker": "First paid gig",
+            "text": "Dana’s first paid gig: folk guitar at the opening of a new garage in Taunton. Folk in a petrol station, she admits, doesn’t really work too well.",
+            "said": "“Folk music in a petrol station doesn’t really work too well”"
+          },
+          {
+            "kicker": "Paul Simon packs his bags",
+            "text": "Paul Simon lived round the corner. Dana arrived to find him packing: ‘Sound of Silence’ had become a freak Number One in America."
+          },
+          {
+            "kicker": "Windmill Girls, 1965",
+            "text": "At sixteen Dana wrote a song for ‘The Secrets of the Windmill Girls’ and foolishly sold it outright for £25, then sang it in the film."
+          },
+          {
+            "kicker": "Britannia Pier, 1965",
+            "text": "Paid £25 a concert in Great Yarmouth, sixteen-year-old Dana hitchhiked there and sometimes slept under the tarpaulin of a pleasure boat on the beach.",
+            "said": "“My mother would have had a fit had she known where I was”"
+          },
+          {
+            "kicker": "Home for Christmas",
+            "text": "One Christmas Day, climbing a Spanish mountain near Ronda, Dana thought of her mum and cried. From then on she always spent Christmas with her."
+          }
+        ]
+      },
+      {
+        "id": "blues",
+        "name": "The blues",
+        "blurb": "Bessie Smith, Clapton, Dylan and seventy albums",
+        "stories": [
+          {
+            "kicker": "The Stones that got away",
+            "text": "Yardbirds manager Giorgio Gomelsky looked after the Stones but never had them under contract. Andrew Loog Oldham stole them from under his nose."
+          },
+          {
+            "kicker": "13th birthday",
+            "text": "A yellow battery record player led to her big love: Bessie Smith’s ‘Empty Bed Blues’, played over and over in her top-floor room."
+          },
+          {
+            "kicker": "The Marquee Club",
+            "text": "At the Marquee in Wardour Street, Dana tried never to miss the Yardbirds. Eric Clapton was her favourite: he played straight from the heart."
+          },
+          {
+            "kicker": "Clapton’s letter",
+            "text": "Eric Clapton was lined up as her guitar teacher, until ‘For Your Love’ hit the charts. He wrote to postpone, in perfect Italic handwriting."
+          },
+          {
+            "kicker": "Richmond, early sixties",
+            "text": "At the American Folk Blues Festival in Richmond her hero was Howlin’ Wolf, but Dana had to catch public transport home for school before he played."
+          },
+          {
+            "kicker": "Donovan on guitar",
+            "text": "Donovan played guitar on Dana’s first single, ‘Donna Donna’, in 1965. Weeks later ‘Catch the Wind’ was a hit, and Donovan was a star."
+          },
+          {
+            "kicker": "A song David taught her",
+            "text": "On ‘Ready Steady Goes Live’, sixteen-year-old Dana sang ‘Love is Strange’, the song Bowie had taught her, with the Les Reed orchestra."
+          },
+          {
+            "kicker": "Jimmy’s in the house",
+            "text": "Jimmy has come to see Dana and The London Blues Band at the 606 Club in Chelsea, and the band always buzz when they know he’s in the audience."
+          },
+          {
+            "kicker": "Opening for Dylan, 1997",
+            "text": "Dylan asked for Dana as opening act on his 1997 British tour. Two days before, he turned up at her door and they drank fennel tea."
+          },
+          {
+            "kicker": "Roger Taylor on drums",
+            "text": "Needing a drummer at three days’ notice for Wembley with Dylan, Dana rang Queen’s Roger Taylor. He said yes and refused the paltry fee.",
+            "said": "“He was an absolute angel”"
+          },
+          {
+            "kicker": "His Bobness approves",
+            "text": "Before the tour Dylan told Dana he liked her songwriting, especially ‘Blue Temptation’, and at Wembley he listened to her whole set.",
+            "said": "“This was high praise indeed from His Bobness”"
+          },
+          {
+            "kicker": "Jimmy Page on guitar",
+            "text": "John Paul Jones and Jimmy Page, later Led Zeppelin, played on Dana’s Decca sessions. Jimmy produced her single ‘You Just Gotta Know My Mind’."
+          },
+          {
+            "kicker": "Box of Surprises",
+            "text": "With the late Mike Vernon producing and blues group Savoy Brown, Dana’s second LP was done in days. Cover: Dana on a coffin, stuffed animals all around."
+          },
+          {
+            "kicker": "Meeting Peter Green",
+            "text": "Signed to Starlight Artists alongside Fleetwood Mac, Dana met Peter Green at his guitar peak, and later sang on Danny Kirwan’s solo album."
+          },
+          {
+            "kicker": "At Muddy’s feet",
+            "text": "On tour in Boston, Dana sat almost at Muddy Waters’ feet at Paul’s Mall, Pinetop Perkins on piano, under a ceiling she could nearly touch."
+          },
+          {
+            "kicker": "Organ Grinder Blues",
+            "text": "Hobbling in on a stick with no sheet music, Dana sat at the piano and sang ‘Organ Grinder Blues’. She won the lead in West End musical ‘Mardi Gras’."
+          },
+          {
+            "kicker": "Bob Marley upstairs",
+            "text": "Little Feat, Joe Cocker and Bob Marley recorded upstairs at Island Studios. Word of Dana’s 16-year-old drummer Simon Phillips brought players down."
+          },
+          {
+            "kicker": "Twenty Januaries",
+            "text": "For 20 years Dana and Basil Charles ran the Mustique Blues Festival. Her festival CDs raised money for children on neighbouring St. Vincent.",
+            "photo": "/img/dana/wmwm/mustique-blues-2025.jpg",
+            "alt": "Dana in a bright pink outfit singing on an outdoor stage beside guitarist Ian Siegal in a white suit and bandana."
+          },
+          {
+            "kicker": "Not his usual style",
+            "text": "Nigel Kennedy joined the London Blues Band at the Mustique Blues Festival: not his usual style! Ronnie Wood, a friend since the sixties, played too."
+          },
+          {
+            "kicker": "Born the same year",
+            "text": "Big Jay McNeely turned professional on sax in 1949, the year Dana was born. They made a duets album, Cherry Pie, and his honking sax wowed Mustique.",
+            "photo": "/img/dana/wmwm/big-jay-mcneely.jpg",
+            "alt": "Dana and saxophonist Big Jay McNeely singing together into microphones on stage, a bass guitarist behind them."
+          },
+          {
+            "kicker": "A café in Vienna",
+            "text": "Hearing bottleneck Blues across a crowded Vienna café, Dana sang her way through the crowd to the guitarist: Erik Trauner of the Mojo Blues Band."
+          },
+          {
+            "kicker": "Jazzland, Vienna",
+            "text": "After a few songs in the cellars of Jazzland, the late owner Axel Melhardt offered Dana a gig on the spot. Decades later she still goes back to sing."
+          },
+          {
+            "kicker": "Saved by the Blues",
+            "text": "After nearly five years of court battles over Mainman, Dana had to rebuild her career. She wanted passion, not pop, and found it in the Blues."
+          },
+          {
+            "kicker": "‘Blue Job’",
+            "text": "Dana pitched Ace Records an album of the rudest old Blues she could find, called ‘Blue Job’. Boss Ted Carroll roared with laughter and signed her."
+          },
+          {
+            "kicker": "A hit from the sand",
+            "text": "An old man’s scratchy cassette in Dubai gave Dana a melody. It became ‘Move Your Body Close To Me’, which won the Golden Carinthia and hit the charts."
+          },
+          {
+            "kicker": "Five sets a night",
+            "text": "At Zurich’s ‘82’ Club, Dana and the band played five 45-minute sets a night for ten days, fuelled by trips to Sprungli, the High Temple of Chocolate.",
+            "said": "“Yes, five!!!”"
+          },
+          {
+            "kicker": "He swung as she sang",
+            "text": "Years before, Dana had asked Baba silently to swing in her heart whenever she sang. When she sang the Blues for Him, He rocked on His swing.",
+            "said": "“Please dearest Baba, will You swing whenever I sing?”"
+          },
+          {
+            "kicker": "Visiting the Goddess",
+            "text": "Dana sold her beloved Citroën DS, ‘the Goddess’, to boogie-woogie pianist Joachim Palden. She visits it in Vienna, and wrote ‘Crazy ’Bout My DS’."
+          },
+          {
+            "kicker": "Why every song is Blue",
+            "text": "Dana wrote dozens of ‘Blue’ songs. Black is too moody, brown too boring, and orange doesn’t rhyme with anything, so only BLUE would do!"
+          },
+          {
+            "kicker": "Christmas in Darjeeling",
+            "text": "Dana sang over Christmas and New Year at Darjeeling’s Hotel Windemere, where the sun would burst through to reveal Kanchenchunga, Tiger Mountain."
+          },
+          {
+            "kicker": "The Ronson tribute",
+            "text": "In 1994 Dana and The London Blues Band played the Mick Ronson memorial concert at the Hammersmith Odeon, alongside Roger Daltrey and Roger Taylor.",
+            "photo": "/img/dana/wmwm/bowie/ronno-chateau.jpg",
+            "alt": "Black and white photo of Mick Ronson in a straw hat beside Dana at the Château d'Hérouville"
+          },
+          {
+            "kicker": "Back for the 25th",
+            "text": "Dana ran the Mustique Blues Festival with Basil for 20 years, and went back in 2020 for its 25th anniversary with keyboard star Dino Baptiste."
+          },
+          {
+            "kicker": "The one that got away",
+            "text": "At South by Southwest in 2023, The Zombies’ Colin Blunstone reminded Dana they nearly went skinny-dipping in the Serpentine, but the car broke down."
+          },
+          {
+            "kicker": "Seventy albums in",
+            "text": "After over 70 albums, Dana made her first of mostly covers, First Love, co-produced by Marc Almond. Gered shot the sleeve, 56 years after her first."
+          },
+          {
+            "kicker": "Blues for Baba’s 70th",
+            "text": "For Sai Baba’s 70th birthday He asked for Dana’s Western music, so she sang the Blues to a stadium crowd, with songs like ‘I Sigh For You’."
+          },
+          {
+            "kicker": "A festival is born",
+            "text": "After closing time at Basil’s Bar, Dana sang the Blues unaccompanied while Basil swung along. Together they dreamed up the Mustique Blues Festival."
+          },
+          {
+            "kicker": "Mick takes the mic",
+            "text": "In 2005 Mick Jagger sang ‘Dust My Broom’ and ‘Going Down’ at the Mustique Blues Festival with Dana’s London Blues Band. The bar was packed!"
+          },
+          {
+            "kicker": "India Blues tour",
+            "text": "Dana’s 2002 British Council tour of India covered eleven cities and twenty-two concerts, and not one bag was lost or one plane late."
+          },
+          {
+            "kicker": "Blues in a glass pyramid",
+            "text": "When the London Blues Band played Astana’s glass pyramid, a smartly dressed Kazakh audience got so excited that ladies rushed the stage to dance."
+          },
+          {
+            "kicker": "70 albums at 70",
+            "text": "Dana lost count long ago, so she was surprised to hear ‘Under My Bed’ was her 70th album, just as she turned 70. Feet up? Not likely.",
+            "said": "“I’m already plotting what to do for my next production”"
+          },
+          {
+            "kicker": "Desert Island Dana",
+            "text": "Julian Clary picked two of Dana’s songs on Desert Island Discs, and chose her Sanskrit song as the one record he’d keep above all others.",
+            "said": "“Thank you, Julian”"
+          },
+          {
+            "kicker": "The wooden overcoat",
+            "text": "Dana still records, still gigs and still gets a buzz from making music for other people to enjoy.",
+            "said": "“I won’t ever give up; I’ll continue till I’m in my wooden overcoat”",
+            "photo": "/img/dana/wmwm/twelve-string.jpg",
+            "alt": "Dana, with red hair, sits hugging an acoustic 12-string guitar in front of shelves of blue glassware."
+          },
+          {
+            "kicker": "Bop till I drop",
+            "text": "Now in her eighth decade, Dana feels blessed to be still out there rolling.",
+            "said": "“I’m going to bop till I drop!”",
+            "photo": "/img/dana/wmwm/mustique-2025.jpg",
+            "alt": "Dana, with red hair and a pink and white floral shirt, leans on a railing beside a pool in a tropical garden."
+          }
+        ]
+      },
+      {
+        "id": "saibaba",
+        "name": "Sai Baba",
+        "blurb": "India, faith and singing for Sai Baba",
+        "stories": [
+          {
+            "kicker": "Windsor polo",
+            "text": "While her parents watched Prince Philip play polo, Dana watched the Maharajah and Maharani of Jaipur. It sparked her lifelong pull to India."
+          },
+          {
+            "kicker": "Age 5, Eltville",
+            "text": "Falling from a goal post, Dana fractured her skull and felt a flash of light, as if she had seen the whole Universe in a single second."
+          },
+          {
+            "kicker": "The River Rhine",
+            "text": "Swept into the Rhine as a small child, Dana says a strange Being dressed all in white lifted her out and laid her safely on the lawn."
+          },
+          {
+            "kicker": "Dylan knew all about Him",
+            "text": "Seeing Sai Baba’s photo on Dana’s wall, Bob Dylan laughed. George Harrison had told him all about Him.",
+            "said": "“That’s the guy who materialises jewellery”"
+          },
+          {
+            "kicker": "A gift for George",
+            "text": "Leaving Dana’s in 1997, Dylan said he was visiting George Harrison the next day. So Dana gave him some of her Sanskrit albums to pass on to George."
+          },
+          {
+            "kicker": "Mirrors of Love",
+            "text": "Dylan browsed Dana’s bookshelves and took a book of quotations from world religions. It inspired her own book and CD, ‘Mirrors of Love’."
+          },
+          {
+            "kicker": "Nine men in blue turbans",
+            "text": "From age 15 Dana had visions of nine bearded men in blue turbans. Twenty years later, in Marrakesh, the same nine walked on stage."
+          },
+          {
+            "kicker": "Twelve years of waiting",
+            "text": "Dana went to Puttaparthi expecting Sai Baba to welcome her with open arms. She sat at the back, and kept coming back.",
+            "said": "“He never actually spoke to me for 12 years”"
+          },
+          {
+            "kicker": "Not his cup of tea",
+            "text": "Elton’s assistant Mike Hewitson played him one of Dana’s Sanskrit albums. His verdict? Dana can’t blame him: Sanskrit music isn’t to everyone’s taste.",
+            "said": "“Oh, I don’t like that at all”"
+          },
+          {
+            "kicker": "A gift for his 50th",
+            "text": "For Dylan’s 50th birthday in 1991 a paper asked his friends for gift ideas. Dana’s: a ticket to India, to show him a good time so he’d smile more."
+          },
+          {
+            "kicker": "He swung as she sang",
+            "text": "Years before, Dana had asked Baba silently to swing in her heart whenever she sang. When she sang the Blues for Him, He rocked on His swing.",
+            "said": "“Please dearest Baba, will You swing whenever I sing?”"
+          },
+          {
+            "kicker": "Every November",
+            "text": "From 1990 to 2015 Dana travelled to Puttaparthi every November for Sai Baba’s birthday, and sometimes sang to Him and the enormous crowds.",
+            "photo": "/img/dana/wmwm/sai-baba-birthday.jpg",
+            "alt": "Dana in a sari stands behind Sai Baba, in a yellow robe, and singer Parween Sultana in a red sari on a decorated stage."
+          },
+          {
+            "kicker": "Her first Sai Baba book",
+            "text": "A sister of the Jam Saheb of Jamnagar met Dana’s father at a London club about 50 years ago. She gave Dana her first book about Sai Baba."
+          },
+          {
+            "kicker": "Coming home",
+            "text": "Sitting at Fatehpur Sikri, Dana feels what she always feels in India.",
+            "said": "“I always feel in my heart that I am coming home!”"
+          },
+          {
+            "kicker": "Sai Gita in the parade",
+            "text": "At Sai Baba’s 75th birthday, His elephant Sai Gita joined the procession, with flags from all over the world, Vedic chanters and marching bands."
+          },
+          {
+            "kicker": "Night-train book",
+            "text": "In the mid-eighties, with nothing to read on a night train from Davos, Dana borrowed ‘Man of Miracles’. By Vienna she knew she must go to India.",
+            "said": "“How little I knew”"
+          },
+          {
+            "kicker": "First darshan",
+            "text": "At her first sight of Sai Baba, from the back row, Dana felt deep peace and knew she must give up meat. She has not touched it since."
+          },
+          {
+            "kicker": "The left hand",
+            "text": "Crying in the Bhajan Hall, Dana silently asked Sai Baba for a sign: one beat with His left hand. He gave it without missing a beat.",
+            "said": "“I want You to beat time for me once with Your left hand”"
+          },
+          {
+            "kicker": "“Ah, the singer!”",
+            "text": "Dana smuggled her bhajan tape into darshan tucked into her clothes. Sai Baba walked straight up to her and asked for it.",
+            "said": "“Ah, the singer! Give me the cassette”"
+          },
+          {
+            "kicker": "Swami’s students",
+            "text": "Sai Baba lent Dana seven of His students as a band, and when they asked to stay nameless, He told her otherwise.",
+            "said": "“You must introduce each boy to the audience, by name”"
+          },
+          {
+            "kicker": "Camel? Pony!",
+            "text": "At a wedding in Cairo Dana booked a gentle dawn camel ride round the pyramids. The owner only had an over-sprightly Arab pony that wanted to gallop."
+          },
+          {
+            "kicker": "A cross for her mother",
+            "text": "When Sai Baba asked Dana’s mother her religion, she gave her answer, and He gave her a diamond crucifix she wore until the day she died.",
+            "said": "“Swami, I’m Church of England, Protestant”"
+          },
+          {
+            "kicker": "About her father",
+            "text": "Dana’s father never went to India, but he bought her first ticket there. Years later, Sai Baba told her something she always knew.",
+            "said": "“Your father was a very great soul”"
+          },
+          {
+            "kicker": "April 2011",
+            "text": "Sai Baba left His body on April 24th 2011, the very day Dana finished mixing ‘Mata Mata’. She still thinks of Him daily.",
+            "said": "“I feel no different now than when He was alive”"
+          },
+          {
+            "kicker": "Blues for Baba’s 70th",
+            "text": "For Sai Baba’s 70th birthday He asked for Dana’s Western music, so she sang the Blues to a stadium crowd, with songs like ‘I Sigh For You’."
+          },
+          {
+            "kicker": "Cloves and vibhuti",
+            "text": "Dana lost her voice the day before Baba’s 70th. She prayed, strangers handed her cloves and vibhuti, and about sixty per cent of her voice came back."
+          },
+          {
+            "kicker": "Barefoot in the dark",
+            "text": "After singing for Sai Baba, Dana’s shoe broke and her knee ached, so she limped barefoot through the streets back to her room.",
+            "said": "“Treat both situations as equal”"
+          },
+          {
+            "kicker": "The meaning of life",
+            "text": "Dana once asked Sai Baba what life means. His answer was five words long.",
+            "said": "“Play the Game. Be happy!”"
+          },
+          {
+            "kicker": "A Samarkand surprise",
+            "text": "In Uzbekistan a grandmother wept at Sai Baba’s photo. Then a young boy looked over her shoulder.",
+            "said": "“That’s the guy I was playing football with, in the street yesterday!”"
+          },
+          {
+            "kicker": "Santosh the kitten",
+            "text": "Ill for ten days in Russia, Dana was nursed by a rescued black kitten who lay purring on her neck. She named him Santosh, meaning happiness."
+          },
+          {
+            "kicker": "A bowl of paysam",
+            "text": "As Sai Baba served the savoury food, Dana silently wished for dessert. Without turning round, He stirred a bowl of paysam and handed it to her."
+          },
+          {
+            "kicker": "Clearing the clouds",
+            "text": "Before Baba’s 75th Birthday concert the sky was full of rain clouds. He waved His hand, and by the time Dana went on most of the clouds had gone.",
+            "said": "“Well, Swami, I’m from London where it rains a lot, so I’m used to it”"
+          },
+          {
+            "kicker": "“Ah, Tiger!”",
+            "text": "On Dana’s 50th birthday Sai Baba showered her with rice and named her for the tiger-print cushion she always sat on (not real skin, of course).",
+            "said": "“Ah, Tiger!”"
+          },
+          {
+            "kicker": "The Shanti Sisters",
+            "text": "Sai Baba pretended to be horrified at the words ‘Ladies Choir’ in Dana’s letter, then smiled and said yes. The choir became The Shanti Sisters.",
+            "photo": "/img/dana/wmwm/puttaparthi-choir.jpg",
+            "alt": "A large ladies choir in turquoise saris lined up in front of an ornate, flower-decked temple building in Puttaparthi."
+          },
+          {
+            "kicker": "The Phoenix Bird",
+            "text": "On Dec. 9th 2010 Dana sang for Sai Baba for the last time. He gave her an orange glass bird, and Jorg later put it on the cover of ‘Mata Mata’.",
+            "said": "“It’s the Phoenix Bird, it’s the Phoenix Bird, it’s the Phoenix Bird”"
+          },
+          {
+            "kicker": "Start with Love",
+            "text": "Dana ends her memoir with one of Sai Baba’s sayings, the way she wants to live.",
+            "said": "“Start the day with Love, Spend the day with Love”"
+          }
+        ]
+      },
+      {
+        "id": "funny",
+        "name": "Funny stories",
+        "blurb": "Mishaps, near misses and great lines",
+        "stories": [
+          {
+            "kicker": "Age 10",
+            "text": "A milkman spotted her in cowboy boots and a Davy Crockett hat. At ten she told her mother everyone must call her Dana: she was going to be famous.",
+            "said": "“Here’s Dangerous Dana from Alabama”"
+          },
+          {
+            "kicker": "Bedtime, about age 7",
+            "text": "Tucked into the Fishers Hill nursery, little Dana asked her mother a big question: “What are we?” The answer still makes her smile.",
+            "said": "“We are Aristocrats”"
+          },
+          {
+            "kicker": "The Mau Mau",
+            "text": "The family called Dad’s Freemason nights “the Mau Mau”. Dana took it literally and insisted to her furious teacher her father was a member."
+          },
+          {
+            "kicker": "Mrs. Perkins the goldfish",
+            "text": "Dad installed a marble fountain trickling onto Dana’s goldfish, Mrs. Perkins, just to watch dinner guests give in and dash for the loo."
+          },
+          {
+            "kicker": "An invitation, mid-avalanche",
+            "text": "As Dana’s mother clawed up the slope after the avalanche searching for her, an Englishman handed her an invitation to a ski club drinks party.",
+            "said": "“Ah, Mrs Gillespie, I’ve been looking for you”"
+          },
+          {
+            "kicker": "The floor fell in",
+            "text": "Her new band was practising on the top floor when part of the floor fell in on her sister Nixi’s bedroom. The drums went to the basement."
+          },
+          {
+            "kicker": "School concert",
+            "text": "Dana and best friend Carrots sat down to play ‘Oranges and Lemons’ and laughed so hard not one note was played. No school choir for her!"
+          },
+          {
+            "kicker": "Pea souper",
+            "text": "In thick London fog, Dana walked past Harrods with her skirt over her head, just so she could one day say she’d done it."
+          },
+          {
+            "kicker": "Rescued!",
+            "text": "Strapped on a sledge after the avalanche, Dana was asked what she wanted. Irwin Shaw piled Mars Bars on her chest. Her hands were strapped in!",
+            "said": "“Chocolate” I replied weakly”"
+          },
+          {
+            "kicker": "Next morning",
+            "text": "When Dana brought David downstairs, her father thought she’d had a girlfriend with her. David’s long lemon-yellow hair was misleading!"
+          },
+          {
+            "kicker": "The whole England squad",
+            "text": "Covering ‘Back Home’, Elton John, David Byron and Dana had to sing as the entire 30-man England World Cup squad, and couldn’t stop giggling."
+          },
+          {
+            "kicker": "Paul Simon packs his bags",
+            "text": "Paul Simon lived round the corner. Dana arrived to find him packing: ‘Sound of Silence’ had become a freak Number One in America."
+          },
+          {
+            "kicker": "Tom Jones’s jacket",
+            "text": "Mid-song Tom Jones handed Dana his bolero jacket in the wings. After his act he took it back, kissed her, and fled by boat before the fans.",
+            "said": "“Heady stuff for a 16-year-old who was still learning the ropes”"
+          },
+          {
+            "kicker": "Gatecrashing Dylan, 1965",
+            "text": "No ticket for the CBS party at the Dorchester? Dana followed a canapé waiter through staff corridors and emerged via a hidden mirrored door."
+          },
+          {
+            "kicker": "Knight in shining armour",
+            "text": "Bouncers charged through the crowd to throw Dana out, but Bob Dylan stepped forward to kiss her hello and the bouncers retreated."
+          },
+          {
+            "kicker": "Don’t Look Back",
+            "text": "Dana appears in ‘Don’t Look Back’, waiting in an empty Albert Hall. Manager Al Grossman reckoned she sang while surfing. It was water skiing.",
+            "said": "“Al Grossman says she sings while surfing”"
+          },
+          {
+            "kicker": "Dylan’s flowery flares",
+            "text": "Dana gave Dylan her flowery bellbottoms, he wore them filming, and she was left with nothing much to wear, stuck in the hotel till he got back."
+          },
+          {
+            "kicker": "Lennon passes out",
+            "text": "Beatles and Stones played new tracks in Dylan’s suite; John Lennon passed out on the bed Dana was sleeping in. She was in it, he was on it."
+          },
+          {
+            "kicker": "Reno Sweeneys, 1974",
+            "text": "Dana’s minder John Bindon, not recognising the scruffy visitor, told Bob Dylan to get lost at her New York show. Poor Bindon later felt awful."
+          },
+          {
+            "kicker": "Singing with Reg Dwight",
+            "text": "On cheap ‘Top of the Pops’ cover LPs Dana sang beside Reg Dwight, who told them he’d changed his name to Elton John.",
+            "said": "“It was one of the best moves he ever made”"
+          },
+          {
+            "kicker": "The vodka-free vodka",
+            "text": "Singing five songs a night for £25 a week at the Crazy Horse Saloon, Dana ordered vodka and orange, minus the vodka, and pocketed the pound."
+          },
+          {
+            "kicker": "First octopus, Eilat",
+            "text": "Visiting Israel over Christmas 1967, Dana dashed into the sparkling Red Sea at Eilat and came straight back out, face to face with an octopus.",
+            "said": "“I wasn’t expecting that!”"
+          },
+          {
+            "kicker": "Lost in Hollywood Hills",
+            "text": "Lost on horseback with Ashton, Gardner and Dyke, Dana headed for the nearest light. It was a funeral home, and they rode right in."
+          },
+          {
+            "kicker": "The best thing that happened",
+            "text": "When the famous Palace Theatre stage doorman Charles retired, the Evening Standard asked his best memory of all his years there.",
+            "said": "“Whenever Dana Gillespie came in”"
+          },
+          {
+            "kicker": "21 days on lemon juice",
+            "text": "To win a Hammer Films part, Dana fasted 21 days on water and lemon juice. She got the role, then rediscovered the crew’s food trolley."
+          },
+          {
+            "kicker": "The Lost Continent",
+            "text": "In ‘The Lost Continent’ Dana wore two huge balloons on her shoulders. Watching incognito in Fulham, she heard the audience fall about laughing.",
+            "said": "“Thank goodness no one recognised me on their way out”"
+          },
+          {
+            "kicker": "Rejected together",
+            "text": "Dana and David Bowie both auditioned for the stage show of ‘Hair’, on different days. Neither of them got chosen!"
+          },
+          {
+            "kicker": "Bowie left at the interval",
+            "text": "Dana told the whole Superstar cast David Bowie was in the audience. To her horror, David and Angie left at the interval!",
+            "photo": "/img/dana/david-angie.jpg",
+            "alt": "Polaroid of David and Angie Bowie lounging"
+          },
+          {
+            "kicker": "The flying dagger",
+            "text": "In rock opera Catch My Soul, Othello’s dagger blade flew out over the audience. He had to slay Desdemona with just the handle!"
+          },
+          {
+            "kicker": "Ten white dots",
+            "text": "Othello clutched his bald, made-up head in grief and left ten white fingerprints. He looked like an alien and the whole stage shook with laughter."
+          },
+          {
+            "kicker": "Five minutes of eternity",
+            "text": "When P.J. Proby missed his cue in Catch My Soul, Dana was stuck alone on stage with the vital handkerchief for about five minutes. An eternity!"
+          },
+          {
+            "kicker": "Ready for bed",
+            "text": "Dana met Colin Tennant on the Cotton House steps in a striped pyjama suit. ‘You look ready for bed,’ she said. ‘And so do you!’ he laughed."
+          },
+          {
+            "kicker": "One letter out",
+            "text": "A misprint turned Dana’s song ‘Fine and Fancy Free’ into ‘Fine and Fanny Free’. Then the promo for her ‘Big Boy’ album called it ‘Bog Boy’!"
+          },
+          {
+            "kicker": "Who’s Charlie Rich?",
+            "text": "Signing to RCA, Dana told boss Rocco she loved his artist Charlie Rich. Rich’s contract had run out three weeks earlier. He then had a smash hit."
+          },
+          {
+            "kicker": "Rhymes with spam",
+            "text": "At a Macaroni Beach lunch with Dana’s house party, Princess Margaret set one guest straight on how to address her.",
+            "said": "“You must call me Ma’am, which rhymes with spam”"
+          },
+          {
+            "kicker": "A royal singalong",
+            "text": "On Mustique, Dana saw Princess Margaret mouthing the words to the saucy ‘King Size Papa’. Her secret? Her father, the King, used to sing it to her."
+          },
+          {
+            "kicker": "‘Blue Job’",
+            "text": "Dana pitched Ace Records an album of the rudest old Blues she could find, called ‘Blue Job’. Boss Ted Carroll roared with laughter and signed her."
+          },
+          {
+            "kicker": "Baroness for a night",
+            "text": "Told Istanbul’s Pera Palas Hotel was full, Dana rang straight back with a new name. They found her a double room right away."
+          },
+          {
+            "kicker": "Doris in the crowd",
+            "text": "At the Stones’ 2006 Twickenham show, as Keith Richards stepped forward for a solo, the lady sitting behind Dana leant forward proudly.",
+            "said": "“That’s my son up there”"
+          },
+          {
+            "kicker": "“Ah, the singer!”",
+            "text": "Dana smuggled her bhajan tape into darshan tucked into her clothes. Sai Baba walked straight up to her and asked for it.",
+            "said": "“Ah, the singer! Give me the cassette”"
+          },
+          {
+            "kicker": "Camel? Pony!",
+            "text": "At a wedding in Cairo Dana booked a gentle dawn camel ride round the pyramids. The owner only had an over-sprightly Arab pony that wanted to gallop."
+          },
+          {
+            "kicker": "Singing for the nuns",
+            "text": "In Darjeeling at Christmas, Dana sang ‘It Ain’t Necessarily So’ to a room of nuns, then remembered the chorus line about the Bible."
+          },
+          {
+            "kicker": "The quacking duck",
+            "text": "Dana’s old ringtone was a sung call to prayer, but at airports people backed away from her. Now it’s something sillier.",
+            "said": "“I have since changed my ringtone to a quacking duck”"
+          },
+          {
+            "kicker": "Tintin slippers",
+            "text": "Dana learned all about life from Tintin. She has a Captain Haddock rug, Tintin plates, bowls and mugs in her kitchen, and a pair of Tintin slippers."
+          },
+          {
+            "kicker": "A bowl of paysam",
+            "text": "As Sai Baba served the savoury food, Dana silently wished for dessert. Without turning round, He stirred a bowl of paysam and handed it to her."
+          },
+          {
+            "kicker": "“Ah, Tiger!”",
+            "text": "On Dana’s 50th birthday Sai Baba showered her with rice and named her for the tiger-print cushion she always sat on (not real skin, of course).",
+            "said": "“Ah, Tiger!”"
+          },
+          {
+            "kicker": "The Shanti Sisters",
+            "text": "Sai Baba pretended to be horrified at the words ‘Ladies Choir’ in Dana’s letter, then smiled and said yes. The choir became The Shanti Sisters.",
+            "photo": "/img/dana/wmwm/puttaparthi-choir.jpg",
+            "alt": "A large ladies choir in turquoise saris lined up in front of an ornate, flower-decked temple building in Puttaparthi."
+          },
+          {
+            "kicker": "How rock ‘n’ roll",
+            "text": "These days Dana’s idea of bliss is a tapestry on her knee, a purring cat nearby and a bar of chocolate. She has made over one hundred cushions.",
+            "said": "“How Rock ‘n’ Roll is that!”"
+          }
+        ]
+      }
+    ]
   }
 ]

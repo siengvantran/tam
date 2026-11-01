@@ -1,21 +1,15 @@
 {
-  "name": "tam-tv",
+  "name": "tamtv",
   "version": "0.1.0",
   "private": true,
-  "description": "TAM.TV: the location-independent live music and media platform for TAM Festival.",
+  "description": "TAM.TV: the Temple of Art and Music on the web. Every night, festival and artist at TAM, with TAM's own ticketing and the festival features first built for The Best Christmas Ever.",
   "type": "module",
   "main": "server.js",
-  "engines": {
-    "node": ">=20"
-  },
+  "engines": { "node": ">=20" },
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test test/*.test.js",
-    "check:content": "node -e \"import('./src/lib/content.js').then(m => { m.loadContent(); console.log('content ok'); })\""
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.132.1",
-    "qrcode": "^1.5.4"
+    "check:content": "node scripts/check-content.js"
   }
 }
