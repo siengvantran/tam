@@ -8,7 +8,7 @@ import path from 'node:path';
 
 export const COLLECTIONS = [
   'bookings', 'tables', 'pins', 'cards', 'sponsors', 'orders', 'follows',
-  'raffleSales', 'raffleDraws', 'visits', 'mailings', 'demand',
+  'raffleSales', 'raffleDraws', 'visits', 'mailings', 'demand', 'enquiries', 'agentLog',
 ];
 
 export async function openStore(dir) {

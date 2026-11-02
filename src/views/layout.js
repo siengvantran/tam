@@ -8,7 +8,7 @@ const FONTS = 'https://fonts.googleapis.com/css2?family=Audiowide&family=Bungee+
 
 export function layout(ctx, {
   title, description, path = '/', theme = 'tam', body, og, scripts = [], noindex = false, jsonLd = null,
-  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '',
+  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null,
 }) {
   const { site } = ctx.content;
   const url = `${ctx.cfg.siteUrl}${path}`;
@@ -16,6 +16,8 @@ export function layout(ctx, {
   const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
   const desc = description || site.description;
   const mods = new Set(['/js/site.js', ...scripts]);
+  const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
+  if (ask) mods.add('/js/concierge.js');
   if (song) mods.add('/js/tamalume.js');
   return '<!doctype html>' + html`
 <html lang="en-GB" data-theme="${theme}">
@@ -44,18 +46,19 @@ ${jsonLd ? raw(`<script type="application/ld+json">${JSON.stringify(jsonLd).repl
 </head>
 <body class="${bodyClass}">
 <a class="skip" href="#main">Skip to content</a>
-${header(ctx, festival)}
+${header(ctx, festival, pathway)}
 <main id="main">${body}</main>
 ${footer(ctx)}
 ${ambient ? html`<canvas class="ambient" id="ambient" data-kind="${ambient}" aria-hidden="true"></canvas>` : ''}
 ${song ? tamalumeBar(ctx, song) : ''}
+${ask ? askDrawer(ctx, pathway) : ''}
 ${data ? jsonData('page-data', data) : ''}
 ${[...mods].map((s) => html`<script type="module" src="${s}"></script>`)}
 </body>
 </html>`;
 }
 
-function header(ctx, festival) {
+function header(ctx, festival, pathway) {
   const { festivals } = ctx.content;
   const fest = festival || festivals.find((f) => f.dates && f.dates.to >= ctx.today()) || festivals[0];
   return html`<header class="top">
@@ -70,6 +73,7 @@ function header(ctx, festival) {
       <a href="/archive">Archive</a>
       <a href="/locations/elephant-castle">Find us</a>
     </nav>
+    ${pathway ? html`<a class="for-you" href="/for/${pathway.slug}" title="Your pathway"><span aria-hidden="true">${pathway.icon}</span> For you</a>` : html`<a class="for-you" href="/for">Who are you?</a>`}
     <a class="btn hot small" href="/whats-on#book">Tickets</a>
   </div>
 </header>`;
@@ -131,7 +135,7 @@ export function nightCard(ctx, n, avail) {
       ${f ? html`<div class="label">${f.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
-      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price muted">${n.url ? 'Tickets on Eventbrite' : 'Tickets soon'}</p>`}
+      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price muted">${n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'At TAM · see details' : 'Tickets soon'}</p>`}
     </div>
   </a>
 </article>`;
@@ -174,4 +178,23 @@ export const artistChip = (a, via) => html`<a class="chip artist-chip" href="/ar
 export function youtubeThumb(v) {
   return html`<a class="yt" href="https://www.youtube.com/watch?v=${v.youtubeId}" data-yt="${v.youtubeId}" target="_blank" rel="noopener">
   <img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" loading="lazy"><span>${v.title}</span></a>`;
+}
+
+// The Ask TAM drawer: opened from the floating button on every public page.
+export function askDrawer(ctx, pathway) {
+  const qs = pathway ? pathway.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue for a party?', 'Christmas party for 12?'];
+  return html`<button class="ask-fab" type="button" id="ask-open" aria-controls="ask-drawer" aria-expanded="false"><span aria-hidden="true">✦</span> Ask TAM</button>
+<aside class="ask-drawer" id="ask-drawer" aria-label="Ask TAM" hidden>
+  <div class="ask-head"><div><b>Ask TAM</b><small>Your guide to nights, gigs, hire and parties</small></div><button type="button" class="ask-x" id="ask-close" aria-label="Close">×</button></div>
+  ${chatPanel(qs, pathway)}
+</aside>`;
+}
+
+export function chatPanel(questions, pathway, { id = 'drawer', placeholder = 'Ask about nights, playing here, hire or parties…' } = {}) {
+  return html`<div class="chat" data-chat="${id}" data-pathway="${pathway ? pathway.slug : ''}">
+  <div class="chat-log" aria-live="polite"></div>
+  <div class="chat-suggest">${questions.map((q) => html`<button type="button" class="chip" data-ask="${q}">${q}</button>`)}</div>
+  <form class="chat-form"><label class="sr" for="chat-in-${id}">Your question</label><textarea id="chat-in-${id}" rows="1" maxlength="1000" placeholder="${placeholder}"></textarea><button class="btn hot small" type="submit">Ask</button></form>
+  <p class="chat-foot"><button type="button" class="linkish" data-chat-clear>Start over</button> · Answers come from TAM’s listings. Check details on the booking page. <a href="/privacy">Privacy</a></p>
+</div>`;
 }

@@ -5,11 +5,16 @@
   "description": "TAM.TV: the Temple of Art and Music on the web. Every night, festival and artist at TAM, with TAM's own ticketing and the festival features first built for The Best Christmas Ever.",
   "type": "module",
   "main": "server.js",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test test/*.test.js",
     "check:content": "node scripts/check-content.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
   }
 }

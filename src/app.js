@@ -15,8 +15,12 @@ import { communityDomain } from './domain/community.js';
 import { collectionsDomain } from './domain/collections.js';
 import { raffleDomain } from './domain/raffle.js';
 import { adminDomain, staffAuth } from './domain/admin.js';
+import { enquiriesDomain } from './domain/enquiries.js';
+import { conciergeService } from './services/concierge.js';
+import { readJson, text as cleanText } from './lib/http.js';
 import * as pages from './views/pages.js';
 import * as staff from './views/staff.js';
+import * as pathwayPages from './views/pathways.js';
 import { seoRoutes } from './views/seo.js';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -37,6 +41,12 @@ export function configFrom(env = process.env) {
     mailReplyTo: env.MAIL_REPLY_TO || '',
     pinModeration: env.PIN_MODERATION !== 'off',
     holdMinutes: 30,
+    anthropicKey: env.ANTHROPIC_API_KEY || '',
+    anthropicBaseUrl: env.ANTHROPIC_BASE_URL || '',
+    aiModel: env.TAM_AI_MODEL || 'claude-opus-5-5',
+    aiEffort: env.TAM_AI_EFFORT || 'low',
+    agentDailyLimit: Number(env.AGENT_DAILY_LIMIT) || 1500,
+    enquiriesTo: env.ENQUIRIES_TO || '',
   };
 }
 
@@ -65,14 +75,34 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.markOrderPaid = collections.markPaid;
   const raffle = raffleDomain(ctx, tickets);
   const admin = adminDomain(ctx, { tickets, collections, raffle });
-  const d = { tickets, community, collections, raffle, admin, qr };
+  const enquiries = enquiriesDomain(ctx);
+  const d = { tickets, community, collections, raffle, admin, enquiries, qr };
+  const concierge = conciergeService(ctx, d);
+  d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries]) dom.routes(api);
+
+  // Ask TAM: one visitor turn, streamed to the page as server-sent events.
+  const agentLimited = rateLimiter({ max: 20 });
+  api.post('/api/agent', async (req, res) => {
+    if (agentLimited(req)) throw new HttpError(429, 'You’ve asked a lot in a short time. Try again in a few minutes.');
+    const body = await readJson(req, 64 * 1024);
+    res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no', 'X-Content-Type-Options': 'nosniff' });
+    const emit = (event, data) => { if (!res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); };
+    try {
+      await concierge.respond({ history: body.history, pathway: cleanText(body.pathway, 40), page: cleanText(body.page, 200) }, emit);
+    } catch (e) {
+      if (!e.status) console.error('Concierge:', e);
+      emit('error', { message: e.status ? e.message : 'Ask TAM hit a snag. Try again in a moment.' });
+    }
+    res.end();
+  });
 
   const site = new Router();
   pages.routes(site, ctx, d);
   staff.routes(site, ctx, d);
+  pathwayPages.routes(site, ctx, d);
   seoRoutes(site, ctx);
 
   const limited = rateLimiter({ max: 60 });

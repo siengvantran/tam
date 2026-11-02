@@ -222,5 +222,11 @@
     "placeholder": "Have the best Christmas ever!"
   },
   "collection": "dana-108",
-  "pastPattern": "christmas"
+  "pastPattern": "christmas",
+  "claims": {
+    "months": [
+      12
+    ],
+    "note": "Everything at TAM in December is part of The Best Christmas Ever."
+  }
 }

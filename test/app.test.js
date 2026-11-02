@@ -30,7 +30,7 @@ const book = (s, extra = {}) => s.call('/api/bookings', { method: 'POST', body: 
 
 test('content: 21 Christmas nights, closed over Christmas, every reference checks', () => {
   const c = loadContent();
-  const xmas = c.nightsFor('best-christmas-ever');
+  const xmas = c.nightsFor('best-christmas-ever').filter((n) => n.sale);
   assert.equal(xmas.length, 21);
   assert.ok(!xmas.some((n) => n.date >= '2026-12-24' && n.date <= '2026-12-28'));
   assert.equal(c.nightBy.get('big-christmas-hootenanny').sale.mode, 'own');
@@ -268,4 +268,21 @@ test('Stripe: checkout, signed webhook marks paid, bad signatures refused', asyn
   clock.t = Date.parse('2026-11-20T12:00:00Z');
   await s.close();
   mock.close();
+});
+
+test('the performance schedule: public nights only, and December belongs to the festival', () => {
+  const raw = fs.readFileSync(new URL('../content/schedule.json', import.meta.url), 'utf8');
+  // nothing from the internal sheet that must stay private
+  assert.doesNotMatch(raw, /£|min(imum)? spend|private|booking|hire|deposit|birthday|\bbday\b|\d{6}|rehears/i);
+  const c = loadContent();
+  for (const n of c.nights.filter((x) => x.date.slice(5, 7) === '12')) assert.equal(n.festival, 'best-christmas-ever', n.slug);
+  const sat = c.nightBy.get('best-christmas-ever-2026-12-05');
+  assert.deepEqual(sat.programme.map((x) => x.series), ['great-british-blues-jam', 'tam-karaoke']);
+  assert.match(sat.label, /Blues Jam/);
+  assert.equal(c.nightBy.get('big-christmas-hootenanny').title, 'The Big Christmas Hootenanny'); // headline nights keep their own name
+  assert.ok(c.nightBy.get('word-of-mouth-2026-12-01').festival === 'best-christmas-ever');
+  assert.ok(c.upcoming('2026-11-02').some((n) => n.series === 'singers-sunday-spot' && n.date.startsWith('2027-')));
+  const decPast = c.pastForFestival(c.festivalBy.get('best-christmas-ever'));
+  assert.ok(decPast.length > 100);
+  assert.ok(decPast.every((e) => e.month === 'December' || /christmas/i.test(e.title)));
 });

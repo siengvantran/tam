@@ -16,7 +16,70 @@
         "Elephant & Castle station"
       ]
     ],
-    "maps": "https://www.google.com/maps/search/?api=1&query=Mercato+Metropolitano+42+Newington+Causeway+London+SE1+6DR"
+    "maps": "https://www.google.com/maps/search/?api=1&query=Mercato+Metropolitano+42+Newington+Causeway+London+SE1+6DR",
+    "guide": {
+      "source": "From the old www.tam.tv. Confirm details with TAM before relying on them.",
+      "openingTimes": [
+        [
+          "Sunday to Wednesday",
+          "3:30pm to 11pm"
+        ],
+        [
+          "Thursday",
+          "6pm to midnight"
+        ],
+        [
+          "Friday",
+          "6pm to 1am"
+        ],
+        [
+          "Saturday",
+          "3:30pm to 1am"
+        ]
+      ],
+      "regulars": [
+        [
+          "The Great British Blues Jam",
+          "Weekly, Saturday afternoons from 4pm. All musicians welcome to come and jam."
+        ],
+        [
+          "Open Mic",
+          "Hosted by guitarist Patrick Hinds: showcase your talent or enjoy the music."
+        ],
+        [
+          "Singers @ Sunday Spot",
+          "Every week: TAM Singers, a live vocal talent search and recording project."
+        ],
+        [
+          "Word of Mouth Brunch",
+          "Hosted by Asha 'Keys' Elfenbein: fusion jazz with pop songwriting."
+        ]
+      ],
+      "food": "Street food from over 20 cuisines from partners in and around Mercato Metropolitano. Only drinks bought from the TAM bar are allowed inside; the proceeds support TAM's artists.",
+      "drinks": "A full bar with cocktails, including piano drinks poured from taps built into old pianos.",
+      "findUs": "Inside Mercato Metropolitano, head towards the 'secret garden' and follow the signs for TAM.",
+      "hire": {
+        "capacity": "Up to 150 guests: 50–70 seated, 70–120 cocktail-style reception",
+        "when": "Any day of the week; rates depend on date and time",
+        "includes": [
+          "Private bar with themed cocktails or mocktails",
+          "Stage and professional AV, projector included",
+          "Live music or karaoke on request",
+          "Flexible seating",
+          "Professional sound and lighting for video shoots",
+          "Curated art and decorative pianos as a backdrop"
+        ],
+        "uses": [
+          "Birthday parties",
+          "Christmas gatherings",
+          "Anniversaries",
+          "Corporate functions",
+          "Video shoots",
+          "Launches"
+        ],
+        "contact": "Vivian Chiu, vivian@tam.tv"
+      }
+    }
   },
   {
     "slug": "canary-wharf",

@@ -11,6 +11,7 @@ import path from 'node:path';
 
 const DAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const ENQUIRY_KINDS = ['venue-hire', 'party', 'perform', 'sponsor', 'other'];
 export const FEATURES = ['countdown', 'ambient', 'tamalume', 'cards', 'teamTables', 'partyWall', 'sponsorship', 'donation', 'raffle', 'invites'];
 
 export function londonToday(now = new Date()) {
@@ -64,6 +65,8 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   const stories = readJson(dir, 'stories.json', []);
   const polaroids = readJson(dir, 'polaroids.json', []);
   const collections = readJson(dir, 'collections.json', []);
+  const pathways = readJson(dir, 'pathways.json', []);
+  const schedule = readJson(dir, 'schedule.json', []);
   const festivals = fs.existsSync(path.join(dir, 'festivals'))
     ? fs.readdirSync(path.join(dir, 'festivals')).filter((f) => f.endsWith('.json')).sort().map((f) => readJson(dir, `festivals/${f}`))
     : [];
@@ -167,6 +170,65 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   const past = archive.map((e) => ({ ...e, ...dateParts(e.date), source: 'eventbrite' })).sort((a, b) => b.date.localeCompare(a.date));
   const pastBy = by(past);
 
+  // ----- TAM's performance schedule (scripts/import_schedule.py): public nights only -----
+  // Past dates join the archive (unless Eventbrite already has that night);
+  // upcoming ones become nights. A festival that claims a month (Christmas
+  // claims December) owns every event in it: on its ticketed nights the
+  // schedule becomes the night's programme, on other dates the event is still
+  // part of the festival, without tickets.
+  const slugify = (t) => t.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 60);
+  const claimant = (date) => festivals.find((f) => f.claims && (f.claims.months || []).includes(Number(date.slice(5, 7)))
+    && (!f.dates || date.slice(0, 4) === f.dates.from.slice(0, 4) || date < f.dates.from)) || null;
+  const SERIES_TIMES = { 'great-british-blues-jam': ['16:00', '19:00'], 'singers-sunday-spot': ['19:30', '22:30'] };
+  const loadDay = londonToday();
+  const titleOf = (e) => (e.theme ? `${e.title}: ${e.theme}` : e.title);
+  const sig = (t) => new Set(t.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3 && !['night', 'with', 'the', 'great', 'british'].includes(w)));
+  const pastByDate = new Map();
+  for (const e of archive) pastByDate.set(e.date, [...(pastByDate.get(e.date) || []), e]);
+  const usedSlugs = new Set([...nights.map((n) => n.slug), ...archive.map((e) => e.slug)]);
+  const uniqueSlug = (base) => { let s = base, i = 2; while (usedSlugs.has(s)) s = `${base}-${i++}`; usedSlugs.add(s); return s; };
+  const festNightOn = new Map(nights.filter((n) => n.festival).map((n) => [`${n.festival}|${n.date}`, n]));
+  const scheduledPast = [];
+  for (const e of schedule) {
+    check(/^\d{4}-\d{2}-\d{2}$/.test(e.date || '') && e.title, `schedule: bad entry ${JSON.stringify(e)}`);
+    const f = claimant(e.date);
+    if (e.date < loadDay) {
+      const same = (pastByDate.get(e.date) || []).some((x) => [...sig(e.title)].some((w) => sig(x.title).has(w)));
+      if (same) continue;
+      scheduledPast.push({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), title: titleOf(e), date: e.date, venue: site.defaultVenue,
+        performers: [], series: e.series || null, genres: [], source: 'schedule', festival: f ? f.slug : null, host: e.host || null });
+      continue;
+    }
+    const host = f && festNightOn.get(`${f.slug}|${e.date}`);
+    if (host) {
+      if (host.handmade && !e.series) continue; // the headline night already says who's on
+      host.programme = [...(host.programme || []), { title: titleOf(e), host: e.host || '', series: e.series || null }];
+      continue;
+    }
+    const [doors, ends] = SERIES_TIMES[e.series] || [null, null];
+    const n = makeNight({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), date: e.date, title: titleOf(e), doors: doors || '19:00', ends: ends || '23:00',
+      timesTbc: !doors, summary: e.host ? `Hosted by ${e.host}.` : '' }, null);
+    n.festival = f ? f.slug : null;
+    n.source = 'schedule';
+    n.series = e.series || null;
+    n.image = f ? f.og || n.image : '/img/og.jpg';
+    nights.push(n);
+  }
+  // a festival night with a programme takes its name from it
+  for (const n of nights) {
+    if (!n.programme || n.handmade) continue;
+    n.programme.sort((a, b) => (SERIES_TIMES[a.series] || ['20:00'])[0].localeCompare((SERIES_TIMES[b.series] || ['20:00'])[0]));
+    const names = n.programme.map((x) => x.title);
+    n.label = n.label || names.join(' + ');
+    n.summary = `Part of ${festivalBy.get(n.festival).name}: ${names.join(', then ')}.`;
+  }
+  nights.sort((a, b) => a.start.localeCompare(b.start));
+  nightBy.clear();
+  for (const n of nights) nightBy.set(n.slug, n);
+  for (const e of scheduledPast) past.push({ ...e, ...dateParts(e.date) });
+  past.sort((a, b) => b.date.localeCompare(a.date));
+  for (const e of scheduledPast) pastBy.set(e.slug, past.find((x) => x.slug === e.slug));
+
   // ----- everything else -----
   const inviteBy = by(invites, 'id');
   for (const i of invites) {
@@ -181,6 +243,12 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     if (f.collection) check(collectionBy.has(f.collection), `festival ${f.slug}: unknown collection ${f.collection}`);
   }
   const legacyBy = by(legacy, 'path');
+  for (const p of pathways) {
+    check(/^[a-z0-9-]+$/.test(p.slug || '') && p.who && p.title, `pathway ${p.slug || '?'}: needs a slug, who and title`);
+    check(!p.enquiry || ENQUIRY_KINDS.includes(p.enquiry), `pathway ${p.slug}: unknown enquiry kind ${p.enquiry}`);
+    check(!(p.nights && p.nights.festival) || festivalBy.has(p.nights.festival), `pathway ${p.slug}: unknown festival ${p.nights && p.nights.festival}`);
+  }
+  const pathwayBy = by(pathways);
   for (const p of legacy) check(p.path && p.path.startsWith('/'), `legacy page ${p.title}: needs a path`);
 
   if (problems.length) throw new Error(`Content problems:\n  - ${problems.join('\n  - ')}`);
@@ -193,13 +261,27 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     past: past.filter((e) => (e.performers || []).includes(slug)),
   });
   const pastFor = (pattern) => past.filter((e) => new RegExp(pattern, 'i').test(e.title));
+  const pastForFestival = (f) => past.filter((e) => e.festival === f.slug || (f.pastPattern && new RegExp(f.pastPattern, 'i').test(e.title)) || (f.claims && (f.claims.months || []).includes(e.month === 'December' ? 12 : 0)));
   const festivalAt = (p) => festivals.find((f) => f.path === p) || null;
   const videosFor = (artist) => videos.filter((v) => (v.artists || []).includes(artist));
 
+  // Nights that suit a pathway: a festival's, ones whose title matches, or all of them.
+  const nightsForPathway = (p, today = londonToday()) => {
+    const up = nights.filter((n) => n.date >= today);
+    const f = (p && p.nights) || {};
+    if (f.festival) return up.filter((n) => n.festival === f.festival);
+    if (f.match) {
+      const rx = new RegExp(f.match, 'i');
+      return up.filter((n) => rx.test(`${n.title} ${n.label} ${n.summary}`));
+    }
+    return f.any ? up : [];
+  };
+
   return {
+    pathways, pathwayBy, nightsForPathway,
     site, venues, venueBy, artists: [...artistBy.values()].sort((a, b) => a.name.localeCompare(b.name)), artistBy,
     series, festivals, festivalBy, festivalAt, nights, nightBy, past, pastBy, legacy, legacyBy, videos,
     invites, inviteBy, stories, storyBy, polaroids, collections, collectionBy,
-    upcoming, nightsFor, artistNights, pastFor, videosFor,
+    upcoming, nightsFor, artistNights, pastFor, pastForFestival, videosFor, schedule,
   };
 }

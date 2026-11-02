@@ -184,6 +184,10 @@ if (form && B && B.nights.length) {
   renderGive();
   loadAvailability().then(() => {
     if (state.night && availFor(state.night).onSale === false) state.night = null;
+    // Ask TAM's booking links arrive with the ticket and quantity chosen
+    const want = new URLSearchParams(location.search);
+    if (want.get('type')) state.type = want.get('type');
+    if (Number(want.get('qty')) > 0) qty.value = Math.min(60, Math.floor(Number(want.get('qty'))));
     renderNights(); renderTypes(); renderTables(); update(); renderTeamTables(); renderRaised();
   });
   renderNights(); renderTypes(); update();

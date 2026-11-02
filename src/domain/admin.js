@@ -73,6 +73,17 @@ export function adminDomain(ctx, { tickets, collections, raffle }) {
       demand: Object.entries(db.demand.reduce((m, d) => ((m[`${d.kind}|${d.target}`] = (m[`${d.kind}|${d.target}`] || 0) + 1), m), {}))
         .map(([k, n]) => ({ kind: k.split('|')[0], target: k.split('|')[1], n })).sort((a, b) => b.n - a.n).slice(0, 50),
       raffle: raffle.summary(raffle.tonight()),
+      enquiries: db.enquiries.slice().reverse(),
+      agent: (() => {
+        const log = db.agentLog;
+        const week = log.filter((x) => x.at >= new Date(ctx.now() - 7 * 86400000).toISOString());
+        const tools = {};
+        for (const x of week) for (const t of x.tools) tools[t] = (tools[t] || 0) + 1;
+        const paths = {};
+        for (const x of week) paths[x.pathway || '(none)'] = (paths[x.pathway || '(none)'] || 0) + 1;
+        return { enabled: Boolean(ctx.cfg.anthropicKey), model: ctx.cfg.aiModel, week: week.length, offline: week.filter((x) => x.mode !== 'agent').length,
+          tools, pathways: paths, recent: log.slice(-60).reverse().map(({ at, pathway, question, tools: t, mode }) => ({ at, pathway, question, tools: t, mode })) };
+      })(),
     };
   }
 

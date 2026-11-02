@@ -5,7 +5,8 @@ import { html as respond, redirect, fail } from '../lib/http.js';
 import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb } from './layout.js';
+import { pathwayOf, pathwayTiles } from './pathways.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -34,7 +35,7 @@ function eventLd(ctx, n) {
 export function routes(r, ctx, d) {
   const c = ctx.content;
 
-  r.get('/', (req, res) => respond(res, home(ctx, d)));
+  r.get('/', (req, res) => respond(res, home(ctx, d, req)));
   r.get('/home', (req, res) => redirect(res, '/', 301));
   r.get('/whats-on', (req, res) => respond(res, whatsOn(ctx, d)));
   r.get('/festivals', (req, res) => respond(res, festivalsIndex(ctx)));
@@ -116,53 +117,67 @@ export function routes(r, ctx, d) {
   r.post('/unfollow', unfollow); // List-Unsubscribe one-click
 }
 
-// ---------------- home ----------------
-function home(ctx, d) {
+// ---------------- home: tailored to who the visitor is ----------------
+function home(ctx, d, req) {
   const c = ctx.content;
+  const p = pathwayOf(ctx, req);
   const up = c.upcoming(ctx.today());
   const next = up[0];
   const fest = c.festivals.find((f) => f.dates && f.dates.to >= ctx.today());
   const legends = c.artists.filter((a) => a.legend).slice(0, 12);
   const md = ctx.today().slice(5);
   const onThisDay = c.past.filter((e) => e.date.slice(5) === md).slice(0, 4);
-  const avail = new Map(up.slice(0, 8).map((n) => [n.slug, d.tickets.nightAvailability(n)]));
+  const avail = (n) => d.tickets.nightAvailability(n);
+  const forYou = p ? c.nightsForPathway(p, ctx.today()).slice(0, 4) : [];
+  const S = {
+    forYou: p && forYou.length ? html`<section class="section"><div class="wrap"><div class="head"><div><div class="label">${p.who}</div><h2 class="chrome gold">Picked for you</h2></div><a class="more" href="/for/${p.slug}">Your TAM →</a></div>
+      <div class="nights-grid">${forYou.map((n) => nightCard(ctx, n, avail(n)))}</div></div></section>` : '',
+    steps: p ? html`<section class="section"><div class="wrap"><div class="head"><div><div class="label">${p.who}</div><h2 class="chrome">${p.title}</h2></div><a class="more" href="/for/${p.slug}">Everything for you →</a></div>
+      <div class="steps">${p.steps.slice(0, 4).map((s, i) => html`<a class="step-card" href="${s.link.startsWith('#') ? `/for/${p.slug}${s.link}` : s.link}"><span class="step-n">${i + 1}</span><h3>${s.title}</h3><p>${s.text}</p><span class="more">${s.label} →</span></a>`)}</div></div></section>` : '',
+    fest: fest ? html`<section class="section fest-banner theme-${fest.theme}"><div class="wrap fb-in">
+      <div>${fest.lockup ? html`<img class="lockup" src="${fest.lockup}" alt="${fest.name}">` : html`<h2 class="chrome gold">${fest.name}</h2>`}
+        <p class="label">${fest.season}</p><p>${fest.lede}</p>
+        <div class="ctas"><a class="btn hot" href="${fest.path}">Explore the festival</a><a class="btn ghost" href="${fest.path}#book">Get tickets</a></div></div>
+      ${fest.heroArt ? html`<img class="fb-art" src="${fest.heroArt}" alt="" loading="lazy">` : ''}</div></section>` : '',
+    upcoming: html`<section class="section"><div class="wrap">
+      <div class="head"><h2 class="chrome">Coming up</h2><a class="more" href="/whats-on">Everything on →</a></div>
+      ${up.length ? html`<div class="nights-grid">${up.slice(0, 8).map((n) => nightCard(ctx, n, avail(n)))}</div>` : html`<p class="muted">New nights are announced soon.</p>`}</div></section>`,
+    legends: legends.length ? html`<section class="section"><div class="wrap">
+      <div class="head"><div><div class="label">They played TAM</div><h2 class="chrome gold">Cult legends</h2></div><a class="more" href="/artists">All artists →</a></div>
+      <div class="chips">${legends.map((a) => artistChip(a))}</div></div></section>` : '',
+    tv: html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome red">TAM TV</h2><a class="more" href="/tv">All films →</a></div>
+      <div class="yt-grid">${c.videos.slice(0, 3).map(youtubeThumb)}</div></div></section>`,
+    onThisDay: onThisDay.length ? html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome">On this day at TAM</h2></div>
+      <ul class="plain">${onThisDay.map((e) => html`<li><a href="/archive/night/${e.slug}">${e.title}</a> <span class="muted">· ${e.year}</span></li>`)}</ul>
+      <p class="small muted">From TAM's Eventbrite listings, which miss some nights.</p></div></section>` : '',
+    visit: visitSection(ctx),
+  };
+  const ORDER = {
+    'live-music': ['forYou', 'fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'],
+    musician: ['steps', 'forYou', 'tv', 'legends', 'upcoming', 'visit'],
+    'venue-hire': ['steps', 'tv', 'upcoming', 'visit'],
+    party: ['steps', 'forYou', 'fest', 'upcoming', 'visit'],
+    brand: ['steps', 'fest', 'tv', 'legends', 'visit'],
+  }[p && p.slug] || ['fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'];
+  const questions = p ? p.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue?', 'Christmas party for 12?'];
   return page(ctx, {
-    path: '/', ambient: 'stars', song: c.site.song, og: '/img/og.jpg',
+    path: '/', ambient: 'stars', song: c.site.song, og: '/img/og.jpg', pathway: p,
     jsonLd: { '@context': 'https://schema.org', '@type': 'MusicVenue', name: c.site.legalName, url: ctx.cfg.siteUrl, address: c.venueBy.get(c.site.defaultVenue)?.address },
     body: html`
 <section class="hero home-hero" aria-labelledby="hero-title">
   <div class="wrap">
     <div class="hero-copy">
       <div class="label">Temple of Art and Music · Elephant &amp; Castle</div>
-      <h1 id="hero-title" class="chrome gold mega">TAM.TV</h1>
-      <p class="lede">${c.site.tagline} ${c.site.description}</p>
-      <div class="ctas"><a class="btn hot" href="/whats-on">What's on</a><a class="btn ghost" href="/tv">Watch TAM TV</a></div>
+      <h1 id="hero-title" class="chrome gold">${p ? html`Welcome back.<br>${p.title}` : html`What brings you to TAM?`}</h1>
+      <p class="lede">${p ? p.promise : html`Live music seven nights a week, a stage for new artists and cult legends, and a room you can make your own. Tell us who you are, or just ask.`}</p>
       ${next ? html`<p class="next">Next at TAM: <a href="/events/${next.slug}"><b>${next.label || next.title}</b> · ${when(next)}</a></p>${countdown(next)}` : ''}
     </div>
-    <div class="hero-mark"><img src="/img/tam-logo-640.png" alt="" width="420" height="420"></div>
+    <div class="home-ask"><div class="label">Ask TAM <span class="muted">· your guide to everything here</span></div>${chatPanel(questions, p, { id: 'home', placeholder: 'e.g. Something bluesy on a Friday, under £20' })}</div>
   </div>
+  <div class="wrap">${pathwayTiles(ctx, p)}${p ? html`<p class="small"><button type="button" class="linkish" data-forget-path>Not you? Choose again</button></p>` : ''}</div>
 </section>
 ${ticker(c.site.ticker || [])}
-${fest ? html`<section class="section fest-banner theme-${fest.theme}"><div class="wrap fb-in">
-  <div>${fest.lockup ? html`<img class="lockup" src="${fest.lockup}" alt="${fest.name}">` : html`<h2 class="chrome gold">${fest.name}</h2>`}
-    <p class="label">${fest.season}</p><p>${fest.lede}</p>
-    <div class="ctas"><a class="btn hot" href="${fest.path}">Explore the festival</a><a class="btn ghost" href="${fest.path}#book">Get tickets</a></div></div>
-  ${fest.heroArt ? html`<img class="fb-art" src="${fest.heroArt}" alt="" loading="lazy">` : ''}
-</div></section>` : ''}
-<section class="section"><div class="wrap">
-  <div class="head"><h2 class="chrome">Coming up</h2><a class="more" href="/whats-on">Everything on →</a></div>
-  ${up.length ? html`<div class="nights-grid">${up.slice(0, 8).map((n) => nightCard(ctx, n, avail.get(n.slug)))}</div>` : html`<p class="muted">New nights are announced soon.</p>`}
-</div></section>
-${legends.length ? html`<section class="section"><div class="wrap">
-  <div class="head"><div><div class="label">They played TAM</div><h2 class="chrome gold">Cult legends</h2></div><a class="more" href="/artists">All artists →</a></div>
-  <div class="chips">${legends.map((a) => artistChip(a))}</div></div></section>` : ''}
-<section class="section"><div class="wrap">
-  <div class="head"><h2 class="chrome red">TAM TV</h2><a class="more" href="/tv">All films →</a></div>
-  <div class="yt-grid">${c.videos.slice(0, 3).map(youtubeThumb)}</div></div></section>
-${onThisDay.length ? html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome">On this day at TAM</h2></div>
-  <ul class="plain">${onThisDay.map((e) => html`<li><a href="/archive/night/${e.slug}">${e.title}</a> <span class="muted">· ${e.year}</span></li>`)}</ul>
-  <p class="small muted">From TAM's Eventbrite listings, which miss some nights.</p></div></section>` : ''}
-${visitSection(ctx)}`,
+${ORDER.map((k) => S[k])}`,
   });
 }
 
@@ -201,7 +216,7 @@ function festivalPage(ctx, d, f) {
   const nights = c.nightsFor(f.slug);
   const opening = nights[0];
   const nav = [['#programme', 'Programme', f.programme], ['#book', 'Tickets', 1], ['#teams', 'Team Tables', f.features.teamTables], ['#wall', 'Party Wall', f.features.partyWall], ['#sponsor', 'Sponsor', f.features.sponsorship], ['#visit', 'Visit', 1]].filter((x) => x[2]);
-  const past = f.pastPattern ? c.pastFor(f.pastPattern).slice(0, 12) : [];
+  const past = c.pastForFestival(f).slice(0, 24);
   const collection = f.collection ? c.collectionBy.get(f.collection) : null;
   return page(ctx, {
     title: f.name, path: f.path, theme: themeOf(f), ambient: ambientOf(f), song: songOf(ctx, f), festival: f, og: f.og,
@@ -215,7 +230,7 @@ function festivalPage(ctx, d, f) {
     <div class="hero-copy">
       <div class="label">${f.label || f.season}</div>
       <h1 id="hero-title" class="flush">${f.lockup ? html`<img class="lockup" src="${f.lockup}" alt="${f.name}">` : html`<span class="chrome gold mega">${f.name}</span>`}</h1>
-      ${f.dates ? html`<div class="meta"><span>${dateParts(f.dates.from).day} – ${dateParts(f.dates.to).day} ${dateParts(f.dates.to).month.toUpperCase()} ${dateParts(f.dates.to).year}</span><span>${nights.length} NIGHTS</span><span>${(c.venueBy.get(f.venue)?.name || 'TAM').toUpperCase()}</span></div>` : ''}
+      ${f.dates ? html`<div class="meta"><span>${dateParts(f.dates.from).day} – ${dateParts(f.dates.to).day} ${dateParts(f.dates.to).month.toUpperCase()} ${dateParts(f.dates.to).year}</span><span>${nights.filter((n) => n.sale).length} NIGHTS</span><span>${(c.venueBy.get(f.venue)?.name || 'TAM').toUpperCase()}</span></div>` : ''}
       <p class="lede">${f.lede}</p>
       <div class="ctas"><a class="btn hot" href="#book">Get tickets</a>${f.song ? html`<a class="btn ghost" href="#song">Hear the song</a>` : ''}</div>
       ${f.features.countdown && opening ? countdown(opening, { link: `${opening.label || opening.title} · ${when(opening)} →` }) : ''}
@@ -235,9 +250,9 @@ ${teamTablesSection(f)}
 ${wallSection(f)}
 ${sponsorSection(ctx, f)}
 ${collection ? html`<section class="section"><div class="wrap narrow"><div class="label">Signed and numbered</div><h2 class="chrome gold">${collection.name}</h2><p>${collection.blurb}</p><a class="btn hot" href="/collections/${collection.slug}">See the collection</a></div></section>` : ''}
-${past.length ? html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome">Christmases past at TAM</h2></div>
+${past.length ? html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome">${f.claims ? 'Past Decembers at TAM' : 'Before at TAM'}</h2></div>
   <ul class="plain cols">${past.map((e) => html`<li><a href="/archive/night/${e.slug}">${e.title}</a> <span class="muted">· ${e.year}</span></li>`)}</ul>
-  <p class="small muted">From TAM's Eventbrite listings, which miss some nights.</p></div></section>` : ''}
+  <p class="small muted">From TAM's schedule and Eventbrite listings.</p></div></section>` : ''}
 ${c.legacyBy.get(f.path) ? html`<section class="section"><div class="wrap narrow legacy"><h2 class="label">From the old TAM site</h2>${legacyBlocks(c.legacyBy.get(f.path))}</div></section>` : ''}
 ${visitSection(ctx, f.venue)}`,
   });
@@ -296,6 +311,8 @@ function eventPage(ctx, d, n, url) {
 ${artists.length ? html`<section class="section" id="lineup"><div class="wrap"><div class="head"><h2 class="chrome">The line-up</h2></div>
   <div class="lineup">${artists.map((a) => html`<article class="artist-card">${a.photo ? html`<img src="${a.photo}" alt="" loading="lazy">` : ''}<h3><a href="/artists/${a.slug}">${a.name}</a></h3>${a.role ? html`<p class="muted">${a.role}</p>` : ''}
     ${invites.some((i) => i.id === a.invite || i.artist === a.slug) ? html`<button class="btn ghost small" type="button" data-invite="${(invites.find((i) => i.id === a.invite) || invites.find((i) => i.artist === a.slug)).id}">Invite a friend</button>` : ''}</article>`)}</div></div></section>` : ''}
+${(n.programme || []).length ? html`<section class="section" id="programme"><div class="wrap narrow"><h2 class="chrome">On the night</h2>
+  <ol class="schedule">${n.programme.map((x) => html`<li><b>✦</b><span>${x.title}${x.host ? ` · hosted by ${x.host}` : ''}</span></li>`)}</ol></div></section>` : ''}
 ${n.schedule.length ? html`<section class="section" id="running-order"><div class="wrap narrow"><h2 class="chrome">Running order</h2>
   <ol class="schedule">${n.schedule.map(([t, s]) => html`<li><b>${t}</b><span>${s}</span></li>`)}</ol></div></section>` : ''}
 ${invites.length && !isPast ? html`<section class="section" id="invite"><div class="wrap"><div class="head"><div><div class="label">Bring someone</div><h2 class="chrome red">Invite a friend</h2></div><p class="intro">Send a personal invitation card. It opens with your note and a link to tickets.</p></div>
@@ -563,9 +580,11 @@ function privacy(ctx) {
   <li><b>Party Wall pins and sponsorship enquiries</b>: what you send us, to publish your pin or reply to you (legitimate interests).</li>
   <li><b>Following an artist</b>: your name and email, only with your consent, to tell you about that artist's gigs. Unsubscribe from any email in one click.</li>
   <li><b>Cards</b>: your message and any photos you add, so the person you send the card to can open it. Only add photos you own.</li>
+  <li><b>Ask TAM</b>: the questions you type are sent to Anthropic (Claude), which answers using TAM’s listings. We keep the latest question of each conversation (not your whole chat) for up to a year to see what visitors need. If you ask Ask TAM to send an enquiry, it passes on the name, email and details you gave it (legitimate interests). Don’t type anything sensitive.</li>
+  <li><b>Enquiries</b>: your name, email and what you’re planning, to reply to you (legitimate interests).</li>
   <li><b>Counts</b>: we count page and invitation visits per day (no cookies, no profiles), so artists can see how their pages are doing.</li></ul>
-  <h2>Cookies and storage</h2><p>No advertising or tracking cookies. Staff who sign in get one sign-in cookie. Your browser remembers a few choices (for example a story theme) in its own storage.</p>
-  <h2>Who processes it for us</h2><p>Railway (hosting), Stripe (card payments), Resend (email), Eventbrite (some listings), Google Fonts and YouTube (fonts and films on the page).</p>
+  <h2>Cookies and storage</h2><p>No advertising or tracking cookies. Staff who sign in get one sign-in cookie. If you pick who you are (musician, party, venue hire…) we set a preference cookie, <code>tam_path</code>, so the site can tailor itself; it holds nothing else and you can reset it with “Not you? Choose again”. Your browser remembers a few choices (for example a story theme) in its own storage.</p>
+  <h2>Who processes it for us</h2><p>Railway (hosting), Stripe (card payments), Resend (email), Anthropic (Ask TAM), Eventbrite (some listings), Google Fonts and YouTube (fonts and films on the page).</p>
   <h2>How long</h2><p>Booking records for six years for accounting; follows until you unsubscribe; cards and pins until the festival's season ends, unless you ask us to remove them sooner.</p>
   <h2>Your rights</h2><p>You can ask to see, correct or delete your data, or object to how we use it. Email the box office. You can also complain to the ICO (ico.org.uk).</p>
   <p class="small muted">Review this notice with TAM before relying on it.</p>

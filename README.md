@@ -5,6 +5,38 @@ The Temple of Art and Music on the web: every night, festival and artist at TAM,
 - What was ported, and what wasn't: [docs/PORTING.md](docs/PORTING.md)
 - What we found on the current tam.tv: [docs/REVIEW.md](docs/REVIEW.md)
 
+## Tailored to who you are
+
+The site starts by asking **what brings you to TAM**, and shapes itself around the answer:
+
+| Pathway | For | What changes |
+| --- | --- | --- |
+| `/for/live-music` | Londoners and visitors after live music | nights picked for them, the regulars, the festival, how to get there |
+| `/for/musician` | players and singers | the jam, the open mic, the Sunday Spot, young artists' nights, pitching a night |
+| `/for/venue-hire` | hiring the room | capacity (up to 150), what's included, an enquiry form |
+| `/for/party` | parties and team nights | group discounts, startup packs, Team Tables, sponsorship, private hire |
+| `/for/brand` | brands and sponsors | sponsorship packages, hosting a night |
+
+Pathways live in `content/pathways.json`. Choosing one sets a preference cookie (`tam_path`), so the home page reorders itself for that visitor and Ask TAM knows who it's talking to. Enquiries from any pathway (or from Ask TAM) land in `/admin` → **Enquiries**, and are emailed to `ENQUIRIES_TO` when email is on.
+
+### Ask TAM, the concierge agent
+
+Every public page has **Ask TAM**: a chat that answers from TAM's own data. It's Claude (`claude-opus-5-5` at `low` effort by default, through the official `@anthropic-ai/sdk`) with nine tools (`src/services/concierge.js`):
+
+`find_nights` · `get_night` · `quote_tickets` (prices exactly as the box office charges, with a pre-filled booking link) · `find_artists` · `search_past_nights` · `venue_guide` · `festival_info` · `pathway_guide` · `start_enquiry` (only after the visitor gives their details and says yes)
+
+- It never takes payment: it quotes and links to the booking form, which opens with the ticket and quantity chosen.
+- The page streams what it's doing ("Checking what's on…") and shows the nights, artists and booking links its tools found as cards.
+- The system prompt and tools never change, so they're cached; today's date, the visitor's pathway and the page go in a mid-conversation system message. Refused requests fall back server-side (`fallbacks: "default"`).
+- **Without `ANTHROPIC_API_KEY`**, or if the API fails, or past `AGENT_DAILY_LIMIT` questions a day, it still answers from keywords: the right pathway and matching nights.
+- 20 questions per visitor per 10 minutes. `/admin` → **Ask TAM** shows what people ask, which pathways and tools, and how often it fell back.
+
+## TAM's schedule
+
+`content/schedule.json` is every **public** night from TAM's Elephant & Castle performance schedule (the Google Sheet, May 2021 onwards), imported by `python3 scripts/import_schedule.py <schedule.xlsx>`. The sheet is TAM's internal calendar, so the importer leaves out private hires, bookings, birthdays, rehearsals, shoots, closures and anything with a fee, strips staff names, and drops any name the sheet ever ties to a private booking. **Never commit the spreadsheet**, and check the output before publishing.
+
+Past nights join the archive (unless Eventbrite already has them). Upcoming ones become nights. **Everything in December is part of The Best Christmas Ever** (`claims: { months: [12] }` in the festival): on its ticketed nights the schedule becomes the night's programme ("The Great British Blues Jam + TAM Karaoke"), and other December dates are still festival nights, without tickets.
+
 ## Run it
 
 ```bash
@@ -12,7 +44,7 @@ ADMIN_TOKEN=change-me-please DOOR_TOKEN=door-code npm start   # http://localhost
 npm test
 ```
 
-Node 20 or newer, and **no dependencies**. Data goes to `./data` unless `DATA_DIR` is set.
+Node 20 or newer. One dependency: the Anthropic SDK for Ask TAM (`npm install`). Data goes to `./data` unless `DATA_DIR` is set.
 
 ## How it fits together
 
@@ -102,6 +134,10 @@ See `.env.example`.
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | card payments. Without them, bookings are reserved and invoiced. Webhook: `https://<site>/api/stripe/webhook` for `checkout.session.completed`, `…async_payment_succeeded`, `…async_payment_failed`, `…expired` |
 | `RESEND_API_KEY`, `MAIL_FROM`, `MAIL_REPLY_TO` | ticket, order and follower emails |
 | `PIN_MODERATION=off` | publish Party Wall pins without review |
+| `ANTHROPIC_API_KEY` | turns on Ask TAM's agent (without it, Ask TAM answers from keywords) |
+| `TAM_AI_MODEL`, `TAM_AI_EFFORT` | default `claude-opus-5-5`, `low` |
+| `AGENT_DAILY_LIMIT` | agent questions per day before falling back to keywords (default 1500) |
+| `ENQUIRIES_TO` | where enquiry emails go (needs `RESEND_API_KEY`) |
 
 ## Deploy on Railway
 
