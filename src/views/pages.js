@@ -6,7 +6,7 @@ import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel } from './layout.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -172,7 +172,7 @@ function home(ctx, d, req) {
       <p class="lede">${p ? p.promise : html`Live music seven nights a week, a stage for new artists and cult legends, and a room you can make your own. Tell us who you are, or just ask.`}</p>
       ${next ? html`<p class="next">Next at TAM: <a href="/events/${next.slug}"><b>${next.label || next.title}</b> · ${when(next)}</a></p>${countdown(next)}` : ''}
     </div>
-    <div class="home-ask"><div class="label">Ask TAM <span class="muted">· your guide to everything here</span></div>${chatPanel(questions, p, { id: 'home', placeholder: 'e.g. Something bluesy on a Friday, under £20' })}</div>
+    <div class="home-ask">${askTitle('Your guide to nights, gigs, hire and parties')}${chatPanel(questions, p, { id: 'home', placeholder: 'e.g. Something bluesy on a Friday, under £20' })}</div>
   </div>
   <div class="wrap">${pathwayTiles(ctx, p)}${p ? html`<p class="small"><button type="button" class="linkish" data-forget-path>Not you? Choose again</button></p>` : ''}</div>
 </section>

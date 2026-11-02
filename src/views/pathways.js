@@ -5,7 +5,7 @@
 import { html } from './html.js';
 import { html as respond, fail } from '../lib/http.js';
 import { pounds } from '../../shared/pricing.js';
-import { layout, nightCard, chatPanel } from './layout.js';
+import { layout, nightCard, chatPanel, askTitle } from './layout.js';
 import { visitSection } from './sections.js';
 import { KIND_NAMES } from '../domain/enquiries.js';
 
@@ -105,7 +105,7 @@ export function routes(r, ctx, d) {
     <div class="ctas">${p.enquiry ? html`<a class="btn hot" href="#enquire">${p.enquiry === 'perform' ? 'Pitch a night' : 'Enquire'}</a>` : html`<a class="btn hot" href="/whats-on">What's on</a>`}
       <a class="btn ghost" href="#steps">How it works</a></div>
   </div>
-  <div class="path-ask"><div class="label">Ask TAM</div>${chatPanel(p.questions, p, { id: 'page' })}</div>
+  <div class="path-ask">${askTitle(p.askLine || 'Your guide to everything at TAM')}${chatPanel(p.questions, p, { id: 'page' })}</div>
 </div></section>
 <section class="section" id="steps"><div class="wrap"><div class="steps">${p.steps.map((s, i) => html`<a class="step-card" href="${s.link}"><span class="step-n">${i + 1}</span><h3>${s.title}</h3><p>${s.text}</p><span class="more">${s.label} →</span></a>`)}</div></div></section>
 ${nights.length ? html`<section class="section"><div class="wrap"><div class="head"><h2 class="chrome">${p.slug === 'party' ? 'Nights for your party' : p.slug === 'musician' ? 'Nights for players' : 'Coming up for you'}</h2><a class="more" href="/whats-on">Everything on →</a></div>

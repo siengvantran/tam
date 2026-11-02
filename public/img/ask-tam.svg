@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Ask TAM">
+  <title>Ask TAM</title>
+  <defs>
+    <linearGradient id="chrome" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#8f8578"/>
+      <stop offset=".28" stop-color="#f7f0e3"/>
+      <stop offset=".55" stop-color="#cfc5b6"/>
+      <stop offset=".8" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#9d9284"/>
+    </linearGradient>
+    <radialGradient id="stage" cx=".5" cy=".38" r=".7">
+      <stop offset="0" stop-color="#3a2618"/>
+      <stop offset=".7" stop-color="#160e12"/>
+      <stop offset="1" stop-color="#0b0709"/>
+    </radialGradient>
+  </defs>
+  <!-- the stage and its gold ring -->
+  <circle cx="48" cy="48" r="46" fill="url(#stage)"/>
+  <circle cx="48" cy="48" r="44.5" fill="none" stroke="#e8c77a" stroke-width="3"/>
+  <circle cx="48" cy="48" r="39.5" fill="none" stroke="#e8c77a" stroke-opacity=".25" stroke-width="1"/>
+  <!-- sound, either side -->
+  <path d="M21 31c-4.5 5-4.5 14 0 19M14.5 26c-7.5 8-7.5 21 0 29" fill="none" stroke="#e8c77a" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+  <path d="M75 31c4.5 5 4.5 14 0 19M81.5 26c7.5 8 7.5 21 0 29" fill="none" stroke="#e8c77a" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+  <!-- a deco ribbon microphone -->
+  <rect x="32" y="13" width="32" height="44" rx="16" fill="url(#chrome)" stroke="#5c5146" stroke-width="1.5"/>
+  <path d="M40 18.5v33M48 16.5v37M56 18.5v33" stroke="#5c5146" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>
+  <rect x="31" y="33" width="34" height="4" rx="2" fill="#e8c77a"/>
+  <!-- yoke and stand -->
+  <path d="M33 47c0 10 6.5 15 15 15s15-5 15-15" fill="none" stroke="#e8c77a" stroke-width="3" stroke-linecap="round"/>
+  <rect x="45.5" y="61" width="5" height="11" rx="1.5" fill="#a8752e"/>
+  <path d="M33 77.5c9-4.5 21-4.5 30 0" fill="none" stroke="#e8c77a" stroke-width="3.6" stroke-linecap="round"/>
+</svg>

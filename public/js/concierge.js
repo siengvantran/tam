@@ -36,7 +36,8 @@ function mount(root) {
 
   function render() {
     const h = load();
-    log.innerHTML = h.map((m) => `<div class="cmsg ${m.role}">${m.role === 'user' ? `<p>${esc(m.text)}</p>` : rich(m.text || '')}${(m.cards || []).length ? `<div class="ccards">${m.cards.map(card).join('')}</div>` : ''}</div>`).join('');
+    const bubble = (m) => `<div class="cmsg ${m.role}">${m.role === 'user' ? `<p>${esc(m.text)}</p>` : rich(m.text || '')}${(m.cards || []).length ? `<div class="ccards">${m.cards.map(card).join('')}</div>` : ''}</div>`;
+    log.innerHTML = h.map((m) => (m.role === 'user' ? bubble(m) : `<div class="crow"><img class="cav" src="/img/ask-tam.svg" alt="">${bubble(m)}</div>`)).join('');
     suggest.hidden = h.length > 0;
     log.scrollTop = log.scrollHeight;
   }
@@ -50,7 +51,7 @@ function mount(root) {
     const reply = { role: 'assistant', text: '', cards: [] };
     h.push(reply);
     keep(h); render();
-    const bubble = log.lastElementChild;
+    const bubble = log.lastElementChild.querySelector('.cmsg') || log.lastElementChild;
     bubble.innerHTML = '<p class="cstatus"><i></i>Thinking…</p>';
     const btn = $('button[type="submit"]', form);
     btn.disabled = true;

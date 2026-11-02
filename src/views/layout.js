@@ -4,7 +4,9 @@ import { html, raw, jsonData } from './html.js';
 import { pounds } from '../../shared/pricing.js';
 import { dateParts } from '../lib/content.js';
 
-const FONTS = 'https://fonts.googleapis.com/css2?family=Audiowide&family=Bungee+Inline&family=Caveat:wght@600&family=Monoton&family=Outfit:wght@400;500;700&family=Shrikhand&display=swap';
+// Type in the music-legacy tradition: a high-contrast serif from record sleeves and
+// concert bills, condensed capitals from jazz labels and gig posters, a clean sans to read.
+const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap';
 
 export function layout(ctx, {
   title, description, path = '/', theme = 'tam', body, og, scripts = [], noindex = false, jsonLd = null,
@@ -135,7 +137,7 @@ export function nightCard(ctx, n, avail) {
       ${f ? html`<div class="label">${f.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
-      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price muted">${n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'At TAM · see details' : 'Tickets soon'}</p>`}
+      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price muted">${n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
     </div>
   </a>
 </article>`;
@@ -183,9 +185,9 @@ export function youtubeThumb(v) {
 // The Ask TAM drawer: opened from the floating button on every public page.
 export function askDrawer(ctx, pathway) {
   const qs = pathway ? pathway.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue for a party?', 'Christmas party for 12?'];
-  return html`<button class="ask-fab" type="button" id="ask-open" aria-controls="ask-drawer" aria-expanded="false"><span aria-hidden="true">✦</span> Ask TAM</button>
+  return html`<button class="ask-fab" type="button" id="ask-open" aria-controls="ask-drawer" aria-expanded="false"><img src="/img/ask-tam.svg" alt="" width="36" height="36"> Ask TAM</button>
 <aside class="ask-drawer" id="ask-drawer" aria-label="Ask TAM" hidden>
-  <div class="ask-head"><div><b>Ask TAM</b><small>Your guide to nights, gigs, hire and parties</small></div><button type="button" class="ask-x" id="ask-close" aria-label="Close">×</button></div>
+  <div class="ask-head"><div><img class="ask-avatar" src="/img/ask-tam.svg" alt="" width="40" height="40"><span><b>Ask TAM</b><small>Your guide to nights, gigs, hire and parties</small></span></div><button type="button" class="ask-x" id="ask-close" aria-label="Close">×</button></div>
   ${chatPanel(qs, pathway)}
 </aside>`;
 }
@@ -198,3 +200,6 @@ export function chatPanel(questions, pathway, { id = 'drawer', placeholder = 'As
   <p class="chat-foot"><button type="button" class="linkish" data-chat-clear>Start over</button> · Answers come from TAM’s listings. Check details on the booking page. <a href="/privacy">Privacy</a></p>
 </div>`;
 }
+
+// The heading over an inline Ask TAM panel, with its avatar.
+export const askTitle = (sub) => html`<div class="ask-title"><img class="ask-avatar" src="/img/ask-tam.svg" alt="" width="44" height="44"><div><div class="label">Ask TAM</div><small>${sub}</small></div></div>`;

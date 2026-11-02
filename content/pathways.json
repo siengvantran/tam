@@ -5,14 +5,42 @@
     "title": "Live music in London, tonight and every night",
     "promise": "Tell us what you love and we'll find your night: blues, soul, singer-songwriters, cult legends or the next big voice.",
     "icon": "♫",
-    "nights": { "any": true },
+    "nights": {
+      "any": true
+    },
     "steps": [
-      { "title": "Find your night", "text": "Every night at TAM, with times and prices, and tickets sold by TAM itself.", "link": "/whats-on", "label": "What's on" },
-      { "title": "Follow the artists you love", "text": "Get an email when they're next on. One click to stop.", "link": "/artists", "label": "Artists" },
-      { "title": "Christmas at TAM", "text": "Twenty-one nights of The Best Christmas Ever, from £10.", "link": "/the-best-christmas-ever", "label": "The festival" },
-      { "title": "Come early, stay late", "text": "Street food from over 20 cuisines at Mercato Metropolitano, and drinks poured from taps built into old pianos.", "link": "/locations/elephant-castle", "label": "Find us" }
+      {
+        "title": "Find your night",
+        "text": "Every night at TAM, with times and prices, and tickets sold by TAM itself.",
+        "link": "/whats-on",
+        "label": "What's on"
+      },
+      {
+        "title": "Follow the artists you love",
+        "text": "Get an email when they're next on. One click to stop.",
+        "link": "/artists",
+        "label": "Artists"
+      },
+      {
+        "title": "Christmas at TAM",
+        "text": "Twenty-one nights of The Best Christmas Ever, from £10.",
+        "link": "/the-best-christmas-ever",
+        "label": "The festival"
+      },
+      {
+        "title": "Come early, stay late",
+        "text": "Street food from over 20 cuisines at Mercato Metropolitano, and drinks poured from taps built into old pianos.",
+        "link": "/locations/elephant-castle",
+        "label": "Find us"
+      }
     ],
-    "questions": ["What's on this weekend?", "Something bluesy for a date night", "Cheapest night before Christmas?", "Who are the cult legends?"]
+    "questions": [
+      "What's on this weekend?",
+      "Something bluesy for a date night",
+      "Cheapest night before Christmas?",
+      "Who are the cult legends?"
+    ],
+    "askLine": "Ask me what’s on, and what you’ll love"
   },
   {
     "slug": "musician",
@@ -21,14 +49,42 @@
     "promise": "TAM was built to give artists a real stage, a real audience and a real shot. Here's how to get on it.",
     "icon": "🎸",
     "enquiry": "perform",
-    "nights": { "match": "jam|open mic|singers|academy|junior|young" },
+    "nights": {
+      "match": "jam|open mic|singers|academy|junior|young"
+    },
     "steps": [
-      { "title": "Jam with us", "text": "The Great British Blues Jam is a TAM weekly: all musicians welcome to come and play.", "link": "/locations/elephant-castle", "label": "Weekly nights" },
-      { "title": "Sing at the Sunday Spot", "text": "TAM Singers: perform in front of a live audience, get filmed and recorded, and you may be invited back for special sessions.", "link": "/singers", "label": "TAM Singers" },
-      { "title": "Young artists", "text": "Junior Open Mic and TAM Open Music Academy put young players on the same stage as the headliners.", "link": "/whats-on/junior-open-mic", "label": "Junior Open Mic" },
-      { "title": "Pitch a night", "text": "Got a band, a collective or a scene? Tell us and we'll talk about a date.", "link": "#enquire", "label": "Pitch us" }
+      {
+        "title": "Jam with us",
+        "text": "The Great British Blues Jam is a TAM weekly: all musicians welcome to come and play.",
+        "link": "/locations/elephant-castle",
+        "label": "Weekly nights"
+      },
+      {
+        "title": "Sing at the Sunday Spot",
+        "text": "TAM Singers: perform in front of a live audience, get filmed and recorded, and you may be invited back for special sessions.",
+        "link": "/singers",
+        "label": "TAM Singers"
+      },
+      {
+        "title": "Young artists",
+        "text": "Junior Open Mic and TAM Open Music Academy put young players on the same stage as the headliners.",
+        "link": "/whats-on/junior-open-mic",
+        "label": "Junior Open Mic"
+      },
+      {
+        "title": "Pitch a night",
+        "text": "Got a band, a collective or a scene? Tell us and we'll talk about a date.",
+        "link": "#enquire",
+        "label": "Pitch us"
+      }
     ],
-    "questions": ["How do I get a gig at TAM?", "When is the next jam?", "Can my band take over a night?", "Is there anything for young players?"]
+    "questions": [
+      "How do I get a gig at TAM?",
+      "When is the next jam?",
+      "Can my band take over a night?",
+      "Is there anything for young players?"
+    ],
+    "askLine": "Ask me how to get on TAM’s stage"
   },
   {
     "slug": "venue-hire",
@@ -38,12 +94,38 @@
     "icon": "🏛",
     "enquiry": "venue-hire",
     "steps": [
-      { "title": "The space", "text": "Up to 150 guests: 50–70 seated, or 70–120 for a cocktail-style reception. Any day of the week, priced by date and time.", "link": "/private-parties", "label": "The space" },
-      { "title": "What's included", "text": "A private bar with themed cocktails or mocktails, a stage and pro AV with a projector, and live music or karaoke if you want it.", "link": "/private-parties", "label": "Amenities" },
-      { "title": "Shoots and content", "text": "Pro sound and lighting, curated art and decorative pianos make a ready-made set for performances and product films.", "link": "/private-parties", "label": "Video shoots" },
-      { "title": "Ask for a date", "text": "Tell us the date, the guest count and what you're planning, and we'll come back with a quote.", "link": "#enquire", "label": "Enquire" }
+      {
+        "title": "The space",
+        "text": "Up to 150 guests: 50–70 seated, or 70–120 for a cocktail-style reception. Any day of the week, priced by date and time.",
+        "link": "/private-parties",
+        "label": "The space"
+      },
+      {
+        "title": "What's included",
+        "text": "A private bar with themed cocktails or mocktails, a stage and pro AV with a projector, and live music or karaoke if you want it.",
+        "link": "/private-parties",
+        "label": "Amenities"
+      },
+      {
+        "title": "Shoots and content",
+        "text": "Pro sound and lighting, curated art and decorative pianos make a ready-made set for performances and product films.",
+        "link": "/private-parties",
+        "label": "Video shoots"
+      },
+      {
+        "title": "Ask for a date",
+        "text": "Tell us the date, the guest count and what you're planning, and we'll come back with a quote.",
+        "link": "#enquire",
+        "label": "Enquire"
+      }
     ],
-    "questions": ["How many people fit?", "Can we hire it on a Saturday night?", "Do you do food?", "Can we film a music video there?"]
+    "questions": [
+      "How many people fit?",
+      "Can we hire it on a Saturday night?",
+      "Do you do food?",
+      "Can we film a music video there?"
+    ],
+    "askLine": "Ask me about hiring the room"
   },
   {
     "slug": "party",
@@ -52,14 +134,42 @@
     "promise": "Christmas with the team, a birthday, a reunion. Book a table on a festival night, or take over the whole room.",
     "icon": "🎉",
     "enquiry": "party",
-    "nights": { "festival": "best-christmas-ever" },
+    "nights": {
+      "festival": "best-christmas-ever"
+    },
     "steps": [
-      { "title": "Christmas parties", "text": "Groups of 6+ save up to 15%, startup packs save 20%, and small teams can share a Team Table on any festival night.", "link": "/the-best-christmas-ever#book", "label": "Book a festival night" },
-      { "title": "Put your brand on the wall", "text": "Booked your party? Pin your company to the Party Wall.", "link": "/the-best-christmas-ever#wall", "label": "The Party Wall" },
-      { "title": "Go big", "text": "Sponsor a night: tickets, a TAM Christmas Box for every guest, and your name on the festival.", "link": "/the-best-christmas-ever#sponsor", "label": "Sponsorship" },
-      { "title": "Have the room to yourselves", "text": "Private hire for up to 150 guests, any day of the week.", "link": "/for/venue-hire", "label": "Private hire" }
+      {
+        "title": "Christmas parties",
+        "text": "Groups of 6+ save up to 15%, startup packs save 20%, and small teams can share a Team Table on any festival night.",
+        "link": "/the-best-christmas-ever#book",
+        "label": "Book a festival night"
+      },
+      {
+        "title": "Put your brand on the wall",
+        "text": "Booked your party? Pin your company to the Party Wall.",
+        "link": "/the-best-christmas-ever#wall",
+        "label": "The Party Wall"
+      },
+      {
+        "title": "Go big",
+        "text": "Sponsor a night: tickets, a TAM Christmas Box for every guest, and your name on the festival.",
+        "link": "/the-best-christmas-ever#sponsor",
+        "label": "Sponsorship"
+      },
+      {
+        "title": "Have the room to yourselves",
+        "text": "Private hire for up to 150 guests, any day of the week.",
+        "link": "/for/venue-hire",
+        "label": "Private hire"
+      }
     ],
-    "questions": ["Christmas party for 12 people, what's best?", "Is there a discount for groups?", "What is a Team Table?", "Can we have the whole venue?"]
+    "questions": [
+      "Christmas party for 12 people, what's best?",
+      "Is there a discount for groups?",
+      "What is a Team Table?",
+      "Can we have the whole venue?"
+    ],
+    "askLine": "Ask me how to throw your party here"
   },
   {
     "slug": "brand",
@@ -69,11 +179,36 @@
     "icon": "✦",
     "enquiry": "sponsor",
     "steps": [
-      { "title": "Sponsor a festival night", "text": "Bauble, Star and Shard packages, each with tickets and a TAM Christmas Box per guest.", "link": "/the-best-christmas-ever#sponsor", "label": "Packages" },
-      { "title": "Host a night", "text": "Launches, community nights and takeovers with your audience and our stage.", "link": "/for/venue-hire", "label": "Hire the room" },
-      { "title": "Content that lasts", "text": "Nights at TAM become films on TAM TV.", "link": "/tv", "label": "TAM TV" },
-      { "title": "Talk to us", "text": "Tell us what you have in mind.", "link": "#enquire", "label": "Enquire" }
+      {
+        "title": "Sponsor a festival night",
+        "text": "Bauble, Star and Shard packages, each with tickets and a TAM Christmas Box per guest.",
+        "link": "/the-best-christmas-ever#sponsor",
+        "label": "Packages"
+      },
+      {
+        "title": "Host a night",
+        "text": "Launches, community nights and takeovers with your audience and our stage.",
+        "link": "/for/venue-hire",
+        "label": "Hire the room"
+      },
+      {
+        "title": "Content that lasts",
+        "text": "Nights at TAM become films on TAM TV.",
+        "link": "/tv",
+        "label": "TAM TV"
+      },
+      {
+        "title": "Talk to us",
+        "text": "Tell us what you have in mind.",
+        "link": "#enquire",
+        "label": "Enquire"
+      }
     ],
-    "questions": ["What sponsorship packages are there?", "Can we host a product launch?", "What does a sponsor get?"]
+    "questions": [
+      "What sponsorship packages are there?",
+      "Can we host a product launch?",
+      "What does a sponsor get?"
+    ],
+    "askLine": "Ask me about partnering with TAM"
   }
 ]

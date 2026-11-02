@@ -6,9 +6,9 @@
   --night: #0b0709; --panel: #160e12; --panel-2: #1f141a; --line: #3a2a31;
   --ink: #f6ecd8; --ink-dim: #c9b9a2; --muted: #9a8b80;
   --gold: #e8c77a; --gold-deep: #a8752e; --pink: #ff2e88; --cyan: #00d8ff; --acid: #ffe500; --violet: #8a2be2; --red: #ff3b4e;
-  --f-body: 'Outfit', 'Helvetica Neue', Arial, sans-serif; --f-display: 'Shrikhand', Georgia, serif;
-  --f-inline: 'Bungee Inline', 'Arial Black', sans-serif; --f-space: 'Audiowide', 'Trebuchet MS', sans-serif;
-  --f-disco: 'Monoton', 'Arial Black', sans-serif; --f-hand: 'Caveat', cursive;
+  --f-body: 'Inter', 'Helvetica Neue', Arial, sans-serif; --f-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
+  --f-inline: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif; --f-space: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
+  --f-disco: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif; --f-hand: 'Caveat', cursive;
   --syn-bass: 0; --syn-mid: 0; --syn-treb: 0; --syn-beat: 0; --syn-color: #e8c77a;
   --r: 18px; --gutter: clamp(16px, 4vw, 40px);
   color-scheme: dark;
@@ -360,3 +360,55 @@ input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: 
 @media (max-width: 600px) { .ask-drawer { inset: 0; width: auto; max-height: none; border-radius: 0; } .ask-fab { bottom: calc(84px + env(safe-area-inset-bottom)); right: 12px; } }
 
 @media (min-width: 901px) { .has-inline-chat .ask-fab { display: none; } }
+
+/* ---------- Legacy type, clean finish ----------
+   DM Serif Display for headlines, Bebas Neue for labels, dates and buttons,
+   Inter to read. Solid colour instead of chrome, soft depth instead of offset
+   shadows. The music still lights the headlines, gently. */
+body { font-size: 16.5px; letter-spacing: -.003em; }
+h1 { font-size: clamp(42px, 7vw, 88px); line-height: 1.02; letter-spacing: -.01em; }
+h2 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.06; letter-spacing: -.005em; }
+h3 { font-weight: 600; letter-spacing: -.01em; }
+.chrome, .chrome.gold, .chrome.red { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--ink); filter: none;
+  text-shadow: 0 0 calc(var(--syn-bass) * 30px) color-mix(in srgb, var(--syn-color) 75%, transparent); }
+.chrome.gold { color: var(--gold); }
+.chrome.red { color: #ff7f8a; }
+.mega { font-size: clamp(56px, 9vw, 120px); }
+.label, .lg, legend { font-size: 16px; letter-spacing: .12em; }
+.label .muted { letter-spacing: .08em; }
+.meta { font-size: 19px; letter-spacing: .08em; }
+.meta span + span::before { color: var(--gold-deep); }
+.month { font-size: 22px; letter-spacing: .1em; }
+.head .more, .subnav a, .step-card .more { font-size: 16px; letter-spacing: .1em; }
+.badge { background: var(--gold); font-size: 13px; letter-spacing: .1em; padding: 5px 10px 4px; }
+.btn { font-size: 18px; letter-spacing: .07em; padding: 2px 24px 0; }
+.btn.small { font-size: 16px; }
+.btn.hot, .vplay { box-shadow: 0 8px 24px color-mix(in srgb, var(--acid) 22%, transparent); }
+.btn.hot:hover { background: color-mix(in srgb, var(--acid) 88%, #fff); }
+.btn:hover { transform: translateY(-1px); }
+.brand { font-size: 26px; letter-spacing: .04em; }
+.ticker span { font-size: clamp(26px, 3.4vw, 38px); letter-spacing: .06em; padding: 12px 22px 9px; }
+.ticker span:nth-child(4n+2), .ticker span:nth-child(4n+4) { color: inherit; }
+.countdown .cd-unit b { font-size: 40px; } .countdown .cd-unit small { font-size: 13px; letter-spacing: .1em; }
+.nc-date b { font-size: 48px; } .nc-date span, .nc-date small { font-size: 15px; letter-spacing: .08em; }
+.total b { font-size: 42px; } .big-count b { font-size: 76px; } .year { font-size: 44px; } .step-n { font-size: 46px; } .stat b { font-size: 36px; }
+.schedule b { font-size: 21px; } .presenters { font-size: 22px; } .raised { font-size: 26px; } .visit .addr { font-family: var(--f-body); font-size: 19px; }
+.cal th { font-size: 15px; } .cal td { font-size: 20px; } .type .tag { font-size: 14px; } .story .k { font-size: 15px; } .staff th { font-size: 13px; }
+.path-tile b { font-size: 22px; letter-spacing: .05em; } .ask-head b { font-size: 24px; letter-spacing: .05em; } .syn-title { font-size: 17px; letter-spacing: .06em; }
+.song .who a, .env-seal { font-size: 22px; letter-spacing: .06em; } .env-tap { font-size: 15px; }
+.remix-head h3, .pkg h3 { font-size: 34px; }
+.ev-art, .vid, .envelope, .home-ask, .path-ask { box-shadow: 0 24px 60px rgba(0, 0, 0, .5); }
+.book img { box-shadow: 0 12px 30px rgba(0, 0, 0, .5); }
+.home-ask, .path-ask { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); }
+
+/* ---------- the Ask TAM avatar ---------- */
+.ask-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; }
+.ask-head { align-items: center; } .ask-head > div { display: flex; gap: 12px; align-items: center; }
+.ask-fab { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); padding: 6px 18px 6px 6px; font-size: 18px; letter-spacing: .06em; }
+.ask-fab img { width: 36px; height: 36px; border-radius: 50%; }
+.ask-title { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.ask-title .label { margin: 0; }
+.ask-title small { display: block; color: var(--muted); font-size: 13px; }
+.crow { display: flex; gap: 10px; align-items: flex-start; max-width: 96%; }
+.crow .cav { width: 30px; height: 30px; border-radius: 50%; flex: none; margin-top: 2px; }
+.crow .cmsg { max-width: none; flex: 1; min-width: 0; }
