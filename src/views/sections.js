@@ -104,7 +104,7 @@ export function charitySection(f) {
     <p class="intro">${d.intro || d.blurb}</p><p class="raised" id="raised" hidden></p>
     ${f.features.raffle ? html`<p class="intro">And on the night: the raffle, ${pounds(f.raffle.price)} a ticket${f.raffle.deal ? ` or ${f.raffle.deal.count} for ${pounds(f.raffle.deal.price)}` : ''}. ${f.raffle.prizesNote || ''} ${f.raffle.draw || ''}.</p>` : ''}
     <div class="ctas"><a class="btn hot" href="#book">Add a donation when you book</a><a class="btn ghost" href="${d.charity.url}" target="_blank" rel="noopener">Give directly ↗</a></div></div>
-  <div class="charity-heart" aria-hidden="true">♥</div>
+  <img class="charity-heart neon-ico" src="/img/neon/heart.svg" alt="" width="220" height="220">
 </div></section>`;
 }
 
@@ -144,7 +144,7 @@ export function sponsorSection(ctx, f) {
   const s = f.sponsorship;
   return html`<section class="section spons" id="sponsor" aria-labelledby="sponsor-title"><div class="wrap">
   <div class="head"><div><div class="label">Sponsorship</div><h2 id="sponsor-title" class="chrome gold">Sponsor a night</h2></div><p class="intro">${s.intro}</p></div>
-  ${s.gift ? html`<div class="xbox"><div class="gift" aria-hidden="true">🎁</div><p>${s.gift}</p></div>` : ''}
+  ${s.gift ? html`<div class="xbox"><img class="gift neon-ico" src="/img/neon/gift.svg" alt="" width="64" height="64"><p>${s.gift}</p></div>` : ''}
   <div class="pkgs">${s.packages.map((p) => html`<article class="pkg"><h3>${p.name}</h3><p class="price">${pounds(p.price)}</p><ul>${p.perks.map((x) => html`<li>${x}</li>`)}</ul></article>`)}</div>
   <form class="formbox" id="spon-form" data-festival="${f.slug}" novalidate>
     <h3>Talk to us about sponsoring</h3><p>Tell us what you have in mind and we'll come back to you within two working days.</p>

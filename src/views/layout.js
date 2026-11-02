@@ -75,7 +75,7 @@ function header(ctx, festival, pathway) {
       <a href="/archive">Archive</a>
       <a href="/locations/elephant-castle">Find us</a>
     </nav>
-    ${pathway ? html`<a class="for-you" href="/for/${pathway.slug}" title="Your pathway"><span aria-hidden="true">${pathway.icon}</span> For you</a>` : html`<a class="for-you" href="/for">Who are you?</a>`}
+    ${pathway ? html`<a class="for-you" href="/for/${pathway.slug}" title="Your pathway"><img class="neon-ico" src="/img/neon/${pathway.icon}.svg" alt="" width="22" height="22"> For you</a>` : html`<a class="for-you" href="/for">Who are you?</a>`}
     <a class="btn hot small" href="/whats-on#book">Tickets</a>
   </div>
 </header>`;
@@ -185,9 +185,9 @@ export function youtubeThumb(v) {
 // The Ask TAM drawer: opened from the floating button on every public page.
 export function askDrawer(ctx, pathway) {
   const qs = pathway ? pathway.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue for a party?', 'Christmas party for 12?'];
-  return html`<button class="ask-fab" type="button" id="ask-open" aria-controls="ask-drawer" aria-expanded="false"><img src="/img/ask-tam.svg" alt="" width="36" height="36"> Ask TAM</button>
+  return html`<button class="ask-fab" type="button" id="ask-open" aria-controls="ask-drawer" aria-expanded="false"><img src="/img/neon/ask-tam.svg" alt="" width="36" height="36"> Ask TAM</button>
 <aside class="ask-drawer" id="ask-drawer" aria-label="Ask TAM" hidden>
-  <div class="ask-head"><div><img class="ask-avatar" src="/img/ask-tam.svg" alt="" width="40" height="40"><span><b>Ask TAM</b><small>Your guide to nights, gigs, hire and parties</small></span></div><button type="button" class="ask-x" id="ask-close" aria-label="Close">×</button></div>
+  <div class="ask-head"><div><img class="ask-avatar" src="/img/neon/ask-tam.svg" alt="" width="40" height="40"><span><b>Ask TAM</b><small>Your guide to nights, gigs, hire and parties</small></span></div><button type="button" class="ask-x" id="ask-close" aria-label="Close">×</button></div>
   ${chatPanel(qs, pathway)}
 </aside>`;
 }
@@ -202,4 +202,4 @@ export function chatPanel(questions, pathway, { id = 'drawer', placeholder = 'As
 }
 
 // The heading over an inline Ask TAM panel, with its avatar.
-export const askTitle = (sub) => html`<div class="ask-title"><img class="ask-avatar" src="/img/ask-tam.svg" alt="" width="44" height="44"><div><div class="label">Ask TAM</div><small>${sub}</small></div></div>`;
+export const askTitle = (sub) => html`<div class="ask-title"><img class="ask-avatar" src="/img/neon/ask-tam.svg" alt="" width="44" height="44"><div><div class="label">Ask TAM</div><small>${sub}</small></div></div>`;

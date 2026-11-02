@@ -37,7 +37,7 @@ function mount(root) {
   function render() {
     const h = load();
     const bubble = (m) => `<div class="cmsg ${m.role}">${m.role === 'user' ? `<p>${esc(m.text)}</p>` : rich(m.text || '')}${(m.cards || []).length ? `<div class="ccards">${m.cards.map(card).join('')}</div>` : ''}</div>`;
-    log.innerHTML = h.map((m) => (m.role === 'user' ? bubble(m) : `<div class="crow"><img class="cav" src="/img/ask-tam.svg" alt="">${bubble(m)}</div>`)).join('');
+    log.innerHTML = h.map((m) => (m.role === 'user' ? bubble(m) : `<div class="crow"><img class="cav" src="/img/neon/ask-tam.svg" alt="">${bubble(m)}</div>`)).join('');
     suggest.hidden = h.length > 0;
     log.scrollTop = log.scrollHeight;
   }

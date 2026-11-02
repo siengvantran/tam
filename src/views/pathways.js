@@ -18,7 +18,7 @@ const remember = (slug) => `${PATH_COOKIE}=${slug}; Path=/; Max-Age=${60 * 60 * 
 
 export function pathwayTiles(ctx, current) {
   return html`<div class="path-tiles">${ctx.content.pathways.map((p) => html`<a class="path-tile${current && current.slug === p.slug ? ' on' : ''}" href="/for/${p.slug}">
-    <span class="pt-icon" aria-hidden="true">${p.icon}</span><b>${p.who}</b><small>${p.promise}</small></a>`)}</div>`;
+    <img class="pt-icon neon-ico" src="/img/neon/${p.icon}.svg" alt="" width="64" height="64"><b>${p.who}</b><small>${p.promise}</small></a>`)}</div>`;
 }
 
 function enquiryForm(p) {
@@ -113,7 +113,7 @@ ${nights.length ? html`<section class="section"><div class="wrap"><div class="he
 ${extras(ctx, p)}
 ${p.enquiry ? enquiryForm(p) : ''}
 <section class="section"><div class="wrap"><div class="head"><h2 class="chrome">Other ways in</h2></div>
-  <div class="path-tiles small">${others.map((o) => html`<a class="path-tile" href="/for/${o.slug}"><span class="pt-icon" aria-hidden="true">${o.icon}</span><b>${o.who}</b></a>`)}</div></div></section>
+  <div class="path-tiles small">${others.map((o) => html`<a class="path-tile" href="/for/${o.slug}"><img class="pt-icon neon-ico" src="/img/neon/${o.icon}.svg" alt="" width="44" height="44"><b>${o.who}</b></a>`)}</div></div></section>
 ${p.slug === 'venue-hire' || p.slug === 'live-music' ? visitSection(ctx) : ''}`,
     }), 200, { 'Set-Cookie': remember(p.slug) });
   });

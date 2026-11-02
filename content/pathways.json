@@ -4,7 +4,7 @@
     "who": "I want to hear live music",
     "title": "Live music in London, tonight and every night",
     "promise": "Tell us what you love and we'll find your night: blues, soul, singer-songwriters, cult legends or the next big voice.",
-    "icon": "♫",
+    "icon": "live-music",
     "nights": {
       "any": true
     },
@@ -47,7 +47,7 @@
     "who": "I'm a musician",
     "title": "Play TAM",
     "promise": "TAM was built to give artists a real stage, a real audience and a real shot. Here's how to get on it.",
-    "icon": "🎸",
+    "icon": "musician",
     "enquiry": "perform",
     "nights": {
       "match": "jam|open mic|singers|academy|junior|young"
@@ -91,7 +91,7 @@
     "who": "I want to hire the venue",
     "title": "Hire TAM",
     "promise": "A gallery of art and rescued pianos with a stage, a private bar and pro sound. Birthdays, launches, corporate nights and shoots.",
-    "icon": "🏛",
+    "icon": "venue-hire",
     "enquiry": "venue-hire",
     "steps": [
       {
@@ -132,7 +132,7 @@
     "who": "I'm planning a party",
     "title": "Your party, our stage",
     "promise": "Christmas with the team, a birthday, a reunion. Book a table on a festival night, or take over the whole room.",
-    "icon": "🎉",
+    "icon": "party",
     "enquiry": "party",
     "nights": {
       "festival": "best-christmas-ever"
@@ -176,7 +176,7 @@
     "who": "I'm a brand or sponsor",
     "title": "Partner with TAM",
     "promise": "Put your name on nights London remembers, with a crowd that's there for the music.",
-    "icon": "✦",
+    "icon": "brand",
     "enquiry": "sponsor",
     "steps": [
       {

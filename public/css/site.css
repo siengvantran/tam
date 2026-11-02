@@ -412,3 +412,16 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 .crow { display: flex; gap: 10px; align-items: flex-start; max-width: 96%; }
 .crow .cav { width: 30px; height: 30px; border-radius: 50%; flex: none; margin-top: 2px; }
 .crow .cmsg { max-width: none; flex: 1; min-width: 0; }
+
+/* ---------- neon modern-art icons (public/img/neon/) ---------- */
+.neon-ico { display: block; }
+.pt-icon { width: 64px; height: 64px; margin: -6px 0 2px -6px; transition: transform .2s ease, filter .2s ease; }
+.path-tiles.small .pt-icon { width: 44px; height: 44px; margin: -4px 0; }
+.path-tile:hover .pt-icon, .path-tile.on .pt-icon { transform: scale(1.06); animation: neon-flicker 1.4s linear 1; filter: brightness(1.15); }
+.for-you { display: inline-flex; align-items: center; gap: 6px; }
+.for-you .neon-ico { width: 22px; height: 22px; }
+.gift { width: 64px; height: 64px; flex: none; }
+.charity-heart { width: clamp(140px, 18vw, 230px); height: auto; transform: scale(calc(1 + var(--syn-beat) * .08)); }
+.ask-avatar, .crow .cav, .ask-fab img { background: #0d0811; }
+@keyframes neon-flicker { 0%, 100% { opacity: 1; } 8% { opacity: .55; } 10% { opacity: 1; } 14% { opacity: .7; } 16% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .path-tile:hover .pt-icon { animation: none; } }
