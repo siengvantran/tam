@@ -425,3 +425,22 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 .ask-avatar, .crow .cav, .ask-fab img { background: #0d0811; }
 @keyframes neon-flicker { 0%, 100% { opacity: 1; } 8% { opacity: .55; } 10% { opacity: 1; } 14% { opacity: .7; } 16% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .path-tile:hover .pt-icon { animation: none; } }
+
+/* ---------- Play the site ---------- */
+.play-site { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 12px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--ink-dim);
+  font: 400 16px/1 var(--f-inline); letter-spacing: .08em; cursor: pointer; transition: border-color .2s, color .2s, box-shadow .2s; }
+.play-site:hover { border-color: var(--gold); color: var(--ink); }
+.play-site[aria-pressed="true"] { color: #fff; border-color: #ff3ea5; box-shadow: 0 0 0 1px #ff3ea5 inset, 0 0 18px rgba(255, 62, 165, .45); }
+.ps-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.ps-eq i { width: 3px; height: 4px; border-radius: 2px; background: currentColor; }
+.play-site[aria-pressed="true"] .ps-eq i { animation: eq .9s ease-in-out infinite; }
+.play-site[aria-pressed="true"] .ps-eq i:nth-child(1) { background: #ff3ea5; } .play-site[aria-pressed="true"] .ps-eq i:nth-child(2) { background: #2ee6ff; animation-delay: -.3s; }
+.play-site[aria-pressed="true"] .ps-eq i:nth-child(3) { background: #ffe14d; animation-delay: -.6s; } .play-site[aria-pressed="true"] .ps-eq i:nth-child(4) { background: #a66bff; animation-delay: -.15s; }
+@keyframes eq { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+@media (max-width: 920px) { .play-site { margin-left: auto; } .play-site + .btn { display: none; } }
+@media (max-width: 920px) { .menu-btn { margin-left: 8px; order: 3; } }
+/* when the site is an instrument, everything you can play lights up as you touch it */
+.site-playing .path-tile:hover, .site-playing .night-card a:hover, .site-playing .step-card:hover, .site-playing .chip:hover { box-shadow: 0 0 0 1px var(--syn-color) inset, 0 0 24px color-mix(in srgb, var(--syn-color) 45%, transparent); border-color: var(--syn-color); }
+
+@media (max-width: 920px) { .top .for-you { display: none; } }
+@media (max-width: 380px) { .play-site .ps-label { display: none; } .play-site { padding: 0 11px; } }

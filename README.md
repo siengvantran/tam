@@ -31,6 +31,15 @@ Every public page has **Ask TAM**: a chat that answers from TAM's own data. It's
 - **Without `ANTHROPIC_API_KEY`**, or if the API fails, or past `AGENT_DAILY_LIMIT` questions a day, it still answers from keywords: the right pathway and matching nights.
 - 20 questions per visitor per 10 minutes. `/admin` → **Ask TAM** shows what people ask, which pathways and tools, and how often it fell back.
 
+## A musical experience
+
+The site is an instrument and a piece of generative digital art:
+
+- **Play the site** (the switch in the header, off by default, remembered): every tile, card, button and link plays a note as you hover it (the same element always plays the same note, so moving around makes a melody), clicks play chords, and the A–K keys play the scale. A soft electric-piano voice with an echo, tuned to a pentatonic scale (`public/js/instrument.js`, Web Audio, no samples).
+- **The living background** (`public/js/visuals.js`): neon ribbons drawn fresh every frame, like an oscilloscope made of light. They swell with the bass, shimmer with the treble, bend towards the pointer and take the colour of the note being played (Tamalume's note-to-colour map).
+- **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
+- For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
+
 ## TAM's schedule
 
 `content/schedule.json` is every **public** night from TAM's Elephant & Castle performance schedule (the Google Sheet, May 2021 onwards), imported by `python3 scripts/import_schedule.py <schedule.xlsx>`. The sheet is TAM's internal calendar, so the importer leaves out private hires, bookings, birthdays, rehearsals, shoots, closures and anything with a fee, strips staff names, and drops any name the sheet ever ties to a private booking. **Never commit the spreadsheet**, and check the output before publishing.

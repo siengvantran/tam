@@ -19,7 +19,7 @@ export function layout(ctx, {
   const desc = description || site.description;
   const mods = new Set(['/js/site.js', ...scripts]);
   const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
-  if (ask) mods.add('/js/concierge.js');
+  if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); }
   if (song) mods.add('/js/tamalume.js');
   return '<!doctype html>' + html`
 <html lang="en-GB" data-theme="${theme}">
@@ -76,6 +76,7 @@ function header(ctx, festival, pathway) {
       <a href="/locations/elephant-castle">Find us</a>
     </nav>
     ${pathway ? html`<a class="for-you" href="/for/${pathway.slug}" title="Your pathway"><img class="neon-ico" src="/img/neon/${pathway.icon}.svg" alt="" width="22" height="22"> For you</a>` : html`<a class="for-you" href="/for">Who are you?</a>`}
+    <button class="play-site" id="play-site" type="button" aria-pressed="false" title="Turn the site into an instrument: hover to play, click for chords, or use the A–K keys"><span class="ps-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="ps-label">Play</span></button>
     <a class="btn hot small" href="/whats-on#book">Tickets</a>
   </div>
 </header>`;

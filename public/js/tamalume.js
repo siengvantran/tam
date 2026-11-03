@@ -31,6 +31,10 @@ if (bar) {
   const chroma = new Float32Array(12);
   const ease = (a, b, up, down) => a + (b - a) * (b > a ? up : down);
 
+  function ripple(vel) {
+    dispatchEvent(new CustomEvent('tam:note', { detail: { pc: Math.max(0, SYN.note), x: innerWidth * (0.15 + Math.random() * 0.7), y: innerHeight * (0.55 + Math.random() * 0.3), vel, source: 'music' } }));
+  }
+
   function setNote(pc, label) {
     SYN.note = pc; SYN.color = COLOURS[pc];
     noteEl.querySelector('span').textContent = label;
@@ -134,7 +138,7 @@ if (bar) {
     SYN.mid = ease(SYN.mid, on ? 0.45 + 0.25 * Math.sin(tm * 1.7) : 0, 0.3, 0.1);
     SYN.treb = ease(SYN.treb, on ? 0.75 * Math.pow(Math.max(0, 1 - Math.abs(ph - 0.5) * 4), 2) : 0, 0.6, 0.15);
     if (on && idx !== lastBeatIdx) {
-      lastBeatIdx = idx; SYN.beat = 1;
+      lastBeatIdx = idx; SYN.beat = 1; ripple(0.55);
       if (idx % 4 === 0) { const pc = CHORDS[Math.floor(idx / 4) % CHORDS.length]; setNote(pc, `In time · ${NAMES[pc]}`); }
     }
   }
@@ -162,7 +166,7 @@ if (bar) {
     }
     // a kick that jumps above the running bass level is a beat
     bassAvg = bassAvg * 0.95 + bass * 0.05;
-    if (playing && bass > bassAvg * 1.3 && bass > 0.32 && t - lastBeat > 230) { lastBeat = t; SYN.beat = 1; }
+    if (playing && bass > bassAvg * 1.3 && bass > 0.32 && t - lastBeat > 230) { lastBeat = t; SYN.beat = 1; ripple(0.4 + SYN.bass * 0.5); }
   }
 
   function frame(t) {

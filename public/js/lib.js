@@ -68,3 +68,6 @@ export function youtube() {
   }
   return ytReady;
 }
+
+// Tamalume's colour for each note (C, C♯, D … B): the same light everywhere on the site.
+export const NOTE_COLOURS = ['#ff3030', '#9b30ff', '#ffe500', '#d0609a', '#7fe8ff', '#d0104a', '#5a84ff', '#ff8a00', '#c27bff', '#3ddc5a', '#c0708e', '#5fb8ff'];

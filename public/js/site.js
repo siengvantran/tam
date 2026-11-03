@@ -1,50 +1,14 @@
-// On every page: menu, the night sky, countdowns, copy buttons, follow forms,
+// On every page: menu, the living background, countdowns, copy buttons, follow forms,
 // "Bring them back" / "I was there", inline YouTube.
 
-import { $, $$, api, still, copyText, formMessage } from './lib.js';
+import { $, $$, api, copyText, formMessage } from './lib.js';
 
 // ----- menu -----
 const menu = $('.menu-btn'), nav = $('#nav');
 if (menu) menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
 
-// ----- the night sky: stars or snow, swelling and taking colour from the music -----
-const sky = $('#ambient');
-if (sky) {
-  const x = sky.getContext('2d');
-  const dpr = Math.min(2, devicePixelRatio || 1);
-  const snow = sky.dataset.kind === 'snow';
-  let dots = [], running = true;
-  const size = () => {
-    sky.width = innerWidth * dpr; sky.height = innerHeight * dpr;
-    const n = Math.round((innerWidth * innerHeight) / (snow ? 9000 : 6000));
-    dots = Array.from({ length: n }, (_, i) => ({
-      x: Math.random() * sky.width, y: Math.random() * sky.height, r: (Math.random() * (snow ? 2.2 : 1.3) + 0.4) * dpr,
-      p: Math.random() * 6.28, f: Math.random() * 2 + 0.6, v: (Math.random() * 0.6 + 0.3) * dpr, w: Math.random() * 0.8 + 0.2,
-      h: ['#ffffff', '#ffe2b0', '#ffd0ef', '#c8f4ff'][i % 4],
-    }));
-  };
-  const draw = (t) => {
-    const S = window.SYN, on = S && S.on;
-    x.clearRect(0, 0, sky.width, sky.height);
-    for (let i = 0; i < dots.length; i++) {
-      const d = dots[i];
-      let a = still ? 0.7 : 0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(t / 1000 * d.f + d.p), 3), r = d.r;
-      if (snow) {
-        a = 0.55 + 0.4 * d.w;
-        if (!still) {
-          d.y += d.v * (1 + (on ? S.bass * 2 : 0)); d.x += Math.sin(t / 1400 + d.p) * 0.35 * dpr;
-          if (d.y > sky.height + 4) { d.y = -4; d.x = Math.random() * sky.width; }
-        }
-      }
-      if (on) { a = Math.min(1, a * (0.5 + S.treb * 1.8) + S.beat * 0.5); if (!still) r = d.r * (1 + S.bass * (i % 2 ? 2.2 : 1.1)); }
-      x.globalAlpha = a; x.fillStyle = on && i % 3 === 0 ? S.color : snow ? '#ffffff' : d.h;
-      x.beginPath(); x.arc(d.x, d.y, r, 0, 6.283); x.fill();
-    }
-    if (!still || (window.SYN && window.SYN.on)) requestAnimationFrame(draw); else running = false;
-  };
-  addEventListener('syn:start', () => { if (!running) { running = true; requestAnimationFrame(draw); } });
-  size(); addEventListener('resize', size); requestAnimationFrame(draw);
-}
+// ----- the living background: generative neon ribbons, ripples of light from every note -----
+import './visuals.js';
 
 // ----- countdowns: to doors, "on now" during the night, a message after -----
 for (const el of $$('[data-countdown]')) {
