@@ -1,128 +1,40 @@
 [
   {
-    "slug": "dana-gillespie-the-best-christmas-ever-2026-12-16",
-    "title": "The Best Christmas Ever with Dana Gillespie & The London Blues Band",
-    "date": "2026-12-16",
-    "time": "19:00",
-    "venue": "elephant-castle",
-    "url": "",
-    "image": "",
-    "performers": [
-      "danagillespie",
-      "the-london-blues-band"
+    "slug": "big-christmas-hootenanny",
+    "date": "2026-12-04",
+    "festival": "best-christmas-ever",
+    "title": "The Big Christmas Hootenanny",
+    "presenters": "Baker’s Dozen × The Best Christmas Ever",
+    "image": "/img/hootenanny/og.jpg",
+    "summary": "Opening night of The Best Christmas Ever: Baker’s Dozen and special guests, two sets of originals, covers and Christmas classics. VIP doors 6pm, GA 6:30pm, show 7pm, after party until 1am (included with every ticket).",
+    "doors": "18:00",
+    "ends": "01:00",
+    "artists": ["bakers-dozen", "hugh-baker", "matt-hootenanny-host", "thomas-caulfield", "queenie-slinger", "molly-chadwick", "haydn-bardoe", "ger-ohanlon", "felix-cassell"],
+    "schedule": [
+      ["18:00", "Doors for guestlist and VIP. The piano starts"],
+      ["18:30", "Doors for general admission"],
+      ["19:00", "Show starts. First set: Baker’s Dozen and guests, originals and well-loved covers"],
+      ["20:15", "Interval"],
+      ["20:30", "Second set: Christmas classics to sing along to"],
+      ["21:45", "Live show ends (approx.)"],
+      ["22:00", "Hootenanny After Party, until 1am. Included with every ticket"]
     ],
-    "series": "dana-gillespie-nights",
-    "festival": "tam-christmas-festival",
-    "academy": true,
-    "genres": [
-      "blues"
-    ],
-    "free": false,
-    "summary": "Dana Gillespie’s Christmas party at TAM, opening with the Golden Hour: the first hour of the night belongs to the juniors.",
-    "programme": [
-      {
-        "time": "19:00",
-        "title": "The Golden Hour",
-        "text": "The night opens with TAM’s juniors: young singers and players from the TAM Academy and the Junior & Youth Open Mic take the stage, in front of a full Christmas crowd."
-      },
-      {
-        "time": "20:00",
-        "title": "Dana Gillespie & The London Blues Band",
-        "text": "Dana and the band bring the blues home for Christmas, in the tradition of Dana’s Christmas nights at TAM."
-      }
-    ],
-    "pricing": {
-      "name": "Christmas ticket",
-      "onSale": true,
-      "door": 3000,
-      "tiers": [
-        {
-          "id": "early-bird",
-          "name": "Early Bird",
-          "price": 1500,
-          "limit": 50,
-          "until": "2026-11-02T00:00:00+00:00",
-          "note": "The first 50 tickets, until Sunday 1 November"
-        },
-        {
-          "id": "advent",
-          "name": "Advent",
-          "price": 2000,
-          "until": "2026-11-30T00:00:00+00:00",
-          "note": "Until Advent Sunday, 29 November"
-        },
-        {
-          "id": "last-orders",
-          "name": "Last Orders",
-          "price": 2500,
-          "until": "2026-12-09T00:00:00+00:00",
-          "note": "30 November to Tuesday 8 December"
-        },
-        {
-          "id": "final-week",
-          "name": "Final week",
-          "price": 3000,
-          "note": "From Wednesday 9 December, and £30 on the door"
-        }
-      ]
-    },
-    "highlights": [
-      {
-        "title": "Sixty years of music, live in one room",
-        "text": "Dana made her first record, “Thank You Boy”, in 1965 as a teenager, with Jimmy Page producing. Since then she has been involved in recording more than 70 albums, moving from 60s pop through 70s glam and rock to the blues."
-      },
-      {
-        "title": "The song David Bowie wrote for her",
-        "text": "Bowie wrote “Andy Warhol” for Dana, and with Mick Ronson he produced her 1973 album Weren’t Born a Man. She also sings backing vocals on “It Ain’t Easy” on Ziggy Stardust.",
-        "links": [
-          [
-            "Dana’s Andy Warhol night at TAM",
-            "/artists/danagillespie/danas-birthday"
-          ]
-        ]
-      },
-      {
-        "title": "The West End’s first Mary Magdalene",
-        "text": "In 1972 Dana played Mary Magdalene in the first London production of Jesus Christ Superstar at the Palace Theatre, and she sings on the original London cast album."
-      },
-      {
-        "title": "A blues singer the world books",
-        "text": "Dana sang with Austria’s Mojo Blues Band in the 1980s and organises the Mustique Blues Festival in the Caribbean. In 2023 she and The London Blues Band were featured artists at SXSW in Austin, Texas, playing The Continental Club. In 2024 she reached the final of Una Voce per San Marino, the Eurovision selection."
-      },
-      {
-        "title": "The London Blues Band",
-        "text": "Dana’s band brings together musicians from TAM’s own stage, including boogie-woogie pianist and harmonica player Dino Baptiste and bassist Harry Whitty, who studied at the Royal Academy of Music.",
-        "links": [
-          [
-            "Dino Baptiste",
-            "/artists/dino-baptiste"
-          ],
-          [
-            "Harry Whitty",
-            "/artists/harry-whitty"
-          ]
-        ]
-      },
-      {
-        "title": "Her life, told with no regrets",
-        "text": "Dana’s 2021 memoir Weren’t Born a Man was called “eye-popping” by The Spectator and “hilarious and moving” by The Times.",
-        "links": [
-          [
-            "Dana and TAM",
-            "/dana-and-the-tam-charles-donovan"
-          ]
-        ]
-      },
-      {
-        "title": "A TAM Christmas tradition",
-        "text": "Dana has played a Christmas night at TAM since 2021, from Dana & Dino’s Christmas Stuffing to last year’s Best Christmas Party Ever. This year the night opens with the juniors’ Golden Hour.",
-        "links": [
-          [
-            "Hear “The Best Christmas Ever”",
-            "/the-best-christmas-ever"
-          ]
-        ]
-      }
+    "tickets": [
+      { "id": "robin", "name": "Robin", "tag": "Early bird", "price": 700, "blurb": "Our early bird ticket. Grab them fast!" },
+      { "id": "ga", "name": "General Admission", "price": 1000, "blurb": "Admission to our Hootenanny! Doors 6:30pm." },
+      { "id": "vip", "name": "VIP", "price": 1500, "tableRequest": true, "blurb": "Reserved seating and early doors at 6pm. Coming as a group? Request a table, and make sure everyone in the group has a VIP ticket." }
     ]
+  },
+  {
+    "slug": "dana-gillespie-live",
+    "date": "2026-12-16",
+    "festival": "best-christmas-ever",
+    "title": "Dana Gillespie Live",
+    "image": "/img/dana/bowie4.jpg",
+    "summary": "Dana Gillespie live at TAM: Bowie’s friend, the first London Mary Magdalene and the Queen of the Blues.",
+    "timesTbc": true,
+    "artists": ["danagillespie", "gemma-schito"],
+    "stories": "dana-gillespie",
+    "collection": "dana-108"
   }
 ]

@@ -1,1 +1,137 @@
-[]
+[
+  {
+    "slug": "bakers-dozen",
+    "name": "Baker’s Dozen",
+    "role": "The house band",
+    "photo": "/img/hootenanny/bakers-dozen.jpg",
+    "bio": [
+      "A powerhouse 13-piece funk-pop collective bringing together some of London’s most exciting young musicians. Part of London’s surging late-night music scene, they recently headlined a sold-out show at the Spice of Life, Soho. Their mission: make pop exciting again, with a live, electrifying boost on classic hits and new music, in themed shows built to draw a crowd. This summer’s show played across London and Oxford."
+    ],
+    "links": [],
+    "invite": "band"
+  },
+  {
+    "slug": "hugh-baker",
+    "name": "Hugh Baker",
+    "role": "Bandleader and drums, Baker’s Dozen",
+    "photo": "/img/hootenanny/hugh-baker.jpg",
+    "bio": [
+      "A London-based drummer, percussionist and bandleader with over a decade of live band, theatre and studio work. Named in the Top 40 of Young Drummer of the Year in 2023, and offered a place at Berklee College of Music in 2025, he has played in numerous theatre productions, including as an actor-musician at Oxford Playhouse.",
+      "As founder and musical director of Baker’s Dozen, Hugh arranges, directs and leads the band from behind the kit, and he organises the Hootenanny."
+    ],
+    "links": [],
+    "invite": "hugh"
+  },
+  {
+    "slug": "matt-hootenanny-host",
+    "name": "Matt",
+    "role": "Host of the Hootenanny",
+    "photo": "/img/hootenanny/matt.jpg",
+    "bio": [
+      "Your host for The Big Christmas Hootenanny: keeping the party going all night, and opening the show with “Proud Mary”."
+    ],
+    "links": [],
+    "invite": "matt"
+  },
+  {
+    "slug": "thomas-caulfield",
+    "name": "Thomas Caulfield",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/thomas-caulfield.jpg",
+    "bio": [
+      "Thomas Caulfield is a London-based multi-instrumentalist and singer-songwriter, blending influences from classic rock, alternative and British indie. Drawing inspiration from artists such as The Beatles, Pink Floyd, Radiohead and Blur, he combines melodic songwriting with guitar-driven arrangements and a distinctive musical style. Equally at home on guitar, drums, bass and piano, Thomas brings a versatile approach to his music and live performances."
+    ],
+    "links": [],
+    "invite": "thomas"
+  },
+  {
+    "slug": "queenie-slinger",
+    "name": "Queenie Slinger",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/queenie-slinger.jpg",
+    "bio": [
+      "Queenie Slinger is a young, up and coming artist who is rapidly growing her fanbase across London and the UK. With her two recent releases, ‘I Don’t Mind’ and ‘My Darling’, she showcases her incredible vocal talent and breathtaking songwriting."
+    ],
+    "links": [],
+    "invite": "queenie"
+  },
+  {
+    "slug": "molly-chadwick",
+    "name": "Molly Chadwick",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/molly-chadwick.jpg",
+    "bio": [
+      "Molly Chadwick is an emerging soul singer-songwriter blending infectious grooves, soulful vocals and contemporary R&B. Inspired by artists such as Prince, Erykah Badu and Michael Jackson, she brings a unique blend of soul, funk and pop to the stage. With captivating vocals and an energetic live presence, Molly is quickly making her mark on the UK music scene."
+    ],
+    "links": [],
+    "invite": "molly"
+  },
+  {
+    "slug": "haydn-bardoe",
+    "name": "Haydn Bardoe",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/haydn-bardoe.jpg",
+    "bio": [
+      "Haydn Bardoe is a London-based session singer whose sound blends contemporary soul, R&B and jazz influences. Drawing inspiration from artists such as Donny Hathaway, Moses Sumney, James Blake and Cleo Sol, he combines rich vocals with a distinctive modern sound. Having appeared on The Voice UK in 2024, Haydn is steadily building a name on the UK live music scene, performing at renowned venues including Ronnie Scott’s, KOKO Camden and most recently Blue Note London."
+    ],
+    "links": [],
+    "invite": "haydn"
+  },
+  {
+    "slug": "ger-ohanlon",
+    "name": "Ger O’Hanlon",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/ger-ohanlon.jpg",
+    "bio": [
+      "Ger O’Hanlon is an Irish singer-songwriter now based in London, known for his powerful, emotive vocals and captivating acoustic performances. Building a following through busking across Ireland and the UK, Ger has attracted millions of views online, including a viral duet in Trafalgar Square. Blending contemporary pop and R&B influences with soulful vocals, he brings warmth, personality and undeniable talent to every performance."
+    ],
+    "links": [],
+    "invite": "ger"
+  },
+  {
+    "slug": "felix-cassell",
+    "name": "Felix Cassell",
+    "role": "Singer-songwriter · special guest at the Hootenanny",
+    "photo": "/img/hootenanny/felix-cassell.jpg",
+    "bio": [
+      "Felix Cassell is an exciting up-and-coming rock and indie singer-songwriter, known for his powerful vocals and commanding stage presence. With a raw, distinctive rock voice and a passion for guitar-driven music, Felix brings an infectious energy and authenticity to his performances. A rising talent on the live music scene, he is an artist to keep an eye on."
+    ],
+    "links": [],
+    "invite": "felix"
+  },
+  {
+    "slug": "danagillespie",
+    "name": "Dana Gillespie",
+    "role": "Singer, songwriter, Queen of the Blues",
+    "photo": "/img/dana/bowie4.jpg",
+    "bio": [
+      "Bowie’s friend from the age of fifteen. The first London Mary Magdalene. The UK’s long-reigning Queen of the Blues, with more than seventy albums. And the woman who gave the Temple of Art and Music its name.",
+      "This December she comes home to the room she named."
+    ],
+    "links": [],
+    "legend": true,
+    "invite": "dana-tam"
+  },
+  {
+    "slug": "gemma-schito",
+    "name": "Gemma Schito",
+    "role": "Singer-songwriter · TAM Fellow",
+    "photo": "/img/dana/gemma-schito.jpg",
+    "bio": [
+      "From Palermo to London: Gemma moved here at eleven without speaking English, and music became her first language.",
+      "She has written sixteen songs and released three: “Smile Like She Did” (October 2025), “Another Stupid Fight” (January 2026) and “Mask” (March 2026), an ISC 2025 semi-finalist.",
+      "A TAM Fellow mentored by Dana Gillespie, she gave the world premiere of Dana’s 1966 song “Foolish Seasons” at TAM on 31 May 2026, and joins Dana as her special guest on 16 December."
+    ],
+    "links": [
+      {
+        "label": "Gemma at Everywhere",
+        "url": "https://everywhere.tam.tv/gemma/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@gemmaschito"
+      }
+    ],
+    "invite": "dana-gemma"
+  }
+]

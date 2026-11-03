@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "dana-108",
+    "name": "Dana’s 108 Verified Collection",
+    "artist": "danagillespie",
+    "size": 108,
+    "maxEach": 4,
+    "postage": 495,
+    "codePrefix": "D108",
+    "blurb": "Signed copies of Dana Gillespie’s books, each with a limited edition Polaroid bookmark. Every copy is numbered: 108 of each book, with a certificate code anyone can check.",
+    "items": [
+      {
+        "id": "wbam",
+        "title": "Weren’t Born a Man",
+        "kind": "Her memoir",
+        "publisher": "Hawksmoor Publishing, 2020",
+        "price": 2500,
+        "cover": "/img/books/wbam-cover.jpg",
+        "blurb": "Dana’s own story: Bowie and Dylan, Jimmy Page and Elton John, Mary Magdalene, Mustique and the blues. “Hilarious and moving”, said The Times."
+      },
+      {
+        "id": "wmwm",
+        "title": "What Memories We Make",
+        "kind": "Her new picture book",
+        "publisher": "Hawksmoor Publishing, 2026",
+        "price": 6500,
+        "cover": "/img/books/wmwm-cover.jpg",
+        "blurb": "Six decades in photographs, with the stories behind them: Bowie in the Seventies, Mustique, India, the movies and the Temple of Art and Music."
+      }
+    ]
+  }
+]

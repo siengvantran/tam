@@ -1,164 +1,189 @@
 # TAM.TV
 
-**TAM began as a place. TAM is becoming a network.**
+The Temple of Art and Music on the web: every night, festival and artist at TAM, with TAM's own box office. It's a fresh build that brings every idea from **The Best Christmas Ever** (christmas.tam.tv) into the main site, so any festival or night can switch them on. Every page of the old Google Sites `www.tam.tv` still answers at its address.
 
-TAM.TV is the digital home of TAM (Temple of Art and Music) and TAM Festival, which hosts emerging artists and cult legends alike. It is a live music and media platform that turns each night at TAM into content that lasts: performance films, interviews, artist pages and stories. Search engines and AI systems can read all of it, and the audience it builds belongs to TAM, not to a social platform.
+- What was ported, and what wasn't: [docs/PORTING.md](docs/PORTING.md)
+- What we found on the current tam.tv: [docs/REVIEW.md](docs/REVIEW.md)
 
-## What it is
+## Tailored to who you are
 
-The home of the Temple of Art and Music on the web: what's on, **tickets sold by TAM itself**, TAM TV (live from the YouTube channel), the TAM Academy, a page for every artist who has played TAM, and an archive of past nights taken from TAM's Eventbrite listings. Every old `www.tam.tv` URL still works.
+The site starts by asking **what brings you to TAM**, and shapes itself around the answer:
 
-Two data loops collect first-party data: **"Bring them back"** on artist pages (who fans want booked next) and **"I was there"** on past nights. Both are logged in `data/demand.jsonl`.
+| Pathway | For | What changes |
+| --- | --- | --- |
+| `/for/live-music` | Londoners and visitors after live music | nights picked for them, the regulars, the festival, how to get there |
+| `/for/musician` | players and singers | the jam, the open mic, the Sunday Spot, young artists' nights, pitching a night |
+| `/for/venue-hire` | hiring the room | capacity (up to 150), what's included, an enquiry form |
+| `/for/party` | parties and team nights | group discounts, startup packs, Team Tables, sponsorship, private hire |
+| `/for/brand` | brands and sponsors | sponsorship packages, hosting a night |
 
-**No unverifiable numbers.** The archive comes from Eventbrite and misses some nights, so the site doesn't publish totals: no night counts, no artist counts, no "most played". Pages that list past nights say they come from Eventbrite listings and may be incomplete.
+Pathways live in `content/pathways.json`. Choosing one sets a preference cookie (`tam_path`), so the home page reorders itself for that visitor and Ask TAM knows who it's talking to. Enquiries from any pathway (or from Ask TAM) land in `/admin` → **Enquiries**, and are emailed to `ENQUIRIES_TO` when email is on.
+
+### Ask TAM, the concierge agent
+
+Every public page has **Ask TAM**: a chat that answers from TAM's own data. It's Claude (`claude-opus-5-5` at `low` effort by default, through the official `@anthropic-ai/sdk`) with nine tools (`src/services/concierge.js`):
+
+`find_nights` · `get_night` · `quote_tickets` (prices exactly as the box office charges, with a pre-filled booking link) · `find_artists` · `search_past_nights` · `venue_guide` · `festival_info` · `pathway_guide` · `start_enquiry` (only after the visitor gives their details and says yes)
+
+- It never takes payment: it quotes and links to the booking form, which opens with the ticket and quantity chosen.
+- The page streams what it's doing ("Checking what's on…") and shows the nights, artists and booking links its tools found as cards.
+- The system prompt and tools never change, so they're cached; today's date, the visitor's pathway and the page go in a mid-conversation system message. Refused requests fall back server-side (`fallbacks: "default"`).
+- **Without `ANTHROPIC_API_KEY`**, or if the API fails, or past `AGENT_DAILY_LIMIT` questions a day, it still answers from keywords: the right pathway and matching nights.
+- 20 questions per visitor per 10 minutes. `/admin` → **Ask TAM** shows what people ask, which pathways and tools, and how often it fell back.
+
+## A musical experience
+
+The site is an instrument and a piece of generative digital art:
+
+- **Play the site** (the switch in the header, off by default, remembered): every tile, card, button and link plays a note as you hover it (the same element always plays the same note, so moving around makes a melody), clicks play chords, and the A–K keys play the scale. A soft electric-piano voice with an echo, tuned to a pentatonic scale (`public/js/instrument.js`, Web Audio, no samples).
+- **The living background** (`public/js/visuals.js`): neon ribbons drawn fresh every frame, like an oscilloscope made of light. They swell with the bass, shimmer with the treble, bend towards the pointer and take the colour of the note being played (Tamalume's note-to-colour map).
+- **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
+- For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
+
+## TAM's live Eventbrite listing comes first
+
+TAM's Eventbrite organiser page ([eventbrite.co.uk/o/33409225909](https://www.eventbrite.co.uk/o/33409225909)) is the **superior data set**. `src/services/eventbrite-live.js` reads the same public endpoints that page uses, at startup and every 30 minutes: every upcoming listing and the most recent past ones. Where Eventbrite and the schedule both have a night (same date, matching name: "The Original Singers Club" is the schedule's "Singers @ Sunday Spot"), **Eventbrite's name, start time, price, sold-out state and ticket link win**. Cancelled listings are left out. December listings join The Best Christmas Ever. Schedule nights Eventbrite doesn't list, and dates beyond its last listing, still come from the schedule.
+
+**Tickets are modelled from each listing's own ticket types** (`/api/v3/events/:id/ticket_classes/for_sale/`, the list Eventbrite's checkout shows): free, paid (price plus Eventbrite's booking fee) or pay-what-you-like, with on-sale state, sales end and the ticket's description. A night with a free ticket on sale is "Free entry" (TAM Karaoke's General Ticket), otherwise it's priced from its cheapest paid ticket. The organiser feed's "minimum price" isn't used: it reports the dearest ticket plus fee (£16.96 for karaoke). Each night's page lists every ticket type, and the structured data carries one offer per type. If a listing's ticket types can't be fetched, the last known ones stay.
+
+The last good copy is saved as `DATA_DIR/eventbrite-live.json`, so if Eventbrite is down the site keeps its listings. Staff see when it last refreshed on the admin overview. `EVENTBRITE_SYNC=off` turns it off. `EVENTBRITE_ORGANIZER` and `EVENTBRITE_BASE` change the organiser and host.
+
+## TAM's schedule
+
+`content/schedule.json` is every **public** night from TAM's Elephant & Castle performance schedule (the Google Sheet, May 2021 onwards), imported by `python3 scripts/import_schedule.py <schedule.xlsx>`. The sheet is TAM's internal calendar, so the importer leaves out private hires, bookings, birthdays, rehearsals, shoots, closures and anything with a fee, strips staff names, and drops any name the sheet ever ties to a private booking. **Never commit the spreadsheet**, and check the output before publishing.
+
+Past nights join the archive (unless Eventbrite already has them). Upcoming ones become nights. **Everything in December is part of The Best Christmas Ever** (`claims: { months: [12] }` in the festival): on its ticketed nights the schedule becomes the night's programme ("The Great British Blues Jam + TAM Karaoke"), and other December dates are still festival nights, without tickets.
 
 ## Run it
 
 ```bash
-npm install
-npm run dev        # http://localhost:3000
+ADMIN_TOKEN=change-me-please DOOR_TOKEN=door-code npm start   # http://localhost:3000
 npm test
 ```
 
-Node 20 or newer. CI runs the tests on Node 20 and 22.
+Node 20 or newer. One dependency: the Anthropic SDK for Ask TAM (`npm install`). Data goes to `./data` unless `DATA_DIR` is set.
+
+Search and christmas.tam.tv: every page has one home, so neither site is filtered as a copy of the other. See [docs/SEO.md](docs/SEO.md).
+
+## How it fits together
+
+```
+server.js                 entry point
+src/app.js                wiring: config → store → services → domains → routes
+src/lib/http.js           router, JSON/HTML responses, body parsing, rate limit, static files, CSP
+src/lib/store.js          db.json in DATA_DIR (atomic writes) + uploaded images
+src/lib/content.js        loads and checks content/, generates festival nights, London time
+src/lib/qr.cjs            QR encoder for tickets (from bestchristmas, dependency-free)
+shared/pricing.js         ticket pricing, shared by the server and the browser
+src/domain/tickets.js     bookings, holds, Team Tables, Stripe checkout + webhook, ticket keys, door
+src/domain/community.js   Party Wall, remix cards, sponsorship, follows, demand, visit counts
+src/domain/collections.js numbered verified collections and certificates
+src/domain/raffle.js      the charity raffle desk
+src/domain/admin.js       staff sign-in and the /admin API
+src/services/             Stripe (no SDK) and Resend email
+src/views/                server-rendered pages (escaped by default)
+public/js/                browser modules: site, festival, song, tamalume, collection, admin, door, raffle
+content/                  everything editable, as JSON
+scripts/                  content import and checks
+```
+
+### One price, everywhere
+
+`shared/pricing.js` is the only place prices are worked out. The server imports it to charge, and the browser imports the same file from `/shared/pricing.js` to show the total. A night's `sale` says how it sells:
+
+| Mode | Used for | Rules |
+| --- | --- | --- |
+| `own` | a night with its own ticket types (the Hootenanny: Robin £7, GA £10, VIP £15) | optional per-type `limit`, `tableRequest` |
+| `schedule` | an early-bird ladder | tiers end at `until` or when `limit` sells out; a `door` price shows the saving |
+| `flat` | festival nights at one price (£10) | |
+| `standard` | headline nights (Dana's night, £22) | group tiers (6+, 10+, 20+) and packs (Startup pack, 4–15 people) |
+
+All of them have a `capacity` and a `maxPerBooking`. Unpaid Stripe checkouts hold their tickets for 35 minutes.
+
+## Festivals
+
+A festival is one JSON file in `content/festivals/`. Its `dates` generate one night per open date (minus `closed`), priced by its `pricing`. Hand-made nights in `content/events.json` with `"festival": "<slug>"` replace the generated night on that date. Each festival turns on the features it wants:
+
+```json
+"features": {
+  "countdown": true,      "ambient": "snow",     "tamalume": true,
+  "cards": true,          "teamTables": true,    "partyWall": true,
+  "sponsorship": true,    "donation": true,      "raffle": true,    "invites": true
+}
+```
+
+The festival page shows a section for each one that's on, and its nights' pages use the same sections. **The Best Christmas Ever is set up as content** (`content/festivals/best-christmas-ever.json`), with the same 21 nights, prices, discounts, team tables, charity, raffle and sponsorship as christmas.tam.tv. To run another festival, copy that file and change it. Startup checks every reference, so a typo stops the server instead of breaking a page.
 
 ## Pages
 
 | | |
-|---|---|
-| `/` | Next night, coming up, the TAM Academy, cult legends, regulars, latest TAM TV, on this day at TAM |
-| `/whats-on` | Upcoming nights (from Eventbrite), grouped by day |
-| `/events/:slug` (+ `.ics`) | A night: booking (when on sale at TAM) or the Eventbrite link, the line-up, and "I was there" for past nights |
-| `/tickets/:code` | A buyer's ticket, with its QR code |
-| `/box-office` | Staff only: open sales, ticket types and prices, bookings, door check-in, guest-list CSV |
-| `/artists`, `/artists/:slug` | Cult legends and A–Z; each artist's nights at TAM, who they shared bills with, TAM TV films, "Bring them back" |
-| `/tv` | TAM TV, live from the YouTube channel |
-| `/academy` | The TAM Academy |
-| `/tech-nights` | Tech nights for AI companies and crypto communities: formats, what hosts get, 21 crypto communities with "I'd come" votes, past tech nights, a sponsor enquiry form |
-| `/the-best-christmas-ever` | The TAM Christmas Festival: its shows, the song player, past Christmas nights at TAM |
-| `/archive`, `/archive/:year` | Past nights by year |
-| `/series/:slug`, `/genres/:genre`, `/locations/:venue` | Regular nights, genres, venues (past ones say so) |
-| `/locations` | Find us |
-| `/about`, `/submit`, `/stories`, `/listen`, `/privacy` | |
+| --- | --- |
+| `/` | next night with a countdown, the current festival, coming up, cult legends, TAM TV, on this day at TAM |
+| `/whats-on` | every upcoming night, and booking for any of them |
+| `/the-best-christmas-ever` (a festival's `path`) | the festival: song and cards, programme, calendar, charity, tickets, Team Tables, Party Wall, sponsorship |
+| `/events/:slug` (+ `.ics`) | a night: line-up, running order, invite a friend, tickets, team tables, add to calendar |
+| `/artists`, `/artists/:slug` | cult legends and A–Z; bio, next gigs (booking links credit the artist), follow, "Bring them back", films, past nights |
+| `/archive`, `/archive/:year`, `/archive/night/:slug` | TAM's Eventbrite history, with "I was there" |
+| `/tv` | TAM TV films |
+| `/card/:id` | a remix card, opened from an envelope |
+| `/invite/:id` | an invitation card (`?to=&from=&m=` adds a personal note) |
+| `/ticket/:ref?k=` | a ticket with its QR code; staff phones get the check-in panel |
+| `/pay/:ref?k=` | pay for a reserved booking by card |
+| `/collections/:slug`, `/verify` | a numbered collection (Dana's 108 signed books) and certificate checks |
+| `/admin`, `/door`, `/raffle-desk` | staff |
+| every old www.tam.tv URL | the old page's text and photos, in the new design |
 
-## Tickets
+## Staff
 
-TAM sells its own tickets. Eventbrite stays the default: a night only sells on TAM.TV once staff open it in the box office.
+- **Admin** (`/admin`, `ADMIN_TOKEN`, 12+ characters): sales per night, bookings (mark paid, cancel, email the ticket, send a payment link), Party Wall approvals and gold pins, sponsor enquiries, collection orders, artist stats (visits, invite views, followers, bookings through their links), demand, emailing followers, CSV exports.
+- **Door** (`/door`, `DOOR_TOKEN`, 8+ characters): sign in once, then scan tickets with the phone camera. The ticket opens with ✓/✗ and check-in buttons. You can also type a reference.
+- **Raffle desk** (`/raffle-desk`, the door code): sell numbered tickets (cash or card), void a sale, draw winners.
 
-1. Set `ADMIN_TOKEN`, then sign in at `/box-office` with it.
-2. Open a night. Tick **On sale**, set up to four ticket types (name, price, optional limit) and an optional room capacity, then save. The night's page swaps the Eventbrite button for a booking form.
-3. **Free tickets** are issued at once. **Paid tickets** go through Stripe Checkout and need `STRIPE_SECRET_KEY`. Until it's set, paid types stay hidden from the public. Seats are held for 30 minutes while the buyer pays. Payment is confirmed when they return to the site, and also by Stripe's webhook if they close the tab. To set up the webhook, point a Stripe endpoint at `https://<site>/api/stripe/webhook` for `checkout.session.completed` and set `STRIPE_WEBHOOK_SECRET`.
-4. Each booking has a ticket page with a QR code and a code like `TAM-ABCDE-FGHJK`. At the door, staff type or scan the code into the box office to check people in. Each night has a guest-list CSV.
+Staff sign-in sets an HttpOnly cookie signed with the site's secret.
 
-Bookings are an append-only log (`data/orders.jsonl`) and settings live in `data/box-office.json`, so both need the Railway volume. Not built yet: emailing tickets (buyers get their ticket page straight away, so they should bookmark it) and automatic refunds (cancel the booking in the box office, then refund it in Stripe).
+## Configuration
 
-## Festivals and hand-made nights
+See `.env.example`.
 
-Nights that aren't on Eventbrite go in `content/events.json`. They can carry a `summary`, a `programme` (time, title, text), `highlights` (title, text, optional links; shown as "Why you'll want to be there" with a booking button) and `"academy": true`, which lists the night on `/academy`. A night with no Eventbrite `url` shows "Tickets soon" until staff open sales in the box office.
+| Variable | |
+| --- | --- |
+| `SITE_URL` | public URL: canonical links, sitemap, emails, Stripe return links |
+| `DATA_DIR` | bookings and uploads. On Railway, mount a volume and point this at it |
+| `ADMIN_TOKEN`, `DOOR_TOKEN` | staff codes |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | card payments. Without them, bookings are reserved and invoiced. Webhook: `https://<site>/api/stripe/webhook` for `checkout.session.completed`, `…async_payment_succeeded`, `…async_payment_failed`, `…expired` |
+| `RESEND_API_KEY`, `MAIL_FROM`, `MAIL_REPLY_TO` | ticket, order and follower emails |
+| `PIN_MODERATION=off` | publish Party Wall pins without review |
+| `ANTHROPIC_API_KEY` | turns on Ask TAM's agent (without it, Ask TAM answers from keywords) |
+| `TAM_AI_MODEL`, `TAM_AI_EFFORT` | default `claude-opus-5-5`, `low` |
+| `AGENT_DAILY_LIMIT` | agent questions per day before falling back to keywords (default 1500) |
+| `ENQUIRIES_TO` | where enquiry emails go (needs `RESEND_API_KEY`) |
+| `INDEXING=on` | **only on the real tam.tv**: lets search engines index the site. Everywhere else every page is `noindex` (see [docs/SEO.md](docs/SEO.md)) |
 
-Festivals live in `content/festivals.json`. Each has a landing page at its `path`, an optional `song` (a YouTube ID) played on that page, and a `pastPattern` for earlier nights to list. A night joins a festival with `"festival": "<slug>"`. **To add a show to the TAM Christmas Festival, add a night with `"festival": "tam-christmas-festival"` to `content/events.json`.** It then appears on `/the-best-christmas-ever` (which keeps the old page's text, so the URL keeps its search value), on the home and What's on pages while it's coming up, and in the festival's structured data.
+## Deploy on Railway
 
-### Price schedules
-
-A night can sell on a price schedule instead of fixed ticket types: add `pricing` to it in `content/events.json`. Each tier has a price in pence and ends at its `until` date or when its `limit` sells out, whichever comes first. The next tier then takes over. A buyer's price is locked in when they book. The night's page shows the whole ladder: the current price, what's gone, how many are left at this price, how much booking now saves on the door price, and a countdown to the next rise. Every tier is also published as an Offer in the structured data.
-
-Dana Gillespie's Best Christmas Ever (16 Dec 2026) is set up like this:
-
-| Tier | Price | Until |
-|---|---|---|
-| Early Bird | £15 | the first 50 tickets, until Sun 1 Nov |
-| Advent | £20 | Advent Sunday, 29 Nov |
-| Last Orders | £25 | Tue 8 Dec |
-| Final week | £30 | from Wed 9 Dec, and £30 on the door |
-
-A scheduled night goes on sale by itself (`"onSale": true`) once Stripe is set up; until then it shows the ladder and "Tickets soon". In the box office, staff can still close sales or set a room capacity, and they can see how many tickets each tier has sold.
-
-## Tech nights
-
-`/tech-nights` is the page for sponsors: AI companies, blockchains, developer tools. Its text, formats and the list of communities are in `content/tech-nights.json`. The page is seeded with 21 of the biggest crypto communities, each with an official link. Visitors tap **I'd come** on the ones they want, and the most-wanted move to the top. The votes are logged in `data/demand.jsonl` as `want-community`, so TAM knows which communities to approach first. Sponsor enquiries go to `data/tech-enquiries.jsonl`. Past tech nights are found in the archive by title, and a new tech night just needs `"tech": true` in `content/events.json`. The page says plainly that the listed communities are not sponsors or partners unless a night says so.
-
-## TAM TV
-
-`/tv` reads TAM's YouTube channel feed (`youtubeChannelId` in `content/site.json`), refreshes it every 30 minutes and plays films in the page. If YouTube can't be reached, it shows the films archived in `content/videos.json`.
-
-## Keeping the old site's search value
-
-All 54 pages of the old Google Sites `www.tam.tv` were crawled (`scripts/crawl_oldsite.py`), and **every old URL still answers at the same address**:
-
-- Old artist URLs keep their slugs (`/artists/danagillespie`, `/artists/hans-theessink`…). They became full artist pages, with the old text and photos folded in.
-- `/locations/elephant-castle` and `/locations/smithfield` became venue pages: the old text, opening hours and photos, plus every night held there.
-- `/tv` and `/whats-on` are now the TAM TV and What's on pages.
-- Every other old page (Dana's projects, Austria, private parties, Singers, NFT…) is served at its original URL in the new design.
-- `/home` returns a 301 redirect to `/`. The test suite requests every crawled URL, so CI fails if one breaks.
-
-The old site's image links expire (Google Sites signs them), so its 165 photos were downloaded and stored as WebP in `public/img/archive/`.
-
-## Refreshing the data
-
-```bash
-# Eventbrite history (past + upcoming) → content/archive/
-node scripts/fetch_eventbrite.mjs /tmp/eventbrite.json      # needs Playwright
-python3 scripts/import_eventbrite.py /tmp/eventbrite.json
-
-# The old site → content/legacy/, content/videos.json, public/img/archive/
-python3 scripts/crawl_oldsite.py /tmp/oldsite.json
-python3 scripts/import_oldsite.py /tmp/oldsite.json        # needs Pillow
-```
-
-Artists are matched to nights by name in the event titles (Eventbrite descriptions are empty), using the hand-curated list in `scripts/sources/performers.txt`. Each line is a name, its aliases, and optionally `@slug=` (keep an old URL), `@note=` (tell namesakes apart, when a TAM artist shares a name with someone famous) and `!legend`. To add or correct an artist, edit that file and re-run the import. Bios and links go in `content/artists.json`, keyed by slug.
-
-## The logo
-
-The TAM logo is a trademark, and TAM.TV only ever shows it **exactly as drawn**. Every logo file in `public/img/` (full logo, circular mark, wordmark, favicons, social card) is cut directly from the original artwork `public/img/tam-logo-original.jpg` by `scripts/extract_logo.py`. The script only makes the black background transparent; nothing is redrawn, recoloured or reshaped. Where the logo sits over the moving background, a solid black disc behind the circle keeps it looking exactly like the original.
-
-All the movement happens *around* the logo:
-
-- **London time.** A halo behind the logo, and the gold used across the site, shift from rose-gold dawn to bright day, amber dusk and a slow-breathing glow at night.
-- **The TAM 108.** Behind every page, 108 songs fall from the top of the screen (`content/chorus.json`). Each one shows its title and artist. Choruses appear only for the 12 public-domain songs, because song lyrics are copyright. You can add a chorus for any other song once TAM holds a lyric licence for it, or has permission from the artist (e.g. TAM's own artists). Set `"licensed": true` on that song; the content check refuses unlicensed lyrics. Visitors can pause the rain from the footer, and it stays still for anyone whose system asks for reduced motion.
-- **Coloured vinyl.** Every artist and night gets its own vinyl record (`/art/<slug>.svg`) until real photography exists. Its name picks one of 24 rare colourways and one of 7 pressing styles. The colourways are borrowed from minerals, deep-sea light, iridescence and astronomy: Opal Fire, Bioluminescence, Labradorite, Ammolite, Hummingbird Throat, Cosmic Latte (the average colour of the universe)… The styles are marble, splatter, galaxy, colour-in-colour, split, pinwheel and smoke. The same name always gets the same record. Records spin on hover, and artist pages say what the record is pressed on. The palettes are in `src/lib/vinyl.js`. The record deliberately doesn't use the TAM mark.
-
-To regenerate the logo files: `python3 scripts/extract_logo.py` (needs Pillow and NumPy).
-
-## AI: the Production Agent
-
-`/studio` turns one night into a content package. You pick an artist and an event and paste your notes. Claude then drafts a profile, captions for Instagram, TikTok, YouTube and X, an SEO title and description, clip ideas, interview questions and story angles. The output follows a JSON schema, and a person edits it before anything is published. To switch it on, set `ANTHROPIC_API_KEY` and `ADMIN_TOKEN`. The studio is protected by the token and is not indexed by search engines.
-
-## Cult legends
-
-Artists marked `!legend` in `scripts/sources/performers.txt` (or `"legend": true` in `content/artists.json`) get a gold **Cult legend** badge, appear first on `/artists`, and are pressed as a **Legend Edition** record. The current list (Dana Gillespie, Holly Penfield, Todd Sharpville, Osibisa, Keith West, Ian Siegal, Jimmy Carpenter, Big Joe Louis, Earl Okin, Keith Shocklee) needs TAM's review. Only artists who appear in TAM's Eventbrite listings are listed as having played TAM. Old-site pages for anyone else (e.g. Hans Theessink) stay at their URLs as archive pages.
+1. New Project → Deploy from GitHub repo → this repo. `railway.json` sets the start command and the `/healthz` check.
+2. Add a volume mounted at `/data` and set `DATA_DIR=/data`.
+3. Set `SITE_URL`, `ADMIN_TOKEN` and `DOOR_TOKEN`, plus Stripe and Resend when you're ready.
 
 ## Content
 
-Everything lives in `content/` as JSON and is validated when the server starts (slugs, cross-references, the lyric-licence guard), so a typo fails loudly. Run `npm run check:content` to test without starting the server.
+- `content/site.json`, `venues.json`: the site and its rooms
+- `content/festivals/*.json`, `events.json`: festivals and hand-made nights
+- `content/artists.json`: profiles, laid over `archive/performers.json` (from Eventbrite)
+- `content/invites.json`, `stories.json`, `polaroids.json`, `collections.json`: from The Best Christmas Ever
+- `content/archive/`, `legacy/pages.json`, `videos.json`: from the `tam` repo's crawl of www.tam.tv and TAM's Eventbrite history
 
-## Deploy (Railway)
+`node scripts/import_christmas.cjs ../bestchristmas` refreshes the Christmas content and artwork. The archive and the old site refresh with the earlier scripts:
 
-`railway.json` sets the start command and the health check (`/healthz`). Set these variables (see `.env.example`):
-
-- `SITE_URL`: the public URL, used for canonical links, the sitemap and structured data
-- `DATA_DIR`: point it at a mounted Railway volume (e.g. `/data`) so submissions, sign-ups and analytics survive redeploys
-- `ADMIN_TOKEN`: signs staff into `/box-office` (and `/studio`)
-- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: paid tickets
-- `ANTHROPIC_API_KEY`: optional, enables the Production Agent
-
-## Architecture
-
-```
-server.js              HTTP entry point
-src/app.js             routing, forms, APIs, security headers (CSP etc.)
-src/views.js           page templates
-src/lib/content.js     content loading, validation, indexes, queries   ← swap for a CMS later
-src/lib/seo.js         JSON-LD, sitemap, llms.txt, knowledge graph
-src/lib/brand.js       logo (original artwork only), archive rings
-src/lib/vinyl.js       coloured vinyl artwork (24 colourways x 7 pressings)
-src/lib/store.js       first-party data: submissions, sign-ups, demand, analytics (JSONL)   ← swap for Postgres later
-src/lib/tickets.js     the box office: ticket types, capacity, orders, check-in
-src/lib/stripe.js      Stripe Checkout + webhook verification (no SDK)
-src/lib/youtube.js     TAM TV's live YouTube feed
-src/lib/ai.js          Production Agent (Claude)
-public/                CSS, client JS, images
-content/               the site's content: archive/ (Eventbrite), legacy/ (old site), videos, chorus.json (the TAM 108)
-scripts/               fetch/crawl/import scripts and the curated performer list
+```bash
+node scripts/fetch_eventbrite.mjs /tmp/eventbrite.json && python3 scripts/import_eventbrite.py /tmp/eventbrite.json   # → content/archive/
+python3 scripts/crawl_oldsite.py /tmp/oldsite.json && python3 scripts/import_oldsite.py /tmp/oldsite.json          # → content/legacy/, videos.json, public/img/archive/
 ```
 
-Each module is a seam where later phases plug in (pledges, membership, more agents) without rebuilding the platform. The roadmap is in [docs/ROADMAP.md](docs/ROADMAP.md).
+Imported venues (`content/archive/venues.json`) are merged with `content/venues.json`, where the hand-written details live. `npm run check:content` checks everything without starting the server.
+
+## Before launch
+
+- Prices, capacity, discounts, sponsorship packages and the raffle are the Christmas site's placeholders. Sign them off in `content/festivals/best-christmas-ever.json`.
+- Review the privacy notice (`/privacy`) with TAM.
+- Point `charity.url` at TAM's own fundraising page once it exists.

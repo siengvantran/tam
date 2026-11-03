@@ -1,19 +1,16 @@
 {
   "name": "TAM.TV",
-  "legalName": "TAM — Temple of Art and Music",
+  "legalName": "TAM · Temple of Art and Music",
   "tagline": "Live music. Emerging artists. Cult legends.",
-  "description": "TAM.TV is the home of the Temple of Art and Music in Elephant & Castle, London: live music from emerging artists and cult legends, what's on, tickets, films and the story of everyone who has played TAM.",
-  "bigIdea": "TAM began as a place. TAM is becoming a network.",
+  "description": "The home of the Temple of Art and Music in Elephant & Castle, London: live music from emerging artists and cult legends, festivals, tickets, films and the story of everyone who has played TAM.",
   "url": "https://tam.tv",
-  "locality": "Elephant & Castle, London",
+  "defaultVenue": "elephant-castle",
   "socials": {
     "youtube": "https://www.youtube.com/@TAM88",
     "eventbrite": "https://www.eventbrite.co.uk/o/temple-of-art-and-music-33409225909",
-    "instagram": "",
-    "tiktok": "",
-    "facebook": "",
-    "x": ""
+    "instagram": "https://www.instagram.com/templeartmusic/"
   },
   "youtubeChannelId": "UCJA26y1Lvdehx9x4cJfXNTg",
-  "hours": []
+  "ticker": ["LIVE MUSIC", "EMERGING ARTISTS", "CULT LEGENDS", "ELEPHANT & CASTLE", "TAM TV", "TEMPLE OF ART AND MUSIC"],
+  "song": { "youtubeId": "cXdu_jnTcPI", "title": "The Best Christmas Ever", "artist": "danagillespie" }
 }
