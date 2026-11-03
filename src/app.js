@@ -47,6 +47,7 @@ export function configFrom(env = process.env) {
     aiEffort: env.TAM_AI_EFFORT || 'low',
     agentDailyLimit: Number(env.AGENT_DAILY_LIMIT) || 1500,
     enquiriesTo: env.ENQUIRIES_TO || '',
+    indexing: env.INDEXING === 'on', // only the real tam.tv: previews are never indexed
   };
 }
 
@@ -109,6 +110,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
 
   async function handle(req, res) {
     res.req = req;
+    if (!cfg.indexing) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const url = new URL(req.url, 'http://x');
     const p = url.pathname;
     try {
@@ -130,6 +132,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
         if (p.startsWith('/uploads/') && await serveStatic(res, store.uploads, p.slice(9), 'public, max-age=86400')) return;
         if (p === '/favicon.ico') return serveStatic(res, path.join(ROOT, 'public/img'), 'favicon-48.png');
       }
+      const alias = content.festivalAliases.get(p);
+      if (alias && (req.method === 'GET' || req.method === 'HEAD')) return redirect(res, alias, 301);
       const m = site.match(req.method, p);
       if (m) return await m.handler(req, res, { url, params: m.params });
       // Every page of the old www.tam.tv still answers at its address.

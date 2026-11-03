@@ -8,7 +8,11 @@ const icsDate = (iso) => iso.replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 export function seoRoutes(r, ctx) {
   const c = ctx.content;
   r.get('/healthz', (req, res) => send(res, 200, { ok: true }));
-  r.get('/robots.txt', (req, res) => send(res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /door\nDisallow: /raffle-desk\nDisallow: /ticket/\nDisallow: /pay/\nDisallow: /card/\nDisallow: /api/\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' }));
+  r.get('/robots.txt', (req, res) => {
+    // A preview stays crawlable so search engines see its noindex header, but advertises no sitemap.
+    if (!ctx.cfg.indexing) return send(res, 200, 'User-agent: *\nAllow: /\n', { 'Content-Type': 'text/plain; charset=utf-8' });
+    send(res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /door\nDisallow: /raffle-desk\nDisallow: /ticket/\nDisallow: /pay/\nDisallow: /card/\nDisallow: /api/\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
+  });
   r.get('/sitemap.xml', (req, res) => {
     const urls = new Set(['/', '/whats-on', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
     for (const f of c.festivals) urls.add(f.path);
@@ -17,6 +21,7 @@ export function seoRoutes(r, ctx) {
     for (const p of c.legacy) if (p.path !== '/home') urls.add(p.path);
     for (const y of new Set(c.past.map((e) => e.year))) urls.add(`/archive/${y}`);
     for (const col of c.collections) urls.add(`/collections/${col.slug}`);
+    for (const u of [...urls]) if (c.canonicalElsewhere.has(u)) urls.delete(u); // their home is another site
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...urls].map((u) => `<url><loc>${ctx.cfg.siteUrl}${encodeURI(u)}</loc></url>`).join('\n')}\n</urlset>\n`;
     send(res, 200, body, { 'Content-Type': 'application/xml; charset=utf-8' });
   });

@@ -254,6 +254,17 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   if (problems.length) throw new Error(`Content problems:\n  - ${problems.join('\n  - ')}`);
 
   // ----- queries -----
+  // Where a page's content officially lives, when that's another site (see docs/SEO.md).
+  const canonicalElsewhere = new Map();
+  for (const f of festivals) {
+    const cn = f.canonical;
+    if (!cn || !cn.host) continue;
+    for (const [here, there] of Object.entries(cn.paths || {})) canonicalElsewhere.set(here, `${cn.host}${there}`);
+    if (cn.invites) for (const i of invites) if ((nightBy.get(i.event) || {}).festival === f.slug) canonicalElsewhere.set(`/invite/${i.id}`, `${cn.host}/invite/${i.id}`);
+  }
+  // Old festival-site paths that resolve on this site (used when that site redirects here).
+  const festivalAliases = new Map(festivals.flatMap((f) => Object.entries((f.canonical || {}).redirects || {})).filter(([from]) => from !== '/'));
+
   const upcoming = (today = londonToday()) => nights.filter((n) => n.date >= today);
   const nightsFor = (festivalSlug) => nights.filter((n) => n.festival === festivalSlug);
   const artistNights = (slug) => ({
@@ -278,7 +289,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   };
 
   return {
-    pathways, pathwayBy, nightsForPathway,
+    pathways, pathwayBy, nightsForPathway, canonicalElsewhere, festivalAliases,
     site, venues, venueBy, artists: [...artistBy.values()].sort((a, b) => a.name.localeCompare(b.name)), artistBy,
     series, festivals, festivalBy, festivalAt, nights, nightBy, past, pastBy, legacy, legacyBy, videos,
     invites, inviteBy, stories, storyBy, polaroids, collections, collectionBy,

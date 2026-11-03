@@ -13,7 +13,10 @@ export function layout(ctx, {
   ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null,
 }) {
   const { site } = ctx.content;
-  const url = `${ctx.cfg.siteUrl}${path}`;
+  const elsewhere = ctx.content.canonicalElsewhere.get(path);
+  const url = elsewhere || `${ctx.cfg.siteUrl}${path}`;
+  if (elsewhere) jsonLd = null; // the event listing belongs to the canonical page, not this copy
+  if (!ctx.cfg.indexing) noindex = true;
   const image = og ? (og.startsWith('http') ? og : `${ctx.cfg.siteUrl}${og}`) : `${ctx.cfg.siteUrl}/img/og.jpg`;
   const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
   const desc = description || site.description;

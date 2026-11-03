@@ -55,6 +55,8 @@ npm test
 
 Node 20 or newer. One dependency: the Anthropic SDK for Ask TAM (`npm install`). Data goes to `./data` unless `DATA_DIR` is set.
 
+Search and christmas.tam.tv: every page has one home, so neither site is filtered as a copy of the other. See [docs/SEO.md](docs/SEO.md).
+
 ## How it fits together
 
 ```
@@ -147,6 +149,7 @@ See `.env.example`.
 | `TAM_AI_MODEL`, `TAM_AI_EFFORT` | default `claude-opus-5-5`, `low` |
 | `AGENT_DAILY_LIMIT` | agent questions per day before falling back to keywords (default 1500) |
 | `ENQUIRIES_TO` | where enquiry emails go (needs `RESEND_API_KEY`) |
+| `INDEXING=on` | **only on the real tam.tv**: lets search engines index the site. Everywhere else every page is `noindex` (see [docs/SEO.md](docs/SEO.md)) |
 
 ## Deploy on Railway
 

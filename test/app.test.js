@@ -286,3 +286,43 @@ test('the performance schedule: public nights only, and December belongs to the 
   assert.ok(decPast.length > 100);
   assert.ok(decPast.every((e) => e.month === 'December' || /christmas/i.test(e.title)));
 });
+
+test('search engines: previews are never indexed, and festival pages point to their one home', async () => {
+  const preview = await start();
+  const home = await preview.call('/');
+  assert.equal(home.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.match(home.body, /<meta name="robots" content="noindex, nofollow">/);
+  const robots = (await preview.call('/robots.txt')).body;
+  assert.doesNotMatch(robots, /Sitemap/);
+  await preview.close();
+
+  const live = await start({ INDEXING: 'on', SITE_URL: 'https://tam.tv' });
+  const page = await live.call('/');
+  assert.equal(page.headers.get('x-robots-tag'), null);
+  assert.doesNotMatch(page.body, /name="robots"/);
+  assert.match(page.body, /<link rel="canonical" href="https:\/\/tam\.tv\/">/);
+  assert.match((await live.call('/robots.txt')).body, /Sitemap: https:\/\/tam\.tv\/sitemap\.xml/);
+  // pages that christmas.tam.tv also has: canonical there, no duplicate event listing
+  for (const [here, there] of [['/the-best-christmas-ever', '/'], ['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'],
+    ['/collections/dana-108', '/books'], ['/invite/band', '/invite/band'], ['/artists/bakers-dozen', '/artist/band']]) {
+    const r = await live.call(here);
+    assert.ok(r.body.includes(`<link rel="canonical" href="https://christmas.tam.tv${there}">`), here);
+    assert.doesNotMatch(r.body, /application\/ld\+json/, here);
+  }
+  // TAM's own pages keep their own home and markup
+  const dana = await live.call('/artists/danagillespie');
+  assert.match(dana.body, /<link rel="canonical" href="https:\/\/tam\.tv\/artists\/danagillespie">/);
+  const night = await live.call('/events/best-christmas-ever-2026-12-05');
+  assert.match(night.body, /<link rel="canonical" href="https:\/\/tam\.tv\/events\/best-christmas-ever-2026-12-05">/);
+  assert.match(night.body, /application\/ld\+json/);
+  const sitemap = (await live.call('/sitemap.xml')).body;
+  assert.doesNotMatch(sitemap, /the-best-christmas-ever<|big-christmas-hootenanny<|\/invite\//);
+  assert.match(sitemap, /artists\/danagillespie</);
+  // the festival site's old paths land on their tam.tv pages (for when it redirects here)
+  for (const [from, to] of [['/opening-night', '/events/big-christmas-hootenanny'], ['/books', '/collections/dana-108'], ['/artist/dana', '/artists/danagillespie']]) {
+    const r = await live.call(from);
+    assert.equal(r.status, 301, from);
+    assert.equal(r.headers.get('location'), to);
+  }
+  await live.close();
+});
