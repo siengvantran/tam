@@ -157,7 +157,7 @@ export function conciergeService(ctx, d) {
     return {
       type: 'night', slug: n.slug, title: n.label && n.label !== n.title ? `${n.title}: ${n.label}` : n.title, date: longDate(n.date),
       times: n.timesTbc ? 'Times announced soon' : `Doors ${n.doors}, until ${n.ends}`,
-      from: a.from !== null && a.from !== undefined ? pounds(a.from) : n.eventbrite && !n.eventbrite.soldOut ? n.eventbrite.priceText || null : null,
+      from: a.from !== null && a.from !== undefined ? pounds(a.from) : n.eventbrite && !n.eventbrite.soldOut ? (n.eventbrite.free ? 'Free' : Number.isFinite(n.eventbrite.from) ? pounds(n.eventbrite.from) : n.eventbrite.priceText || null) : null,
       left: a.left, url: `/events/${n.slug}`,
       ...(n.eventbrite ? { tickets: n.eventbrite.url, sold_out: n.eventbrite.soldOut, sold_on: 'Eventbrite' } : {}),
     };
@@ -198,7 +198,9 @@ export function conciergeService(ctx, d) {
         festival: f ? { name: f.name, url: f.path } : null, summary: n.summary, programme: (n.programme || []).map((x) => (x.host ? `${x.title} (hosted by ${x.host})` : x.title)), running_order: n.schedule.map(([t, x]) => `${t} ${x}`),
         line_up: n.artists.map((a) => ({ name: artistName(a), role: (c.artistBy.get(a) || {}).role || '', url: `/artists/${a}` })),
         on_sale_here: Boolean(n.sale), seats_left: n.sale && n.sale.capacity ? Math.max(0, n.sale.capacity - s.sold) : null,
-        tickets: opts.map((o) => ({ id: o.id, name: o.name, price: pounds(o.price), about: o.blurb || (o.pack && o.pack.blurb) || '', left: o.left ?? null, table_request: Boolean(o.tableRequest) })),
+        tickets: n.sale || !n.eventbrite ? opts.map((o) => ({ id: o.id, name: o.name, price: pounds(o.price), about: o.blurb || (o.pack && o.pack.blurb) || '', left: o.left ?? null, table_request: Boolean(o.tableRequest) }))
+          : (n.eventbrite.tickets || []).map((t) => ({ name: t.name, price: t.kind === 'free' ? 'Free' : t.kind === 'donation' ? 'Pay what you like' : pounds(t.price),
+            booking_fee: t.fee ? pounds(t.fee) : null, about: t.about, on_sale: t.status === 'AVAILABLE', book_on: 'Eventbrite' })),
         group_discounts: n.sale && n.sale.mode === 'standard' ? (n.sale.groupTiers || []).map((t) => `${t.min}+ tickets: ${Math.round(t.off * 100)}% off`) : [],
         packs: n.sale && n.sale.mode === 'standard' ? (n.sale.packs || []).map((p) => `${p.name}: ${p.min}–${p.max} people, ${Math.round(p.off * 100)}% off${p.needsTeam ? ', needs a team name' : ''}`) : [],
         team_tables_open: f && f.features.teamTables ? d.tickets.tablesFor(n.slug).map((t) => ({ teams: t.teams.map((x) => x.name), seats_left: t.left })) : [],

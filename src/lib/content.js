@@ -206,7 +206,8 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       }
       liveCount.upcoming++;
       const host = f && festNightOn.get(`${f.slug}|${e.date}`);
-      const listing = { id: String(e.id), url: e.url || '', priceText: e.priceText || '', free: Boolean(e.free), soldOut: Boolean(e.soldOut) };
+      const listing = { id: String(e.id), url: e.url || '', priceText: e.priceText || '', free: Boolean(e.free), soldOut: Boolean(e.soldOut),
+        from: Number.isFinite(e.from) ? e.from : null, tickets: Array.isArray(e.tickets) ? e.tickets : [] };
       if (host) {
         if (host.handmade && sameNight(host.title, e.name)) { host.eventbrite = listing; continue; } // TAM's own headline night, also on Eventbrite
         host.programme = [...(host.programme || []), { title: e.name, time: e.time || '', url: e.url || '', eventbrite: listing, source: 'eventbrite' }];

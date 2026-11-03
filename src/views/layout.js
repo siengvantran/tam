@@ -131,7 +131,11 @@ export function ticker(items) {
 export const when = (n) => `${n.weekday} ${n.day} ${n.month}`;
 export const times = (n) => (n.timesTbc ? 'Times announced soon' : n.source === 'eventbrite' ? `Starts ${n.doors}` : `Doors ${n.doors}${n.ends ? ` · until ${n.ends}` : ''}`);
 // What a night costs on Eventbrite, from the live listing.
-export const listingPrice = (l) => (!l ? '' : l.soldOut ? 'Sold out' : l.free ? 'Free' : l.priceText ? `From ${l.priceText}` : 'Tickets on Eventbrite');
+export const listingPrice = (l) => (!l ? '' : l.soldOut ? 'Sold out' : l.free ? 'Free entry' : Number.isFinite(l.from) ? `From ${pounds(l.from)}` : l.priceText || 'Tickets on Eventbrite');
+// One Eventbrite ticket type's price and state, for lists.
+export const ticketPrice = (t) => (t.kind === 'free' ? 'Free' : t.kind === 'donation' ? 'Pay what you like' : pounds(t.price));
+export const ticketState = (t, now = Date.now()) => (t.status === 'AVAILABLE' ? '' : t.status === 'NOT_YET_ON_SALE' ? 'Not on sale yet'
+  : t.salesEnd && Date.parse(t.salesEnd) < now ? 'Sales ended' : 'Sold out');
 
 export function nightCard(ctx, n, avail) {
   const f = n.festival ? ctx.content.festivalBy.get(n.festival) : null;

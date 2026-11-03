@@ -6,7 +6,7 @@ import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice } from './layout.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -18,12 +18,31 @@ const ambientOf = (f) => (f && f.features.ambient) || 'stars';
 const songOf = (ctx, f) => (f && f.features.tamalume && f.song) || null;
 const featureScripts = (f) => (f ? ['/js/festival.js', ...(f.features.cards || f.song ? ['/js/song.js'] : [])] : []);
 
+// Schema.org offers from a night's Eventbrite ticket types (pay-what-you-like ones carry no price).
+function ebOffers(l) {
+  const avail = (t) => (t.status === 'AVAILABLE' ? 'https://schema.org/InStock' : t.status === 'NOT_YET_ON_SALE' ? 'https://schema.org/PreOrder' : 'https://schema.org/SoldOut');
+  const priced = (l.tickets || []).filter((t) => t.kind !== 'donation');
+  if (!priced.length) return [{ '@type': 'Offer', url: l.url, priceCurrency: 'GBP', ...(l.free ? { price: '0' } : {}), availability: l.soldOut ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' }];
+  return priced.map((t) => ({ '@type': 'Offer', name: t.name, url: l.url, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', availability: avail(t), ...(t.salesEnd ? { validThrough: t.salesEnd } : {}) }));
+}
+
+// The ticket types a night sells on Eventbrite, as Eventbrite's checkout lists them.
+const ebTickets = (n) => {
+  const l = n.eventbrite;
+  if (!l || !l.tickets || !l.tickets.length) return '';
+  const fees = l.tickets.some((t) => t.fee);
+  return html`<section class="section" id="tickets"><div class="wrap"><div class="head"><h2 class="chrome">Tickets</h2>
+  <p class="muted">${l.free ? 'Free to come: reserve a place on Eventbrite. ' : ''}${fees ? 'Paid tickets carry Eventbrite’s booking fee.' : ''}</p></div>
+  <ul class="eb-tickets">${l.tickets.map((t) => { const st = ticketState(t); return html`<li class="${st ? 'off' : ''}"><div><b>${t.name}</b>${t.about ? html`<p class="small muted">${t.about}</p>` : ''}</div>
+    <div class="eb-price"><b>${ticketPrice(t)}</b>${t.fee ? html`<span class="small muted">+ ${pounds(t.fee)} fee</span>` : ''}${st ? html`<span class="small tag">${st}</span>` : ''}</div></li>`; })}</ul>
+  <p><a class="btn hot" href="${l.url}" target="_blank" rel="noopener">${l.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : l.free ? 'Reserve on Eventbrite ↗' : 'Book on Eventbrite ↗'}</a></p></div></section>`;
+};
+
 function eventLd(ctx, n) {
   const v = ctx.content.venueBy.get(n.venue);
   const offers = n.sale ? (n.sale.mode === 'own' ? n.sale.tickets : n.sale.mode === 'schedule' ? n.sale.tiers : [{ name: 'Ticket', price: n.sale.price }])
     .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}`, ...(t.until ? { validThrough: t.until } : {}) }))
-    : n.eventbrite && n.eventbrite.url ? [{ '@type': 'Offer', url: n.eventbrite.url, priceCurrency: 'GBP', ...(n.eventbrite.free ? { price: '0' } : /^£[\d.]+$/.test(n.eventbrite.priceText) ? { price: n.eventbrite.priceText.slice(1) } : {}),
-      availability: n.eventbrite.soldOut ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' }] : undefined;
+    : n.eventbrite && n.eventbrite.url ? ebOffers(n.eventbrite) : undefined;
   return {
     '@context': 'https://schema.org', '@type': 'MusicEvent', name: n.title, startDate: n.start, endDate: n.end,
     eventStatus: 'https://schema.org/EventScheduled', eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
@@ -305,12 +324,13 @@ function eventPage(ctx, d, n, url) {
     ${n.presenters ? html`<p class="presenters">${n.presenters}</p>` : ''}
     <div class="meta"><span>${longDate(n.date).toUpperCase()}</span><span>${times(n).toUpperCase()}</span><span>${(v ? v.name : 'TAM').toUpperCase()}</span></div>
     ${n.summary ? html`<p class="lede">${n.summary}</p>` : ''}
-    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : `Tickets on Eventbrite${n.eventbrite && n.eventbrite.priceText ? ` · ${listingPrice(n.eventbrite).replace('From ', 'from ')}` : ''} ↗`}</a>` : ''}
+    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : n.eventbrite && n.eventbrite.free ? 'Free entry · reserve on Eventbrite ↗' : `Tickets on Eventbrite${n.eventbrite && Number.isFinite(n.eventbrite.from) ? ` · from ${pounds(n.eventbrite.from)}` : ''} ↗`}</a>${n.eventbrite && n.eventbrite.tickets && n.eventbrite.tickets.length ? html`<a class="btn ghost" href="#tickets">Ticket types</a>` : ''}` : ''}
       <a class="btn ghost" href="${gcal}" target="_blank" rel="noopener">Add to Google Calendar</a><a class="btn ghost" href="/events/${n.slug}.ics">Apple / Outlook (.ics)</a></div>
     ${f && f.features.countdown && !isPast ? countdown(n) : ''}
   </div>
   ${n.image ? html`<img class="ev-art" src="${n.image}" alt="" loading="lazy">` : ''}
 </div></section>
+${!isPast ? ebTickets(n) : ''}
 ${artists.length ? html`<section class="section" id="lineup"><div class="wrap"><div class="head"><h2 class="chrome">The line-up</h2></div>
   <div class="lineup">${artists.map((a) => html`<article class="artist-card">${a.photo ? html`<img src="${a.photo}" alt="" loading="lazy">` : ''}<h3><a href="/artists/${a.slug}">${a.name}</a></h3>${a.role ? html`<p class="muted">${a.role}</p>` : ''}
     ${invites.some((i) => i.id === a.invite || i.artist === a.slug) ? html`<button class="btn ghost small" type="button" data-invite="${(invites.find((i) => i.id === a.invite) || invites.find((i) => i.artist === a.slug)).id}">Invite a friend</button>` : ''}</article>`)}</div></div></section>` : ''}
