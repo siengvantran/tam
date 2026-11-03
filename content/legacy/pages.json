@@ -583,15 +583,18 @@
    },
    {
     "type": "h2",
-    "text": "Mercato Metropolitano"
+    "text": "Mercato Metropolitano",
+    "hidden": true
    },
    {
     "type": "p",
-    "text": "Mercato Metropolitano, which houses the TAM, sprang from an idea that began at the time of the 2015 Expo in Milan. Andrea Rasca took over an abandoned car park and built a street-food enterprise in three months, using no chemicals, no plastics, no sponsors, no WiFi and no advertising. Next, Andrea set his sights on London, leasing a space in Elephant & Castle."
+    "text": "Mercato Metropolitano, which houses the TAM, sprang from an idea that began at the time of the 2015 Expo in Milan. Andrea Rasca took over an abandoned car park and built a street-food enterprise in three months, using no chemicals, no plastics, no sponsors, no WiFi and no advertising. Next, Andrea set his sights on London, leasing a space in Elephant & Castle.",
+    "hidden": true
    },
    {
     "type": "p",
-    "text": "No home could be more fitting for the TAM, which shares Andrea’s vision. It is not about creating an artificial community but building a space so that the community grows itself."
+    "text": "No home could be more fitting for the TAM, which shares Andrea’s vision. It is not about creating an artificial community but building a space so that the community grows itself.",
+    "hidden": true
    },
    {
     "type": "h2",
@@ -1973,11 +1976,13 @@
    },
    {
     "type": "p",
-    "text": "Mercato Metropolitano, which houses the TAM, sprang from an idea that began at the time of the 2015 Expo in Milan. Andrea took over an abandoned car park and built a street-food enterprise in three months, using no chemicals, no plastics, no sponsors, no WiFi and no advertising. By the time the space reverted to its owner, it had welcomed 2.5 million visitors. Next, Andrea set his sights on London, leasing a space in Elephant & Castle which, at the time, had no water, no gas, no electricity. “All my friends told me not to do it,” he recalls. “That’s when you need to be a dreamer, not an accountant. I knew it was right and after six months we’d passed our first million visitors, with not a penny invested in advertising, nothing industrial, no Coca Cola, no San Pellegrino.” There are now MM sites in Mayfair and Ilford, with Berlin and New York to follow. “It’s not a place for shareholders to become rich; we deliver an experience that’s sustainable from a social and economic point of view.”"
+    "text": "Mercato Metropolitano, which houses the TAM, sprang from an idea that began at the time of the 2015 Expo in Milan. Andrea took over an abandoned car park and built a street-food enterprise in three months, using no chemicals, no plastics, no sponsors, no WiFi and no advertising. By the time the space reverted to its owner, it had welcomed 2.5 million visitors. Next, Andrea set his sights on London, leasing a space in Elephant & Castle which, at the time, had no water, no gas, no electricity. “All my friends told me not to do it,” he recalls. “That’s when you need to be a dreamer, not an accountant. I knew it was right and after six months we’d passed our first million visitors, with not a penny invested in advertising, nothing industrial, no Coca Cola, no San Pellegrino.” There are now MM sites in Mayfair and Ilford, with Berlin and New York to follow. “It’s not a place for shareholders to become rich; we deliver an experience that’s sustainable from a social and economic point of view.”",
+    "hidden": true
    },
    {
     "type": "p",
-    "text": "No home could be more fitting for the TAM, which shares Andrea’s vision. It is not about creating an artificial community but building a space so that the community grows itself. Plans for the TAM include an in-house radio station and a record label which, not unlike John Peel’s Dandelion in the 1960s, will seek to treat musicians equitably and give them the freedom and support to do what they do best. There will be retail space at the TAM for CDs and merchandise and some of the profits will be reinvested in community ventures, including a summer academy for children with theatre, art and music classes. There will be employment opportunities at all levels for musicians and artists, so visitors may discover that the person bringing the drinks to their table is also a virtuoso bass player or drummer."
+    "text": "No home could be more fitting for the TAM, which shares Andrea’s vision. It is not about creating an artificial community but building a space so that the community grows itself. Plans for the TAM include an in-house radio station and a record label which, not unlike John Peel’s Dandelion in the 1960s, will seek to treat musicians equitably and give them the freedom and support to do what they do best. There will be retail space at the TAM for CDs and merchandise and some of the profits will be reinvested in community ventures, including a summer academy for children with theatre, art and music classes. There will be employment opportunities at all levels for musicians and artists, so visitors may discover that the person bringing the drinks to their table is also a virtuoso bass player or drummer.",
+    "hidden": true
    },
    {
     "type": "p",
