@@ -8,7 +8,7 @@
 // song the visuals follow the song's tempo (song.bpm) and walk its chords
 // (song.bars, pitch classes); your track and the mic are analysed for real.
 
-import { $, pageData, youtube, still } from './lib.js';
+import { $, pageData, youtube, still, setSyn } from './lib.js';
 
 const NOTES = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
 const COLOURS = ['#ff3030', '#9b30ff', '#ffe500', '#d0609a', '#7fe8ff', '#d0104a', '#5a84ff', '#ff8a00', '#c27bff', '#3ddc5a', '#c0708e', '#5fb8ff'];
@@ -23,7 +23,6 @@ if (bar) {
   const SYN = window.SYN = { on: false, bass: 0, mid: 0, treb: 0, energy: 0, beat: 0, note: -1, color: '#e8c77a' };
   const play = $('#syn-play'), srcSel = $('#syn-src'), fileIn = $('#syn-file'), now = $('#syn-now');
   const noteEl = $('#syn-note'), bars = $('#syn-bars'), bx = bars.getContext('2d');
-  const root = document.documentElement.style;
 
   let source = 'song', playing = false, running = false;
   let ac, analyser, freq, audio, audioNode, mic, micNode, yt;
@@ -175,12 +174,7 @@ if (bar) {
     SYN.beat *= 0.88;
     SYN.energy = (SYN.bass + SYN.mid + SYN.treb) / 3;
     const k = still ? 0.3 : 1; // calmer for reduced motion
-    root.setProperty('--syn-bass', (SYN.bass * k).toFixed(3));
-    root.setProperty('--syn-mid', (SYN.mid * k).toFixed(3));
-    root.setProperty('--syn-treb', (SYN.treb * k).toFixed(3));
-    root.setProperty('--syn-beat', (SYN.beat * k).toFixed(3));
-    root.setProperty('--syn-energy', SYN.energy.toFixed(3));
-    root.setProperty('--syn-color', SYN.color);
+    setSyn({ bass: SYN.bass * k, mid: SYN.mid * k, treb: SYN.treb * k, beat: SYN.beat * k, energy: SYN.energy, color: SYN.color });
     // the little spectrum
     bx.clearRect(0, 0, bars.width, bars.height);
     for (let i = 0; i < 16; i++) {

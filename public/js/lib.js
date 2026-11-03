@@ -71,3 +71,23 @@ export function youtube() {
 
 // Tamalume's colour for each note (C, C♯, D … B): the same light everywhere on the site.
 export const NOTE_COLOURS = ['#ff3030', '#9b30ff', '#ffe500', '#d0609a', '#7fe8ff', '#d0104a', '#5a84ff', '#ff8a00', '#c27bff', '#3ddc5a', '#c0708e', '#5fb8ff'];
+
+// The one writer of the music variables (--syn-bass, --syn-beat, --syn-color…)
+// that CSS reacts to. Each write restyles the page, so: at most 20 times a
+// second, in coarse steps, and only when something actually changed. (Writing
+// them every frame made Safari on iPhone run out of memory mid-song.)
+const synLast = {};
+let synAt = 0;
+export function setSyn(vals, force = false) {
+  const now = performance.now();
+  if (!force && now - synAt < 50) return;
+  synAt = now;
+  const root = document.documentElement.style;
+  for (const [k, v] of Object.entries(vals)) {
+    if (v === undefined || v === null) continue;
+    const out = typeof v === 'number' ? (Math.round(v * 10) / 10).toFixed(1) : v;
+    if (synLast[k] === out) continue;
+    synLast[k] = out;
+    root.setProperty(`--syn-${k}`, out);
+  }
+}

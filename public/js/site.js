@@ -19,8 +19,11 @@ for (const el of $$('[data-countdown]')) {
     if (now >= start) { el.innerHTML = `<span class="label">On now</span>${el.dataset.href ? ` <a class="btn hot small" href="${el.dataset.href}">${el.dataset.link || 'See the night'}</a>` : ''}`; return setTimeout(tick, 30000); }
     let s = Math.floor((start - now) / 1000);
     const parts = [['days', Math.floor(s / 86400)], ['hours', Math.floor((s %= 86400) / 3600)], ['mins', Math.floor((s %= 3600) / 60)], ['secs', s % 60]];
-    el.innerHTML = parts.map(([k, v]) => `<div class="cd-unit"><b>${String(v).padStart(2, '0')}</b><small>${k.toUpperCase()}</small></div>`).join('')
-      + (el.dataset.link ? `<a href="${el.dataset.href}">${el.dataset.link.replace(/[<>&]/g, '')}</a>` : '');
+    if (!el.querySelector('.cd-unit')) {
+      el.innerHTML = parts.map(([k]) => `<div class="cd-unit"><b>00</b><small>${k.toUpperCase()}</small></div>`).join('')
+        + (el.dataset.link ? `<a href="${el.dataset.href}">${el.dataset.link.replace(/[<>&]/g, '')}</a>` : '');
+    }
+    el.querySelectorAll('.cd-unit b').forEach((b, i) => { const v = String(parts[i][1]).padStart(2, '0'); if (b.textContent !== v) b.textContent = v; });
     setTimeout(tick, 1000);
   };
   tick();

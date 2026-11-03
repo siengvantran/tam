@@ -446,3 +446,15 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 @media (max-width: 380px) { .play-site .ps-label { display: none; } .play-site { padding: 0 11px; } }
 
 .fest-home { margin-top: 18px; font-size: 15px; color: var(--ink-dim); } .fest-home a { color: var(--acid); }
+
+/* ---------- performance: the music only moves cheap things ----------
+   Blurs, drop-shadows and border widths that change with the music made the
+   browser re-render big areas every frame (and crashed Safari on iPhone).
+   The music now changes only transforms, opacity and colours. */
+.chrome, .chrome.gold, .chrome.red { text-shadow: none; filter: none; }
+.hero-mark img { filter: drop-shadow(0 0 30px rgba(232, 199, 122, .35)); }
+.tree img { filter: drop-shadow(0 0 24px rgba(232, 199, 122, .45)); }
+.fx-pulse { border: 4px solid var(--syn-color); opacity: calc(.2 + var(--syn-beat) * .8); }
+.syn { box-shadow: 0 8px 30px rgba(0, 0, 0, .45); }
+.story, .charity-heart, .fx-photos img { will-change: transform; }
+.ambient { will-change: auto; }

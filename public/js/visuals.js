@@ -4,14 +4,16 @@
 // or the visitor playing the site). Every note sends a ripple of light out
 // from where it happened. Stars (or snow, on festive pages) sit on top.
 
-import { still, NOTE_COLOURS } from './lib.js';
+import { still, NOTE_COLOURS, setSyn } from './lib.js';
 
 const cv = document.getElementById('ambient');
 if (cv) {
   const x = cv.getContext('2d');
-  const dpr = Math.min(1.5, devicePixelRatio || 1);
+  // Phones get a lighter piece: native-resolution canvas, fewer lines, 30 frames a second.
+  const small = matchMedia('(max-width: 700px), (pointer: coarse)').matches;
+  const dpr = small ? 1 : Math.min(1.5, devicePixelRatio || 1);
+  let skip = false;
   const snow = cv.dataset.kind === 'snow';
-  const root = document.documentElement.style;
   const PALETTE = ['#ff3ea5', '#2ee6ff', '#a66bff', '#ffe14d', '#e8c77a'];
   let W = 0, H = 0, dots = [], ribbons = [], ripples = [];
   let accent = null, accentW = 0, pulse = 0;          // colour and energy from the latest note
@@ -30,9 +32,9 @@ if (cv) {
       p: Math.random() * 6.28, f: Math.random() * 2 + 0.6, v: (Math.random() * 0.6 + 0.3) * dpr, w: Math.random(),
       h: ['#ffffff', '#ffd0ef', '#c8f4ff', '#fff3c4'][i % 4],
     }));
-    ribbons = PALETTE.map((colour, i) => ({
+    ribbons = PALETTE.slice(0, small ? 3 : 5).map((colour, i) => ({
       colour, base: 0.52 + i * 0.085, amp: (26 + i * 9) * dpr, f1: 0.0016 + i * 0.00035, f2: 0.0041 - i * 0.0004,
-      speed: 0.00022 + i * 0.00006, phase: i * 1.7, lines: 4,
+      speed: 0.00022 + i * 0.00006, phase: i * 1.7, lines: small ? 2 : 4,
     }));
   }
 
@@ -97,6 +99,7 @@ if (cv) {
 
   function frame(t) {
     const S = window.SYN;
+    if (small && !still) { skip = !skip; if (skip) { requestAnimationFrame(frame); return; } }
     x.clearRect(0, 0, W, H);
     drawRibbons(t, S);
     drawDots(t, S);
@@ -105,8 +108,7 @@ if (cv) {
     // let the latest note fade, and glow the headlines with it when no song is playing
     accentW *= 0.985; pulse *= 0.93; pointer.energy *= 0.97;
     if (!(S && S.on)) {
-      root.setProperty('--syn-bass', pulse.toFixed(3));
-      if (accent) root.setProperty('--syn-color', accent);
+      setSyn({ bass: pulse, color: accent || undefined });
     }
     if (still || document.hidden) { running = false; return; }
     requestAnimationFrame(frame);
