@@ -318,11 +318,7 @@ test('search engines: previews are never indexed, and festival pages point to th
   const sitemap = (await live.call('/sitemap.xml')).body;
   assert.doesNotMatch(sitemap, /the-best-christmas-ever<|big-christmas-hootenanny<|\/invite\//);
   assert.match(sitemap, /artists\/danagillespie</);
-  // the festival site's old paths land on their tam.tv pages (for when it redirects here)
-  for (const [from, to] of [['/opening-night', '/events/big-christmas-hootenanny'], ['/books', '/collections/dana-108'], ['/artist/dana', '/artists/danagillespie']]) {
-    const r = await live.call(from);
-    assert.equal(r.status, 301, from);
-    assert.equal(r.headers.get('location'), to);
-  }
+  // the festival page sends people to the festival's permanent home
+  assert.match((await live.call('/the-best-christmas-ever')).body, /href="https:\/\/christmas\.tam\.tv\/2027"/);
   await live.close();
 });

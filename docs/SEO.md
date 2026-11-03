@@ -29,19 +29,20 @@ Dana Gillespie and Gemma Schito keep **tam.tv** as their home (`/artists/danagil
 2. Leave every other deployment (previews, staging) without `INDEXING`.
 3. In Google Search Console, add tam.tv and submit `https://tam.tv/sitemap.xml`.
 
-## After the festival: consolidating into tam.tv (January 2027)
+## christmas.tam.tv is the permanent home for Christmas
 
-When christmas.tam.tv's season is over, move its authority to tam.tv for good:
+Christmas at TAM builds authority on its own subdomain, year after year, rather than being folded into tam.tv. So:
 
-1. On christmas.tam.tv, **301-redirect every path to the same path on tam.tv**, except `/`, which goes to `/the-best-christmas-ever`. TAM.TV already answers the festival site's old paths and sends each to its tam.tv page (`/opening-night` → the Hootenanny, `/books` → the collection, `/artist/hugh` → `/artists/hugh-baker`…), and `/invite/<id>`, `/verify` and `/privacy` exist on both. So that one rule covers everything.
-2. Delete the `canonical` block from the festival file. The pages become tam.tv's own, with their event markup and sitemap entries.
-3. In Search Console, use **Change of address** for christmas.tam.tv → tam.tv only if the whole subdomain is redirecting; otherwise the 301s are enough.
-4. Keep the redirects in place for at least a year.
+- These tam.tv pages **always** point their canonical to christmas.tam.tv, and the `canonical` block in the festival file stays.
+- tam.tv's festival page tells visitors where the festival lives (`home` in the festival file) and links to its next-Christmas and past-Christmases pages, so the links go to the subdomain.
+- christmas.tam.tv keeps a page for every year (`/2021` … `/2026`), recruits for the next one at `/2027`, publishes evergreen guides and has its own sitemap. See the `bestchristmas` repo's README.
 
-## Optional, on christmas.tam.tv now
+When the season ends, christmas.tam.tv's home page becomes next year's hub, and this year's festival lives on at `/2026`. Then change `/the-best-christmas-ever`'s canonical target in the festival file from `/` to `/2026`, so it points at the page with the same content.
 
-It has no canonical tags and no robots.txt. That's fine: search engines treat each page as its own canonical. Adding explicit self-canonicals there (`<link rel="canonical" href="https://christmas.tam.tv/opening-night">` and so on) makes the choice unambiguous.
+## On christmas.tam.tv
+
+Self-canonicals on every page, `robots.txt` and `sitemap.xml` are in [siengvantran/bestchristmas#59](https://github.com/siengvantran/bestchristmas/pull/59).
 
 ## Duplicate text
 
-The festival page on tam.tv reuses christmas.tam.tv's wording (the lede, programme cards, charity and sponsorship copy). With the canonical tags above this is fine. Once tam.tv becomes the festival's home, it's the only copy.
+The festival page on tam.tv reuses christmas.tam.tv's wording (the lede, programme cards, charity and sponsorship copy). With the canonical tags above this is fine: search engines treat christmas.tam.tv's wording as the original.

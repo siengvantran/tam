@@ -234,6 +234,7 @@ function festivalPage(ctx, d, f) {
       <p class="lede">${f.lede}</p>
       <div class="ctas"><a class="btn hot" href="#book">Get tickets</a>${f.song ? html`<a class="btn ghost" href="#song">Hear the song</a>` : ''}</div>
       ${f.features.countdown && opening ? countdown(opening, { link: `${opening.label || opening.title} · ${when(opening)} →` }) : ''}
+      ${f.home ? html`<p class="fest-home">The festival’s home is <a href="${f.home.url}">${f.home.url.replace('https://', '')}</a>: <a href="${f.home.next}">get first news of next Christmas</a>, or see <a href="${f.home.past}">every Christmas at TAM</a>.</p>` : ''}
     </div>
     ${f.heroArt ? html`<div class="tree" aria-hidden="true"><img src="${f.heroArt}" alt="" width="720" height="1490"><span class="glint" style="left:48%;top:12%"></span><span class="glint" style="left:30%;top:56%;animation-delay:.9s"></span><span class="glint" style="left:64%;top:40%;animation-delay:1.5s"></span></div>` : ''}
   </div>

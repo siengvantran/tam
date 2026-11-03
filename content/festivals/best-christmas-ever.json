@@ -230,7 +230,7 @@
     "note": "Everything at TAM in December is part of The Best Christmas Ever."
   },
   "canonical": {
-    "note": "While christmas.tam.tv is the festival's live site, these pages point search engines there. When christmas.tam.tv redirects to tam.tv, delete this block. See docs/SEO.md.",
+    "note": "christmas.tam.tv is TAM's permanent home for Christmas, so these tam.tv pages always point search engines there. See docs/SEO.md.",
     "host": "https://christmas.tam.tv",
     "invites": true,
     "paths": {
@@ -247,23 +247,11 @@
       "/artists/haydn-bardoe": "/artist/haydn",
       "/artists/ger-ohanlon": "/artist/ger",
       "/artists/felix-cassell": "/artist/felix"
-    },
-    "redirects": {
-      "/": "/the-best-christmas-ever",
-      "/opening-night": "/events/big-christmas-hootenanny",
-      "/dana-gillespie": "/events/dana-gillespie-live",
-      "/books": "/collections/dana-108",
-      "/artist/band": "/artists/bakers-dozen",
-      "/artist/hugh": "/artists/hugh-baker",
-      "/artist/matt": "/artists/matt-hootenanny-host",
-      "/artist/thomas": "/artists/thomas-caulfield",
-      "/artist/queenie": "/artists/queenie-slinger",
-      "/artist/molly": "/artists/molly-chadwick",
-      "/artist/haydn": "/artists/haydn-bardoe",
-      "/artist/ger": "/artists/ger-ohanlon",
-      "/artist/felix": "/artists/felix-cassell",
-      "/artist/dana": "/artists/danagillespie",
-      "/artist/gemma": "/artists/gemma-schito"
     }
+  },
+  "home": {
+    "url": "https://christmas.tam.tv",
+    "next": "https://christmas.tam.tv/2027",
+    "past": "https://christmas.tam.tv/past"
   }
 }

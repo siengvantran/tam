@@ -444,3 +444,5 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 
 @media (max-width: 920px) { .top .for-you { display: none; } }
 @media (max-width: 380px) { .play-site .ps-label { display: none; } .play-site { padding: 0 11px; } }
+
+.fest-home { margin-top: 18px; font-size: 15px; color: var(--ink-dim); } .fest-home a { color: var(--acid); }
