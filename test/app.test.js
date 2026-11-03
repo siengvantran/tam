@@ -368,3 +368,14 @@ test('Old-site pages stay live, unlinked until staff reconnect them', async () =
   assert.match((await s.call('/for/venue-hire')).body, /class="step-card" href="#enquire"/);
   await s.close();
 });
+
+test('Hidden blocks on old-site pages stay off the page', async () => {
+  const s = await start();
+  for (const p of ['/about', '/dana-and-the-tam-charles-donovan']) {
+    const { status, body: page } = await s.call(p);
+    assert.equal(status, 200, p);
+    assert.doesNotMatch(page, /sprang from an idea|No home could be more fitting|<h2>Mercato Metropolitano<\/h2>/, p);
+  }
+  assert.match((await s.call("/about")).body, /The Future/);
+  await s.close();
+});

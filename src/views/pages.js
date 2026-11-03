@@ -565,6 +565,7 @@ export function legacyBlocks(p) {
   const out = [];
   let i = 0;
   for (const b of p.blocks) {
+    if (b.hidden) continue; // taken down for now, kept in the content
     if (b.type === 'h1' || b.type === 'h2') out.push(html`<h2>${b.text}</h2>`);
     else if (b.type === 'h3') out.push(html`<h3>${b.text}</h3>`);
     else out.push(html`<p>${b.text}</p>`);
