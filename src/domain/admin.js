@@ -74,6 +74,7 @@ export function adminDomain(ctx, { tickets, collections, raffle }) {
         .map(([k, n]) => ({ kind: k.split('|')[0], target: k.split('|')[1], n })).sort((a, b) => b.n - a.n).slice(0, 50),
       raffle: raffle.summary(raffle.tonight()),
       eventbrite: ctx.live ? ctx.live.status : null,
+      legacy: ctx.links ? ctx.links.list() : [],
       enquiries: db.enquiries.slice().reverse(),
       agent: (() => {
         const log = db.agentLog;

@@ -476,3 +476,6 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 .eb-price b { font-size: 1.15em; }
 .eb-price .tag { color: var(--pink); text-transform: uppercase; letter-spacing: .12em; font-size: 11px; }
 @media (max-width: 560px) { .eb-tickets li { flex-direction: column; } .eb-price { align-items: flex-start; text-align: left; } }
+
+/* admin: Old site tab */
+#admin select[data-legacy] { min-width: 140px; }

@@ -292,7 +292,7 @@ export function conciergeService(ctx, d) {
     const p = c.pathwayBy.get(pathway);
     if (!p) return { result: { error: 'Unknown pathway.' } };
     return {
-      result: { title: p.title, promise: p.promise, steps: p.steps.map((s) => ({ ...s, link: s.link.startsWith('#') ? `/for/${p.slug}${s.link}` : s.link })), page: `/for/${p.slug}`, enquiry_kind: p.enquiry || null },
+      result: { title: p.title, promise: p.promise, steps: p.steps.map(({ fallback, ...s }) => { const link = !ctx.links || ctx.links.linkable(s.link) ? s.link : fallback || '#enquire'; return { ...s, link: link.startsWith('#') ? `/for/${p.slug}${link}` : link }; }), page: `/for/${p.slug}`, enquiry_kind: p.enquiry || null },
       cards: [{ type: 'link', title: p.title, sub: p.promise, url: `/for/${p.slug}` }],
     };
   }

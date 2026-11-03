@@ -323,6 +323,52 @@ test('search engines: previews are never indexed, and festival pages point to th
   await live.close();
 });
 
+test('Old-site pages stay live, unlinked until staff reconnect them', async () => {
+  const s = await start();
+  const legacy = s.app.ctx.content.legacy.filter((p) => p.path !== '/home');
+  const oldOnly = legacy.filter((p) => s.app.ctx.links.isOldOnly(p.path)).map((p) => p.path);
+  assert.ok(oldOnly.includes('/about') && oldOnly.includes('/private-parties') && oldOnly.includes('/singers'));
+  assert.ok(!oldOnly.includes('/locations/elephant-castle') && !oldOnly.includes('/whats-on') && !oldOnly.includes('/the-best-christmas-ever'));
+  for (const p of legacy) assert.equal((await s.call(p.path)).status, 200, p.path);
+
+  // crawl the new site: nothing links to an old-only page
+  const crawl = async () => {
+    const seen = new Set(), queue = ['/', '/for/musician', '/for/venue-hire', '/for/party'], hits = [];
+    while (queue.length && seen.size < 120) {
+      const u = queue.shift();
+      if (seen.has(u)) continue;
+      seen.add(u);
+      const r = await s.call(u);
+      if (r.status !== 200 || typeof r.body !== 'string' || oldOnly.includes(u)) continue;
+      for (const m of r.body.matchAll(/href="(\/[^"#?]*)/g)) {
+        const h = m[1].replace(/(.)\/$/, '$1');
+        if (oldOnly.includes(h)) hits.push(`${h} from ${u}`);
+        if (!/\.\w+$/.test(h) && !h.startsWith('/api') && !h.startsWith('/archive/')) queue.push(h);
+      }
+    }
+    return hits;
+  };
+  assert.deepEqual(await crawl(), []);
+
+  // reconnect two from the admin
+  const H = { 'x-staff-token': ADMIN };
+  assert.equal((await s.call('/api/admin/legacy', { method: 'POST', body: { path: '/about', place: 'footer' } })).status, 401);
+  assert.equal((await s.call('/api/admin/legacy', { method: 'POST', headers: H, body: { path: '/nope', place: 'footer' } })).status, 404);
+  assert.equal((await s.call('/api/admin/legacy', { method: 'POST', headers: H, body: { path: '/about', place: 'footer' } })).status, 200);
+  assert.equal((await s.call('/api/admin/legacy', { method: 'POST', headers: H, body: { path: '/private-parties', place: 'header', label: 'Parties' } })).status, 200);
+  const home = (await s.call('/')).body;
+  assert.match(home, /<nav class="nav"[\s\S]*<a href="\/private-parties">Parties<\/a>[\s\S]*<\/nav>/);
+  assert.match(home, /<nav aria-label="More">[\s\S]*<a href="\/about">Who are we|<a href="\/about">/);
+  assert.match((await s.call('/for/venue-hire')).body, /class="step-card" href="\/private-parties"/);
+  const admin = (await s.call('/api/admin/overview', { headers: H })).body;
+  assert.equal(admin.legacy.find((p) => p.path === '/private-parties').nav.place, 'header');
+  // and off again
+  await s.call('/api/admin/legacy', { method: 'POST', headers: H, body: { path: '/private-parties', place: 'off' } });
+  assert.doesNotMatch((await s.call('/')).body, /href="\/private-parties"/);
+  assert.match((await s.call('/for/venue-hire')).body, /class="step-card" href="#enquire"/);
+  await s.close();
+});
+
 test('Hidden blocks on old-site pages stay off the page', async () => {
   const s = await start();
   for (const p of ['/about', '/dana-and-the-tam-charles-donovan']) {

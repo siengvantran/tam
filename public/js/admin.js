@@ -29,6 +29,20 @@ const TABS = {
     <td>${o.copies.map((c) => `${esc(c.title)} No. ${c.number} <small>${c.code}</small>`).join('<br>')}</td><td>${o.delivery}${o.address ? `<br><small>${esc(o.address)}</small>` : ''}</td><td>${pounds(o.total)}</td>
     <td>${!['paid', 'fulfilled', 'cancelled'].includes(o.status) ? btn('Mark paid', `data-o="${o.id}" data-a="paid"`) : ''}${o.status === 'paid' ? btn('Fulfilled', `data-o="${o.id}" data-a="fulfilled"`) : ''}${o.status !== 'cancelled' ? btn('Cancel (frees numbers)', `data-o="${o.id}" data-a="cancel"`) : ''}</td></tr>`)),
   artists: () => table(['Artist', 'Page visits', '7 days', 'Invite views', 'Followers', 'New (7d)', 'Bookings via', 'Tickets', 'Paid revenue', ''], data.artists.map((a) => `<tr><td><a href="/artists/${a.slug}">${esc(a.name)}</a></td><td>${a.pageVisits}</td><td>${a.pageVisits7}</td><td>${a.inviteViews}</td><td>${a.followers}</td><td>${a.newFollowers7}</td><td>${a.bookings}</td><td>${a.tickets}</td><td>${pounds(a.revenue)}</td><td>${a.followers ? btn('Followers CSV', `data-csv="/api/admin/followers.csv?artist=${a.slug}"`) : ''}</td></tr>`)),
+  // Every page of the old www.tam.tv: all live at their old addresses. The new site
+  // doesn't link to the old-only ones until they're put back in the navigation here.
+  legacy: () => {
+    const old = data.legacy.filter((p) => p.oldOnly);
+    const linked = data.legacy.filter((p) => p.nav);
+    return `<p>All ${data.legacy.length} pages of the old www.tam.tv are live at their old addresses, so no link to them is lost, and they stay in the sitemap.
+      The new site doesn't link to the ${old.length} that only the old site has. To reconnect one, put it in the header or footer navigation.
+      The new site's own links to it come back too.</p>
+      <p class="small muted">${linked.length ? `In the navigation now: ${linked.map((p) => `${esc(p.nav.label || p.title)} (${p.nav.place})`).join(', ')}.` : 'None reconnected yet.'}</p>`
+      + table(['Page', 'Address', 'Status', 'Navigation', 'Label'], data.legacy.map((p) => `<tr><td>${esc(p.title)}</td><td><a href="${esc(p.path)}" target="_blank" rel="noopener">${esc(p.path)} ↗</a></td>
+        <td>${p.oldOnly ? (p.nav ? 'Live · in the navigation' : 'Live · not linked') : 'Live · part of the new site'}</td>
+        <td>${p.oldOnly || p.nav ? `<select data-legacy="${esc(p.path)}" aria-label="Navigation for ${esc(p.path)}">${['off', 'header', 'footer'].map((v) => `<option value="${v}"${(p.nav ? p.nav.place : 'off') === v ? ' selected' : ''}>${{ off: 'Not linked', header: 'Header', footer: 'Footer' }[v]}</option>`).join('')}</select>` : '<span class="muted">Linked already</span>'}</td>
+        <td>${p.oldOnly || p.nav ? `<input data-legacy-label="${esc(p.path)}" value="${esc(p.nav ? p.nav.label : '')}" placeholder="${esc(p.title)}" maxlength="40" aria-label="Label for ${esc(p.path)}">` : ''}</td></tr>`));
+  },
   demand: () => `<p>What fans asked for: “Bring them back” on artist pages and “I was there” on past nights.</p>` + table(['Kind', 'Artist or night', 'Count'], data.demand.map((d) => `<tr><td>${d.kind}</td><td>${esc(d.target)}</td><td>${d.n}</td></tr>`)),
   enquiries: () => table(['When', 'Kind', 'Who', 'Details', 'Message', 'From', 'Status'], data.enquiries.map((e) => `<tr><td>${e.createdAt.slice(0, 16).replace('T', ' ')}<br><small>${e.id}</small></td><td>${esc(e.kind)}</td>
     <td>${esc(e.name)}<br><small><a href="mailto:${esc(e.email)}">${esc(e.email)}</a> ${esc(e.phone)}</small>${e.company ? `<br><small>${esc(e.company)}</small>` : ''}</td>
@@ -46,8 +60,8 @@ const TABS = {
     <div class="row-btn"><button class="btn ghost" type="button" id="mail-test">Send a test</button><button class="btn hot" type="submit">Send to followers</button></div><p class="err" role="status"></p></form>
     <h3>History</h3>${table(['Sent', 'Artist', 'Subject', 'To', 'Delivered', 'Failed'], data.mailings.map((m) => `<tr><td>${m.startedAt}</td><td>${esc(m.artist)}</td><td>${esc(m.subject)}</td><td>${m.to}</td><td>${m.delivered}</td><td>${m.failed}</td></tr>`))}`,
 };
-const ORDER = ['enquiries', 'nights', 'bookings', 'wall', 'sponsors', 'orders', 'artists', 'agent', 'demand', 'email'];
-const NAMES = { enquiries: 'Enquiries', agent: 'Ask TAM', nights: 'Nights', bookings: 'Bookings', wall: 'Party Wall', sponsors: 'Sponsors', orders: 'Collection orders', artists: 'Artists', demand: 'Demand', email: 'Email followers' };
+const ORDER = ['enquiries', 'nights', 'bookings', 'wall', 'sponsors', 'orders', 'artists', 'agent', 'demand', 'email', 'legacy'];
+const NAMES = { enquiries: 'Enquiries', agent: 'Ask TAM', nights: 'Nights', bookings: 'Bookings', wall: 'Party Wall', sponsors: 'Sponsors', orders: 'Collection orders', artists: 'Artists', demand: 'Demand', email: 'Email followers', legacy: 'Old site' };
 
 function render() {
   root.innerHTML = `<div class="admin-tabs">${ORDER.map((k) => `<button class="chip" type="button" data-tab="${k}" aria-pressed="${k === tab}">${NAMES[k]}${k === 'wall' && data.pins.some((p) => p.status === 'pending') ? ` (${data.pins.filter((p) => p.status === 'pending').length})` : ''}</button>`).join('')}
@@ -87,6 +101,14 @@ signedIn(() => api('/api/admin/overview'), (d) => {
     }
   });
   root.addEventListener('change', async (e) => {
+    const lg = e.target.closest('[data-legacy], [data-legacy-label]');
+    if (lg) {
+      const path = lg.dataset.legacy || lg.dataset.legacyLabel;
+      const place = root.querySelector(`select[data-legacy="${CSS.escape(path)}"]`).value;
+      const label = root.querySelector(`input[data-legacy-label="${CSS.escape(path)}"]`).value;
+      try { await api('/api/admin/legacy', { method: 'POST', body: { path, place, label } }); await reload(); } catch (err) { alert(err.message); }
+      return;
+    }
     const q = e.target.closest('[data-enq]');
     if (q) { try { await api(`/api/admin/enquiries/${q.dataset.enq}`, { method: 'POST', body: { status: q.value } }); } catch (err) { alert(err.message); } return; }
     const s = e.target.closest('[data-s]');

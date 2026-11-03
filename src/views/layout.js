@@ -63,6 +63,11 @@ ${[...mods].map((s) => html`<script type="module" src="${s}"></script>`)}
 </html>`;
 }
 
+// Old-site pages staff have reconnected to the navigation (src/domain/legacy-links.js).
+const navLinks = (ctx, place) => (ctx.links ? ctx.links.navLinks(place) : []);
+// Where a link may point: old-only pages that aren't reconnected fall back.
+export const linkTo = (ctx, href, fallback) => (!ctx.links || ctx.links.linkable(href) ? href : fallback);
+
 function header(ctx, festival, pathway) {
   const { festivals } = ctx.content;
   const fest = festival || festivals.find((f) => f.dates && f.dates.to >= ctx.today()) || festivals[0];
@@ -77,6 +82,7 @@ function header(ctx, festival, pathway) {
       <a href="/tv">TAM TV</a>
       <a href="/archive">Archive</a>
       <a href="/locations/elephant-castle">Find us</a>
+      ${navLinks(ctx, 'header').map((l) => html`<a href="${l.path}">${l.label}</a>`)}
     </nav>
     ${pathway ? html`<a class="for-you" href="/for/${pathway.slug}" title="Your pathway"><img class="neon-ico" src="/img/neon/${pathway.icon}.svg" alt="" width="22" height="22"> For you</a>` : html`<a class="for-you" href="/for">Who are you?</a>`}
     <button class="play-site" id="play-site" type="button" aria-pressed="false" title="Turn the site into an instrument: hover to play, click for chords, or use the A–K keys"><span class="ps-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="ps-label">Play</span></button>
@@ -96,7 +102,7 @@ function footer(ctx) {
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a><a href="/private-parties">Private parties</a><a href="/about">About</a><a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
+      <a href="/archive">Archive</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}

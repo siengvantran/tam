@@ -63,12 +63,14 @@
         "title": "Sing at the Sunday Spot",
         "text": "TAM Singers: perform in front of a live audience, get filmed and recorded, and you may be invited back for special sessions.",
         "link": "/singers",
+        "fallback": "/whats-on",
         "label": "TAM Singers"
       },
       {
         "title": "Young artists",
         "text": "Junior Open Mic and TAM Open Music Academy put young players on the same stage as the headliners.",
         "link": "/whats-on/junior-open-mic",
+        "fallback": "/whats-on",
         "label": "Junior Open Mic"
       },
       {
@@ -98,18 +100,21 @@
         "title": "The space",
         "text": "Up to 150 guests: 50–70 seated, or 70–120 for a cocktail-style reception. Any day of the week, priced by date and time.",
         "link": "/private-parties",
+        "fallback": "#enquire",
         "label": "The space"
       },
       {
         "title": "What's included",
         "text": "A private bar with themed cocktails or mocktails, a stage and pro AV with a projector, and live music or karaoke if you want it.",
         "link": "/private-parties",
+        "fallback": "#enquire",
         "label": "Amenities"
       },
       {
         "title": "Shoots and content",
         "text": "Pro sound and lighting, curated art and decorative pianos make a ready-made set for performances and product films.",
         "link": "/private-parties",
+        "fallback": "#enquire",
         "label": "Video shoots"
       },
       {
