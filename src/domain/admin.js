@@ -73,6 +73,7 @@ export function adminDomain(ctx, { tickets, collections, raffle }) {
       demand: Object.entries(db.demand.reduce((m, d) => ((m[`${d.kind}|${d.target}`] = (m[`${d.kind}|${d.target}`] || 0) + 1), m), {}))
         .map(([k, n]) => ({ kind: k.split('|')[0], target: k.split('|')[1], n })).sort((a, b) => b.n - a.n).slice(0, 50),
       raffle: raffle.summary(raffle.tonight()),
+      eventbrite: ctx.live ? ctx.live.status : null,
       enquiries: db.enquiries.slice().reverse(),
       agent: (() => {
         const log = db.agentLog;

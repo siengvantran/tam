@@ -30,7 +30,7 @@ async function mockClaude(script) {
 
 async function start(env = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-ai-'));
-  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: 'admin-token-for-tests', SITE_URL: 'http://tam.test', ...env }, now: () => clock.t });
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: 'admin-token-for-tests', SITE_URL: 'http://tam.test', EVENTBRITE_SYNC: 'off', ...env }, now: () => clock.t });
   await new Promise((r) => app.listen(0, r));
   const base = `http://127.0.0.1:${app.server.address().port}`;
   let n = 0;

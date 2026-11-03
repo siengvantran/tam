@@ -40,6 +40,12 @@ The site is an instrument and a piece of generative digital art:
 - **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
 - For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
 
+## TAM's live Eventbrite listing comes first
+
+TAM's Eventbrite organiser page ([eventbrite.co.uk/o/33409225909](https://www.eventbrite.co.uk/o/33409225909)) is the **superior data set**. `src/services/eventbrite-live.js` reads the same public endpoints that page uses, at startup and every 30 minutes: every upcoming listing and the most recent past ones. Where Eventbrite and the schedule both have a night (same date, matching name: "The Original Singers Club" is the schedule's "Singers @ Sunday Spot"), **Eventbrite's name, start time, price, sold-out state and ticket link win**. Cancelled listings are left out. December listings join The Best Christmas Ever. Schedule nights Eventbrite doesn't list, and dates beyond its last listing, still come from the schedule.
+
+The last good copy is saved as `DATA_DIR/eventbrite-live.json`, so if Eventbrite is down the site keeps its listings. Staff see when it last refreshed on the admin overview. `EVENTBRITE_SYNC=off` turns it off. `EVENTBRITE_ORGANIZER` and `EVENTBRITE_BASE` change the organiser and host.
+
 ## TAM's schedule
 
 `content/schedule.json` is every **public** night from TAM's Elephant & Castle performance schedule (the Google Sheet, May 2021 onwards), imported by `python3 scripts/import_schedule.py <schedule.xlsx>`. The sheet is TAM's internal calendar, so the importer leaves out private hires, bookings, birthdays, rehearsals, shoots, closures and anything with a fee, strips staff names, and drops any name the sheet ever ties to a private booking. **Never commit the spreadsheet**, and check the output before publishing.

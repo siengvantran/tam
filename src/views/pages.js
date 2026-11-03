@@ -6,7 +6,7 @@ import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle } from './layout.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -21,7 +21,9 @@ const featureScripts = (f) => (f ? ['/js/festival.js', ...(f.features.cards || f
 function eventLd(ctx, n) {
   const v = ctx.content.venueBy.get(n.venue);
   const offers = n.sale ? (n.sale.mode === 'own' ? n.sale.tickets : n.sale.mode === 'schedule' ? n.sale.tiers : [{ name: 'Ticket', price: n.sale.price }])
-    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}`, ...(t.until ? { validThrough: t.until } : {}) })) : undefined;
+    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}`, ...(t.until ? { validThrough: t.until } : {}) }))
+    : n.eventbrite && n.eventbrite.url ? [{ '@type': 'Offer', url: n.eventbrite.url, priceCurrency: 'GBP', ...(n.eventbrite.free ? { price: '0' } : /^£[\d.]+$/.test(n.eventbrite.priceText) ? { price: n.eventbrite.priceText.slice(1) } : {}),
+      availability: n.eventbrite.soldOut ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' }] : undefined;
   return {
     '@context': 'https://schema.org', '@type': 'MusicEvent', name: n.title, startDate: n.start, endDate: n.end,
     eventStatus: 'https://schema.org/EventScheduled', eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
@@ -303,7 +305,7 @@ function eventPage(ctx, d, n, url) {
     ${n.presenters ? html`<p class="presenters">${n.presenters}</p>` : ''}
     <div class="meta"><span>${longDate(n.date).toUpperCase()}</span><span>${times(n).toUpperCase()}</span><span>${(v ? v.name : 'TAM').toUpperCase()}</span></div>
     ${n.summary ? html`<p class="lede">${n.summary}</p>` : ''}
-    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">Tickets on Eventbrite ↗</a>` : ''}
+    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : `Tickets on Eventbrite${n.eventbrite && n.eventbrite.priceText ? ` · ${listingPrice(n.eventbrite).replace('From ', 'from ')}` : ''} ↗`}</a>` : ''}
       <a class="btn ghost" href="${gcal}" target="_blank" rel="noopener">Add to Google Calendar</a><a class="btn ghost" href="/events/${n.slug}.ics">Apple / Outlook (.ics)</a></div>
     ${f && f.features.countdown && !isPast ? countdown(n) : ''}
   </div>
@@ -313,7 +315,7 @@ ${artists.length ? html`<section class="section" id="lineup"><div class="wrap"><
   <div class="lineup">${artists.map((a) => html`<article class="artist-card">${a.photo ? html`<img src="${a.photo}" alt="" loading="lazy">` : ''}<h3><a href="/artists/${a.slug}">${a.name}</a></h3>${a.role ? html`<p class="muted">${a.role}</p>` : ''}
     ${invites.some((i) => i.id === a.invite || i.artist === a.slug) ? html`<button class="btn ghost small" type="button" data-invite="${(invites.find((i) => i.id === a.invite) || invites.find((i) => i.artist === a.slug)).id}">Invite a friend</button>` : ''}</article>`)}</div></div></section>` : ''}
 ${(n.programme || []).length ? html`<section class="section" id="programme"><div class="wrap narrow"><h2 class="chrome">On the night</h2>
-  <ol class="schedule">${n.programme.map((x) => html`<li><b>✦</b><span>${x.title}${x.host ? ` · hosted by ${x.host}` : ''}</span></li>`)}</ol></div></section>` : ''}
+  <ol class="schedule">${n.programme.map((x) => html`<li><b>${x.time || '✦'}</b><span>${x.url ? html`<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.host ? ` · hosted by ${x.host}` : ''}${x.eventbrite ? html` <span class="muted">· ${listingPrice(x.eventbrite)} on Eventbrite</span>` : ''}</span></li>`)}</ol></div></section>` : ''}
 ${n.schedule.length ? html`<section class="section" id="running-order"><div class="wrap narrow"><h2 class="chrome">Running order</h2>
   <ol class="schedule">${n.schedule.map(([t, s]) => html`<li><b>${t}</b><span>${s}</span></li>`)}</ol></div></section>` : ''}
 ${invites.length && !isPast ? html`<section class="section" id="invite"><div class="wrap"><div class="head"><div><div class="label">Bring someone</div><h2 class="chrome red">Invite a friend</h2></div><p class="intro">Send a personal invitation card. It opens with your note and a link to tickets.</p></div>

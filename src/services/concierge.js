@@ -157,7 +157,9 @@ export function conciergeService(ctx, d) {
     return {
       type: 'night', slug: n.slug, title: n.label && n.label !== n.title ? `${n.title}: ${n.label}` : n.title, date: longDate(n.date),
       times: n.timesTbc ? 'Times announced soon' : `Doors ${n.doors}, until ${n.ends}`,
-      from: a.from !== null && a.from !== undefined ? pounds(a.from) : null, left: a.left, url: `/events/${n.slug}`,
+      from: a.from !== null && a.from !== undefined ? pounds(a.from) : n.eventbrite && !n.eventbrite.soldOut ? n.eventbrite.priceText || null : null,
+      left: a.left, url: `/events/${n.slug}`,
+      ...(n.eventbrite ? { tickets: n.eventbrite.url, sold_out: n.eventbrite.soldOut, sold_on: 'Eventbrite' } : {}),
     };
   }
 

@@ -129,7 +129,9 @@ export function ticker(items) {
 }
 
 export const when = (n) => `${n.weekday} ${n.day} ${n.month}`;
-export const times = (n) => (n.timesTbc ? 'Times announced soon' : `Doors ${n.doors}${n.ends ? ` · until ${n.ends}` : ''}`);
+export const times = (n) => (n.timesTbc ? 'Times announced soon' : n.source === 'eventbrite' ? `Starts ${n.doors}` : `Doors ${n.doors}${n.ends ? ` · until ${n.ends}` : ''}`);
+// What a night costs on Eventbrite, from the live listing.
+export const listingPrice = (l) => (!l ? '' : l.soldOut ? 'Sold out' : l.free ? 'Free' : l.priceText ? `From ${l.priceText}` : 'Tickets on Eventbrite');
 
 export function nightCard(ctx, n, avail) {
   const f = n.festival ? ctx.content.festivalBy.get(n.festival) : null;
@@ -141,7 +143,7 @@ export function nightCard(ctx, n, avail) {
       ${f ? html`<div class="label">${f.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
-      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price muted">${n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
+      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
     </div>
   </a>
 </article>`;

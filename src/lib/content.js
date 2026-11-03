@@ -115,7 +115,6 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   }
 
   // ----- TAM's own nights -----
-  const nights = [];
   const handBy = new Map();
   for (const e of handmade) {
     check(e.slug && /^\d{4}-\d{2}-\d{2}$/.test(e.date || ''), `event ${e.slug || '?'}: needs a slug and a YYYY-MM-DD date`);
@@ -123,6 +122,10 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     for (const a of e.artists || []) check(artistBy.has(a), `event ${e.slug}: unknown artist ${a}`);
     for (const t of e.tickets || []) check(t.id && t.name && Number.isInteger(t.price), `event ${e.slug}: ticket types need id, name and a price in pence`);
     if (e.festival) handBy.set(`${e.festival}|${e.date}`, e);
+    if (e.festival && festivalBy.get(e.festival) && festivalBy.get(e.festival).dates) {
+      const fd = festivalBy.get(e.festival).dates;
+      check(e.date >= fd.from && e.date <= fd.to, `event ${e.slug}: ${e.date} is outside its festival's dates`);
+    }
   }
   function makeNight(e, f) {
     const date = e.date;
@@ -145,89 +148,137 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       handmade: Boolean(e.title), url: e.url || '', sale,
     };
   }
-  for (const f of festivals) {
-    if (!f.dates) continue;
-    const closed = new Set(f.closed || []);
-    for (let d = f.dates.from; d <= f.dates.to; d = addDay(d)) {
-      if (closed.has(d)) continue;
-      const hand = handBy.get(`${f.slug}|${d}`);
-      nights.push(makeNight(hand || { slug: `${f.slug}-${d}`, date: d }, f));
-    }
-  }
-  for (const e of handmade) {
-    if (e.festival && festivalBy.get(e.festival).dates) {
-      const fd = festivalBy.get(e.festival).dates;
-      check(e.date >= fd.from && e.date <= fd.to, `event ${e.slug}: ${e.date} is outside its festival's dates`);
-      continue;
-    }
-    nights.push(makeNight(e, e.festival ? festivalBy.get(e.festival) : null));
-  }
-  nights.sort((a, b) => a.start.localeCompare(b.start));
-  const nightBy = by(nights);
-  check(nightBy.size === nights.length, 'two nights share a slug');
 
-  // ----- the Eventbrite archive (past nights) -----
-  const past = archive.map((e) => ({ ...e, ...dateParts(e.date), source: 'eventbrite' })).sort((a, b) => b.date.localeCompare(a.date));
-  const pastBy = by(past);
-
-  // ----- TAM's performance schedule (scripts/import_schedule.py): public nights only -----
-  // Past dates join the archive (unless Eventbrite already has that night);
-  // upcoming ones become nights. A festival that claims a month (Christmas
-  // claims December) owns every event in it: on its ticketed nights the
-  // schedule becomes the night's programme, on other dates the event is still
-  // part of the festival, without tickets.
   const slugify = (t) => t.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 60);
   const claimant = (date) => festivals.find((f) => f.claims && (f.claims.months || []).includes(Number(date.slice(5, 7)))
     && (!f.dates || date.slice(0, 4) === f.dates.from.slice(0, 4) || date < f.dates.from)) || null;
   const SERIES_TIMES = { 'great-british-blues-jam': ['16:00', '19:00'], 'singers-sunday-spot': ['19:30', '22:30'] };
-  const loadDay = londonToday();
   const titleOf = (e) => (e.theme ? `${e.title}: ${e.theme}` : e.title);
-  const sig = (t) => new Set(t.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3 && !['night', 'with', 'the', 'great', 'british'].includes(w)));
-  const pastByDate = new Map();
-  for (const e of archive) pastByDate.set(e.date, [...(pastByDate.get(e.date) || []), e]);
-  const usedSlugs = new Set([...nights.map((n) => n.slug), ...archive.map((e) => e.slug)]);
-  const uniqueSlug = (base) => { let s = base, i = 2; while (usedSlugs.has(s)) s = `${base}-${i++}`; usedSlugs.add(s); return s; };
-  const festNightOn = new Map(nights.filter((n) => n.festival).map((n) => [`${n.festival}|${n.date}`, n]));
-  const scheduledPast = [];
-  for (const e of schedule) {
-    check(/^\d{4}-\d{2}-\d{2}$/.test(e.date || '') && e.title, `schedule: bad entry ${JSON.stringify(e)}`);
-    const f = claimant(e.date);
-    if (e.date < loadDay) {
-      const same = (pastByDate.get(e.date) || []).some((x) => [...sig(e.title)].some((w) => sig(x.title).has(w)));
-      if (same) continue;
-      scheduledPast.push({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), title: titleOf(e), date: e.date, venue: site.defaultVenue,
-        performers: [], series: e.series || null, genres: [], source: 'schedule', festival: f ? f.slug : null, host: e.host || null });
-      continue;
+  const sig = (t) => new Set(t.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3 && !['night', 'with', 'the', 'great', 'british', 'live', 'hosted', 'party'].includes(w)).map((w) => w.slice(0, 6)));
+  // Regular nights the two sources name differently ("Singers @ Sunday Spot" is Eventbrite's "The Original Singers Club").
+  const SERIES_WORDS = { 'singers-sunday-spot': /singer/i, 'great-british-blues-jam': /blues jam/i, 'tam-karaoke': /karaoke/i, 'word-of-mouth': /word of mouth|\bwom\b/i, 'open-mic': /open mic/i, 'junior-open-mic': /junior|\bjom\b/i, 'jazz-jam': /jazz jam/i, 'latin-jam': /latin/i };
+  const sameNight = (a, b, series) => (series && SERIES_WORDS[series] && SERIES_WORDS[series].test(b)) || [...sig(a)].some((w) => sig(b).has(w));
+
+  const archivePast = archive.map((e) => ({ ...e, ...dateParts(e.date), source: 'eventbrite' }));
+  const archiveIds = new Set(archive.map((e) => String(e.id)));
+  const nights = [];
+  const nightBy = new Map();
+  const past = [];
+  const pastBy = new Map();
+  let liveCount = { upcoming: 0, past: 0 };
+
+  // Builds every night and the archive. `live` is TAM's live Eventbrite listing
+  // (src/services/eventbrite-live.js): it outranks the schedule, so where both
+  // have the same night, Eventbrite's name, time, price and link win. Rebuilt in
+  // place whenever the listing refreshes, so every page sees it at once.
+  function build(live) {
+    const loadDay = londonToday();
+    const out = [];
+    for (const f of festivals) {
+      if (!f.dates) continue;
+      const closed = new Set(f.closed || []);
+      for (let d = f.dates.from; d <= f.dates.to; d = addDay(d)) {
+        if (closed.has(d)) continue;
+        const hand = handBy.get(`${f.slug}|${d}`);
+        out.push(makeNight(hand || { slug: `${f.slug}-${d}`, date: d }, f));
+      }
     }
-    const host = f && festNightOn.get(`${f.slug}|${e.date}`);
-    if (host) {
-      if (host.handmade && !e.series) continue; // the headline night already says who's on
-      host.programme = [...(host.programme || []), { title: titleOf(e), host: e.host || '', series: e.series || null }];
-      continue;
+    for (const e of handmade) if (!(e.festival && festivalBy.get(e.festival).dates)) out.push(makeNight(e, e.festival ? festivalBy.get(e.festival) : null));
+
+    const usedSlugs = new Set([...out.map((n) => n.slug), ...archive.map((e) => e.slug)]);
+    const uniqueSlug = (base) => { let x = base, i = 2; while (usedSlugs.has(x)) x = `${base}-${i++}`; usedSlugs.add(x); return x; };
+    const festNightOn = new Map(out.filter((n) => n.festival).map((n) => [`${n.festival}|${n.date}`, n]));
+
+    // 1. Eventbrite, the live listing
+    const liveOn = new Map(); // date → names Eventbrite lists that day
+    const livePast = [];
+    liveCount = { upcoming: 0, past: 0 };
+    for (const e of (live && live.events) || []) {
+      if (!e || e.cancelled || !/^\d{4}-\d{2}-\d{2}$/.test(e.date || '') || !e.name) continue;
+      liveOn.set(e.date, [...(liveOn.get(e.date) || []), e.name]);
+      const f = claimant(e.date);
+      if (e.date < loadDay) {
+        if (archiveIds.has(String(e.id))) continue;
+        livePast.push({ id: String(e.id), slug: uniqueSlug(`${slugify(e.name)}-${e.date}`), title: e.name, date: e.date, time: e.time || '', venue: site.defaultVenue,
+          url: e.url || '', image: e.image || '', performers: [], series: null, genres: [], source: 'eventbrite', festival: f ? f.slug : null });
+        liveCount.past++;
+        continue;
+      }
+      liveCount.upcoming++;
+      const host = f && festNightOn.get(`${f.slug}|${e.date}`);
+      const listing = { id: String(e.id), url: e.url || '', priceText: e.priceText || '', free: Boolean(e.free), soldOut: Boolean(e.soldOut) };
+      if (host) {
+        if (host.handmade && sameNight(host.title, e.name)) { host.eventbrite = listing; continue; } // TAM's own headline night, also on Eventbrite
+        host.programme = [...(host.programme || []), { title: e.name, time: e.time || '', url: e.url || '', eventbrite: listing, source: 'eventbrite' }];
+        continue;
+      }
+      const n = makeNight({ slug: uniqueSlug(`${slugify(e.name)}-${e.date}`), date: e.date, title: e.name, doors: e.time || '19:00', summary: e.summary || '', url: e.url || '', image: e.image || '' }, null);
+      n.ends = '';                                                     // Eventbrite listings give a start time only
+      n.end = new Date(Date.parse(n.start) + 3 * 3600000).toISOString();
+      n.handmade = false;
+      n.festival = f ? f.slug : null;
+      if (!e.image && f) n.image = f.og || n.image;
+      n.source = 'eventbrite';
+      n.eventbrite = listing;
+      out.push(n);
     }
-    const [doors, ends] = SERIES_TIMES[e.series] || [null, null];
-    const n = makeNight({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), date: e.date, title: titleOf(e), doors: doors || '19:00', ends: ends || '23:00',
-      timesTbc: !doors, summary: e.host ? `Hosted by ${e.host}.` : '' }, null);
-    n.festival = f ? f.slug : null;
-    n.source = 'schedule';
-    n.series = e.series || null;
-    n.image = f ? f.og || n.image : '/img/og.jpg';
-    nights.push(n);
+    const listedOn = (date, title, series) => (liveOn.get(date) || []).some((name) => sameNight(title, name, series));
+
+    // 2. TAM's performance schedule, wherever Eventbrite doesn't already have the night.
+    // Past dates join the archive; upcoming ones become nights. A festival that claims a
+    // month (Christmas claims December) owns every event in it: on its ticketed nights
+    // the schedule becomes the night's programme, on other dates the event is still part
+    // of the festival, without tickets.
+    const pastByDate = new Map();
+    for (const e of [...archive, ...livePast]) pastByDate.set(e.date, [...(pastByDate.get(e.date) || []), e]);
+    const scheduledPast = [];
+    for (const e of schedule) {
+      if (!built) check(/^\d{4}-\d{2}-\d{2}$/.test(e.date || '') && e.title, `schedule: bad entry ${JSON.stringify(e)}`);
+      const f = claimant(e.date);
+      if (e.date < loadDay) {
+        if ((pastByDate.get(e.date) || []).some((x) => sameNight(e.title, x.title, e.series))) continue;
+        scheduledPast.push({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), title: titleOf(e), date: e.date, venue: site.defaultVenue,
+          performers: [], series: e.series || null, genres: [], source: 'schedule', festival: f ? f.slug : null, host: e.host || null });
+        continue;
+      }
+      if (listedOn(e.date, e.title, e.series)) continue;            // Eventbrite has it: its version wins
+      const host = f && festNightOn.get(`${f.slug}|${e.date}`);
+      if (host) {
+        if (host.handmade && !e.series) continue; // the headline night already says who's on
+        host.programme = [...(host.programme || []), { title: titleOf(e), host: e.host || '', series: e.series || null }];
+        continue;
+      }
+      const [doors, ends] = SERIES_TIMES[e.series] || [null, null];
+      const n = makeNight({ slug: uniqueSlug(`${slugify(titleOf(e))}-${e.date}`), date: e.date, title: titleOf(e), doors: doors || '19:00', ends: ends || '23:00',
+        timesTbc: !doors, summary: e.host ? `Hosted by ${e.host}.` : '' }, null);
+      n.handmade = false;
+      n.festival = f ? f.slug : null;
+      n.source = 'schedule';
+      n.series = e.series || null;
+      n.image = f ? f.og || n.image : '/img/og.jpg';
+      out.push(n);
+    }
+    // a festival night with a programme takes its name from it
+    for (const n of out) {
+      if (!n.programme || n.handmade) continue;
+      const t = (x) => x.time || (SERIES_TIMES[x.series] || ['20:00'])[0];
+      n.programme.sort((a, b) => t(a).localeCompare(t(b)));
+      const names = n.programme.map((x) => x.title);
+      n.label = n.label || names.join(' + ');
+      n.summary = `Part of ${festivalBy.get(n.festival).name}: ${names.join(', then ')}.`;
+    }
+    out.sort((a, b) => a.start.localeCompare(b.start));
+    nights.length = 0; nights.push(...out);
+    nightBy.clear(); for (const n of nights) nightBy.set(n.slug, n);
+    past.length = 0;
+    past.push(...archivePast, ...livePast.map((e) => ({ ...e, ...dateParts(e.date) })), ...scheduledPast.map((e) => ({ ...e, ...dateParts(e.date) })));
+    past.sort((a, b) => b.date.localeCompare(a.date));
+    pastBy.clear(); for (const e of past) pastBy.set(e.slug, e);
+    built = true;
   }
-  // a festival night with a programme takes its name from it
-  for (const n of nights) {
-    if (!n.programme || n.handmade) continue;
-    n.programme.sort((a, b) => (SERIES_TIMES[a.series] || ['20:00'])[0].localeCompare((SERIES_TIMES[b.series] || ['20:00'])[0]));
-    const names = n.programme.map((x) => x.title);
-    n.label = n.label || names.join(' + ');
-    n.summary = `Part of ${festivalBy.get(n.festival).name}: ${names.join(', then ')}.`;
-  }
-  nights.sort((a, b) => a.start.localeCompare(b.start));
-  nightBy.clear();
-  for (const n of nights) nightBy.set(n.slug, n);
-  for (const e of scheduledPast) past.push({ ...e, ...dateParts(e.date) });
-  past.sort((a, b) => b.date.localeCompare(a.date));
-  for (const e of scheduledPast) pastBy.set(e.slug, past.find((x) => x.slug === e.slug));
+  let built = false;
+  build(null);
+  check(nightBy.size === nights.length, 'two nights share a slug');
 
   // ----- everything else -----
   const inviteBy = by(invites, 'id');
@@ -287,6 +338,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   };
 
   return {
+    applyLive: (live) => build(live), liveCounts: () => liveCount,
     pathways, pathwayBy, nightsForPathway, canonicalElsewhere,
     site, venues, venueBy, artists: [...artistBy.values()].sort((a, b) => a.name.localeCompare(b.name)), artistBy,
     series, festivals, festivalBy, festivalAt, nights, nightBy, past, pastBy, legacy, legacyBy, videos,

@@ -17,6 +17,7 @@ import { raffleDomain } from './domain/raffle.js';
 import { adminDomain, staffAuth } from './domain/admin.js';
 import { enquiriesDomain } from './domain/enquiries.js';
 import { conciergeService } from './services/concierge.js';
+import { eventbriteLive } from './services/eventbrite-live.js';
 import { readJson, text as cleanText } from './lib/http.js';
 import * as pages from './views/pages.js';
 import * as staff from './views/staff.js';
@@ -58,9 +59,14 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   if (!store.db.meta.secret) { store.db.meta.secret = crypto.randomBytes(32).toString('hex'); await store.save(); }
   cfg.siteUrl = cfg.siteUrl || content.site.url || 'http://localhost:3000';
 
+  // TAM's live Eventbrite listing outranks the schedule (src/services/eventbrite-live.js)
+  const live = eventbriteLive({ content, dataDir: cfg.dataDir, organizer: env.EVENTBRITE_ORGANIZER || '33409225909',
+    base: env.EVENTBRITE_BASE || 'https://www.eventbrite.co.uk', enabled: env.EVENTBRITE_SYNC !== 'off' });
+  await live.start();
+
   const auth = staffAuth(cfg, store.db.meta.secret);
   const ctx = {
-    db: store.db, save: store.save, saveImage: store.saveImage, content, cfg, now,
+    db: store.db, save: store.save, saveImage: store.saveImage, content, cfg, now, live,
     secret: store.db.meta.secret,
     today: () => londonToday(new Date(now())),
     stripe: stripeClient(cfg.stripeKey, cfg.stripeApi),
@@ -149,7 +155,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
 
   const server = http.createServer((req, res) => { handle(req, res); });
   return {
-    store, ctx, server, handle,
+    store, ctx, server, handle, live,
     listen: (port, cb) => server.listen(port, cb),
   };
 }

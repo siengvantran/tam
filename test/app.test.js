@@ -14,7 +14,7 @@ const clock = { t: Date.parse('2026-11-20T12:00:00Z') };
 
 async function start(env = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-'));
-  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, DOOR_TOKEN: DOOR, SITE_URL: 'http://tam.test', PIN_MODERATION: 'on', ...env }, now: () => clock.t });
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, DOOR_TOKEN: DOOR, SITE_URL: 'http://tam.test', PIN_MODERATION: 'on', EVENTBRITE_SYNC: 'off', ...env }, now: () => clock.t });
   await new Promise((r) => app.listen(0, r));
   const base = `http://127.0.0.1:${app.server.address().port}`;
   let n = 0;
