@@ -15,6 +15,7 @@ import { communityDomain } from './domain/community.js';
 import { collectionsDomain } from './domain/collections.js';
 import { raffleDomain } from './domain/raffle.js';
 import { adminDomain, staffAuth } from './domain/admin.js';
+import { legacyLinks } from './domain/legacy-links.js';
 import { enquiriesDomain } from './domain/enquiries.js';
 import { conciergeService } from './services/concierge.js';
 import { eventbriteLive } from './services/eventbrite-live.js';
@@ -81,6 +82,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const collections = collectionsDomain(ctx, tickets);
   ctx.markOrderPaid = collections.markPaid;
   const raffle = raffleDomain(ctx, tickets);
+  ctx.links = legacyLinks(ctx);
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };
@@ -88,7 +90,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -110,6 +112,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   pages.routes(site, ctx, d);
   staff.routes(site, ctx, d);
   pathwayPages.routes(site, ctx, d);
+  ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 
   const limited = rateLimiter({ max: 60 });

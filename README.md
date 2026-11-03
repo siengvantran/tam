@@ -48,6 +48,10 @@ TAM's Eventbrite organiser page ([eventbrite.co.uk/o/33409225909](https://www.ev
 
 The last good copy is saved as `DATA_DIR/eventbrite-live.json`, so if Eventbrite is down the site keeps its listings. Staff see when it last refreshed on the admin overview. `EVENTBRITE_SYNC=off` turns it off. `EVENTBRITE_ORGANIZER` and `EVENTBRITE_BASE` change the organiser and host.
 
+## The old www.tam.tv
+
+Every page of the old site is still live at its old address, and stays in the sitemap, so no link or search ranking is lost. The new site doesn't link to the pages only the old site has (About, Private parties, TAM Singers, the NFT and TOM pages and so on) until staff reconnect them: **/admin → Old site** lists every old page and puts any of them in the header or footer navigation, with its own label. Reconnecting a page also brings back the new site's own links to it, such as the pathway cards that point at `/private-parties` (until then they fall back to the card's `fallback`, e.g. the enquiry form). See `src/domain/legacy-links.js`.
+
 ## TAM's schedule
 
 `content/schedule.json` is every **public** night from TAM's Elephant & Castle performance schedule (the Google Sheet, May 2021 onwards), imported by `python3 scripts/import_schedule.py <schedule.xlsx>`. The sheet is TAM's internal calendar, so the importer leaves out private hires, bookings, birthdays, rehearsals, shoots, closures and anything with a fee, strips staff names, and drops any name the sheet ever ties to a private booking. **Never commit the spreadsheet**, and check the output before publishing.
