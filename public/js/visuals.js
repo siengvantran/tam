@@ -11,6 +11,7 @@ if (cv) {
   const x = cv.getContext('2d');
   // Phones get a lighter piece: native-resolution canvas, fewer lines, 30 frames a second.
   const small = matchMedia('(max-width: 700px), (pointer: coarse)').matches;
+  let inView = true;
   const dpr = small ? 1 : Math.min(1.5, devicePixelRatio || 1);
   let skip = false;
   const snow = cv.dataset.kind === 'snow';
@@ -24,8 +25,8 @@ if (cv) {
   const mix = (a, b, t) => { const p = hexToRgb(a), q = hexToRgb(b); return `rgb(${p.map((v, i) => Math.round(v + (q[i] - v) * t)).join(',')})`; };
 
   function size() {
-    W = cv.width = Math.round(innerWidth * dpr);
-    H = cv.height = Math.round(innerHeight * dpr);
+    W = cv.width = Math.round((cv.clientWidth || innerWidth) * dpr);
+    H = cv.height = Math.round((cv.clientHeight || innerHeight) * dpr);
     const n = Math.round((innerWidth * innerHeight) / (snow ? 9000 : 9000));
     dots = Array.from({ length: n }, (_, i) => ({
       x: Math.random() * W, y: Math.random() * H, r: (Math.random() * (snow ? 2.1 : 1.1) + 0.35) * dpr,
@@ -110,14 +111,15 @@ if (cv) {
     if (!(S && S.on)) {
       setSyn({ bass: pulse, color: accent || undefined });
     }
-    if (still || document.hidden) { running = false; return; }
+    if (still || document.hidden || !inView) { running = false; return; }
     requestAnimationFrame(frame);
   }
-  const wake = () => { if (!running && !still) { running = true; requestAnimationFrame(frame); } };
+  const wake = () => { if (!running && !still && !small) { running = true; requestAnimationFrame(frame); } };
 
   addEventListener('tam:note', (e) => {
     const { pc = 0, x: nx, y: ny, vel = 0.7 } = e.detail || {};
     accent = NOTE_COLOURS[((pc % 12) + 12) % 12]; accentW = 0.9; pulse = Math.max(pulse, vel * 0.8);
+    if (small) return; // phones show a still background: no live canvas to ripple
     if (still) { frame(performance.now()); return; }
     ripples.push({ x: (nx ?? innerWidth / 2) * dpr, y: (ny ?? innerHeight * 0.7) * dpr, r: 6 * dpr, speed: (3 + vel * 4) * dpr, life: 0.9, colour: accent });
     if (ripples.length > 24) ripples.shift();
@@ -125,8 +127,28 @@ if (cv) {
   });
   addEventListener('pointermove', (e) => { pointer.x = e.clientX * dpr; pointer.y = e.clientY * dpr; pointer.energy = Math.min(1, pointer.energy + 0.06); });
   addEventListener('syn:start', wake);
+  // Stop drawing when the canvas isn't visible.
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) wake(); }).observe(cv);
   document.addEventListener('visibilitychange', wake);
-  addEventListener('resize', () => { size(); if (still) frame(performance.now()); });
+  addEventListener('resize', () => { if (small) return; size(); if (still) frame(performance.now()); });
   size();
-  if (still) frame(performance.now()); else wake();
+  if (small) {
+    // Phones: paint the artwork once as the page's background image instead of a live canvas.
+    // A live canvas makes the browser keep page-sized GPU layers for the content above it
+    // (220 MB at iPhone resolution on the festival page), and iPhones ran out mid-song.
+    const paintStill = () => {
+      size();
+      const t = 4000;
+      x.clearRect(0, 0, W, H);
+      drawRibbons(t, null);
+      drawDots(t, null);
+      x.globalAlpha = 1;
+      document.body.style.background = `#0b0709 url(${cv.toDataURL('image/png')}) center top / 100% auto no-repeat`;
+      cv.width = cv.height = 0; // free the canvas memory
+    };
+    cv.style.display = 'none';
+    paintStill();
+    let rt;
+    addEventListener('orientationchange', () => { clearTimeout(rt); rt = setTimeout(paintStill, 400); });
+  } else if (still) frame(performance.now()); else wake();
 }

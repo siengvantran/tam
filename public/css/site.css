@@ -458,3 +458,11 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 .syn { box-shadow: 0 8px 30px rgba(0, 0, 0, .45); }
 .story, .charity-heart, .fx-photos img { will-change: transform; }
 .ambient { will-change: auto; }
+
+/* ---------- iPhone memory ----------
+   A live canvas behind the page forced page-sized GPU layers for everything
+   overlapping it ("overlap" compositing), and frosted-glass blurs re-rendered
+   over it every frame: iPhones ran out mid-song. */
+.top { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(11, 7, 9, .96); }
+.syn { backdrop-filter: none; -webkit-backdrop-filter: none; background: #1b1216; }
+/* Phones paint the background once as an image (visuals.js) instead of a live canvas. */
