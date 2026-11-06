@@ -52,6 +52,7 @@ ${jsonLd ? raw(`<script type="application/ld+json">${JSON.stringify(jsonLd).repl
 <body class="${bodyClass}">
 <a class="skip" href="#main">Skip to content</a>
 ${header(ctx, festival, pathway)}
+${friday(ctx) && isFriday(ctx) && !festival ? fridayRibbon(ctx) : ''}
 <main id="main">${body}</main>
 ${footer(ctx)}
 ${ambient ? html`<canvas class="ambient" id="ambient" data-kind="${ambient}" aria-hidden="true"></canvas>` : ''}
@@ -68,6 +69,30 @@ const navLinks = (ctx, place) => (ctx.links ? ctx.links.navLinks(place) : []);
 // Where a link may point: old-only pages that aren't reconnected fall back.
 export const linkTo = (ctx, href, fallback) => (!ctx.links || ctx.links.linkable(href) ? href : fallback);
 
+// Friday Night Live (friday.tam.tv), TAM's own site for its Fridays. On a Friday
+// (London time) the site lights it up: a glowing header link and a ribbon on every page.
+export const friday = (ctx) => ctx.content.site.friday || null;
+export const isFriday = (ctx) => new Date(`${ctx.today()}T12:00:00Z`).getUTCDay() === 5;
+const fridayUrl = (ctx, where) => `${friday(ctx).url}/?utm_source=tam.tv&utm_medium=referral&utm_campaign=${where}`;
+export { fridayUrl };
+
+function fridayRibbon(ctx) {
+  const f = friday(ctx);
+  return html`<a class="fri-ribbon" href="${fridayUrl(ctx, 'ribbon')}" target="_blank" rel="noopener"><span class="fri-dot" aria-hidden="true"></span>
+  <b>It's Friday.</b> <span>${f.name} ${f.by}: find your Friday tonight</span> <span class="fri-go">friday.tam.tv ↗</span></a>`;
+}
+
+// The Friday Night Live tile for listings: always there, lit on a Friday.
+export function fridayTile(ctx) {
+  const f = friday(ctx);
+  if (!f) return '';
+  const lit = isFriday(ctx);
+  return html`<a class="fri-tile${lit ? ' lit' : ''}" href="${fridayUrl(ctx, 'listing')}" target="_blank" rel="noopener">
+  <div class="fri-word"><b>FRIDAY NIGHT</b><b class="fri-live">LIVE</b><small>${f.by}</small></div>
+  <div><div class="label">${lit ? 'Tonight · every Friday' : 'Every Friday'}</div><h3>${f.tagline}</h3><p class="muted">${f.blurb}</p><span class="fri-go">friday.tam.tv ↗</span></div>
+</a>`;
+}
+
 function header(ctx, festival, pathway) {
   const { festivals } = ctx.content;
   const fest = festival || festivals.find((f) => f.dates && f.dates.to >= ctx.today()) || festivals[0];
@@ -77,6 +102,7 @@ function header(ctx, festival, pathway) {
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
     <nav class="nav" id="nav" aria-label="Main">
       <a href="/whats-on">What's on</a>
+      ${friday(ctx) ? html`<a class="fri-link${isFriday(ctx) ? ' lit' : ''}" href="${fridayUrl(ctx, 'nav')}" target="_blank" rel="noopener" title="${friday(ctx).name} ${friday(ctx).by} · friday.tam.tv">Fridays</a>` : ''}
       ${fest ? html`<a href="${fest.path}" class="fest-link">${fest.name}</a>` : ''}
       <a href="/artists">Artists</a>
       <a href="/tv">TAM TV</a>
@@ -146,11 +172,13 @@ export const ticketState = (t, now = Date.now()) => (t.status === 'AVAILABLE' ? 
 export function nightCard(ctx, n, avail) {
   const f = n.festival ? ctx.content.festivalBy.get(n.festival) : null;
   const from = avail && avail.from;
-  return html`<article class="night-card${n.festival ? ` fest-${n.festival}` : ''}">
+  const fri = !f && n.weekday === 'Friday' && friday(ctx);
+  const tonight = fri && n.date === ctx.today();
+  return html`<article class="night-card${n.festival ? ` fest-${n.festival}` : ''}${fri ? ' fri' : ''}${tonight ? ' lit' : ''}">
   <a href="/events/${n.slug}">
     <div class="nc-date"><b>${n.day}</b><span>${n.month.slice(0, 3)}</span><small>${n.weekday.slice(0, 3)}</small></div>
     <div class="nc-body">
-      ${f ? html`<div class="label">${f.name}</div>` : ''}
+      ${f ? html`<div class="label">${f.name}</div>` : fri ? html`<div class="label fri-label">${tonight ? 'Tonight · ' : ''}${fri.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
       ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
