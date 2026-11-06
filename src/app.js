@@ -116,10 +116,14 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   seoRoutes(site, ctx);
 
   const limited = rateLimiter({ max: 60 });
+  const siteHost = (() => { try { return new URL(cfg.siteUrl).host.toLowerCase(); } catch { return ''; } })();
+  const requestHost = (req) => String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().toLowerCase();
 
   async function handle(req, res) {
     res.req = req;
-    if (!cfg.indexing) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    // Only the real address is indexed: the Railway preview and any other host stay out of search.
+    req.indexable = cfg.indexing && requestHost(req) === siteHost;
+    if (!req.indexable) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const url = new URL(req.url, 'http://x');
     const p = url.pathname;
     try {
