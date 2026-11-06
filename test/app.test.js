@@ -420,3 +420,22 @@ test('TAM is open six nights a week, not seven', async () => {
   assert.match((await s.call('/for/live-music')).body, /six nights a week/);
   await s.close();
 });
+
+test('An enquiry email replies straight to the person who enquired', async () => {
+  const sent = [];
+  const resend = http.createServer((req, res) => {
+    let body = '';
+    req.on('data', (c) => { body += c; });
+    req.on('end', () => { sent.push(JSON.parse(body)); res.writeHead(200, { 'content-type': 'application/json' }); res.end('{"id":"em_1"}'); });
+  });
+  await new Promise((r) => resend.listen(0, r));
+  const s = await start({ RESEND_API_KEY: 're_test', RESEND_API: `http://127.0.0.1:${resend.address().port}`, ENQUIRIES_TO: 'box@tam.test', MAIL_REPLY_TO: 'tickets@tam.test' });
+  const r = await s.call('/api/enquiries', { method: 'POST', body: { kind: 'party', name: 'Jo', email: 'jo@example.com', guests: '30', message: 'Office party' } });
+  assert.equal(r.status, 201);
+  for (let i = 0; i < 50 && !sent.length; i++) await new Promise((x) => setTimeout(x, 20));
+  assert.equal(sent.length, 1);
+  assert.deepEqual(sent[0].to, ['box@tam.test']);
+  assert.equal(sent[0].reply_to, 'jo@example.com');
+  await s.close();
+  resend.closeAllConnections(); resend.close();
+});
