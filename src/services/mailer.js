@@ -4,12 +4,13 @@ import { escape as e } from '../views/html.js';
 import { pounds } from '../../shared/pricing.js';
 
 export function mailer({ key, from = 'TAM <tickets@tam.tv>', replyTo = '', api = 'https://api.resend.com' } = {}) {
-  async function send({ to, subject, html, text, headers }) {
+  // `replyTo` on a single email overrides the default (an enquiry replies to the enquirer).
+  async function send({ to, subject, html, text, headers, replyTo: replyOne }) {
     if (!key) throw new Error('Email is off: set RESEND_API_KEY.');
     const res = await fetch(`${api}/emails`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to: [to], subject, html, text, headers, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      body: JSON.stringify({ from, to: [to], subject, html, text, headers, ...(replyOne || replyTo ? { reply_to: replyOne || replyTo } : {}) }),
     });
     const json = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error((json && json.message) || `Resend ${res.status}`);

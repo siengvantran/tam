@@ -35,7 +35,8 @@ export function enquiriesDomain(ctx) {
     const rows = [['Kind', KIND_NAMES[e.kind]], ['Name', e.name], ['Email', e.email], ['Phone', e.phone], ['Company', e.company], ['Date', e.date], ['Guests', e.guests], ['Budget', e.budget], ['Came from', e.source === 'agent' ? 'Ask TAM concierge' : `the ${e.pathway || 'site'} form`]].filter(([, v]) => v);
     try {
       await ctx.mail.send({
-        to: cfg.enquiriesTo, subject: `New enquiry (${KIND_NAMES[e.kind]}): ${e.name} · ${e.id}`,
+        to: cfg.enquiriesTo, replyTo: e.email, // Reply goes straight to the person who enquired
+        subject: `New enquiry (${KIND_NAMES[e.kind]}): ${e.name} · ${e.id}`,
         html: `<h2>${escape(KIND_NAMES[e.kind])} enquiry</h2><table>${rows.map(([k, v]) => `<tr><td>${escape(k)}</td><td><b>${escape(v)}</b></td></tr>`).join('')}</table><p>${escape(e.message).replace(/\n/g, '<br>')}</p><p><a href="${cfg.siteUrl}/admin">Open admin</a></p>`,
         text: `${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\n${e.message}`,
       });
