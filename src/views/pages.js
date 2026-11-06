@@ -190,7 +190,7 @@ function home(ctx, d, req) {
     <div class="hero-copy">
       <div class="label">Temple of Art and Music · Elephant &amp; Castle</div>
       <h1 id="hero-title" class="chrome gold">${p ? html`Welcome back.<br>${p.title}` : html`What brings you to TAM?`}</h1>
-      <p class="lede">${p ? p.promise : html`Live music seven nights a week, a stage for new artists and cult legends, and a room you can make your own. Tell us who you are, or just ask.`}</p>
+      <p class="lede">${p ? p.promise : html`Live music six nights a week, a stage for new artists and cult legends, and a room you can make your own. Tell us who you are, or just ask.`}</p>
       ${next ? html`<p class="next">Next at TAM: <a href="/events/${next.slug}"><b>${next.label || next.title}</b> · ${when(next)}</a></p>${countdown(next)}` : ''}
     </div>
     <div class="home-ask">${askTitle('Your guide to nights, gigs, hire and parties')}${chatPanel(questions, p, { id: 'home', placeholder: 'e.g. Something bluesy on a Friday, under £20' })}</div>

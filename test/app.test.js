@@ -411,3 +411,12 @@ test('Friday Night Live is in the listing, and lit up on a Friday', async () => 
   await s.close();
   clock.t = keep;
 });
+
+test('TAM is open six nights a week, not seven', async () => {
+  const s = await start();
+  const home = (await s.call('/')).body;
+  assert.match(home, /six nights a week/);
+  assert.doesNotMatch(home, /seven nights/i);
+  assert.match((await s.call('/for/live-music')).body, /six nights a week/);
+  await s.close();
+});
