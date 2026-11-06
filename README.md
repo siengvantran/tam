@@ -40,6 +40,24 @@ The site is an instrument and a piece of generative digital art:
 - **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
 - For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
 
+## Shows: the back office for creating nights (/shows)
+
+**tam.tv/shows** is where TAM's team creates and runs shows: a month calendar of every night (TAM shows, Eventbrite listings, the schedule, festival nights; Mondays marked as the rest day), and an editor for each show.
+
+- **Sign in** with an emailed link (no passwords): type your work email at /shows. The link works once, for 20 minutes, and opens a page with a Sign in button (so email scanners can't use it up). Sessions last 30 days. The admin code still works.
+- **The team** is set by `STAFF` on Railway, e.g. `STAFF="Vivian <vivian@…> ops; Sieng <sieng@…> admin"`, and managed in **/admin → Team**. **Ops** (Vivian, the ops director) creates and publishes shows, sets up tickets, posts to Eventbrite, Facebook and Google, and runs the door. **Admin** can do everything, including the team. Emails stay out of the repo.
+- **A show** has a title, date and times, summary, description, image, video, line-up (names can be kept secret: the page says "+1 to be revealed"), running order and tickets. It's a draft until it's published; then it's a night on tam.tv and replaces the Eventbrite or schedule entry for the same night. Shows can be copied to another date or repeated weekly (as drafts), and nights already on the site can be brought in to manage ("Manage it in Shows"). Every change is logged with who made it.
+- **Tickets**, per show: TAM box office · TAM box office + Eventbrite (the Eventbrite allocation comes out of the same capacity, so nothing oversells) · Eventbrite only · free guest list (RSVP, books without a card) · free entry.
+- **Share it**:
+  - **Eventbrite**: creates a draft listing with the show's title, times (UK clock changes included), words, image (cropped 2:1) and ticket types, then publishes, syncs sales and cancels. Needs `EVENTBRITE_TOKEN` (a private token from the account that owns TAM's organiser page). Its listing is never shown twice: the live Eventbrite read sync skips listings that belong to a show.
+  - **Facebook**: Meta doesn't let apps create Facebook Events, so: connect TAM's Facebook Page in Eventbrite once (Account settings → Facebook) and published listings appear there as Facebook Events; and /shows posts to the Page with the link. Needs `FACEBOOK_PAGE_ID` and `FACEBOOK_PAGE_TOKEN` (long-lived, `pages_manage_posts`).
+  - **Google Business Profile**: an Event post with date, times, photo and a Book button. Needs `GBP_CLIENT_ID`, `GBP_CLIENT_SECRET`, `GBP_REFRESH_TOKEN` (OAuth, scope `business.manage`), `GBP_ACCOUNT_ID` and `GBP_LOCATION_ID`. Google also finds every show through the event details on its tam.tv page.
+  - Not connected yet? The posts are still written for you: copy them, post by hand, and mark them as posted.
+- **Write it for me**: Claude drafts the summary, description and posts from the show's details and your notes (`ANTHROPIC_API_KEY`). It uses only the facts given and changes nothing until you press Use.
+- **tam.tv/calendar.ics** is a public calendar of every upcoming night, to subscribe to in Google or Apple Calendar.
+
+Built from christmas.tam.tv (the Eventbrite and social publishing), friday.tam.tv (staff roles, line-up reveals, free RSVP through the box office) and immersive.tam.tv. See `src/domain/shows.js`, `src/domain/team.js`, `src/services/eventbrite-publish.js`, `src/services/social.js`, `src/services/writer.js`, `public/js/shows.js`.
+
 ## TAM's live Eventbrite listing comes first
 
 TAM's Eventbrite organiser page ([eventbrite.co.uk/o/33409225909](https://www.eventbrite.co.uk/o/33409225909)) is the **superior data set**. `src/services/eventbrite-live.js` reads the same public endpoints that page uses, at startup and every 30 minutes: every upcoming listing and the most recent past ones. Where Eventbrite and the schedule both have a night (same date, matching name: "The Original Singers Club" is the schedule's "Singers @ Sunday Spot"), **Eventbrite's name, start time, price, sold-out state and ticket link win**. Cancelled listings are left out. December listings join The Best Christmas Ever. Schedule nights Eventbrite doesn't list, and dates beyond its last listing, still come from the schedule.

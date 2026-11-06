@@ -16,6 +16,11 @@ import { collectionsDomain } from './domain/collections.js';
 import { raffleDomain } from './domain/raffle.js';
 import { adminDomain, staffAuth } from './domain/admin.js';
 import { legacyLinks } from './domain/legacy-links.js';
+import { teamDomain } from './domain/team.js';
+import { showsDomain } from './domain/shows.js';
+import { eventbritePublisher } from './services/eventbrite-publish.js';
+import { socialPublisher } from './services/social.js';
+import { showWriter } from './services/writer.js';
 import { enquiriesDomain } from './domain/enquiries.js';
 import { conciergeService } from './services/concierge.js';
 import { eventbriteLive } from './services/eventbrite-live.js';
@@ -49,6 +54,7 @@ export function configFrom(env = process.env) {
     aiEffort: env.TAM_AI_EFFORT || 'low',
     agentDailyLimit: Number(env.AGENT_DAILY_LIMIT) || 1500,
     enquiriesTo: env.ENQUIRIES_TO || '',
+    staff: env.STAFF || '', // the team: "Vivian <vivian@…> ops; …" (src/domain/team.js)
     indexing: env.INDEXING === 'on', // only the real tam.tv: previews are never indexed
   };
 }
@@ -76,6 +82,10 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
     ...auth,
   };
   if (!cfg.stripeKey) ctx.stripe.enabled = false;
+  // Named staff with emailed sign-in links; the admin and door codes still work.
+  ctx.team = teamDomain(ctx, { isAdminCode: auth.isAdmin, isDoorCode: auth.isDoor });
+  ctx.isAdmin = ctx.team.isAdmin;
+  ctx.isDoor = ctx.team.isDoor;
 
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
@@ -83,6 +93,11 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.markOrderPaid = collections.markPaid;
   const raffle = raffleDomain(ctx, tickets);
   ctx.links = legacyLinks(ctx);
+  // Shows created in /shows, and where they're published
+  const eventbrite = eventbritePublisher(ctx, { token: env.EVENTBRITE_TOKEN || '', api: env.EVENTBRITE_API || 'https://www.eventbriteapi.com/v3',
+    organizer: env.EVENTBRITE_ORGANIZER || '33409225909', orgId: env.EVENTBRITE_ORG_ID || '', publicDir: path.join(ROOT, 'public'), uploadsDir: store.uploads });
+  const social = socialPublisher(ctx, env);
+  const shows = showsDomain(ctx, { tickets, eventbrite, social, writer: showWriter(cfg) });
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };
@@ -90,7 +105,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });

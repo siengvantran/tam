@@ -149,6 +149,34 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     };
   }
 
+  // A show from /shows as a night. Its tickets are sold by TAM's box office
+  // (mode tam, both, rsvp), or on Eventbrite only (mode eventbrite), or not at all.
+  function showNight(s, f) {
+    const sl = s.sales || {};
+    const listed = s.eventbrite && !['canceled', 'deleted'].includes(s.eventbrite.status) ? s.eventbrite : null;
+    const held = sl.mode === 'both' && listed ? Number(listed.allocation) || 0 : 0;
+    const tickets = sl.mode === 'rsvp' ? [{ id: 'guest', name: 'Guest list', price: 0, blurb: 'Free: your name on the door.' }]
+      : (sl.tickets || []).filter((t) => t && t.id && t.name && Number.isInteger(t.price));
+    const boxOffice = ['tam', 'both', 'rsvp'].includes(sl.mode) && tickets.length;
+    const n = makeNight({
+      slug: s.slug, date: s.date, title: s.title, presenters: s.presenters || '', doors: s.doors || '19:00', ends: s.ends || '23:00',
+      summary: s.summary || '', schedule: s.schedule || [], image: s.image || (f && f.og) || '/img/og.jpg',
+      artists: (s.artists || []).filter((a) => artistBy.has(a)),
+      url: listed && listed.url && ['eventbrite', 'both'].includes(sl.mode) ? listed.url : '',
+    }, null);
+    n.festival = f ? f.slug : null;
+    n.sale = boxOffice ? { mode: 'own', tickets, capacity: Math.max(0, (Number(sl.capacity) || 0) - held), maxPerBooking: Number(sl.maxPerBooking) || 10 } : null;
+    n.source = 'show';
+    n.showId = s.id;
+    n.description = s.description || '';
+    n.video = s.video || '';
+    n.lineup = (s.lineup || []).filter((x) => x && x.name && x.revealed !== false).map((x) => ({ name: x.name, role: x.role || '' }));
+    n.lineupHidden = (s.lineup || []).filter((x) => x && x.name && x.revealed === false).length;
+    n.eventbrite = listed ? { id: String(listed.id), url: listed.url || '', soldOut: false, free: sl.mode === 'rsvp', from: null, tickets: [], priceText: '' } : null;
+    if (!boxOffice && !(listed && listed.url)) n.priceText = sl.mode === 'none' ? 'Free entry' : '';
+    return n;
+  }
+
   const slugify = (t) => t.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 60);
   const claimant = (date) => festivals.find((f) => f.claims && (f.claims.months || []).includes(Number(date.slice(5, 7)))
     && (!f.dates || date.slice(0, 4) === f.dates.from.slice(0, 4) || date < f.dates.from)) || null;
@@ -171,18 +199,32 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   // (src/services/eventbrite-live.js): it outranks the schedule, so where both
   // have the same night, Eventbrite's name, time, price and link win. Rebuilt in
   // place whenever the listing refreshes, so every page sees it at once.
-  function build(live) {
+  // `shows` are the shows TAM's team creates in /shows (src/domain/shows.js).
+  // They outrank everything else: a published show on a date replaces the
+  // Eventbrite listing or schedule entry for the same night.
+  let lastLive = null, lastShows = [];
+  function build(live = lastLive, shows = lastShows) {
+    lastLive = live; lastShows = shows;
     const loadDay = londonToday();
     const out = [];
+    const published = (shows || []).filter((s) => s.status === 'published' && /^\d{4}-\d{2}-\d{2}$/.test(s.date || ''));
+    const showOn = new Map(); // date → [show]
+    for (const s of published) showOn.set(s.date, [...(showOn.get(s.date) || []), s]);
+    // Eventbrite listings that belong to a show: the show is the night (or, if it was cancelled, there's none).
+    const showEventbriteIds = new Set((shows || []).filter((s) => ['published', 'cancelled'].includes(s.status)).map((s) => s.eventbrite && String(s.eventbrite.id)).filter(Boolean));
+    const usedShow = new Set();
     for (const f of festivals) {
       if (!f.dates) continue;
       const closed = new Set(f.closed || []);
       for (let d = f.dates.from; d <= f.dates.to; d = addDay(d)) {
         if (closed.has(d)) continue;
         const hand = handBy.get(`${f.slug}|${d}`);
+        const show = !hand && (showOn.get(d) || [])[0];
+        if (show) { usedShow.add(show.id); out.push(showNight(show, f)); continue; } // a show on a festival date is that night
         out.push(makeNight(hand || { slug: `${f.slug}-${d}`, date: d }, f));
       }
     }
+    for (const s of published) if (!usedShow.has(s.id)) out.push(showNight(s, claimant(s.date)));
     for (const e of handmade) if (!(e.festival && festivalBy.get(e.festival).dates)) out.push(makeNight(e, e.festival ? festivalBy.get(e.festival) : null));
 
     const usedSlugs = new Set([...out.map((n) => n.slug), ...archive.map((e) => e.slug)]);
@@ -195,6 +237,8 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     liveCount = { upcoming: 0, past: 0 };
     for (const e of (live && live.events) || []) {
       if (!e || e.cancelled || !/^\d{4}-\d{2}-\d{2}$/.test(e.date || '') || !e.name) continue;
+      if (showEventbriteIds.has(String(e.id))) continue;                                   // a TAM show: the show is the night
+      if (e.date >= loadDay && (showOn.get(e.date) || []).some((s) => sameNight(s.title, e.name))) continue;
       liveOn.set(e.date, [...(liveOn.get(e.date) || []), e.name]);
       const f = claimant(e.date);
       if (e.date < loadDay) {
@@ -243,6 +287,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
         continue;
       }
       if (listedOn(e.date, e.title, e.series)) continue;            // Eventbrite has it: its version wins
+      if ((showOn.get(e.date) || []).some((s) => sameNight(s.title, e.title, e.series))) continue; // a TAM show covers it
       const host = f && festNightOn.get(`${f.slug}|${e.date}`);
       if (host) {
         if (host.handmade && !e.series) continue; // the headline night already says who's on
@@ -340,6 +385,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
 
   return {
     applyLive: (live) => build(live), liveCounts: () => liveCount,
+    applyShows: (shows) => build(undefined, shows), slugify, sameNight,
     pathways, pathwayBy, nightsForPathway, canonicalElsewhere,
     site, venues, venueBy, artists: [...artistBy.values()].sort((a, b) => a.name.localeCompare(b.name)), artistBy,
     series, festivals, festivalBy, festivalAt, nights, nightBy, past, pastBy, legacy, legacyBy, videos,
