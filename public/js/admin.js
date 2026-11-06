@@ -43,6 +43,14 @@ const TABS = {
         <td>${p.oldOnly || p.nav ? `<select data-legacy="${esc(p.path)}" aria-label="Navigation for ${esc(p.path)}">${['off', 'header', 'footer'].map((v) => `<option value="${v}"${(p.nav ? p.nav.place : 'off') === v ? ' selected' : ''}>${{ off: 'Not linked', header: 'Header', footer: 'Footer' }[v]}</option>`).join('')}</select>` : '<span class="muted">Linked already</span>'}</td>
         <td>${p.oldOnly || p.nav ? `<input data-legacy-label="${esc(p.path)}" value="${esc(p.nav ? p.nav.label : '')}" placeholder="${esc(p.title)}" maxlength="40" aria-label="Label for ${esc(p.path)}">` : ''}</td></tr>`));
   },
+  // The team: who can sign in with an emailed link. Ops (e.g. Vivian, ops director): shows, tickets, publishing, the door. Admin: everything.
+  team: () => `<p>People here sign in at <a href="/shows">/shows</a> with an emailed link. <b>Ops</b> can create and publish shows, manage tickets and post to Eventbrite, Facebook and Google, and run the door. <b>Admin</b> can do everything, including this list.</p>`
+    + table(['Name', 'Email', 'Role', 'Last signed in', ''], data.team.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td>${esc(p.roleName)}</td><td>${p.lastSignIn ? esc(p.lastSignIn.slice(0, 16).replace('T', ' ')) : '<span class="muted">Not yet</span>'}</td>
+      <td>${btn('Remove', `data-team-remove="${esc(p.email)}"`)}</td></tr>`))
+    + `<form class="formbox" id="team-form"><h3>Add someone</h3><div class="fields"><label class="field"><span>Name</span><input name="name" maxlength="60" required></label>
+      <label class="field"><span>Email</span><input name="email" type="email" required></label>
+      <label class="field"><span>Role</span><select name="role"><option value="ops">Ops: shows, tickets, publishing, door</option><option value="admin">Admin: everything</option></select></label></div>
+      <button class="btn hot" type="submit">Add to the team</button><p class="err" role="status"></p></form>`,
   demand: () => `<p>What fans asked for: “Bring them back” on artist pages and “I was there” on past nights.</p>` + table(['Kind', 'Artist or night', 'Count'], data.demand.map((d) => `<tr><td>${d.kind}</td><td>${esc(d.target)}</td><td>${d.n}</td></tr>`)),
   enquiries: () => table(['When', 'Kind', 'Who', 'Details', 'Message', 'From', 'Status'], data.enquiries.map((e) => `<tr><td>${e.createdAt.slice(0, 16).replace('T', ' ')}<br><small>${e.id}</small></td><td>${esc(e.kind)}</td>
     <td>${esc(e.name)}<br><small><a href="mailto:${esc(e.email)}">${esc(e.email)}</a> ${esc(e.phone)}</small>${e.company ? `<br><small>${esc(e.company)}</small>` : ''}</td>
@@ -60,8 +68,8 @@ const TABS = {
     <div class="row-btn"><button class="btn ghost" type="button" id="mail-test">Send a test</button><button class="btn hot" type="submit">Send to followers</button></div><p class="err" role="status"></p></form>
     <h3>History</h3>${table(['Sent', 'Artist', 'Subject', 'To', 'Delivered', 'Failed'], data.mailings.map((m) => `<tr><td>${m.startedAt}</td><td>${esc(m.artist)}</td><td>${esc(m.subject)}</td><td>${m.to}</td><td>${m.delivered}</td><td>${m.failed}</td></tr>`))}`,
 };
-const ORDER = ['enquiries', 'nights', 'bookings', 'wall', 'sponsors', 'orders', 'artists', 'agent', 'demand', 'email', 'legacy'];
-const NAMES = { enquiries: 'Enquiries', agent: 'Ask TAM', nights: 'Nights', bookings: 'Bookings', wall: 'Party Wall', sponsors: 'Sponsors', orders: 'Collection orders', artists: 'Artists', demand: 'Demand', email: 'Email followers', legacy: 'Old site' };
+const ORDER = ['enquiries', 'nights', 'bookings', 'wall', 'sponsors', 'orders', 'artists', 'agent', 'demand', 'email', 'legacy', 'team'];
+const NAMES = { enquiries: 'Enquiries', agent: 'Ask TAM', nights: 'Nights', bookings: 'Bookings', wall: 'Party Wall', sponsors: 'Sponsors', orders: 'Collection orders', artists: 'Artists', demand: 'Demand', email: 'Email followers', legacy: 'Old site', team: 'Team' };
 
 function render() {
   root.innerHTML = `<div class="admin-tabs">${ORDER.map((k) => `<button class="chip" type="button" data-tab="${k}" aria-pressed="${k === tab}">${NAMES[k]}${k === 'wall' && data.pins.some((p) => p.status === 'pending') ? ` (${data.pins.filter((p) => p.status === 'pending').length})` : ''}</button>`).join('')}
@@ -95,6 +103,12 @@ signedIn(() => api('/api/admin/overview'), (d) => {
       if (act.dataset.a === 'cancel' && !confirm('Cancel this? Its tickets or numbers are released.')) return;
       try { await api(`/api/admin/${kind}/${id}`, { method: 'POST', body: { action: act.dataset.a } }); await reload(); } catch (err) { alert(err.message); }
     }
+    const rm = e.target.closest('[data-team-remove]');
+    if (rm) {
+      if (!confirm(`Remove ${rm.dataset.teamRemove}? They'll be signed out.`)) return;
+      try { await api('/api/admin/team', { method: 'POST', body: { email: rm.dataset.teamRemove, remove: true } }); await reload(); } catch (err) { alert(err.message); }
+      return;
+    }
     if (e.target.id === 'mail-test') {
       const f = Object.fromEntries(new FormData($('#mail-form')));
       try { await api('/api/admin/mailings', { method: 'POST', body: { ...f, test: true } }); alert('Test sent.'); } catch (err) { alert(err.message); }
@@ -115,6 +129,11 @@ signedIn(() => api('/api/admin/overview'), (d) => {
     if (s) { try { await api(`/api/admin/sponsors/${s.dataset.s}`, { method: 'POST', body: { status: s.value } }); } catch (err) { alert(err.message); } }
   });
   root.addEventListener('submit', async (e) => {
+    if (e.target.id === 'team-form') {
+      e.preventDefault();
+      try { await api('/api/admin/team', { method: 'POST', body: Object.fromEntries(new FormData(e.target)) }); await reload(); } catch (err) { alert(err.message); }
+      return;
+    }
     if (e.target.id !== 'mail-form') return;
     e.preventDefault();
     const f = Object.fromEntries(new FormData(e.target));

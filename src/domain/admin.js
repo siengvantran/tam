@@ -75,6 +75,7 @@ export function adminDomain(ctx, { tickets, collections, raffle }) {
       raffle: raffle.summary(raffle.tonight()),
       eventbrite: ctx.live ? ctx.live.status : null,
       legacy: ctx.links ? ctx.links.list() : [],
+      team: ctx.team ? ctx.team.list() : [],
       enquiries: db.enquiries.slice().reverse(),
       agent: (() => {
         const log = db.agentLog;

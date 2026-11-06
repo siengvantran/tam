@@ -167,7 +167,7 @@ export function ticketsDomain(ctx) {
         tableRequest: Boolean(q.ticket && q.ticket.tableRequest && body.tableRequest),
         tableNote: q.ticket && q.ticket.tableRequest && body.tableRequest ? text(body.tableNote, 300) : '',
         via: c.inviteBy.has(body.via) || c.artistBy.has(body.via) ? body.via : '',
-        status: ctx.stripe.enabled ? 'awaiting_payment' : 'reserved',
+        status: ctx.stripe.enabled && q.total + gift.amount > 0 ? 'awaiting_payment' : 'reserved', // free (guest list) needs no card
       };
       if (!b.name) throw fail(400, 'Add the name for the booking.');
       if (!b.email) throw fail(400, 'Add a valid email address.');
@@ -193,7 +193,7 @@ export function ticketsDomain(ctx) {
       if (b.status === 'awaiting_payment') b.holdUntil = new Date(ctx.now() + (cfg.holdMinutes + 5) * 60000).toISOString();
       db.bookings.push(b);
       let checkoutUrl = null;
-      if (ctx.stripe.enabled) {
+      if (b.status === 'awaiting_payment') {
         try { checkoutUrl = await startCheckout(req, b); } catch (e) { b.status = 'cancelled'; await save(); throw e; }
       }
       await save();

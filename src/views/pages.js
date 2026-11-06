@@ -333,6 +333,9 @@ function eventPage(ctx, d, n, url) {
   ${n.image ? html`<img class="ev-art" src="${n.image}" alt="" loading="lazy">` : ''}
 </div></section>
 ${!isPast ? ebTickets(n) : ''}
+${n.description ? html`<section class="section"><div class="wrap narrow prose">${n.description.split(/\n{2,}/).map((p) => html`<p>${p}</p>`)}</div></section>` : ''}
+${!artists.length && ((n.lineup || []).length || n.lineupHidden) ? html`<section class="section" id="lineup"><div class="wrap"><div class="head"><h2 class="chrome">The line-up</h2></div>
+  <ul class="show-lineup">${(n.lineup || []).map((x) => html`<li><b>${x.name}</b>${x.role ? html`<span class="muted">${x.role}</span>` : ''}</li>`)}${n.lineupHidden ? html`<li class="soon"><b>+ ${n.lineupHidden} to be revealed</b><span class="muted">Watch this space</span></li>` : ''}</ul></div></section>` : ''}
 ${artists.length ? html`<section class="section" id="lineup"><div class="wrap"><div class="head"><h2 class="chrome">The line-up</h2></div>
   <div class="lineup">${artists.map((a) => html`<article class="artist-card">${a.photo ? html`<img src="${a.photo}" alt="" loading="lazy">` : ''}<h3><a href="/artists/${a.slug}">${a.name}</a></h3>${a.role ? html`<p class="muted">${a.role}</p>` : ''}
     ${invites.some((i) => i.id === a.invite || i.artist === a.slug) ? html`<button class="btn ghost small" type="button" data-invite="${(invites.find((i) => i.id === a.invite) || invites.find((i) => i.artist === a.slug)).id}">Invite a friend</button>` : ''}</article>`)}</div></div></section>` : ''}
