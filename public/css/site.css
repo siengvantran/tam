@@ -70,7 +70,7 @@ ul.cols { columns: 2 280px; column-gap: 40px; } ul.cols li { break-inside: avoid
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 400 22px/1 var(--f-inline); }
 .brand b { color: var(--acid); font-weight: 400; }
 .nav { display: flex; gap: 22px; margin-left: auto; }
-.nav a { color: var(--ink-dim); text-decoration: none; font-size: 15px; }
+.nav a { color: var(--ink-dim); text-decoration: none; font-size: 15px; white-space: nowrap; }
 .nav a:hover, .nav .fest-link { color: var(--acid); }
 .menu-btn { display: none; margin-left: auto; background: none; border: 2px solid var(--line); color: var(--ink); border-radius: 999px; padding: 8px 14px; font: inherit; }
 @media (max-width: 920px) {
@@ -479,3 +479,24 @@ h3 { font-weight: 600; letter-spacing: -.01em; }
 
 /* admin: Old site tab */
 #admin select[data-legacy] { min-width: 140px; }
+
+/* Friday Night Live (friday.tam.tv): always listed, lit up on a Friday */
+.nav .fri-link { color: var(--cyan); }
+.nav .fri-link.lit { color: #fff; text-shadow: 0 0 8px var(--cyan), 0 0 18px var(--cyan); animation: fri-glow 2.4s ease-in-out infinite; }
+@keyframes fri-glow { 50% { text-shadow: 0 0 4px var(--cyan), 0 0 10px var(--cyan); } }
+.fri-ribbon { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; padding: 10px 16px; text-decoration: none;
+  color: #fff; background: linear-gradient(90deg, rgba(0,216,255,.16), rgba(178,92,255,.16)); border-bottom: 1px solid rgba(92,225,255,.45); font-size: 15px; text-align: center; }
+.fri-ribbon b { font: 400 18px/1 var(--f-space); letter-spacing: .08em; color: var(--cyan); }
+.fri-ribbon .fri-go, .fri-tile .fri-go { color: var(--cyan); font-weight: 600; white-space: nowrap; }
+.fri-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: fri-pulse 1.6s ease-in-out infinite; }
+@keyframes fri-pulse { 50% { opacity: .35; } }
+.fri-tile { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; margin: 18px 0 8px; padding: 20px 22px; border-radius: 16px; text-decoration: none; color: inherit;
+  border: 1px solid rgba(92,225,255,.35); background: rgba(0,216,255,.05); }
+.fri-tile h3 { margin: 4px 0 6px; } .fri-tile p { margin: 0 0 8px; }
+.fri-tile.lit { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan), 0 0 28px rgba(0,216,255,.35); background: rgba(0,216,255,.09); }
+.fri-word { display: flex; flex-direction: column; line-height: .9; font-family: var(--f-space); color: #fff; letter-spacing: .04em; }
+.fri-word b { font-weight: 400; font-size: 26px; } .fri-word .fri-live { font-size: 46px; color: var(--cyan); text-shadow: 0 0 14px rgba(0,216,255,.6); } .fri-word small { font: 12px var(--f-body); color: var(--ink-dim); margin-top: 4px; }
+.night-card.fri .fri-label { color: var(--cyan); }
+.night-card.fri.lit { box-shadow: 0 0 0 1px var(--cyan), 0 0 22px rgba(0,216,255,.3); border-radius: 14px; }
+@media (max-width: 560px) { .fri-tile { grid-template-columns: 1fr; gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { .nav .fri-link.lit, .fri-dot { animation: none; } }

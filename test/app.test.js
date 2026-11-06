@@ -379,3 +379,31 @@ test('Hidden blocks on old-site pages stay off the page', async () => {
   assert.match((await s.call("/about")).body, /The Future/);
   await s.close();
 });
+
+test('Friday Night Live is in the listing, and lit up on a Friday', async () => {
+  const keep = clock.t;
+  clock.t = Date.parse('2026-11-04T18:00:00Z'); // a Wednesday
+  const s = await start();
+  const wed = (await s.call('/whats-on')).body;
+  assert.match(wed, /class="fri-tile" href="https:\/\/friday\.tam\.tv\//);
+  assert.match(wed, /class="fri-link" href="https:\/\/friday\.tam\.tv\//);
+  assert.doesNotMatch(wed, /fri-ribbon/);
+  assert.match(wed, /class="night-card fri"[\s\S]*?Friday Night Live/); // Friday nights carry the label
+
+  clock.t = Date.parse('2026-11-06T09:30:00Z'); // Friday 6 November
+  for (const p of ['/', '/whats-on', '/artists', '/for/musician']) {
+    const page = (await s.call(p)).body;
+    assert.match(page, /class="fri-ribbon"/, p);
+    assert.match(page, /class="fri-link lit"/, p);
+  }
+  const fri = (await s.call('/whats-on')).body;
+  assert.match(fri, /class="fri-tile lit"/);
+  assert.match(fri, /Tonight · every Friday/);
+  // the festival's own pages keep their look
+  assert.doesNotMatch((await s.call('/the-best-christmas-ever')).body, /fri-ribbon/);
+  // a Friday night's page points to Friday Night Live
+  const night = s.app.ctx.content.nights.find((n) => n.weekday === 'Friday' && !n.festival && n.date >= '2026-11-06');
+  assert.match((await s.call(`/events/${night.slug}`)).body, /On Friday Night Live ↗/);
+  await s.close();
+  clock.t = keep;
+});

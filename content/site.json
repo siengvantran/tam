@@ -11,6 +11,25 @@
     "instagram": "https://www.instagram.com/templeartmusic/"
   },
   "youtubeChannelId": "UCJA26y1Lvdehx9x4cJfXNTg",
-  "ticker": ["LIVE MUSIC", "EMERGING ARTISTS", "CULT LEGENDS", "ELEPHANT & CASTLE", "TAM TV", "TEMPLE OF ART AND MUSIC"],
-  "song": { "youtubeId": "cXdu_jnTcPI", "title": "The Best Christmas Ever", "artist": "danagillespie" }
+  "ticker": [
+    "LIVE MUSIC",
+    "EMERGING ARTISTS",
+    "CULT LEGENDS",
+    "ELEPHANT & CASTLE",
+    "TAM TV",
+    "TEMPLE OF ART AND MUSIC"
+  ],
+  "song": {
+    "youtubeId": "cXdu_jnTcPI",
+    "title": "The Best Christmas Ever",
+    "artist": "danagillespie"
+  },
+  "friday": {
+    "name": "Friday Night Live",
+    "by": "by TAM",
+    "url": "https://friday.tam.tv",
+    "tagline": "Find your Friday",
+    "blurb": "Great nights. Real places. People worth discovering. Every Friday, TAM's own guide to who's playing, with the line-up revealed song by song.",
+    "image": "https://friday.tam.tv/og/friday-night-live.jpg"
+  }
 }
