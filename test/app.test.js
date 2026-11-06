@@ -297,11 +297,15 @@ test('search engines: previews are never indexed, and festival pages point to th
   await preview.close();
 
   const live = await start({ INDEXING: 'on', SITE_URL: 'https://tam.tv' });
-  const page = await live.call('/');
+  const real = { headers: { 'x-forwarded-host': 'tam.tv' } };
+  const page = await live.call('/', real);
   assert.equal(page.headers.get('x-robots-tag'), null);
+  // any other address (the Railway preview) is never indexed, even with indexing on
+  assert.equal((await live.call('/')).headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.doesNotMatch((await live.call('/robots.txt')).body, /Sitemap/);
   assert.doesNotMatch(page.body, /name="robots"/);
   assert.match(page.body, /<link rel="canonical" href="https:\/\/tam\.tv\/">/);
-  assert.match((await live.call('/robots.txt')).body, /Sitemap: https:\/\/tam\.tv\/sitemap\.xml/);
+  assert.match((await live.call('/robots.txt', real)).body, /Sitemap: https:\/\/tam\.tv\/sitemap\.xml/);
   // pages that christmas.tam.tv also has: canonical there, no duplicate event listing
   for (const [here, there] of [['/the-best-christmas-ever', '/'], ['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'],
     ['/collections/dana-108', '/books'], ['/invite/band', '/invite/band'], ['/artists/bakers-dozen', '/artist/band']]) {
