@@ -131,7 +131,7 @@ function footer(ctx) {
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
+      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}
@@ -172,13 +172,18 @@ export const ticketPrice = (t) => (t.kind === 'free' ? 'Free' : t.kind === 'dona
 export const ticketState = (t, now = Date.now()) => (t.status === 'AVAILABLE' ? '' : t.status === 'NOT_YET_ON_SALE' ? 'Not on sale yet'
   : t.salesEnd && Date.parse(t.salesEnd) < now ? 'Sales ended' : 'Sold out');
 
+// The Great British Blues Jam has its own page (hosts, house band, sign-up to jam): its nights link there.
+export const BLUES_JAM = '/great-british-blues-jam#jam';
+export const isBluesJam = (x) => /blues jam/i.test(String(x && (x.title || x.name) || x || ''));
+export const nightHref = (n) => (isBluesJam(n.title) && !n.festival ? BLUES_JAM : `/events/${n.slug}`);
+
 export function nightCard(ctx, n, avail) {
   const f = n.festival ? ctx.content.festivalBy.get(n.festival) : null;
   const from = avail && avail.from;
   const fri = !f && n.weekday === 'Friday' && friday(ctx);
   const tonight = fri && n.date === ctx.today();
   return html`<article class="night-card${n.festival ? ` fest-${n.festival}` : ''}${fri ? ' fri' : ''}${tonight ? ' lit' : ''}">
-  <a href="/events/${n.slug}">
+  <a href="${nightHref(n)}">
     <div class="nc-date"><b>${n.day}</b><span>${n.month.slice(0, 3)}</span><small>${n.weekday.slice(0, 3)}</small></div>
     <div class="nc-body">
       ${f ? html`<div class="label">${f.name}</div>` : fri ? html`<div class="label fri-label">${tonight ? 'Tonight · ' : ''}${fri.name}</div>` : ''}

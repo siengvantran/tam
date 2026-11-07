@@ -7,7 +7,7 @@ import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { venueLd, placeLd, availability } from './ai.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl } from './layout.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -350,7 +350,7 @@ ${artists.length ? html`<section class="section" id="lineup"><div class="wrap"><
   <div class="lineup">${artists.map((a) => html`<article class="artist-card">${a.photo ? html`<img src="${a.photo}" alt="" loading="lazy">` : ''}<h3><a href="/artists/${a.slug}">${a.name}</a></h3>${a.role ? html`<p class="muted">${a.role}</p>` : ''}
     ${invites.some((i) => i.id === a.invite || i.artist === a.slug) ? html`<button class="btn ghost small" type="button" data-invite="${(invites.find((i) => i.id === a.invite) || invites.find((i) => i.artist === a.slug)).id}">Invite a friend</button>` : ''}</article>`)}</div></div></section>` : ''}
 ${(n.programme || []).length ? html`<section class="section" id="programme"><div class="wrap narrow"><h2 class="chrome">On the night</h2>
-  <ol class="schedule">${n.programme.map((x) => html`<li><b>${x.time || '✦'}</b><span>${x.url ? html`<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.host ? ` · hosted by ${x.host}` : ''}${x.eventbrite ? html` <span class="muted">· ${listingPrice(x.eventbrite)} on Eventbrite</span>` : ''}</span></li>`)}</ol></div></section>` : ''}
+  <ol class="schedule">${n.programme.map((x) => html`<li><b>${x.time || '✦'}</b><span>${isBluesJam(x.title) ? html`<a href="${BLUES_JAM}">${x.title}</a>` : x.url ? html`<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.host ? ` · hosted by ${x.host}` : ''}${x.eventbrite ? html` <span class="muted">· ${listingPrice(x.eventbrite)} on Eventbrite</span>` : ''}</span></li>`)}</ol></div></section>` : ''}
 ${n.schedule.length ? html`<section class="section" id="running-order"><div class="wrap narrow"><h2 class="chrome">Running order</h2>
   <ol class="schedule">${n.schedule.map(([t, s]) => html`<li><b>${t}</b><span>${s}</span></li>`)}</ol></div></section>` : ''}
 ${invites.length && !isPast ? html`<section class="section" id="invite"><div class="wrap"><div class="head"><div><div class="label">Bring someone</div><h2 class="chrome red">Invite a friend</h2></div><p class="intro">Send a personal invitation card. It opens with your note and a link to tickets.</p></div>
