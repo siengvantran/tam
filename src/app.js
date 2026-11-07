@@ -18,6 +18,8 @@ import { adminDomain, staffAuth } from './domain/admin.js';
 import { legacyLinks } from './domain/legacy-links.js';
 import { teamDomain } from './domain/team.js';
 import { showsDomain } from './domain/shows.js';
+import { bluesDomain } from './domain/blues.js';
+import * as bluesPages from './views/blues.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -98,6 +100,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
     organizer: env.EVENTBRITE_ORGANIZER || '33409225909', orgId: env.EVENTBRITE_ORG_ID || '', publicDir: path.join(ROOT, 'public'), uploadsDir: store.uploads });
   const social = socialPublisher(ctx, env);
   const shows = showsDomain(ctx, { tickets, eventbrite, social, writer: showWriter(cfg) });
+  const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };
@@ -105,7 +108,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -127,6 +130,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   pages.routes(site, ctx, d);
   staff.routes(site, ctx, d);
   pathwayPages.routes(site, ctx, d);
+  bluesPages.routes(site, ctx, blues, qr);
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 

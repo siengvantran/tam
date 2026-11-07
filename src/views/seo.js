@@ -15,7 +15,7 @@ export function seoRoutes(r, ctx) {
     send(res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /door\nDisallow: /raffle-desk\nDisallow: /ticket/\nDisallow: /pay/\nDisallow: /card/\nDisallow: /api/\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
   });
   r.get('/sitemap.xml', (req, res) => {
-    const urls = new Set(['/', '/whats-on', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
+    const urls = new Set(['/', '/whats-on', '/great-british-blues-jam', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
     for (const f of c.festivals) urls.add(f.path);
     for (const n of c.nights) urls.add(`/events/${n.slug}`);
     for (const a of c.artists) urls.add(`/artists/${a.slug}`);

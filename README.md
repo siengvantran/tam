@@ -40,6 +40,15 @@ The site is an instrument and a piece of generative digital art:
 - **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
 - For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
 
+## The Great British Blues Jam (/great-british-blues-jam, short link tam.tv/blues)
+
+TAM's Saturday afternoon jam has its own page: each coming Saturday's **host** and **house band**, the jam list, a **sign-up** to jam (name and instrument, email optional and seen only by staff; people can cancel their own), and **The Great British Blues Wall** (short notes; while `PIN_MODERATION` is on they wait for a staff OK, like the Party Wall).
+
+- **The big screen** (`/great-british-blues-jam/screen`, or tam.tv/blues/screen) is for the projector in the Temple. It shows the title, the TAM logo large and pulsing to the beat of the room (through the laptop's microphone, with rings of light on every beat), the host, who's on stage, who's next, the house band, the wall, and a QR code to sign up. It refreshes itself every few seconds. Press the start button (the browser asks for the microphone once). Keys: **F** full screen, **M** microphone, **A** steady shuffle beat, **Space** tap the tempo, **H** hide the lists. It keeps the screen awake and hides the cursor.
+- **Running it** (`/great-british-blues-jam/manage`, for the team: sign in at /shows): set each Saturday's host, house band (name and instrument), jam list size, sign-ups open or closed, and a note; run the jam list (put someone **On stage**, mark them done, move up or down, remove); show or hide wall posts. Everything appears on the page and the screen straight away.
+
+See `src/domain/blues.js`, `src/views/blues.js`, `public/js/blues.js`, `public/js/blues-screen.js`, `public/js/blues-manage.js`.
+
 ## Shows: the back office for creating nights (/shows)
 
 **tam.tv/shows** is where TAM's team creates and runs shows: a month calendar of every night (TAM shows, Eventbrite listings, the schedule, festival nights; Mondays marked as the rest day), and an editor for each show.
