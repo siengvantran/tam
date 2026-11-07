@@ -10,7 +10,7 @@ const logo = $('#bj-logo');
 const cv = $('#bj-rings');
 const x = cv.getContext('2d');
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const COLOURS = ['#e8c77a', '#ff7a3d', '#4d8dff', '#ff3ea5', '#2ee6ff'];
+const COLOURS = ['#d9a441', '#a3262a', '#efe0bd', '#c46a2b', '#d9a441', '#6b2d1e']; // mustard, oxblood, old paper, rust, mustard, burnt umber
 
 let mode = null;                    // 'mic' | 'auto'
 let analyser = null, bins = null;

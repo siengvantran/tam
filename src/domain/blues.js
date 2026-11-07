@@ -74,7 +74,7 @@ export function bluesDomain(ctx) {
     const list = queue(date);
     const waiting = list.filter((x) => x.status === 'waiting');
     return {
-      date, when: longDate(date), start: n && !n.timesTbc ? n.doors : START, page: n ? `/events/${n.slug}` : null,
+      date, when: longDate(date), start: n && !n.festival && !n.timesTbc ? n.doors : START, // a festival night's doors are its evening show page: n ? `/events/${n.slug}` : null,
       tickets: n ? (n.eventbrite && n.eventbrite.url) || n.url || null : null, price: n && n.eventbrite && Number.isFinite(n.eventbrite.from) ? n.eventbrite.from : null,
       host: s.host, band: s.band, note: s.note,
       open: s.open && !closed(date), spotsLeft: Math.max(0, s.cap - list.length),
