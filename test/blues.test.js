@@ -114,3 +114,17 @@ test('The Great British Blues Jam: sign up to jam, the wall, the screen, and run
   assert.ok(Array.isArray(sc.next) && Array.isArray(sc.wall));
   assert.equal(sc.wall[0].name, 'Fan');
 });
+
+test('Every Blues Jam link on the site goes to the jam page', async (t) => {
+  const s = await start();
+  t.after(() => s.close());
+  const jam = 'href="/great-british-blues-jam#jam"';
+  const whatsOn = (await s.call('/whats-on')).body;
+  const jamNight = s.app.ctx.content.nights.find((n) => /blues jam/i.test(n.title) && !n.festival);
+  if (jamNight) {
+    assert.ok(whatsOn.includes(jam), 'What’s on cards');
+    assert.doesNotMatch(whatsOn, new RegExp(`<a href="/events/${jamNight.slug}">`));
+  }
+  assert.ok((await s.call('/')).body.includes(jam), 'footer');
+  assert.ok((await s.call('/for/musician')).body.includes(`class="step-card" ${jam}`), 'the musician pathway');
+});
