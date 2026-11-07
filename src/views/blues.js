@@ -3,7 +3,7 @@
 import { html } from './html.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout } from './layout.js';
-import { PATH } from '../domain/blues.js';
+import { PATH, HOST } from '../domain/blues.js';
 import { placeLd } from './ai.js';
 import { londonToUtc } from '../lib/content.js';
 
@@ -11,6 +11,21 @@ import { londonToUtc } from '../lib/content.js';
 // a typed sign-up sheet (Special Elite) and 1920s race-record print (Old Standard TT).
 const FONTS = 'https://fonts.googleapis.com/css2?family=Ultra&family=Rye&family=Special+Elite&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap';
 const BLUES_FONTS = 'https://fonts.googleapis.com/css2?family=Ultra&family=Rye&family=Special+Elite&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap';
+
+// Your host: MAZZA, with his photos and story (content/artists.json).
+function hostSection(ctx) {
+  const a = ctx.content.artistBy.get(HOST.artist);
+  if (!a) return '';
+  const pics = (a.gallery || []).slice(1, 4);
+  return html`<section class="section bj-hostsec" id="host"><div class="wrap bj-host-in">
+  <figure class="bj-host-photo"><img src="${a.photo}" alt="${(a.gallery || [])[0]?.alt || a.name}" loading="lazy"><figcaption>Your host</figcaption></figure>
+  <div><div class="bj-kicker">★ Your host every Saturday ★</div><h2 class="chrome">${a.name}</h2>
+    ${a.bio.slice(0, 2).map((p) => html`<p>${p}</p>`)}
+    <p><a class="btn ghost" href="/artists/${a.slug}">More about ${a.name}</a> ${a.links[0] ? html`<a class="btn ghost" href="${a.links[0].url}" target="_blank" rel="noopener">${a.links[0].label} ↗</a>` : ''}</p>
+    ${pics.length ? html`<div class="bj-host-pics">${pics.map((g) => html`<img src="${g.src}" alt="${g.alt}" loading="lazy">`)}</div>` : ''}
+    ${a.credit ? html`<p class="small muted">${a.credit}</p>` : ''}
+  </div></div></section>`;
+}
 
 function page(ctx, blues) {
   const first = blues.publicNight(blues.jamDay());
@@ -33,6 +48,7 @@ function page(ctx, blues) {
   <noscript><p>Next: ${first.when}${first.host ? ` · hosted by ${first.host}` : ''}.</p></noscript></div>
   <div class="bj-78" aria-hidden="true"><div class="bj-78-label"><small>TAM Records</small><b>Saturday Blues</b><i>The Great British Blues Jam</i><small>78 RPM · Elephant &amp; Castle</small></div></div>
 </div></section>
+${hostSection(ctx)}
 <section class="section" id="jam"><div class="wrap"><div class="head"><h2 class="chrome">Saturdays</h2><p class="muted">Each week’s host and house band, and who’s down to jam. Put your name down for any Saturday.</p></div>
   <div id="bj-nights" class="bj-nights" aria-live="polite">${blues.saturdays().map((d) => blues.publicNight(d)).map((n, i) => html`<article class="bj-night${i === 0 ? ' next' : ''}">
     <header><div class="label">${n.start}</div><h3>${n.when}</h3></header>
@@ -59,7 +75,7 @@ function screen(ctx) {
 <canvas id="bj-rings" aria-hidden="true"></canvas>
 <header class="bj-s-title"><div class="bj-s-kicker" id="s-date">Saturday · TAM</div><h1><span>The Great British</span> Blues Jam</h1><p id="s-host"></p></header>
 <main class="bj-s-stage"><img id="bj-logo" src="/img/tam-logo-640.png" alt="TAM · Temple of Art and Music"></main>
-<aside class="bj-s-side"><div class="bj-s-now" id="s-now" hidden><div class="bj-s-k">On stage now</div><b id="s-now-name"></b><span id="s-now-inst"></span></div>
+<aside class="bj-s-side"><div class="bj-s-host" id="s-hostcard" hidden><img id="s-hostimg" alt=""><div><div class="bj-s-k">Your host</div><b id="s-hostname"></b></div></div><div class="bj-s-now" id="s-now" hidden><div class="bj-s-k">On stage now</div><b id="s-now-name"></b><span id="s-now-inst"></span></div>
   <div class="bj-s-k">Up next</div><ol id="s-next"></ol><div class="bj-s-k">House band</div><ul id="s-band"></ul></aside>
 <footer class="bj-s-foot"><div class="bj-s-wall" id="s-wall"><span>The Great British Blues Wall</span></div>
   <div class="bj-s-qr"><img src="${PATH}/qr.svg" alt="" width="110" height="110"><span>Jam with us<br><b id="s-url">tam.tv/blues</b></span></div></footer>

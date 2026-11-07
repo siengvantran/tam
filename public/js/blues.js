@@ -16,7 +16,7 @@ function nightCard(n, i) {
     <header><div class="label">${esc(n.start)}</div><h3>${esc(n.when)}</h3>
       ${n.page ? `<a class="small" href="${esc(n.page)}">Details</a>` : ''}${n.tickets ? ` · <a class="small" href="${esc(n.tickets)}" target="_blank" rel="noopener">Tickets${n.price !== null && n.price !== undefined ? ` from ${pounds(n.price)}` : ''} ↗</a>` : ''}</header>
     <div class="bj-who">
-      <div><div class="bj-k">Host</div><p class="bj-host">${n.host ? esc(n.host) : '<span class="muted">Announced soon</span>'}</p></div>
+      <div><div class="bj-k">Host</div><p class="bj-host">${n.hostArtist ? `<a href="${esc(n.hostArtist.url)}">${esc(n.host)}</a>` : n.host ? esc(n.host) : '<span class="muted">Announced soon</span>'}</p></div>
       <div><div class="bj-k">House band</div>${n.band.length ? `<ul class="bj-band">${n.band.map((b) => `<li><b>${esc(b.name)}</b>${b.instrument ? ` <span class="muted">${esc(b.instrument)}</span>` : ''}</li>`).join('')}</ul>` : '<p class="muted">Announced soon</p>'}</div>
     </div>
     ${n.note ? `<p class="bj-note">${esc(n.note)}</p>` : ''}

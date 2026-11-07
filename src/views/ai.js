@@ -117,7 +117,7 @@ ${up.map(line).join('\n')}
 
 ## Regular nights
 ${(g.regulars || []).map(([k, t]) => `- ${k}: ${t}`).join('\n')}
-- The Great British Blues Jam has its own page, with each Saturday's host, house band and jam sign-up: ${base}/great-british-blues-jam
+- The Great British Blues Jam, every Saturday from 4pm, hosted by MAZZA (London blues guitarist and singer-songwriter, ${base}/artists/mazza): each Saturday's host, house band and jam sign-up at ${base}/great-british-blues-jam
 - Friday nights: ${base.includes('tam.tv') ? 'https://friday.tam.tv' : `${base}/whats-on`} (Friday Night Live by TAM)
 - Christmas: https://christmas.tam.tv (The Best Christmas Ever, every December)
 

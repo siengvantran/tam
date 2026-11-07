@@ -395,7 +395,8 @@ function artistPage(ctx, a) {
   return page(ctx, {
     title: a.name, path: `/artists/${a.slug}`, og: a.photo || '/img/og.jpg', scripts: ['/js/festival.js'],
     description: a.bio[0] || `${a.name} at the Temple of Art and Music.`,
-    jsonLd: { '@context': 'https://schema.org', '@type': 'MusicGroup', name: a.name, url: `${ctx.cfg.siteUrl}/artists/${a.slug}`, image: a.photo ? `${ctx.cfg.siteUrl}${a.photo}` : undefined },
+    jsonLd: { '@context': 'https://schema.org', '@type': 'MusicGroup', name: a.name, url: `${ctx.cfg.siteUrl}/artists/${a.slug}`, image: a.photo ? `${ctx.cfg.siteUrl}${a.photo}` : undefined,
+      ...(a.bio[0] ? { description: a.bio[0] } : {}), ...(a.links.length ? { sameAs: a.links.filter((l) => /^https?:/.test(l.url)).map((l) => l.url).filter((u, i, all) => all.indexOf(u) === i) } : {}) },
     body: html`<section class="section artist-hero"><div class="wrap ev-in">
   <div>
     <div class="label">${a.role || 'Artist at TAM'}</div>
@@ -406,6 +407,9 @@ function artistPage(ctx, a) {
   </div>
   ${a.photo ? html`<img class="ev-art" src="${a.photo}" alt="${a.name}">` : ''}
 </div></section>
+${(a.gallery || []).length ? html`<section class="section"><div class="wrap"><div class="artist-gallery">${a.gallery.map((g) => html`<figure><img src="${g.src}" alt="${g.alt}" loading="lazy"></figure>`)}</div>
+  ${a.credit ? html`<p class="small muted">${a.credit}</p>` : ''}</div></section>` : ''}
+${a.slug === 'mazza' ? html`<section class="section"><div class="wrap narrow"><p class="lede">Catch MAZZA hosting <a href="/great-british-blues-jam">The Great British Blues Jam</a> at TAM every Saturday from 4pm, and sign up to jam with him and the house band.</p></div></section>` : ''}
 ${upcoming.length ? html`<section class="section"><div class="wrap"><h2 class="chrome">Next at TAM</h2><div class="nights-grid">${upcoming.map((n) => html`<article class="night-card"><a href="/events/${n.slug}?via=${a.slug}#book"><div class="nc-date"><b>${n.day}</b><span>${n.month.slice(0, 3)}</span></div><div class="nc-body"><h3>${n.title}</h3><p class="muted">${times(n)}</p><p class="price">Book →</p></div></a></article>`)}</div></div></section>` : ''}
 <section class="section"><div class="wrap narrow">
   <form class="formbox" id="follow-form" data-artist="${a.slug}" novalidate>

@@ -789,3 +789,23 @@ body.blues .bj-signup input::placeholder { color: #8a7459; }
   .bj-rule { gap: 8px; letter-spacing: .18em; } .bj-rule span + span::before { margin-right: 8px; }
 }
 @media (max-width: 860px) { .bj-hero .wrap.bj-hero-in { grid-template-columns: minmax(0, 1fr); } .bj-poster { min-width: 0; margin-inline: 6px; } .bj-title b { font-size: clamp(48px, 15.5vw, 96px); } }
+
+/* the Blues Jam host (MAZZA) */
+.bj-host-in { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 36px; align-items: center; }
+.bj-host-photo { margin: 0; position: relative; }
+.bj-host-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border: 10px solid var(--paper, #ecdcb6); box-shadow: 0 20px 40px rgba(0,0,0,.6); transform: rotate(-1.5deg); filter: sepia(.25) contrast(1.05); }
+.bj-host-photo figcaption { position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%) rotate(-3deg); background: var(--oxblood, #8e1f22); color: var(--paper, #ecdcb6); font: 400 18px var(--f-juke, serif); padding: 6px 16px; box-shadow: 2px 2px 0 #000; white-space: nowrap; }
+.bj-host-in .bj-kicker { text-align: left; }
+.bj-host-pics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 6px; }
+.bj-host-pics img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 5px solid var(--paper, #ecdcb6); filter: sepia(.2); box-shadow: 0 8px 18px rgba(0,0,0,.5); }
+.bj-host-pics img:nth-child(1) { transform: rotate(1.2deg); } .bj-host-pics img:nth-child(2) { transform: rotate(-.8deg); } .bj-host-pics img:nth-child(3) { transform: rotate(.6deg); }
+body.blues .bj-night .bj-host a { color: var(--paper-ink); text-decoration-color: var(--oxblood); }
+@media (max-width: 860px) { .bj-host-in { grid-template-columns: 1fr; } .bj-host-photo { max-width: 360px; justify-self: center; } }
+.artist-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+.artist-gallery figure { margin: 0; } .artist-gallery img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 12px; display: block; }
+/* the screen: the host's portrait */
+.bj-screen .bj-s-host { display: flex; gap: 1vw; align-items: center; margin-bottom: 1.6vh; }
+.bj-screen .bj-s-host[hidden] { display: none; }
+.bj-screen .bj-s-host img { width: clamp(64px, 6.5vw, 140px); aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--mustard); filter: sepia(.3); }
+.bj-screen .bj-s-host b { font: 400 clamp(20px, 2vw, 44px)/1 var(--f-wood); text-transform: uppercase; }
+.bj-screen .bj-s-host .bj-s-k { margin-top: 0; border: 0; }
