@@ -92,7 +92,8 @@ function home() {
   const up = setup.upcoming || [];
   $('#sh-editor').innerHTML = `<div class="sh-card"><h3>Hello ${esc(setup.me.name.split(' ')[0])}</h3>
     <p>Press <b>+</b> on a day to add a show, or pick a show to edit it. Nights from Eventbrite or the schedule can be brought in here too.</p>
-    ${connections()}</div>
+    ${connections()}
+    <p class="small">Running a regular? <a href="/great-british-blues-jam/manage">The Great British Blues Jam</a>: hosts, house band, jam list, wall and the big screen.</p></div>
     ${up.length ? `<div class="sh-card"><h3>Your shows coming up</h3><ul class="plain sh-up">${up.map((s) => `<li><button class="linkish" type="button" data-show="${s.id}">${esc(longDay(s.date))} · ${esc(s.title || 'Untitled')}</button> <span class="tag small">${esc(STATUS[s.status])}</span></li>`).join('')}</ul></div>` : ''}`;
 }
 
