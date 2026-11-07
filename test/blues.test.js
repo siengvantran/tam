@@ -38,6 +38,19 @@ test('The Great British Blues Jam: sign up to jam, the wall, the screen, and run
   assert.match((await s.call('/great-british-blues-jam/qr.svg')).body, /<svg/);
   assert.match((await s.call('/sitemap.xml')).body, /great-british-blues-jam/);
 
+  // MAZZA hosts every Saturday unless staff set someone else
+  const page = (await s.call('/great-british-blues-jam')).body;
+  assert.match(page, /Your host every Saturday/);
+  assert.match(page, /\/img\/artists\/mazza\/tunnel\.webp/);
+  const artist = (await s.call('/artists/mazza')).body;
+  assert.match(artist, /Davide Mazzantini/);
+  assert.match(artist, /artist-gallery/);
+  assert.match(artist, /mazzasound\.com/);
+  const first = (await s.call('/api/blues')).body.nights[0];
+  assert.equal(first.host, 'MAZZA');
+  assert.equal(first.hostArtist.url, '/artists/mazza');
+  assert.equal((await s.call('/api/blues/screen')).body.hostArtist.photo, '/img/artists/mazza/tunnel.webp');
+
   // Saturdays
   const pub = (await s.call('/api/blues')).body;
   assert.ok(pub.nights.length >= 6);

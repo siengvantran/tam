@@ -133,5 +133,57 @@
       }
     ],
     "invite": "dana-gemma"
+  },
+  {
+    "slug": "mazza",
+    "name": "MAZZA",
+    "role": "Host of The Great British Blues Jam",
+    "photo": "/img/artists/mazza/tunnel.webp",
+    "bio": [
+      "MAZZA hosts The Great British Blues Jam at TAM every Saturday afternoon. Born Davide Mazzantini, he is a London blues guitarist and singer-songwriter who has been part of the UK blues scene since 2009: a twangy Telecaster, a warm voice, and songs about life in the grey metropolitan jungle.",
+      "His debut album, Tales From The City, came out on 31 October 2025 on vinyl, CD and streaming. It was cut to tape at Toe Rag Studios in East London with engineer and producer Liam Watson, with Little George Sueref as special guest and co-producer. Blues in Britain called it “a solid, thoughtful album with traditional ingredients, but not your normal ‘meat and potatoes’ 12-bar blues”.",
+      "He has shared the stage with Little George Sueref, Ian Siegal and Adam Gussow, and has held a long residency at Soho’s Ain’t Nothin’ But… Blues Bar. With his band he mixes deep Southern blues with the drive of a modern four-piece, and he plays solo, as a duo or with the full band. He has played TAM since 2022."
+    ],
+    "links": [
+      {
+        "label": "mazzasound.com",
+        "url": "https://mazzasound.com/"
+      },
+      {
+        "label": "About MAZZA",
+        "url": "https://mazzasound.com/about/"
+      },
+      {
+        "label": "Live dates",
+        "url": "https://mazzasound.com/gigs/"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/img/artists/mazza/tunnel.webp",
+        "alt": "MAZZA playing his Telecaster in a metal tunnel"
+      },
+      {
+        "src": "/img/artists/mazza/alley.webp",
+        "alt": "MAZZA with his guitar in a London brick alley"
+      },
+      {
+        "src": "/img/artists/mazza/portrait-green.webp",
+        "alt": "MAZZA in a sheepskin coat under green light"
+      },
+      {
+        "src": "/img/artists/mazza/thames.webp",
+        "alt": "MAZZA looking across the Thames towards Canary Wharf"
+      },
+      {
+        "src": "/img/artists/mazza/close-up.webp",
+        "alt": "A close-up of MAZZA outdoors"
+      },
+      {
+        "src": "/img/artists/mazza/dunes.webp",
+        "alt": "MAZZA sitting on a sand dune at dusk"
+      }
+    ],
+    "credit": "Photos and words from mazzasound.com, with thanks to MAZZA."
   }
 ]

@@ -133,6 +133,9 @@ async function refresh() {
     const d = await r.json();
     $('#s-date').textContent = `${d.when} · TAM, Elephant & Castle`;
     $('#s-host').innerHTML = d.host ? `Hosted by <b>${esc(d.host)}</b>` : '';
+    const ha = d.hostArtist;
+    $('#s-hostcard').hidden = !(ha && ha.photo);
+    if (ha && ha.photo) { if ($('#s-hostimg').getAttribute('src') !== ha.photo) $('#s-hostimg').src = ha.photo; $('#s-hostname').textContent = d.host; }
     $('#s-now').hidden = !d.onStage;
     if (d.onStage) { $('#s-now-name').textContent = d.onStage.name; $('#s-now-inst').textContent = d.onStage.instrument; }
     $('#s-next').innerHTML = d.next.length ? d.next.map((j) => `<li><b>${esc(j.name)}</b> <span>${esc(j.instrument)}</span></li>`).join('') : '<li class="muted">Sign up with the QR code</li>';

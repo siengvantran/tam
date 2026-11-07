@@ -26,6 +26,7 @@ export const INSTRUMENTS = ['Vocals', 'Guitar', 'Bass', 'Drums', 'Keys', 'Harmon
 const DEFAULT_CAP = 30;
 const WEEKS = 6;
 const START = '16:00', END = '19:00'; // as TAM lists it
+export const HOST = { name: 'MAZZA', artist: 'mazza' }; // hosts every Saturday; staff can set another host for a date
 const hash = (t) => crypto.createHash('sha256').update(t).digest('hex');
 const addDays = (d, n) => new Date(Date.parse(`${d}T12:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
 const isSat = (d) => new Date(`${d}T12:00:00Z`).getUTCDay() === 6;
@@ -37,8 +38,6 @@ export function bluesDomain(ctx) {
   const B = db.bluesJam;
   B.nights = B.nights || {}; B.signups = B.signups || []; B.wall = B.wall || [];
 
-  // The schedule names a host for some Saturdays: the default until staff set one.
-  const scheduleHost = new Map(c.schedule.filter((e) => e.series === 'great-british-blues-jam' && e.host).map((e) => [e.date, e.host]));
 
   // The jam's day: today if it's a Saturday (until it ends), else the next one.
   function jamDay() {
@@ -59,10 +58,16 @@ export function bluesDomain(ctx) {
     return [...dates].sort().slice(0, WEEKS + 2);
   }
 
+  // The host's TAM artist page, if they have one (MAZZA does).
+  function hostArtist(name) {
+    const key = String(name || '').trim().toLowerCase();
+    const a = key && (c.artistBy.get(key === HOST.name.toLowerCase() ? HOST.artist : key) || c.artists.find((x) => x.name.toLowerCase() === key));
+    return a ? { slug: a.slug, name: a.name, photo: a.photo || '', role: a.role || '', url: `/artists/${a.slug}` } : null;
+  }
   const nightOf = (date) => c.nights.find((n) => n.date === date && isJam(n)) || null;
   const settings = (date) => {
     const s = B.nights[date] || {};
-    return { host: s.host ?? scheduleHost.get(date) ?? '', band: s.band || [], open: s.open !== false, cap: s.cap || DEFAULT_CAP, note: s.note || '', onStage: s.onStage || null };
+    return { host: s.host || HOST.name, band: s.band || [], open: s.open !== false, cap: s.cap || DEFAULT_CAP, note: s.note || '', onStage: s.onStage || null };
   };
   const queue = (date) => B.signups.filter((x) => x.date === date && x.status !== 'removed').sort((a, b) => a.order - b.order);
   const closed = (date) => new Date(ctx.now()).toISOString() > londonToUtc(date, END);
@@ -76,7 +81,7 @@ export function bluesDomain(ctx) {
     return {
       date, when: longDate(date), start: n && !n.festival && !n.timesTbc ? n.doors : START, // a festival night's doors are its evening show page: n ? `/events/${n.slug}` : null,
       tickets: n ? (n.eventbrite && n.eventbrite.url) || n.url || null : null, price: n && n.eventbrite && Number.isFinite(n.eventbrite.from) ? n.eventbrite.from : null,
-      host: s.host, band: s.band, note: s.note,
+      host: s.host, hostArtist: hostArtist(s.host), band: s.band, note: s.note,
       open: s.open && !closed(date), spotsLeft: Math.max(0, s.cap - list.length),
       onStage: (() => { const x = s.onStage && list.find((y) => y.id === s.onStage); return x ? { id: x.id, name: x.name, instrument: x.instrument } : null; })(),
       jammers: list.map((x) => ({ id: x.id, name: x.name, instrument: x.instrument, played: x.status === 'played' })),
