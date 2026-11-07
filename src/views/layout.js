@@ -10,7 +10,7 @@ const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat
 
 export function layout(ctx, {
   title, description, path = '/', theme = 'tam', body, og, scripts = [], noindex = false, jsonLd = null,
-  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null,
+  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null, fonts = '',
 }) {
   const { site } = ctx.content;
   const elsewhere = ctx.content.canonicalElsewhere.get(path);
@@ -45,7 +45,7 @@ ${noindex ? raw('<meta name="robots" content="noindex, nofollow">') : ''}
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="${FONTS}">
+<link rel="stylesheet" href="${FONTS}">${fonts ? html`<link rel="stylesheet" href="${fonts}">` : ''}
 <link rel="stylesheet" href="/css/site.css">
 ${jsonLd ? raw(`<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`) : ''}
 </head>

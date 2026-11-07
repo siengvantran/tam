@@ -5,21 +5,27 @@ import { html as respond, redirect } from '../lib/http.js';
 import { layout } from './layout.js';
 import { PATH } from '../domain/blues.js';
 
-const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display&family=Inter:wght@400;600&display=swap';
+// Old-school blues type: wood-type gig-poster capitals (Ultra), juke-joint display (Rye),
+// a typed sign-up sheet (Special Elite) and 1920s race-record print (Old Standard TT).
+const FONTS = 'https://fonts.googleapis.com/css2?family=Ultra&family=Rye&family=Special+Elite&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap';
+const BLUES_FONTS = 'https://fonts.googleapis.com/css2?family=Ultra&family=Rye&family=Special+Elite&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap';
 
 function page(ctx, blues) {
   const first = blues.publicNight(blues.jamDay());
   const desc = 'The Great British Blues Jam at TAM, Elephant & Castle: every Saturday afternoon. A host, a house band, and a stage for anyone who plays. Sign up to jam, and leave a note on the Great British Blues Wall.';
   return layout(ctx, {
-    title: 'The Great British Blues Jam', path: PATH, description: desc, scripts: ['/js/blues.js'], og: '/img/og.jpg',
+    title: 'The Great British Blues Jam', path: PATH, description: desc, scripts: ['/js/blues.js'], og: '/img/og.jpg', bodyClass: 'blues', ambient: null, fonts: BLUES_FONTS,
     jsonLd: { '@context': 'https://schema.org', '@type': 'EventSeries', name: 'The Great British Blues Jam', description: desc, url: `${ctx.cfg.siteUrl}${PATH}`,
       location: { '@type': 'Place', name: 'TAM, Temple of Art and Music', address: '42 Newington Causeway, London SE1 6DR' } },
-    body: html`<section class="hero bj-hero"><div class="wrap">
-  <div class="label">Every Saturday at TAM · ${first.start}</div>
-  <h1 class="chrome gold">The Great British Blues Jam</h1>
-  <p class="lede">A host, a house band, and the stage for anyone who plays. Bring your guitar, your harp, your voice: put your name down for a Saturday and the host will call you up.</p>
+    body: html`<section class="hero bj-hero"><div class="wrap bj-hero-in"><div class="bj-poster">
+  <div class="bj-kicker">★ Every Saturday · ${first.start === '16:00' ? '4 o’clock' : first.start} ★</div>
+  <div class="bj-pre">The Temple of Art &amp; Music presents</div>
+  <h1 class="bj-title"><span>The Great British</span> <b>Blues Jam</b></h1>
+  <div class="bj-rule"><span>Live</span><span>Loud</span><span>Low-down</span></div>
+  <p class="bj-lede">A host, a house band, and the stage for anyone who plays. Bring your guitar, your harp, your voice: put your name down for a Saturday and the host will call you up.</p>
   <div class="ctas"><a class="btn hot" href="#jam">Sign up to jam</a><a class="btn ghost" href="#wall">The Great British Blues Wall</a>${first.tickets ? html`<a class="btn ghost" href="${first.tickets}" target="_blank" rel="noopener">Tickets ↗</a>` : ''}</div>
-  <noscript><p>Next: ${first.when}${first.host ? ` · hosted by ${first.host}` : ''}.</p></noscript>
+  <noscript><p>Next: ${first.when}${first.host ? ` · hosted by ${first.host}` : ''}.</p></noscript></div>
+  <div class="bj-78" aria-hidden="true"><div class="bj-78-label"><small>TAM Records</small><b>Saturday Blues</b><i>The Great British Blues Jam</i><small>78 RPM · Elephant &amp; Castle</small></div></div>
 </div></section>
 <section class="section" id="jam"><div class="wrap"><div class="head"><h2 class="chrome">Saturdays</h2><p class="muted">Each week’s host and house band, and who’s down to jam. Put your name down for any Saturday.</p></div>
   <div id="bj-nights" class="bj-nights" aria-live="polite"></div></div></section>
@@ -40,7 +46,7 @@ function screen(ctx) {
 <link rel="stylesheet" href="${FONTS}"><link rel="stylesheet" href="/css/site.css"></head>
 <body class="bj-screen">
 <canvas id="bj-rings" aria-hidden="true"></canvas>
-<header class="bj-s-title"><div class="bj-s-kicker" id="s-date">Saturday · TAM</div><h1>The Great British Blues Jam</h1><p id="s-host"></p></header>
+<header class="bj-s-title"><div class="bj-s-kicker" id="s-date">Saturday · TAM</div><h1><span>The Great British</span> Blues Jam</h1><p id="s-host"></p></header>
 <main class="bj-s-stage"><img id="bj-logo" src="/img/tam-logo-640.png" alt="TAM · Temple of Art and Music"></main>
 <aside class="bj-s-side"><div class="bj-s-now" id="s-now" hidden><div class="bj-s-k">On stage now</div><b id="s-now-name"></b><span id="s-now-inst"></span></div>
   <div class="bj-s-k">Up next</div><ol id="s-next"></ol><div class="bj-s-k">House band</div><ul id="s-band"></ul></aside>

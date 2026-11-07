@@ -13,7 +13,7 @@ function nightCard(n, i) {
   const me = mine();
   const instruments = data.instruments.map((x) => `<option>${esc(x)}</option>`).join('');
   return `<article class="bj-night${i === 0 ? ' next' : ''}" id="sat-${n.date}">
-    <header><div class="label">${i === 0 ? 'Next jam · ' : ''}${esc(n.start)}</div><h3>${esc(n.when)}</h3>
+    <header><div class="label">${esc(n.start)}</div><h3>${esc(n.when)}</h3>
       ${n.page ? `<a class="small" href="${esc(n.page)}">Details</a>` : ''}${n.tickets ? ` · <a class="small" href="${esc(n.tickets)}" target="_blank" rel="noopener">Tickets${n.price !== null && n.price !== undefined ? ` from ${pounds(n.price)}` : ''} ↗</a>` : ''}</header>
     <div class="bj-who">
       <div><div class="bj-k">Host</div><p class="bj-host">${n.host ? esc(n.host) : '<span class="muted">Announced soon</span>'}</p></div>
