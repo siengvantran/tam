@@ -213,6 +213,8 @@ export function visitSection(ctx, venueSlug) {
   <div><div class="label">Where</div><h2 id="visit-title" class="chrome">Find TAM</h2>
     <p class="addr" id="addr">${v.name}<br>${v.place}<br>${v.address}</p>
     ${(v.transport || []).length ? html`<ul class="facts">${v.transport.map(([k, t]) => html`<li><b>${k}</b><span>${t}</span></li>`)}</ul>` : ''}
+    ${((v.guide || {}).openingTimes || []).length ? html`<h3 class="label">Opening times</h3><ul class="facts hours">${v.guide.openingTimes.map(([k, t]) => html`<li><b>${k}</b><span>${t}</span></li>`)}</ul>
+      <p class="small muted">Times can change for special events: each night’s page has its own times.</p>` : ''}
     <div class="row-btn">${v.maps ? html`<a class="btn hot" href="${v.maps}" target="_blank" rel="noopener">Open in Maps</a>` : ''}
       <button class="btn ghost" type="button" data-copy-text="${`${v.name}, ${v.place}, ${v.address}`}">Copy address</button></div>
   </div>

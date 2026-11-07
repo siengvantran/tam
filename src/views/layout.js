@@ -47,6 +47,9 @@ ${noindex ? raw('<meta name="robots" content="noindex, nofollow">') : ''}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">${fonts ? html`<link rel="stylesheet" href="${fonts}">` : ''}
 <link rel="stylesheet" href="/css/site.css">
+<link rel="alternate" type="application/json" href="/whats-on.json" title="What’s on at TAM (data)">
+<link rel="alternate" type="text/calendar" href="/calendar.ics" title="TAM calendar">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="TAM for AI assistants">
 ${jsonLd ? raw(`<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`) : ''}
 </head>
 <body class="${bodyClass}">
