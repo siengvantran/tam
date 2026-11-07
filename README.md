@@ -40,6 +40,20 @@ The site is an instrument and a piece of generative digital art:
 - **Light from sound**: every note, whether from the visitor or from Tamalume's beat, sends a ripple of neon light out from where it happened and tints the headlines in that note's colour.
 - For visitors who prefer reduced motion the ribbons are drawn once and stay still, with no ripples. Sound only starts when someone switches Play on.
 
+## Readable by AI (Google AI Mode, Gemini, ChatGPT, Claude, Perplexity)
+
+Google's AI Mode answers questions like "what's on at TAM tonight, how much, are tickets left?" by reading the site, and calls the venue when it can't find the answer ([Google's guide](https://support.google.com/websearch/answer/17104441)). So tam.tv says it all in ways machines read (`src/views/ai.js`):
+
+- **The venue** (home page and Find TAM): schema.org `MusicVenue` with the address, **opening hours (Mondays closed)**, capacity, food and drink, socials, and how to book tickets or hire the room. The opening times are also shown to everyone in the Find TAM section; they're in `content/venues.json` (`guide.openingTimes` for people, `hours` for machines).
+- **Every night**: schema.org `MusicEvent` with the venue's full address, door time, prices, **availability (in stock, limited, sold out) and tickets left** from TAM's box office or Eventbrite, the performers and the booking link. What's on carries the whole list.
+- **/whats-on.json**: every upcoming night as data (times, prices, tickets left, who sells them, booking link).
+- **/llms.txt**: a plain-language guide to TAM for AI assistants: where it is, when it's open, how tickets work, what's coming up, the regulars, hiring the venue.
+- **/calendar.ics**: the same nights as a calendar.
+- **robots.txt** welcomes search engines and AI crawlers (Googlebot, Google-Extended, Bingbot, GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, Claude-User, PerplexityBot, Applebot, DuckAssistBot) to the public site and keeps them out of staff pages and the API. Remove `Google-Extended` or `GPTBot` there to opt out of AI training while staying in search and answers.
+- The Blues Jam Saturdays are written into the page itself, as not every assistant runs scripts.
+
+Keep the opening times right in `content/venues.json` and on TAM's Google Business Profile: AI Mode compares both.
+
 ## The Great British Blues Jam (/great-british-blues-jam, short link tam.tv/blues)
 
 TAM's Saturday afternoon jam has its own page: each coming Saturday's **host** and **house band**, the jam list, a **sign-up** to jam (name and instrument, email optional and seen only by staff; people can cancel their own), and **The Great British Blues Wall** (short notes; while `PIN_MODERATION` is on they wait for a staff OK, like the Party Wall).

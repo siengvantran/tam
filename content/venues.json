@@ -21,7 +21,11 @@
       "source": "From the old www.tam.tv. Confirm details with TAM before relying on them.",
       "openingTimes": [
         [
-          "Sunday to Wednesday",
+          "Monday",
+          "Closed (TAM's rest day; occasionally open for special projects)"
+        ],
+        [
+          "Tuesday and Wednesday",
           "3:30pm to 11pm"
         ],
         [
@@ -35,6 +39,10 @@
         [
           "Saturday",
           "3:30pm to 1am"
+        ],
+        [
+          "Sunday",
+          "3:30pm to 11pm"
         ]
       ],
       "regulars": [
@@ -79,7 +87,39 @@
         ],
         "contact": "Vivian Chiu, vivian@tam.tv"
       }
-    }
+    },
+    "hours": [
+      {
+        "days": [
+          "Tuesday",
+          "Wednesday",
+          "Sunday"
+        ],
+        "opens": "15:30",
+        "closes": "23:00"
+      },
+      {
+        "days": [
+          "Thursday"
+        ],
+        "opens": "18:00",
+        "closes": "00:00"
+      },
+      {
+        "days": [
+          "Friday"
+        ],
+        "opens": "18:00",
+        "closes": "01:00"
+      },
+      {
+        "days": [
+          "Saturday"
+        ],
+        "opens": "15:30",
+        "closes": "01:00"
+      }
+    ]
   },
   {
     "slug": "canary-wharf",

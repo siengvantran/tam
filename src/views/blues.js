@@ -4,6 +4,8 @@ import { html } from './html.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout } from './layout.js';
 import { PATH } from '../domain/blues.js';
+import { placeLd } from './ai.js';
+import { londonToUtc } from '../lib/content.js';
 
 // Old-school blues type: wood-type gig-poster capitals (Ultra), juke-joint display (Rye),
 // a typed sign-up sheet (Special Elite) and 1920s race-record print (Old Standard TT).
@@ -16,7 +18,11 @@ function page(ctx, blues) {
   return layout(ctx, {
     title: 'The Great British Blues Jam', path: PATH, description: desc, scripts: ['/js/blues.js'], og: '/img/og.jpg', bodyClass: 'blues', ambient: null, fonts: BLUES_FONTS,
     jsonLd: { '@context': 'https://schema.org', '@type': 'EventSeries', name: 'The Great British Blues Jam', description: desc, url: `${ctx.cfg.siteUrl}${PATH}`,
-      location: { '@type': 'Place', name: 'TAM, Temple of Art and Music', address: '42 Newington Causeway, London SE1 6DR' } },
+      location: placeLd(ctx), organizer: { '@type': 'Organization', name: 'TAM, Temple of Art and Music', url: ctx.cfg.siteUrl },
+      subEvent: blues.saturdays().map((d) => blues.publicNight(d)).map((n) => ({ '@type': 'MusicEvent', name: 'The Great British Blues Jam', startDate: londonToUtc(n.date, n.start),
+        eventStatus: 'https://schema.org/EventScheduled', eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', location: placeLd(ctx), url: `${ctx.cfg.siteUrl}${PATH}`,
+        ...(n.host ? { performer: [{ '@type': 'Person', name: n.host }, ...n.band.map((b) => ({ '@type': 'Person', name: b.name }))] } : {}),
+        ...(n.tickets ? { offers: { '@type': 'Offer', url: n.tickets, priceCurrency: 'GBP', availability: 'https://schema.org/InStock', ...(n.price !== null ? { price: (n.price / 100).toFixed(2) } : {}) } } : {}) })) },
     body: html`<section class="hero bj-hero"><div class="wrap bj-hero-in"><div class="bj-poster">
   <div class="bj-kicker">★ Every Saturday · ${first.start === '16:00' ? '4 o’clock' : first.start} ★</div>
   <div class="bj-pre">The Temple of Art &amp; Music presents</div>
@@ -28,7 +34,12 @@ function page(ctx, blues) {
   <div class="bj-78" aria-hidden="true"><div class="bj-78-label"><small>TAM Records</small><b>Saturday Blues</b><i>The Great British Blues Jam</i><small>78 RPM · Elephant &amp; Castle</small></div></div>
 </div></section>
 <section class="section" id="jam"><div class="wrap"><div class="head"><h2 class="chrome">Saturdays</h2><p class="muted">Each week’s host and house band, and who’s down to jam. Put your name down for any Saturday.</p></div>
-  <div id="bj-nights" class="bj-nights" aria-live="polite"></div></div></section>
+  <div id="bj-nights" class="bj-nights" aria-live="polite">${blues.saturdays().map((d) => blues.publicNight(d)).map((n, i) => html`<article class="bj-night${i === 0 ? ' next' : ''}">
+    <header><div class="label">${n.start}</div><h3>${n.when}</h3></header>
+    <p><b>Host:</b> ${n.host || 'announced soon'}. <b>House band:</b> ${n.band.length ? n.band.map((b) => `${b.name}${b.instrument ? ` (${b.instrument})` : ''}`).join(', ') : 'announced soon'}.</p>
+    ${n.note ? html`<p class="bj-note">${n.note}</p>` : ''}
+    <p>${n.jammers.length ? `${n.jammers.length} signed up to jam: ${n.jammers.map((j) => `${j.name} (${j.instrument})`).join(', ')}.` : 'Nobody has signed up to jam yet.'} ${n.open ? `${n.spotsLeft} jam spots left.` : 'Sign-ups are closed.'}${n.tickets ? html` <a href="${n.tickets}">Tickets</a>.` : ''}</p>
+  </article>`)}</div></div></section>
 <section class="section" id="wall"><div class="wrap"><div class="head"><h2 class="chrome">The Great British Blues Wall</h2><p class="muted">Shout-outs, setlists, who blew you away. Leave a note for the jam.</p></div>
   <form class="formbox bj-wall-form" id="bj-wall-form"><div class="fields"><label class="field"><span>Your name</span><input name="name" maxlength="40" required autocomplete="name"></label>
     <label class="field bj-msg"><span>Your message</span><textarea name="message" maxlength="200" rows="2" required placeholder="That harmonica solo last week…"></textarea></label></div>

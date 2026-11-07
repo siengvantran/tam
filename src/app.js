@@ -20,6 +20,7 @@ import { teamDomain } from './domain/team.js';
 import { showsDomain } from './domain/shows.js';
 import { bluesDomain } from './domain/blues.js';
 import * as bluesPages from './views/blues.js';
+import * as aiPages from './views/ai.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -131,6 +132,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   staff.routes(site, ctx, d);
   pathwayPages.routes(site, ctx, d);
   bluesPages.routes(site, ctx, blues, qr);
+  aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 

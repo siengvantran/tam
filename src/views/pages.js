@@ -5,6 +5,7 @@ import { html as respond, redirect, fail } from '../lib/http.js';
 import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
+import { venueLd, placeLd, availability } from './ai.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
 import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl } from './layout.js';
 import {
@@ -38,17 +39,23 @@ const ebTickets = (n) => {
   <p><a class="btn hot" href="${l.url}" target="_blank" rel="noopener">${l.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : l.free ? 'Reserve on Eventbrite ↗' : 'Book on Eventbrite ↗'}</a></p></div></section>`;
 };
 
-function eventLd(ctx, n) {
+function eventLd(ctx, n, d) {
   const v = ctx.content.venueBy.get(n.venue);
+  const av = d ? availability(ctx, d, n) : null;
+  const stock = av ? (av.soldOut ? 'https://schema.org/SoldOut' : av.left !== null && av.left <= 10 ? 'https://schema.org/LimitedAvailability' : 'https://schema.org/InStock') : 'https://schema.org/InStock';
   const offers = n.sale ? (n.sale.mode === 'own' ? n.sale.tickets : n.sale.mode === 'schedule' ? n.sale.tiers : [{ name: 'Ticket', price: n.sale.price }])
-    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}`, ...(t.until ? { validThrough: t.until } : {}) }))
+    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}#book`, availability: stock,
+      ...(av && av.left !== null ? { inventoryLevel: { '@type': 'QuantitativeValue', value: av.left } } : {}), seller: { '@type': 'Organization', name: 'TAM, Temple of Art and Music' }, ...(t.until ? { validThrough: t.until } : {}) }))
     : n.eventbrite && n.eventbrite.url ? ebOffers(n.eventbrite) : undefined;
   return {
     '@context': 'https://schema.org', '@type': 'MusicEvent', name: n.title, startDate: n.start, endDate: n.end,
     eventStatus: 'https://schema.org/EventScheduled', eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    location: v ? { '@type': 'Place', name: v.name, address: v.address } : undefined, image: `${ctx.cfg.siteUrl}${n.image}`,
-    description: n.summary || undefined, offers,
-    performer: n.artists.map((s) => ({ '@type': 'PerformingGroup', name: ctx.content.artistBy.get(s).name })),
+    location: v ? placeLd(ctx) : undefined, image: n.image && n.image.startsWith('http') ? n.image : `${ctx.cfg.siteUrl}${n.image}`,
+    url: `${ctx.cfg.siteUrl}/events/${n.slug}`, description: n.summary || undefined, offers,
+    ...(n.timesTbc ? {} : { doorTime: n.start }),
+    ...(av && av.free ? { isAccessibleForFree: true } : {}),
+    ...(av && av.left !== null ? { remainingAttendeeCapacity: av.left } : {}), ...(av && av.capacity ? { maximumAttendeeCapacity: av.capacity } : {}),
+    performer: [...n.artists.map((s) => ({ '@type': 'PerformingGroup', name: ctx.content.artistBy.get(s).name })), ...(n.lineup || []).map((x) => ({ '@type': 'Person', name: x.name }))],
     organizer: { '@type': 'Organization', name: ctx.content.site.legalName, url: ctx.cfg.siteUrl },
   };
 }
@@ -183,7 +190,7 @@ function home(ctx, d, req) {
   const questions = p ? p.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue?', 'Christmas party for 12?'];
   return page(ctx, {
     path: '/', ambient: 'stars', song: c.site.song, og: '/img/og.jpg', pathway: p,
-    jsonLd: { '@context': 'https://schema.org', '@type': 'MusicVenue', name: c.site.legalName, url: ctx.cfg.siteUrl, address: c.venueBy.get(c.site.defaultVenue)?.address },
+    jsonLd: venueLd(ctx), // address, opening hours (Mondays closed), how to book: for search and AI assistants
     body: html`
 <section class="hero home-hero" aria-labelledby="hero-title">
   <div class="wrap">
@@ -209,6 +216,8 @@ function whatsOn(ctx, d) {
   const months = [...new Set(up.map((n) => `${n.month} ${n.year}`))];
   return page(ctx, {
     title: 'What’s on', path: '/whats-on', scripts: ['/js/festival.js'],
+    jsonLd: { '@context': 'https://schema.org', '@type': 'ItemList', name: 'What’s on at TAM', numberOfItems: up.length,
+      itemListElement: up.slice(0, 60).map((n, i) => ({ '@type': 'ListItem', position: i + 1, item: eventLd(ctx, n, d) })) },
     description: 'Upcoming nights at the Temple of Art and Music, Elephant & Castle: live music, festivals and tickets.',
     data: { booking: bookingData(ctx, up, null) },
     body: html`<section class="section"><div class="wrap">
@@ -244,7 +253,7 @@ function festivalPage(ctx, d, f) {
     title: f.name, path: f.path, theme: themeOf(f), ambient: ambientOf(f), song: songOf(ctx, f), festival: f, og: f.og,
     description: `${f.name}: ${f.lede}`, scripts: featureScripts(f),
     data: { booking: bookingData(ctx, nights, f), festival: festivalClient(ctx, f) },
-    jsonLd: { '@context': 'https://schema.org', '@type': 'Festival', name: f.name, startDate: f.dates?.from, endDate: f.dates?.to, url: `${ctx.cfg.siteUrl}${f.path}`, subEvent: nights.filter((n) => n.handmade).map((n) => eventLd(ctx, n)) },
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Festival', name: f.name, startDate: f.dates?.from, endDate: f.dates?.to, url: `${ctx.cfg.siteUrl}${f.path}`, subEvent: nights.filter((n) => n.handmade).map((n) => eventLd(ctx, n, d)) },
     body: html`
 <nav class="subnav" aria-label="Sections"><div class="wrap">${nav.map(([h, t]) => html`<a href="${h}">${t}</a>`)}</div></nav>
 <section class="hero fest-hero" aria-labelledby="hero-title">
@@ -314,7 +323,7 @@ function eventPage(ctx, d, n, url) {
   const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(n.title)}&dates=${n.timesTbc ? `${n.date.replace(/-/g, '')}/${n.date.replace(/-/g, '')}` : `${n.start.replace(/[-:]/g, '').slice(0, 15)}Z/${n.end.replace(/[-:]/g, '').slice(0, 15)}Z`}&location=${encodeURIComponent(v ? `${v.name}, ${v.address}` : 'TAM')}&details=${encodeURIComponent(`${ctx.cfg.siteUrl}/events/${n.slug}`)}`;
   return page(ctx, {
     title: `${n.title} · ${when(n)}`, path: `/events/${n.slug}`, theme: themeOf(f), ambient: ambientOf(f), song: songOf(ctx, f), festival: f,
-    og: n.image, description: n.summary || `${n.title} at TAM, ${longDate(n.date)}.`, jsonLd: eventLd(ctx, n),
+    og: n.image, description: n.summary || `${n.title} at TAM, ${longDate(n.date)}.`, jsonLd: eventLd(ctx, n, d),
     scripts: ['/js/festival.js'],
     data: { booking: { ...bookingData(ctx, [n], f), preselect: n.slug, via }, festival: f ? { slug: f.slug, features: f.features, song: f.song ? { bpm: f.song.bpm, bars: f.song.bars } : null } : null, night: n.slug },
     body: html`
@@ -589,6 +598,7 @@ export function legacyPage(req, res, ctx, p) {
   const upcoming = venue ? ctx.content.upcoming(ctx.today()).filter((n) => n.venue === venue.slug) : [];
   respond(res, page(ctx, {
     title: p.title, path: p.path, description: (p.description || '').trim().slice(0, 160), scripts: ['/js/festival.js'],
+    ...(venue && venue.slug === ctx.content.site.defaultVenue ? { jsonLd: venueLd(ctx) } : {}),
     body: html`<section class="section"><div class="wrap narrow legacy">
   <h1 class="chrome gold">${p.title}</h1>
   ${fest ? html`<p><a class="btn hot" href="${fest.path}">${fest.name}</a></p>` : ''}

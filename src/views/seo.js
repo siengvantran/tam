@@ -12,7 +12,10 @@ export function seoRoutes(r, ctx) {
   r.get('/robots.txt', (req, res) => {
     // A preview stays crawlable so search engines see its noindex header, but advertises no sitemap.
     if (!ctx.cfg.indexing || !req.indexable) return send(res, 200, 'User-agent: *\nAllow: /\n', { 'Content-Type': 'text/plain; charset=utf-8' });
-    send(res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /door\nDisallow: /raffle-desk\nDisallow: /ticket/\nDisallow: /pay/\nDisallow: /card/\nDisallow: /api/\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
+    const rules = ['/admin', '/door', '/raffle-desk', '/ticket/', '/pay/', '/card/', '/api/', '/shows', '/staff/', '/great-british-blues-jam/manage'].map((p) => `Disallow: ${p}`).join('\n');
+    // Search engines and AI assistants (Google's AI Mode and Gemini, ChatGPT, Claude, Perplexity, Apple) are all welcome to the public site.
+    const bots = ['Googlebot', 'Google-Extended', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Applebot', 'Applebot-Extended', 'DuckAssistBot', '*'];
+    send(res, 200, `# TAM, Temple of Art and Music. A guide for AI assistants: ${ctx.cfg.siteUrl}/llms.txt\n# Every upcoming night as data: ${ctx.cfg.siteUrl}/whats-on.json\n\n${bots.map((b) => `User-agent: ${b}`).join('\n')}\nAllow: /\n${rules}\n\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
   });
   r.get('/sitemap.xml', (req, res) => {
     const urls = new Set(['/', '/whats-on', '/great-british-blues-jam', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
