@@ -20,6 +20,8 @@ import { teamDomain } from './domain/team.js';
 import { showsDomain } from './domain/shows.js';
 import { bluesDomain } from './domain/blues.js';
 import * as bluesPages from './views/blues.js';
+import { openMicDomain, hostPath } from './domain/openmic.js';
+import * as openMicPages from './views/openmic.js';
 import * as aiPages from './views/ai.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
@@ -102,6 +104,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const social = socialPublisher(ctx, env);
   const shows = showsDomain(ctx, { tickets, eventbrite, social, writer: showWriter(cfg) });
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
+  const openMic = openMicDomain(ctx); // Open Mic hub, and JOM: young artists' profiles, follows and cheers
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };
@@ -109,7 +112,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, openMic]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -132,6 +135,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   staff.routes(site, ctx, d);
   pathwayPages.routes(site, ctx, d);
   bluesPages.routes(site, ctx, blues, qr);
+  openMicPages.routes(site, ctx, openMic, d);
   aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
@@ -147,6 +151,11 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
     if (!req.indexable) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const url = new URL(req.url, 'http://x');
     const p = url.pathname;
+    // jom.tam.tv, openmic.tam.tv and singers.tam.tv are front doors to their pages here.
+    const door = hostPath(requestHost(req));
+    if (door && requestHost(req) !== siteHost && (req.method === 'GET' || req.method === 'HEAD') && p !== '/healthz') {
+      return redirect(res, `${cfg.siteUrl}${p === '/' ? door : p}${url.search}`, 302);
+    }
     try {
       if (p.startsWith('/api/')) {
         if (req.method === 'POST' && !p.startsWith('/api/admin') && p !== '/api/stripe/webhook' && limited(req)) {

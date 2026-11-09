@@ -63,6 +63,29 @@ TAM's Saturday afternoon jam has its own page: each coming Saturday's **host** a
 
 See `src/domain/blues.js`, `src/views/blues.js`, `public/js/blues.js`, `public/js/blues-screen.js`, `public/js/blues-manage.js`.
 
+## Open Mic (/open-mic) and JOM, the Junior Open Mic (/jom)
+
+**tam.tv/open-mic** is the front door to TAM's three open mics, each with its own page and its own address:
+
+| Night | Page | Address that lands on it |
+| --- | --- | --- |
+| International Open Mic, Tuesdays | `/open-mic/international` | openmic.tam.tv |
+| Singers at TAM, Sundays | `/open-mic/singers` | singers.tam.tv |
+| Junior Open Mic (JOM) | `/jom` | jom.tam.tv |
+
+Dates and tickets on these pages are TAM's own nights (the box office, Eventbrite and the schedule): a night whose title says "open mic", "singers" or "junior open mic" appears on its page by itself, so creating a show in /shows is all it takes. The three addresses are custom domains on the same Railway service; the app redirects each to its page.
+
+**JOM is a microverse**: one screen per young artist, swiped in four directions (left and right for Backstage, Lineup, Spotlight and Profile; up and down for the next artist). Fans follow artists and send one of four cheers. Each performer makes their own profile in Backstage.
+
+The artists are children, so:
+
+- **Nothing a family sends is public until staff approve it** at **/jom/manage** (Ops and Admin: sign in at /shows). An edit to a live profile waits too, while the approved version stays up. Staff can hide or remove a profile, and add artists themselves.
+- **No comments, no messages.** A fan is a random id in the visitor's browser: no account and no email.
+- **A parent or guardian's email is required** and only staff see it. With email on, they're sent the private link that edits or removes the profile, and `ENQUIRIES_TO` hears about each new profile.
+- Photos are shrunk in the browser and stored in `DATA_DIR/uploads`.
+
+See `src/domain/openmic.js`, `src/views/openmic.js`, `public/js/jom.js`, `public/js/jom-manage.js`.
+
 ## Shows: the back office for creating nights (/shows)
 
 **tam.tv/shows** is where TAM's team creates and runs shows: a month calendar of every night (TAM shows, Eventbrite listings, the schedule, festival nights; Mondays marked as the rest day), and an editor for each show.

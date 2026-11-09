@@ -131,7 +131,7 @@ function footer(ctx) {
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
+      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a><a href="/open-mic">Open Mic</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}
