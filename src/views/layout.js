@@ -21,6 +21,7 @@ export function layout(ctx, {
   const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
   const desc = description || site.description;
   const mods = new Set(['/js/site.js', ...scripts]);
+  if (String(body).includes('data-carousel')) mods.add('/js/carousel.js'); // the featured show's carousel
   const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
   if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); }
   if (song) mods.add('/js/tamalume.js');

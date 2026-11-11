@@ -809,3 +809,59 @@ body.blues .bj-night .bj-host a { color: var(--paper-ink); text-decoration-color
 .bj-screen .bj-s-host img { width: clamp(64px, 6.5vw, 140px); aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--mustard); filter: sepia(.3); }
 .bj-screen .bj-s-host b { font: 400 clamp(20px, 2vw, 44px)/1 var(--f-wood); text-transform: uppercase; }
 .bj-screen .bj-s-host .bj-s-k { margin-top: 0; border: 0; }
+
+/* ---------- The featured show: a futuristic carousel hero (src/views/featured.js) ---------- */
+.fx-hero { --fx: #ffe600; --fx2: #ff2ea6; --fx3: #22e1ff; position: relative; overflow: hidden; padding: clamp(36px, 6vw, 72px) 0 clamp(44px, 6vw, 80px);
+  background: radial-gradient(ellipse at 70% 30%, rgba(255,46,166,.22), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(34,225,255,.16), transparent 55%), #07050c; isolation: isolate; }
+.fx-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px); pointer-events: none; }
+/* a neon perspective grid floor */
+.fx-grid { position: absolute; left: -20%; right: -20%; bottom: -10%; height: 60%; z-index: -1; transform: perspective(500px) rotateX(62deg); transform-origin: 50% 100%;
+  background-image: linear-gradient(rgba(34,225,255,.45) 1px, transparent 1px), linear-gradient(90deg, rgba(255,46,166,.4) 1px, transparent 1px); background-size: 60px 60px;
+  mask-image: linear-gradient(to top, #000 10%, transparent 85%); -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%); animation: fx-floor 6s linear infinite; }
+@keyframes fx-floor { to { background-position: 0 60px, 0 0; } }
+.fx-in { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(20px, 4vw, 56px); align-items: center; }
+.fx-kicker { display: inline-flex; align-items: center; gap: 10px; font: 400 clamp(14px, 1.4vw, 18px) var(--f-space); letter-spacing: .24em; text-transform: uppercase; color: var(--fx3); }
+.fx-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--fx2); box-shadow: 0 0 12px var(--fx2); animation: fx-blink 1.4s steps(2) infinite; }
+@keyframes fx-blink { 50% { opacity: .2; } }
+.fx-title { margin: 10px 0 8px; font: 400 clamp(44px, 6.4vw, 96px)/.92 var(--f-space); letter-spacing: .01em; text-transform: uppercase; color: var(--fx);
+  text-shadow: 0 0 18px rgba(255,230,0,.45), 3px 3px 0 var(--fx2), -2px -2px 0 rgba(34,225,255,.7); }
+.fx-when { font: 600 clamp(17px, 1.7vw, 22px) var(--f-body); color: #fff; margin: 0 0 10px; }
+.fx-lede { color: #d9d2e6; max-width: 34em; }
+.fx-note { color: var(--fx3); font-size: 14px; letter-spacing: .02em; }
+.btn.fx-btn { background: var(--fx); color: #07050c; border: 0; box-shadow: 0 0 0 2px #07050c, 0 0 0 4px var(--fx), 0 0 26px rgba(255,230,0,.55); }
+.btn.fx-btn:hover { background: #fff; }
+/* the coverflow */
+.fx-car { position: relative; outline: none; }
+.fx-car:focus-visible { outline: 2px solid var(--fx3); outline-offset: 6px; border-radius: 12px; }
+.fx-stage { position: relative; height: clamp(360px, 46vw, 600px); perspective: 1400px; transform-style: preserve-3d; touch-action: pan-y; }
+.fx-slide { --o: 0; --a: 0; position: absolute; top: 0; left: 50%; width: clamp(220px, 28vw, 400px); margin: 0 0 0 calc(clamp(220px, 28vw, 400px) / -2); aspect-ratio: 4 / 5;
+  transform: translateX(calc(var(--o) * 46%)) translateZ(calc(var(--a) * -190px)) rotateY(calc(var(--o) * -32deg)); transition: transform .7s cubic-bezier(.2,.8,.2,1), opacity .7s, filter .7s;
+  opacity: calc(1 - var(--a) * .22); filter: saturate(calc(1 - var(--a) * .25)) brightness(calc(1 - var(--a) * .18)); cursor: pointer; -webkit-box-reflect: below 6px linear-gradient(transparent 70%, rgba(255,255,255,.18)); }
+.fx-slide a { display: block; height: 100%; border-radius: 14px; overflow: hidden; position: relative; }
+.fx-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fx-slide a::after { content: ''; position: absolute; inset: 0; border-radius: 14px; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+.fx-slide.on a { box-shadow: 0 0 0 2px var(--fx), 0 0 30px rgba(255,230,0,.45), 0 0 80px rgba(255,46,166,.35); animation: fx-glow 3s ease-in-out infinite alternate; }
+@keyframes fx-glow { to { box-shadow: 0 0 0 2px var(--fx3), 0 0 34px rgba(34,225,255,.5), 0 0 90px rgba(255,46,166,.3); } }
+.fx-slide.on a::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.22) 45%, transparent 60%); background-size: 250% 100%; animation: fx-sheen 3.5s ease-in-out infinite; }
+@keyframes fx-sheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.fx-ctrl { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 18px; position: relative; z-index: 2; }
+.fx-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(34,225,255,.6); background: rgba(7,5,12,.7); color: var(--fx3); font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 0 14px rgba(34,225,255,.3); }
+.fx-arrow:hover { color: var(--fx); border-color: var(--fx); }
+.fx-dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.fx-dots button { width: 10px; height: 10px; padding: 0; border-radius: 3px; border: 0; background: rgba(255,255,255,.25); cursor: pointer; transition: width .3s, background .3s; }
+.fx-dots button[aria-selected="true"] { width: 26px; background: var(--fx); box-shadow: 0 0 10px var(--fx); }
+.fx-caption { text-align: center; color: #fff; font: 400 clamp(15px, 1.3vw, 18px) var(--f-space); letter-spacing: .12em; text-transform: uppercase; min-height: 1.4em; margin: 10px 0 0; }
+.fx-credit { text-align: center; font-size: 12px; color: #8f87a3; margin: 4px 0 0; }
+.fx-hero.compact { padding: 28px 0 40px; margin: 18px 0 10px; border-radius: 22px; }
+.fx-hero.compact .fx-title { font-size: clamp(36px, 4.6vw, 68px); }
+/* reduced motion: a plain crossfade */
+.fx-car.still .fx-slide { transform: none; transition: opacity .4s; opacity: 0; -webkit-box-reflect: none; }
+.fx-car.still .fx-slide.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .fx-grid, .fx-dot, .fx-slide.on a, .fx-slide.on a::before { animation: none; } }
+@media (max-width: 860px) {
+  .fx-in { grid-template-columns: minmax(0, 1fr); }
+  .fx-stage { height: clamp(340px, 108vw, 520px); }
+  .fx-slide { width: min(64vw, 340px); margin-left: calc(min(64vw, 340px) / -2); transform: translateX(calc(var(--o) * 40%)) translateZ(calc(var(--a) * -160px)) rotateY(calc(var(--o) * -28deg)); }
+}
+.fx-copy { position: relative; z-index: 2; }
+.fx-stage { clip-path: inset(-12% 0 -40% 0); } /* the fanned slides stay in their column, clear of the title */
