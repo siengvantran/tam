@@ -59,6 +59,10 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.match(await (await fetch(`${B}/sunday-showcases/${date}/the-lanterns`)).text(), /href="https:\/\/instagram\.com\/thelanterns"/);
     assert.match(after, /&lt;b&gt;Ruby/);
     assert.equal((after.match(/To be announced/g) || []).length, 8); // 4 presents + 4 carousel slides
+    // the home page shows the same line-up carousel, pointing to the showcases page for the tree
+    const home = await (await fetch(`${B}/`)).text();
+    assert.match(home, /id="line-up"[\s\S]*data-carousel/);
+    assert.match(home, /href="\/sunday-showcases#this-sunday">Unwrap the tree/);
     // the line-up carousel: one slide per act, tapping one unwraps its present
     assert.match(after, /id="line-up"[\s\S]*data-carousel/);
     assert.equal((after.match(/<figure class="fx-slide/g) || []).length, 6);
