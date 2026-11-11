@@ -16,6 +16,8 @@ const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>
   <label class="field"><span>What they play</span><input data-k="plays" value="${esc(a.plays)}" maxlength="80" placeholder="e.g. soul trio"></label>
   <label class="field full"><span>Links, one per line</span><textarea data-k="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube…">${esc((a.links || []).map((k) => k.url || k).join('\n'))}</textarea></label>
   <label class="field full"><span>About them (their bio)</span><textarea data-k="blurb" rows="4" maxlength="1200">${esc(a.blurb)}</textarea></label>
+  <div class="fields"><label class="field"><span>Song for their page (YouTube link)</span><input data-k="songUrl" value="${esc(a.song && a.song.youtubeId ? `https://www.youtube.com/watch?v=${a.song.youtubeId}` : '')}" maxlength="200" placeholder="Plays through Tamalume; the page moves with it"></label>
+  <label class="field"><span>Song title</span><input data-k="songTitle" value="${esc((a.song && a.song.title) || '')}" maxlength="120"></label></div>
   <input type="hidden" data-k="slug" value="${esc(a.slug || '')}">
   <input type="hidden" data-k="media" value="${esc(JSON.stringify(a.media || []))}">
   <input type="hidden" data-k="press" value="${esc(JSON.stringify(a.press || []))}">
@@ -55,7 +57,9 @@ const current = () => $$('[data-row]', root).map((f) => {
   let media = [], press = [];
   try { media = JSON.parse(a.media || '[]'); } catch { /* keep none */ }
   try { press = JSON.parse(a.press || '[]'); } catch { /* keep none */ }
-  return { ...a, media, press, links: a.links ? a.links.split(/\s+/).filter(Boolean) : [] };
+  const song = a.songUrl ? { url: a.songUrl, title: a.songTitle } : null;
+  delete a.songUrl; delete a.songTitle;
+  return { ...a, media, press, song, links: a.links ? a.links.split(/\s+/).filter(Boolean) : [] };
 });
 const rowOf = (el) => $$('[data-row]', root).indexOf(el.closest('[data-row]'));
 

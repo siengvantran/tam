@@ -34,6 +34,15 @@ const cleanMedia = (list) => (Array.isArray(list) ? list : []).slice(0, 8).map((
 // Up to four links: a list, or one per line (the old single "link" still reads).
 const cleanLinks = (a) => [].concat(a.links || [], a.link || []).flatMap((x) => String((x && typeof x === 'object' ? x.url : x) || '').split(/\s+/)).map(cleanLink).filter(Boolean).slice(0, 4);
 const LINK_NAMES = [[/instagram\.com/, 'Instagram'], [/youtu\.?be/, 'YouTube'], [/spotify\.com/, 'Spotify'], [/soundcloud\.com/, 'SoundCloud'], [/tiktok\.com/, 'TikTok'], [/bandcamp\.com/, 'Bandcamp'], [/music\.apple\.com/, 'Apple Music'], [/facebook\.com/, 'Facebook']];
+// A YouTube video for an act's page: a watch/short/embed link or the bare id; a title; a tempo for the lights.
+const ytId = (v) => { const s = String(v || '').trim(); const m = /(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/.exec(s); return m ? m[1] : /^[\w-]{11}$/.test(s) ? s : ''; };
+export const songOf = (x) => {
+  if (!x) return null;
+  const youtubeId = ytId(typeof x === 'string' ? x : x.youtubeId || x.url);
+  if (!youtubeId) return null;
+  const bpm = parseInt(x.bpm, 10);
+  return { youtubeId, title: text(x.title, 120), ...(bpm >= 50 && bpm <= 220 ? { bpm } : {}) };
+};
 export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Website'])[1];
 
 // Each act's page has its own look: a vibe staff pick in the editor.
@@ -258,6 +267,8 @@ export function showcaseDomain(ctx) {
           name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
           photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200), media: cleanMedia(a && a.media),
           vibe: a && VIBES[a.vibe] ? a.vibe : 'stage',
+          // a song for their page: a YouTube video played through Tamalume, the page pulsing to it
+          ...(songOf(a && a.song) ? { song: songOf(a.song) } : {}),
           ...(a && /^[a-z0-9-]{1,60}$/.test(a.slug || '') ? { slug: a.slug } : {}),
           // press: up to four pieces about them, each a headline, where it ran, a link, and a line in our words
           press: (Array.isArray(a && a.press) ? a.press : []).slice(0, 4).map((p) => ({

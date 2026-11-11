@@ -155,7 +155,9 @@ function actPage(ctx, showcase, { l, a }) {
   const invite = `Come and see ${a.name} at TAM's Sunday Showcase, ${day}${l.night && l.night.doors ? `, doors ${l.night.doors}` : ''}. TAM, Elephant & Castle. ${url}`;
   const desc = `${a.name}${a.plays ? `, ${a.plays}` : ''}: Act ${a.n} at TAM's Sunday Showcase, ${l.when}. Invite your friends, and vote for ${a.name} at the Christmas Showcase Special.`;
   return layout(ctx, {
-    title: `${a.name} · Sunday Showcase`, path: a.href, description: desc, og: a.photo || '/img/og.jpg', scripts: ['/js/showcase-act.js'], bodyClass: `sc-actpage vibe-${a.vibe}`, ambient: null,
+    title: `${a.name} · Sunday Showcase`, path: a.href, description: desc, og: a.photo || '/img/og.jpg', scripts: ['/js/showcase-act.js'], bodyClass: `sc-actpage vibe-${a.vibe}${a.song ? ' has-song' : ''}`, ambient: null,
+    // their song plays through Tamalume (the player bar); the page pulses to its beat
+    ...(a.song ? { song: { youtubeId: a.song.youtubeId, title: a.song.title || `${a.name} live` }, data: { festival: { song: { bpm: a.song.bpm || 100 } } } } : {}),
     jsonLd: { '@context': 'https://schema.org', '@type': 'MusicEvent', name: `Sunday Showcase: ${a.name}`, startDate: l.date, url,
       performer: { '@type': 'PerformingGroup', name: a.name, ...(a.links.length ? { sameAs: a.links.map((k) => k.url) } : {}) },
       location: { '@type': 'MusicVenue', name: 'TAM, Temple of Art and Music', address: { '@type': 'PostalAddress', postalCode: 'SE1 6DR', addressLocality: 'London' } },
@@ -173,6 +175,7 @@ function actPage(ctx, showcase, { l, a }) {
     <div class="ctas"><a class="btn va-btn" href="#invite">Invite your friends</a><a class="btn ghost" href="#xmas">Bring them to Christmas ✦</a></div>
   </div>
 </section>
+${listen(a)}
 ${slides.length > 1 ? html`<section class="fx-hero va-car" aria-label="${a.name}: photos and clips"><div class="fx-grid" aria-hidden="true"></div><div class="wrap">
   <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${a.name}">
     <div class="fx-stage">${slides.map((m, k) => html`<figure class="fx-slide${m.type === 'video' ? ' is-video' : ''}" data-i="${k}" aria-roledescription="slide" aria-label="${k + 1} of ${slides.length}">${m.type === 'video'
@@ -238,6 +241,21 @@ function follow(a) {
   return html`<section class="section va-follow" aria-labelledby="va-follow-h"><div class="wrap narrow">
   <div class="label">Follow ${a.name}</div><h2 id="va-follow-h">Keep up with them</h2>
   <ul class="plain va-socials">${a.links.map((k) => html`<li><a href="${k.url}" target="_blank" rel="noopener"><span class="va-net">${k.label}</span><b>${handleOf(k.url) || 'Listen and watch'}</b><i aria-hidden="true">↗</i></a></li>`)}</ul>
+</div></section>`;
+}
+
+// Listen: their song through Tamalume (a YouTube video), or, where they have
+// no song yet, their own live clip, whose sound the page hears and dances to.
+function listen(a) {
+  const clip = !a.song && (a.media || []).find((m) => m.type === 'video');
+  if (!a.song && !clip) return '';
+  return html`<section class="section va-listen" id="listen" aria-labelledby="va-listen-h"><div class="wrap">
+  <div class="head"><div class="label">Listen · Tamalume</div><h2 id="va-listen-h">${a.song ? a.song.title || `${a.name} live` : `${a.name} live`}</h2><p class="muted">Press play and the page moves with the music.</p></div>
+  ${a.song ? html`<div class="va-video" data-youtube="${a.song.youtubeId}">
+    <div class="va-video-in"><div id="va-player"></div><img class="vthumb" src="https://i.ytimg.com/vi/${a.song.youtubeId}/hqdefault.jpg" alt=""><button class="vplay" type="button">▶ Play ${a.name}</button></div>
+    <div class="va-pulse" aria-hidden="true"></div></div>`
+    : html`<div class="va-video va-clip"><div class="va-video-in"><video src="${clip.src}" ${clip.poster ? html`poster="${clip.poster}"` : ''} controls playsinline preload="metadata" crossorigin="anonymous" data-hear aria-label="${a.name} live"></video></div>
+    <div class="va-pulse" aria-hidden="true"></div></div>`}
 </div></section>`;
 }
 

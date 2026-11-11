@@ -136,8 +136,22 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.deepEqual(vid.acts[0].media.map((m) => m.type), ['video', 'image']);
     // on the act's own page, its photos and clips are a carousel
     assert.match(await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text(), /data-carousel[\s\S]*<source src="\/img\/showcases\/waris-albakri-1\.mp4" type="video\/mp4">/);
+    // Listen: no song yet, so their own live clip plays, and the page hears it
+    const tp = await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text();
+    assert.match(tp, /<section class="section va-listen" id="listen"/);
+    assert.match(tp, /<video src="\/img\/showcases\/waris-albakri-1\.mp4"[^>]*data-hear/);
+    assert.doesNotMatch(tp, /id="syn"/); // no Tamalume bar without a song
     // with more than one picture, the invite card lets you choose: the first (hero) is chosen to start
     assert.match(await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text(), /<input type="radio" name="card-pic" value="\/img\/showcases\/waris-albakri-1-poster\.jpg" checked>/);
+    // a YouTube song: any link form is read down to its id; the Tamalume bar plays it, the page pulses
+    const sg = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
+      { name: 'Trio', song: { url: 'https://www.youtube.com/watch?v=Z_c4NlhkWdY&t=3s', title: 'Black & Blue', bpm: 96 } }, { name: 'Bad Song', song: 'https://evil.example/x' }] }) })).json();
+    assert.deepEqual(sg.acts[0].song, { youtubeId: 'Z_c4NlhkWdY', title: 'Black & Blue', bpm: 96 });
+    assert.equal(sg.acts[1].song, undefined);
+    const sp2 = await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text();
+    assert.match(sp2, /class="va-video" data-youtube="Z_c4NlhkWdY"/);
+    assert.match(sp2, /<aside class="syn" id="syn"[^>]*data-youtube="Z_c4NlhkWdY"/);
+    assert.match(sp2, /class="sc-actpage vibe-stage has-song"/);
 
     // staff add a later showcase; the page keeps showing the next one, and moves on when it's removed
     const later = new Date(Date.parse(date) + 7 * 864e5).toISOString().slice(0, 10);
