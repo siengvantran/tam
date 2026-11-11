@@ -1100,3 +1100,37 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .va-press-list a { display: grid; gap: 4px; color: var(--v-ink); text-decoration: none; } .va-press-list a:hover b { text-decoration: underline; }
 .va-src { font: 400 12px var(--f-space); letter-spacing: .2em; text-transform: uppercase; color: var(--v-3); }
 .va-press-list p { margin: 8px 0 0; color: #d8cfc4; }
+
+/* ---------- The Sunday Showcase brand: its mark and wordmark, and "Sunday Showcase × TAM" ---------- */
+.ss-lockup { display: inline-flex; align-items: center; gap: 12px; line-height: 1; }
+.ss-lockup img { width: 56px; height: 56px; filter: drop-shadow(0 0 12px rgba(255,200,110,.45)); }
+.ss-word { display: grid; gap: 2px; }
+.ss-word i { font: italic 400 26px/0.9 var(--f-display); color: #fff6e6; }
+.ss-word b { font: 400 26px/0.9 var(--f-space); letter-spacing: .26em; color: #f0b44a; }
+.ss-lockup.big img { width: 92px; height: 92px; } .ss-lockup.big .ss-word i { font-size: 44px; } .ss-lockup.big .ss-word b { font-size: 42px; }
+.sc-brand { margin-bottom: 14px; }
+.ss-title { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; line-height: 1; }
+.ss-t-ss i { font: italic 400 1.1em var(--f-display); color: #fff6e6; } .ss-t-ss b { font: 400 1.15em var(--f-space); letter-spacing: .08em; color: #fff6e6; }
+.ss-x { color: var(--v-2, #ff2ea6); font: 400 1.1em var(--f-body); }
+.ss-t-tam { display: inline-flex; align-items: center; gap: 6px; font: 400 1.35em/1 var(--f-inline); letter-spacing: .06em; color: var(--v-1, #e8c77a); }
+.ss-t-tam img { width: 1.25em; height: 1.25em; }
+.va-brand { display: inline-block; font-size: clamp(18px, 2.2vw, 26px); text-decoration: none; margin-bottom: 8px; }
+
+/* ---------- The invite card on an act's page ---------- */
+.va-invite-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: clamp(20px, 4vw, 44px); align-items: center; }
+.va-pick { border: 0; padding: 0; margin: 14px 0 6px; display: flex; flex-wrap: wrap; gap: 8px; }
+.va-pick legend { padding: 0 0 8px; }
+.va-pick label { cursor: pointer; } .va-pick input { position: absolute; opacity: 0; pointer-events: none; }
+.va-pick img { display: block; width: 64px; height: 80px; object-fit: cover; border-radius: 10px; border: 3px solid transparent; opacity: .7; transition: .2s; }
+.va-pick input:checked + img { border-color: var(--v-1); opacity: 1; box-shadow: 0 0 16px color-mix(in srgb, var(--v-1) 60%, transparent); }
+.va-pick input:focus-visible + img { outline: 2px solid var(--v-3); outline-offset: 2px; }
+.va-cardbox { margin: 0; text-align: center; }
+.va-card { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; padding: 22px; text-align: left; color: #fff6e6;
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.05) 30%, rgba(0,0,0,.35) 62%, rgba(0,0,0,.92)), var(--pic) center 30% / cover no-repeat, var(--v-bg);
+  border: 4px solid var(--v-1); box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 40px color-mix(in srgb, var(--v-2) 30%, transparent); }
+.va-card .ss-lockup img { width: 44px; height: 44px; } .va-card .ss-word i, .va-card .ss-word b { font-size: 20px; }
+.va-card-mid { align-self: end; display: grid; gap: 4px; padding-bottom: 10px; }
+.va-card-name { font: 400 clamp(44px, 5vw, 64px)/.9 var(--f-space); text-transform: uppercase; text-shadow: 3px 3px 0 var(--v-2); overflow-wrap: anywhere; }
+.va-card-mid span { font: italic 600 15px var(--f-body); color: var(--v-1); }
+.va-card-title { font-size: 19px; } .va-card-foot p { margin: 8px 0 0; font-size: 13px; color: #e9e1d6; }
+@media (max-width: 760px) { .va-invite-in { grid-template-columns: minmax(0, 1fr); } .va-cardbox { order: -1; max-width: 340px; margin: 0 auto; width: 100%; } }

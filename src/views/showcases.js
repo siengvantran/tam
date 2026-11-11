@@ -102,6 +102,7 @@ function page(ctx, showcase) {
       organizer: { '@type': 'Organization', name: 'TAM, Temple of Art and Music', url: ctx.cfg.siteUrl } },
     body: html`<section class="hero sc-hero"><div class="wrap">
   <div class="sc-spot" aria-hidden="true"></div>
+  <div class="sc-brand">${showcaseLockup('big')}</div>
   <div class="label">${s.kicker}</div>
   <h1 class="chrome gold">${s.title}</h1>
   <p class="lede">${s.lede}</p>
@@ -145,6 +146,8 @@ function actPage(ctx, showcase, { l, a }) {
   const fest = showcase.festival();
   const festUrl = fest ? (fest.home && fest.home.url) || fest.path : 'https://christmas.tam.tv';
   const slides = [...(a.photo ? [{ type: 'image', src: a.photo }] : []), ...(a.media || [])];
+  // pictures for the invite card: the hero photo first, then their other photos and the stills from their clips
+  const pics = [...new Set(slides.map((m) => (m.type === 'video' ? m.poster : m.src)).filter(Boolean))];
   const others = l.acts.filter((x) => !x.tba);
   const i = others.findIndex((x) => x.slug === a.slug);
   const prev = others[(i - 1 + others.length) % others.length], nxt = others[(i + 1) % others.length];
@@ -160,7 +163,8 @@ function actPage(ctx, showcase, { l, a }) {
   <div class="va-bg" aria-hidden="true"></div><div class="va-snow" aria-hidden="true"></div>
   <div class="wrap va-in">
     <div class="va-vibes">${vibeMark(a)}</div>
-    <p class="va-kicker"><a href="${PATH}#line-up">Sunday Showcase</a> · Act ${a.n} · ${day}</p>
+    <a class="va-brand" href="${PATH}#line-up" aria-label="Sunday Showcase × TAM: the line-up">${showcaseTitle()}</a>
+    <p class="va-kicker">Act ${a.n} · ${day}</p>
     <h1 class="va-name">${a.name}</h1>
     ${a.plays ? html`<p class="va-plays">${a.plays}</p>` : ''}
     <p class="va-when">${l.night ? html`<a href="${l.night.href}">${l.night.title}</a>` : 'TAM'}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · TAM, Elephant & Castle</p>
@@ -186,16 +190,28 @@ ${(a.press || []).length ? html`<section class="section va-press" aria-labelledb
   <ul class="plain va-press-list">${a.press.map((p) => html`<li><a href="${p.url}" target="_blank" rel="noopener"><span class="va-src">${p.source}</span><b>${p.title} ↗</b></a>${p.note ? html`<p>${p.note}</p>` : ''}</li>`)}</ul>
 </div></section>` : ''}
 ${worldMap(a)}
-<section class="section va-invite" id="invite"><div class="wrap narrow"><div class="va-panel">
-  <div class="label">Invite your friends</div><h2>Bring a crowd for ${a.name}</h2>
-  <p>Send your friends the night: ${day}${l.night && l.night.doors ? html`, doors ${l.night.doors}` : ''}, at TAM, Elephant & Castle.</p>
-  <div class="va-share" data-share data-url="${url}" data-text="${invite}" data-title="${a.name} at TAM's Sunday Showcase">
-    <button class="btn va-btn" type="button" data-native hidden>Send an invite</button>
-    <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(invite)}" target="_blank" rel="noopener">WhatsApp</a>
-    <a class="btn ghost" href="mailto:?subject=${encodeURIComponent(`Come and see ${a.name} at TAM`)}&body=${encodeURIComponent(invite)}">Email</a>
-    <a class="btn ghost" href="sms:?&body=${encodeURIComponent(invite)}">Text</a>
-    <button class="btn ghost" type="button" data-copy>Copy link</button>
-  </div><p class="small muted" data-share-msg role="status" aria-live="polite"></p>
+<section class="section va-invite" id="invite"><div class="wrap"><div class="va-panel va-invite-in">
+  <div class="va-invite-copy">
+    <div class="label">Invite your friends</div><h2>Bring a crowd for ${a.name}</h2>
+    <p>Pick a picture for your invite card, then send it. It carries the night: ${day}${l.night && l.night.doors ? html`, doors ${l.night.doors}` : ''}, at TAM, Elephant & Castle.</p>
+    ${pics.length > 1 ? html`<fieldset class="va-pick"><legend class="small muted">Choose the picture</legend>${pics.map((src, k) => html`<label><input type="radio" name="card-pic" value="${src}" ${k === 0 ? 'checked' : ''}><img src="${src}" alt="Picture ${k + 1}" width="72" height="90" loading="lazy"></label>`)}</fieldset>` : ''}
+    <div class="va-share" data-share data-url="${url}" data-text="${invite}" data-title="${a.name} · Sunday Showcase × TAM" data-file="${a.slug}-sunday-showcase.png">
+      <button class="btn va-btn" type="button" data-native hidden>Send the card</button>
+      <button class="btn ghost" type="button" data-save>Save the card</button>
+      <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(invite)}" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ghost" href="mailto:?subject=${encodeURIComponent(`Come and see ${a.name} at TAM`)}&body=${encodeURIComponent(invite)}">Email</a>
+      <a class="btn ghost" href="sms:?&body=${encodeURIComponent(invite)}">Text</a>
+      <button class="btn ghost" type="button" data-copy>Copy link</button>
+    </div><p class="small muted" data-share-msg role="status" aria-live="polite"></p>
+  </div>
+  <figure class="va-cardbox">
+    <div class="va-card" data-card data-name="${a.name}" data-plays="${a.plays || ''}" data-day="${day}" data-doors="${l.night && l.night.doors ? `Doors ${l.night.doors}` : ''}" data-act="Act ${a.n}" data-site="${url.replace(/^https?:\/\//, '')}" style="--pic:url('${pics[0] || ''}')">
+      <div class="va-card-top">${showcaseLockup()}</div>
+      <div class="va-card-mid"><b class="va-card-name">${a.name}</b>${a.plays ? html`<span>${a.plays}</span>` : ''}</div>
+      <div class="va-card-foot"><div class="va-card-title">${showcaseTitle()}</div><p>${day}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · Elephant & Castle</p></div>
+    </div>
+    <figcaption class="small muted">Your invite card</figcaption>
+  </figure>
 </div></div></section>
 <section class="section va-xmas" id="xmas"><div class="sc-snow" aria-hidden="true"></div>${shardTree('va-tree')}<div class="wrap narrow"><div class="va-panel va-xpanel">
   <div class="label">✦ The Best Christmas Ever ✦</div><h2>Want ${a.name} at the Christmas Showcase Special?</h2>
@@ -208,6 +224,11 @@ ${worldMap(a)}
 </div></nav>`,
   });
 }
+// The Sunday Showcase brand: its mark (a sun rising over the stage) and its wordmark.
+export const showcaseLockup = (cls = '') => html`<span class="ss-lockup ${cls}"><img src="/img/sunday-showcase-mark.svg" alt="" width="56" height="56"><span class="ss-word"><i>Sunday</i><b>Showcase</b></span></span>`;
+// "Sunday Showcase × TAM": TAM in TAM's own lettering, with its mark.
+export const showcaseTitle = () => html`<span class="ss-title"><span class="ss-t-ss"><i>Sunday</i> <b>Showcase</b></span><span class="ss-x">×</span><span class="ss-t-tam"><img src="/img/tam-mark-96.png" alt="" width="40" height="40">TAM</span></span>`;
+
 // Follow them: each link as a big tile, with the @handle where the link has one.
 const handleOf = (url) => { const m = /(?:instagram\.com|tiktok\.com\/@?|soundcloud\.com|twitter\.com|x\.com)\/@?([\w.]+)/i.exec(url); return m ? `@${m[1]}` : ''; };
 function follow(a) {
