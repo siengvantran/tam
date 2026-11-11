@@ -17,6 +17,8 @@ const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>
   <label class="field full"><span>Links, one per line</span><textarea data-k="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube…">${esc((a.links || []).map((k) => k.url || k).join('\n'))}</textarea></label>
   <label class="field full"><span>About them (their bio)</span><textarea data-k="blurb" rows="4" maxlength="1200">${esc(a.blurb)}</textarea></label>
   <input type="hidden" data-k="media" value="${esc(JSON.stringify(a.media || []))}">
+  <input type="hidden" data-k="press" value="${esc(JSON.stringify(a.press || []))}">
+  ${(a.press || []).length ? `<p class="small muted full">In the press: ${a.press.map((p) => esc(p.source || p.title)).join(', ')}.</p>` : ''}
   ${(a.media || []).length ? `<p class="small muted full">Also on their profile: ${a.media.filter((m) => m.type === 'video').length} video(s), ${a.media.filter((m) => m.type === 'image').length} more photo(s).</p>` : ''}
   <div class="field full sc-m-photo"><span>Photo</span><input type="hidden" data-k="photo" value="${esc(a.photo)}">
     ${a.photo ? `<img src="${esc(a.photo)}" alt="" width="72" height="72">` : ''}<input type="file" accept="image/*" data-photo aria-label="Photo for act ${i + 1}">
@@ -48,8 +50,10 @@ function render(acts) {
 
 const current = () => $$('[data-row]', root).map((f) => {
   const a = Object.fromEntries($$('[data-k]', f).map((i) => [i.dataset.k, i.value.trim()]));
-  let media = []; try { media = JSON.parse(a.media || '[]'); } catch { /* keep none */ }
-  return { ...a, media, links: a.links ? a.links.split(/\s+/).filter(Boolean) : [] };
+  let media = [], press = [];
+  try { media = JSON.parse(a.media || '[]'); } catch { /* keep none */ }
+  try { press = JSON.parse(a.press || '[]'); } catch { /* keep none */ }
+  return { ...a, media, press, links: a.links ? a.links.split(/\s+/).filter(Boolean) : [] };
 });
 const rowOf = (el) => $$('[data-row]', root).indexOf(el.closest('[data-row]'));
 
