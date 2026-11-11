@@ -50,7 +50,7 @@ export function lineupCarousel(l) {
           ? html`<a href="${href(a)}" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${v.poster || pic}" aria-label="${label(a)}"><source src="${v.src}" type="video/mp4"></video><img class="fx-alt" src="${pic}" alt="${label(a)}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
           : a.tba || !pic
             ? html`<a href="${href(a)}" tabindex="-1" class="sc-fx-blank"><img src="/img/christmas/tam-logo-gold.png" alt="${label(a)}" width="400" height="400"><span>${a.tba ? '?' : a.name}</span></a>`
-            : html`<a href="${href(a)}" tabindex="-1"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}${a.tba ? '' : html` ${vibeMark(a, 'sc-fx-vibe')}`}</span></figcaption></figure>`;
+            : html`<a href="${href(a)}" tabindex="-1"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>${a.on ? html`${a.on} · ` : ''}Act ${a.n}${a.tba ? '' : html` ${vibeMark(a, 'sc-fx-vibe')}`}</span></figcaption></figure>`;
       })}</div>
       <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous act">‹</button>
         <div class="fx-dots" role="tablist">${l.acts.map((a, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${label(a)}"></button>`)}</div>
@@ -69,7 +69,7 @@ export function treeSection(l) {
     <p class="muted">${l.night ? html`At <a href="${l.night.href}">${l.night.title}</a>${l.night.doors ? html`, doors ${l.night.doors}` : ''}. ` : ''}${l.count} acts are waiting under the Shard tree. Tap a present to unwrap it and meet the act.</p>${l.note ? html`<p>${l.note}</p>` : ''}</div>
   <div class="sc-scene">
     ${shardTree()}
-    <ul class="plain sc-gifts">${l.acts.map((a, i) => html`<li class="sc-g c${i % 6}${a.tba ? ' tba' : ''}">
+    <ul class="plain sc-gifts">${l.acts.map((a, i) => html`<li class="sc-g c${i % 6}${a.tba ? ' tba' : ''}"${a.tba ? '' : html` data-signal="/api/showcases/${l.date}/act/${a.slug}"`}>
       <button class="sc-wrap" type="button" aria-expanded="false" aria-controls="sc-act-${a.n}" aria-label="Unwrap act ${a.n}"><span class="g-lid"></span><span class="g-l"></span><span class="g-r"></span><span class="g-bow"></span><span class="g-tag">Act ${a.n}</span></button>
       <div class="sc-card" id="sc-act-${a.n}"><div class="label">Act ${a.n}</div>
         ${a.tba ? html`<h3>To be announced</h3><p class="small muted">This act is still under wraps. Check back soon.</p>`
@@ -77,6 +77,7 @@ export function treeSection(l) {
       </div></li>`)}</ul>
   </div>
   <p class="sc-all"><button class="btn ghost" type="button" id="sc-unwrap-all">Unwrap them all</button></p>
+  ${l.run ? html`<div class="sc-run"><div class="label">The running order</div><ol class="plain">${l.run.order.map((x, k) => { const act = l.acts.find((y) => y.slug === x.slug) || {}; return html`<li><b>${x.on}</b><a href="${act.href}">${act.name}</a>${l.run.intervalAt && k === l.run.order.findIndex((o) => o.off === l.run.intervalAt.from) ? html`<span class="sc-int">Interval ${l.run.intervalAt.from}–${l.run.intervalAt.to}</span>` : ''}</li>`; })}</ol><p class="small muted">Times may move a little on the night.</p></div>` : ''}
 </div></section>`;
 }
 
@@ -159,7 +160,7 @@ function actPage(ctx, showcase, { l, a }) {
       performer: { '@type': 'PerformingGroup', name: a.name, ...(a.links.length ? { sameAs: a.links.map((k) => k.url) } : {}) },
       location: { '@type': 'MusicVenue', name: 'TAM, Temple of Art and Music', address: { '@type': 'PostalAddress', postalCode: 'SE1 6DR', addressLocality: 'London' } },
       ...(a.photo ? { image: `${ctx.cfg.siteUrl}${a.photo}` } : {}) },
-    body: html`<section class="va-hero" style="${a.photo ? html`--hero:url('${a.photo}')` : ''}">
+    body: html`<section class="va-hero" data-signal="/api/showcases/${l.date}/act/${a.slug}" style="${a.photo ? html`--hero:url('${a.photo}')` : ''}">
   <div class="va-bg" aria-hidden="true"></div><div class="va-snow" aria-hidden="true"></div>
   <div class="wrap va-in">
     <div class="va-vibes">${vibeMark(a)}</div>
@@ -167,6 +168,7 @@ function actPage(ctx, showcase, { l, a }) {
     <p class="va-kicker">Act ${a.n} · ${day}</p>
     <h1 class="va-name">${a.name}</h1>
     ${a.plays ? html`<p class="va-plays">${a.plays}</p>` : ''}
+    ${a.on ? html`<p class="va-on">On stage <b>${a.on}</b></p>` : ''}
     <p class="va-when">${l.night ? html`<a href="${l.night.href}">${l.night.title}</a>` : 'TAM'}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · TAM, Elephant & Castle</p>
     <div class="ctas"><a class="btn va-btn" href="#invite">Invite your friends</a><a class="btn ghost" href="#xmas">Bring them to Christmas ✦</a></div>
   </div>
@@ -205,7 +207,7 @@ ${worldMap(a)}
     </div><p class="small muted" data-share-msg role="status" aria-live="polite"></p>
   </div>
   <figure class="va-cardbox">
-    <div class="va-card" data-card data-name="${a.name}" data-plays="${a.plays || ''}" data-day="${day}" data-doors="${l.night && l.night.doors ? `Doors ${l.night.doors}` : ''}" data-act="Act ${a.n}" data-site="${url.replace(/^https?:\/\//, '')}" style="--pic:url('${pics[0] || ''}')">
+    <div class="va-card" data-card data-name="${a.name}" data-plays="${a.plays || ''}" data-day="${day}" data-doors="${a.on ? `On stage ${a.on}` : l.night && l.night.doors ? `Doors ${l.night.doors}` : ''}" data-act="Act ${a.n}" data-site="${url.replace(/^https?:\/\//, '')}" style="--pic:url('${pics[0] || ''}')">
       <div class="va-card-top">${showcaseLockup()}</div>
       <div class="va-card-mid"><b class="va-card-name">${a.name}</b>${a.plays ? html`<span>${a.plays}</span>` : ''}</div>
       <div class="va-card-foot"><div class="va-card-title">${showcaseTitle()}</div><p>${day}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · Elephant & Castle</p></div>
@@ -261,7 +263,7 @@ const dateRange = (d) => { const [a, b] = [new Date(`${d.from}T12:00:00Z`), new 
 // Staff: who's in this week's showcase, in running order.
 function manage(ctx) {
   return layout(ctx, {
-    title: 'Sunday Showcase: line-up', path: `${PATH}/manage`, noindex: true, ambient: null, scripts: ['/js/showcases-manage.js'], bodyClass: 'staff',
+    title: 'Sunday Showcase: line-up', path: `${PATH}/manage`, noindex: true, ambient: null, scripts: ['/js/showcases-manage.js', '/js/running-order.js'], bodyClass: 'staff',
     body: html`<section class="section"><div class="wrap narrow">
     <div class="label">TAM back office</div><h1 class="chrome gold">Sunday Showcases</h1>
     <p><a class="btn ghost small" href="${PATH}#this-sunday" target="_blank" rel="noopener">See the tree ↗</a> <a class="btn ghost small" href="/shows">Shows</a></p>

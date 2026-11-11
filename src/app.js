@@ -52,6 +52,8 @@ export function configFrom(env = process.env) {
     mailFrom: env.MAIL_FROM || 'TAM <tickets@tam.tv>',
     mailReplyTo: env.MAIL_REPLY_TO || '',
     pinModeration: env.PIN_MODERATION !== 'off',
+    // Google Analytics 4 measurement ID (G-…): loaded only for visitors who say yes on the cookie banner
+    gaId: /^G-[A-Z0-9]{4,16}$/.test(env.GA_MEASUREMENT_ID || '') ? env.GA_MEASUREMENT_ID : '',
     holdMinutes: 30,
     anthropicKey: env.ANTHROPIC_API_KEY || '',
     anthropicBaseUrl: env.ANTHROPIC_BASE_URL || '',

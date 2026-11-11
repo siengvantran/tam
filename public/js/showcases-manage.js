@@ -16,6 +16,7 @@ const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>
   <label class="field"><span>What they play</span><input data-k="plays" value="${esc(a.plays)}" maxlength="80" placeholder="e.g. soul trio"></label>
   <label class="field full"><span>Links, one per line</span><textarea data-k="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube…">${esc((a.links || []).map((k) => k.url || k).join('\n'))}</textarea></label>
   <label class="field full"><span>About them (their bio)</span><textarea data-k="blurb" rows="4" maxlength="1200">${esc(a.blurb)}</textarea></label>
+  <input type="hidden" data-k="slug" value="${esc(a.slug || '')}">
   <input type="hidden" data-k="media" value="${esc(JSON.stringify(a.media || []))}">
   <input type="hidden" data-k="press" value="${esc(JSON.stringify(a.press || []))}">
   ${(a.press || []).length ? `<p class="small muted full">In the press: ${a.press.map((p) => esc(p.source || p.title)).join(', ')}.</p>` : ''}
@@ -45,7 +46,8 @@ function render(acts) {
   <p><button class="btn ghost small" type="button" data-add>+ Add an act</button></p>
   <label class="field"><span>Note on the page (optional)</span><input name="note" value="${esc(s.saved.note)}" maxlength="200"></label>
   <p><button class="btn hot" type="submit">Save</button> <span class="small muted" id="sc-saved"></span>
-    <button class="btn ghost small" type="button" data-remove style="float:right">Remove this showcase</button></p></form>${add}`;
+    <button class="btn ghost small" type="button" data-remove style="float:right">Remove this showcase</button></p></form>
+  <section class="sh-card ro" id="sc-run" data-date="${s.date}" aria-label="Running order"></section>${add}`;
 }
 
 const current = () => $$('[data-row]', root).map((f) => {

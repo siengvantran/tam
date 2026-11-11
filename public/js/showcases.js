@@ -1,6 +1,7 @@
 // The Sunday Showcases call-out form: sent as a "Play at TAM" enquiry.
 
 import { $, api, formMessage } from './lib.js';
+import { signal } from './track.js';
 
 const f = $('#sc-form');
 if (f) {
@@ -22,7 +23,7 @@ if (f) {
 }
 
 // This week's showcase: tap a present under the tree to unwrap it.
-const unwrap = (g) => { g.classList.add('open'); g.querySelector('.sc-wrap').setAttribute('aria-expanded', 'true'); };
+const unwrap = (g) => { if (!g.classList.contains('open') && g.dataset.signal) signal(g.dataset.signal, 'unwrap'); g.classList.add('open'); g.querySelector('.sc-wrap').setAttribute('aria-expanded', 'true'); };
 document.querySelectorAll('.sc-g').forEach((g) => g.querySelector('.sc-wrap').addEventListener('click', () => unwrap(g)));
 const all = document.getElementById('sc-unwrap-all');
 if (all) all.addEventListener('click', () => document.querySelectorAll('.sc-g:not(.open)').forEach((g, i) => setTimeout(() => unwrap(g), i * 260)));

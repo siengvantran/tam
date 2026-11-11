@@ -3,6 +3,17 @@
 // at the Christmas Showcase Special" (one vote per browser).
 
 import { api } from './lib.js';
+import { signal, signalOnce } from './track.js';
+
+// how visitors react, for the running order (public/js/track.js)
+const SIG = (document.querySelector('[data-signal]') || {}).dataset?.signal;
+signalOnce(SIG, 'view');
+document.addEventListener('click', (e) => {
+  const how = e.target.closest('[data-share] a, [data-share] button');
+  if (how) signal(SIG, 'invite', { method: (how.textContent || '').trim().toLowerCase() });
+  if (e.target.closest('.va-socials a, .sc-links a')) signal(SIG, 'follow', { network: (e.target.closest('a').querySelector('.va-net') || e.target.closest('a')).textContent.trim() });
+});
+document.querySelectorAll('video').forEach((v) => v.addEventListener('play', () => signalOnce(SIG, 'play'), { once: true }));
 
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
@@ -109,6 +120,7 @@ if (want) {
     try {
       const r = await api(want.dataset.want, { method: 'POST', body: { id } });
       store.set(key, '1'); done(r.count);
+      if (window.tamTrack) window.tamTrack('showcase_vote', { act: SIG.split('/').pop() });
       document.body.classList.add('va-cheer'); setTimeout(() => document.body.classList.remove('va-cheer'), 1600);
     } catch (err) { want.disabled = false; count.textContent = err.message; }
   });
