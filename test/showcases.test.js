@@ -71,6 +71,13 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.match(prof, /class="sc-pic" src="\/img\/showcases\/justyna\.jpg"/);
     assert.match(prof, /href="https:\/\/youtu\.be\/abc"/);
     assert.equal((await fetch(`${B}/api/showcases/photo`, { method: 'POST', body: '{}' })).status, 401);
+    // staff upload a photo: it's stored and comes back as a site path
+    const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    const upr = await fetch(`${B}/api/showcases/photo`, { method: 'POST', headers: H, body: JSON.stringify({ image: png }) });
+    assert.equal(upr.status, 200);
+    const up = await upr.json();
+    assert.match(up.photo, /^\/uploads\//);
+    assert.equal((await fetch(B + up.photo)).status, 200);
     const pub = await (await fetch(`${B}/api/showcases`)).json();
     assert.equal(pub.acts[0].name, 'The Lanterns');
     assert.equal(pub.count, 6);
