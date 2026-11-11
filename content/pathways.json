@@ -74,6 +74,12 @@
         "label": "Junior Open Mic"
       },
       {
+        "title": "Play a Sunday Showcase",
+        "text": "The best acts from our open nights get a full set at a Sunday Showcase. Start on the open mic circuit, then register your interest.",
+        "link": "/sunday-showcases",
+        "label": "Sunday Showcases"
+      },
+      {
         "title": "Pitch a night",
         "text": "Got a band, a collective or a scene? Tell us and we'll talk about a date.",
         "link": "#enquire",
