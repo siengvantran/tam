@@ -110,8 +110,10 @@ if (form && B && B.nights.length) {
       $('#b-qty-hint').textContent = gift.error || '';
       $('#b-pay').disabled = Boolean(gift.error);
     }
-    $('#b-pay').textContent = avail.payments === 'card' ? 'Pay by card' : 'Book tickets';
-    $('#b-pay-note').textContent = avail.payments === 'card' ? 'You’ll pay securely with Stripe.' : 'We’ll hold your tickets and send an invoice.';
+    // free tickets (and no donation): nothing to pay, no invoice: the tickets come by email
+    const free = !q.error && q.total + (gift.amount || 0) === 0;
+    $('#b-pay').textContent = free ? 'Book free tickets' : avail.payments === 'card' ? 'Pay by card' : 'Book tickets';
+    $('#b-pay-note').textContent = free ? 'Free entry: we’ll email your tickets straight away.' : avail.payments === 'card' ? 'You’ll pay securely with Stripe.' : 'We’ll hold your tickets and send an invoice.';
     const bar = $('#tbar');
     if (bar) bar.hidden = !n;
   }

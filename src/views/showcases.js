@@ -202,6 +202,7 @@ ${slides.length > 1 ? html`<section class="fx-hero va-car" aria-label="${a.name}
   ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
 </div></section>
 ${follow(a)}
+${wall(a, l, showcase)}
 ${(a.press || []).length ? html`<section class="section va-press" aria-labelledby="va-press-h"><div class="wrap narrow">
   <div class="label">In the press</div><h2 id="va-press-h">${a.name} in the news</h2>
   <ul class="plain va-press-list">${a.press.map((p) => html`<li><a href="${p.url}" target="_blank" rel="noopener"><span class="va-src">${p.source}</span><b>${p.title} ↗</b></a>${p.note ? html`<p>${p.note}</p>` : ''}</li>`)}</ul>
@@ -245,6 +246,27 @@ ${worldMap(a)}
 export const showcaseLockup = (cls = '') => html`<span class="ss-lockup ${cls}"><img src="/img/sunday-showcase-mark.svg" alt="" width="56" height="56"><span class="ss-word"><i>Sunday</i><b>Showcase</b></span></span>`;
 // "Sunday Showcase × TAM": TAM in TAM's own lettering, with its mark.
 export const showcaseTitle = () => html`<span class="ss-title"><span class="ss-t-ss"><i>Sunday</i> <b>Showcase</b></span><span class="ss-x">×</span><span class="ss-t-tam"><img src="/img/tam-mark-96.png" alt="" width="40" height="40">TAM</span></span>`;
+
+// The wall: notes from fans (shown once checked), and the act's own YouTube and Instagram posts.
+const embedOf = (w) => (w.kind === 'youtube'
+  ? html`<div class="aw-embed aw-yt"><iframe src="https://www.youtube-nocookie.com/embed/${w.videoId}" title="YouTube video" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
+  : html`<div class="aw-embed aw-ig"><iframe src="https://www.instagram.com/${w.postType || 'p'}/${w.postId}/embed" title="Instagram post" loading="lazy" scrolling="no"></iframe></div>`);
+function wall(a, l, showcase) {
+  const items = showcase.wallShown(l.date, a.slug);
+  return html`<section class="section aw" id="wall" aria-labelledby="aw-h"><div class="wrap">
+  <div class="head"><div class="label">The wall</div><h2 id="aw-h">${a.name}’s wall</h2><p class="muted">Leave ${a.name} a note: why you’re coming, a song you want to hear, good luck for Sunday.</p></div>
+  <form class="aw-form" id="aw-form" data-wall="/api/showcases/${l.date}/act/${a.slug}/wall" novalidate>
+    <label class="field"><span>Your name</span><input name="name" maxlength="40" required autocomplete="given-name"></label>
+    <label class="field aw-msg"><span>Your note</span><textarea name="message" maxlength="280" rows="2" required></textarea></label>
+    <button class="btn va-btn" type="submit">Post to the wall</button><p class="small muted" role="status" aria-live="polite" data-aw-msg></p>
+  </form>
+  ${items.length ? html`<div class="aw-grid">${items.map((w) => (w.kind === 'note'
+    ? html`<figure class="aw-note"><blockquote>${w.message}</blockquote><figcaption>${w.name}</figcaption></figure>`
+    : html`<figure class="aw-post">${embedOf(w)}${w.caption ? html`<figcaption>${w.caption}</figcaption>` : ''}<span class="aw-by">from ${a.name}</span></figure>`))}</div>`
+    : html`<p class="muted aw-empty">No notes yet. Be the first.</p>`}
+  <p class="small muted aw-artist">Are you ${a.name}? <a href="${PATH}/artist">Sign in to your artist page</a> to add your YouTube and Instagram posts.</p>
+</div></section>`;
+}
 
 // Follow them: each link as a big tile, with the @handle where the link has one.
 const handleOf = (url) => { const m = /(?:instagram\.com|tiktok\.com\/@?|soundcloud\.com|twitter\.com|x\.com)\/@?([\w.]+)/i.exec(url); return m ? `@${m[1]}` : ''; };
@@ -290,6 +312,26 @@ function worldMap(a) {
 
 const dateRange = (d) => { const [a, b] = [new Date(`${d.from}T12:00:00Z`), new Date(`${d.to}T12:00:00Z`)]; const m = (x) => x.toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' }); return `${a.getUTCDate()}${m(a) === m(b) ? '' : ` ${m(a)}`}–${b.getUTCDate()} ${m(b)}`; };
 
+// Artists: sign in with the email TAM has for them, then add their YouTube and
+// Instagram posts to their wall, and show or hide fans' notes (public/js/artist.js).
+function artistPage(ctx, signIn = false) {
+  return layout(ctx, {
+    title: 'Your artist page', path: `${PATH}/artist`, noindex: true, ambient: null, scripts: ['/js/artist.js'], bodyClass: 'sc-artist',
+    body: html`<section class="section"><div class="wrap narrow">
+  <div class="sc-brand">${showcaseLockup()}</div>
+  <h1 class="chrome gold">Your artist page</h1>
+  ${signIn ? html`<p id="ar-signing" class="lede">Signing you in…</p>` : ''}
+  <form class="formbox" id="ar-login" ${signIn ? 'hidden' : ''} novalidate>
+    <p>Playing a Sunday Showcase? Type the email TAM has for you and we’ll send you a link to sign in.</p>
+    <label class="field"><span>Your email</span><input name="email" type="email" required autocomplete="email"></label>
+    <button class="btn hot" type="submit">Email me a sign-in link</button><p class="small muted" role="status" aria-live="polite" data-ar-msg></p>
+    <p class="small muted">Not working? Ask Vivian at TAM to add your email to your act.</p>
+  </form>
+  <div id="ar-home" hidden></div>
+</div></section>`,
+  });
+}
+
 // Staff: who's in this week's showcase, in running order.
 function manage(ctx) {
   return layout(ctx, {
@@ -306,6 +348,9 @@ export function routes(r, ctx, showcase) {
   if (!ctx.content.showcases) return;
   r.get(PATH, (req, res) => respond(res, page(ctx, showcase)));
   r.get(`${PATH}/manage`, (req, res) => respond(res, manage(ctx)));
+  // before /:date/:act, which would take these
+  r.get(`${PATH}/artist`, (req, res) => respond(res, artistPage(ctx)));
+  r.get(`${PATH}/artist/sign-in`, (req, res) => respond(res, artistPage(ctx, true)));
   r.get(`${PATH}/:date/:act`, (req, res, { params }) => {
     const x = showcase.act(params.date, params.act);
     if (!x) return respond(res, layout(ctx, { title: 'Not here', path: req.url, noindex: true, body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome">That act isn’t here</h1><p><a href="${PATH}#line-up">See the Sunday Showcase line-up</a>.</p></div></section>` }), 404);

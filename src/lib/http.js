@@ -56,7 +56,7 @@ const SECURITY_HEADERS = {
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://i.ytimg.com https://img.evbuc.com https://cdn.evbuc.com",
     "media-src 'self' blob:",
-    "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+    "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.instagram.com", // Instagram posts on artists' walls
     "connect-src 'self'",
     "form-action 'self' https://checkout.stripe.com",
     "base-uri 'self'",
