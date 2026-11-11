@@ -66,11 +66,6 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const fj = await full.json();
     assert.deepEqual(fj.acts[0].links.map((k) => k.label), ['YouTube', 'Instagram']);
     assert.equal(fj.acts[1].photo, '');
-    // videos and more photos on a profile: site files only
-    const vid = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [{ name: 'Trio',
-      media: [{ src: '/img/showcases/waris-albakri-1.mp4', poster: '/img/showcases/waris-albakri-1-poster.jpg' }, { src: '/img/showcases/waris-albakri-banjo.jpg' }, { src: 'https://evil.example/x.mp4' }] }] }) })).json();
-    assert.deepEqual(vid.acts[0].media.map((m) => m.type), ['video', 'image']);
-    assert.match(await (await fetch(`${B}/sunday-showcases`)).text(), /<video src="\/img\/showcases\/waris-albakri-1\.mp4" poster=/);
     const prof = await (await fetch(`${B}/sunday-showcases`)).text();
     assert.match(prof, /id="sc-p-1"[\s\S]*?<p>One\.<\/p><p>Two\.<\/p>/);
     assert.match(prof, /class="sc-pic" src="\/img\/showcases\/justyna\.jpg"/);
@@ -79,6 +74,11 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const pub = await (await fetch(`${B}/api/showcases`)).json();
     assert.equal(pub.acts[0].name, 'The Lanterns');
     assert.equal(pub.count, 6);
+    // videos and more photos on a profile: site files only
+    const vid = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [{ name: 'Trio',
+      media: [{ src: '/img/showcases/waris-albakri-1.mp4', poster: '/img/showcases/waris-albakri-1-poster.jpg' }, { src: '/img/showcases/waris-albakri-banjo.jpg' }, { src: 'https://evil.example/x.mp4' }] }] }) })).json();
+    assert.deepEqual(vid.acts[0].media.map((m) => m.type), ['video', 'image']);
+    assert.match(await (await fetch(`${B}/sunday-showcases`)).text(), /<video src="\/img\/showcases\/waris-albakri-1\.mp4" poster=/);
 
     // staff add a later showcase; the page keeps showing the next one, and moves on when it's removed
     const later = new Date(Date.parse(date) + 7 * 864e5).toISOString().slice(0, 10);
