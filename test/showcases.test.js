@@ -23,8 +23,8 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
   assert.match(page, /id="sc-form"/);
   // each night sits under its own regular: JOM isn't listed as TAM Open Mic
   const card = (name) => page.split('<article class="sc-night">').find((c) => c.includes(`<h3>${name}</h3>`));
-  const jom = app.ctx.content.upcoming(app.ctx.today()).find((n) => /\bjom\b/i.test(n.title));
-  if (jom) assert.ok(!card('TAM Open Mic').includes(`/events/${jom.slug}`));
+  assert.doesNotMatch(card('TAM Open Mic'), />Sunday /); // the open mic is on Wednesdays; JOM's Sunday goes under JOM
+  assert.match(card('Junior Open Mic / JOM'), />Sunday /);
 
   const old = await fetch(`${B}/showcases`, { redirect: 'manual' });
   assert.equal(old.status, 301);
