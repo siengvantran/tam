@@ -76,6 +76,14 @@ export function showcaseDomain(ctx) {
         });
       });
 
+      // An act's photo (before /:date, which would take this path): a data URL from the editor, shrunk in the browser first.
+      r.post('/api/showcases/photo', async (req, res) => {
+        ctx.team.guard(req, 'ops');
+        const b = await readJson(req, 2_000_000);
+        const photo = await ctx.saveImage(b.image, `showcase-${Date.now().toString(36)}`, { maxKB: 900, what: 'The photo' });
+        send(res, 200, { photo });
+      });
+
       r.post('/api/showcases/:date', async (req, res, { params }) => {
         ctx.team.guard(req, 'ops');
         const date = params.date;
@@ -96,14 +104,6 @@ export function showcaseDomain(ctx) {
         };
         await save();
         send(res, 200, { ok: true, ...lineup(date) });
-      });
-
-      // An act's photo: a data URL from the editor, shrunk in the browser first.
-      r.post('/api/showcases/photo', async (req, res) => {
-        ctx.team.guard(req, 'ops');
-        const b = await readJson(req, 2_000_000);
-        const photo = await ctx.saveImage(b.image, `showcase-${Date.now().toString(36)}`, { maxKB: 900, what: 'The photo' });
-        send(res, 200, { photo });
       });
 
       r.post('/api/showcases/:date/remove', async (req, res, { params }) => {
