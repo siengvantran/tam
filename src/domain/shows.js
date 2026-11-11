@@ -74,8 +74,9 @@ export function showsDomain(ctx, { tickets, eventbrite, social, writer }) {
       const mode = MODES[x.mode] ? x.mode : 'tam';
       const capacity = Math.max(0, Math.min(2000, parseInt(x.capacity, 10) || 0));
       const ticketsIn = (Array.isArray(x.tickets) ? x.tickets : []).slice(0, 12).map((t, i) => {
-        const price = Math.round(Number(String(t && t.price).replace(/[£,\s]/g, '')) * 100);
-        return { id: clip(t && t.id, 24).replace(/[^\w-]/g, '') || `t${i + 1}`, name: clip(t && t.name, 60), price: Number.isFinite(price) && price >= 0 ? price : NaN, blurb: clip(t && t.blurb, 300), limit: parseInt(t && t.limit, 10) || null };
+        const donation = Boolean(t && t.donation); // pay what you like: sold on Eventbrite, which takes the payment
+        const price = donation ? 0 : Math.round(Number(String(t && t.price).replace(/[£,\s]/g, '')) * 100);
+        return { id: clip(t && t.id, 24).replace(/[^\w-]/g, '') || `t${i + 1}`, name: clip(t && t.name, 60), price: Number.isFinite(price) && price >= 0 ? price : NaN, blurb: clip(t && t.blurb, 300), limit: parseInt(t && t.limit, 10) || null, ...(donation ? { donation: true } : {}) };
       }).filter((t) => t.name);
       for (const t of ticketsIn) if (!Number.isInteger(t.price)) throw fail(400, `Give “${t.name}” a price, like 12 or 12.50 (0 for free).`);
       const ids = new Set(); for (const t of ticketsIn) { while (ids.has(t.id)) t.id += 'x'; ids.add(t.id); }

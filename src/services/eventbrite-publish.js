@@ -158,7 +158,7 @@ export function eventbritePublisher(ctx, { token = '', api = 'https://www.eventb
   function ticketTypes(s) {
     const sl = s.sales || {};
     if (sl.mode === 'rsvp') return [{ key: 'guest', name: 'Guest list', price: 0, description: 'Free entry: your name on the door.' }];
-    return (sl.tickets || []).map((t) => ({ key: t.id, name: t.name, price: t.price, description: t.blurb || '' }));
+    return (sl.tickets || []).map((t) => ({ key: t.id, name: t.name, price: t.price, description: t.blurb || '', donation: Boolean(t.donation) }));
   }
 
   function allocationFor(s, soldHere, current = 0) {
@@ -173,7 +173,7 @@ export function eventbritePublisher(ctx, { token = '', api = 'https://www.eventb
 
   const ticketBody = (t, allocation, created) => ({ ticket_class: {
     name: t.name, description: String(t.description || '').slice(0, 2500), quantity_total: allocation,
-    ...(t.price ? { cost: `GBP,${t.price}`, free: false } : { free: true }),
+    ...(t.donation ? { donation: true, free: false } : t.price ? { cost: `GBP,${t.price}`, free: false } : { free: true }),
     ...(created ? {} : { minimum_quantity: 1, maximum_quantity: MAX_PER_ORDER }),
   } });
 

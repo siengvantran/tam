@@ -156,7 +156,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     const listed = s.eventbrite && !['canceled', 'deleted'].includes(s.eventbrite.status) ? s.eventbrite : null;
     const held = sl.mode === 'both' && listed ? Number(listed.allocation) || 0 : 0;
     const tickets = sl.mode === 'rsvp' ? [{ id: 'guest', name: 'Guest list', price: 0, blurb: 'Free: your name on the door.' }]
-      : (sl.tickets || []).filter((t) => t && t.id && t.name && Number.isInteger(t.price));
+      : (sl.tickets || []).filter((t) => t && t.id && t.name && Number.isInteger(t.price) && !t.donation); // donations are taken on Eventbrite
     const boxOffice = ['tam', 'both', 'rsvp'].includes(sl.mode) && tickets.length;
     const n = makeNight({
       slug: s.slug, date: s.date, title: s.title, presenters: s.presenters || '', doors: s.doors || '19:00', ends: s.ends || '23:00',
@@ -172,6 +172,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     n.video = s.video || '';
     n.lineup = (s.lineup || []).filter((x) => x && x.name && x.revealed !== false).map((x) => ({ name: x.name, role: x.role || '' }));
     n.lineupHidden = (s.lineup || []).filter((x) => x && x.name && x.revealed === false).length;
+    n.donate = listed && listed.url && (sl.tickets || []).some((t) => t && t.donation) ? listed.url : null; // a donation ticket on the Eventbrite listing
     n.eventbrite = listed ? { id: String(listed.id), url: listed.url || '', soldOut: false, free: sl.mode === 'rsvp', from: null, tickets: [], priceText: '' } : null;
     if (!boxOffice && !(listed && listed.url)) n.priceText = sl.mode === 'none' ? 'Free entry' : '';
     return n;

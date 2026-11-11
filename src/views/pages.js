@@ -340,6 +340,7 @@ function eventPage(ctx, d, n, url) {
     <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : n.eventbrite && n.eventbrite.free ? 'Free entry · reserve on Eventbrite ↗' : `Tickets on Eventbrite${n.eventbrite && Number.isFinite(n.eventbrite.from) ? ` · from ${pounds(n.eventbrite.from)}` : ''} ↗`}</a>${n.eventbrite && n.eventbrite.tickets && n.eventbrite.tickets.length ? html`<a class="btn ghost" href="#tickets">Ticket types</a>` : ''}` : ''}
       ${!f && n.weekday === 'Friday' && friday(ctx) ? html`<a class="btn ghost fri-btn" href="${fridayUrl(ctx, 'event')}" target="_blank" rel="noopener">On ${friday(ctx).name} ↗</a>` : ''}
       ${/blues jam/i.test(n.title) ? html`<a class="btn ghost" href="/great-british-blues-jam#jam">Sign up to jam →</a>` : ''}
+      ${!isPast && n.donate ? html`<a class="btn ghost" href="${n.donate}" target="_blank" rel="noopener">Make a donation on Eventbrite ↗</a>` : ''}
       <a class="btn ghost" href="${gcal}" target="_blank" rel="noopener">Add to Google Calendar</a><a class="btn ghost" href="/events/${n.slug}.ics">Apple / Outlook (.ics)</a></div>
     ${f && f.features.countdown && !isPast ? countdown(n) : ''}
   </div>
