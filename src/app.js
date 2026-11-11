@@ -54,6 +54,8 @@ export function configFrom(env = process.env) {
     pinModeration: env.PIN_MODERATION !== 'off',
     // Google Analytics 4 measurement ID (G-…): loaded only for visitors who say yes on the cookie banner
     gaId: /^G-[A-Z0-9]{4,16}$/.test(env.GA_MEASUREMENT_ID || '') ? env.GA_MEASUREMENT_ID : '',
+    // or a Google Tag Manager container (GTM-…), also loaded only after a yes
+    gtmId: /^GTM-[A-Z0-9]{4,12}$/.test(env.GTM_ID || '') ? env.GTM_ID : '',
     holdMinutes: 30,
     anthropicKey: env.ANTHROPIC_API_KEY || '',
     anthropicBaseUrl: env.ANTHROPIC_BASE_URL || '',
