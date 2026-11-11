@@ -179,8 +179,12 @@ ${slides.length > 1 ? html`<section class="fx-hero va-car" aria-label="${a.name}
   </div></div></section>` : ''}
 <section class="section va-about" id="about"><div class="wrap narrow">
   ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
-  ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}
 </div></section>
+${follow(a)}
+${(a.press || []).length ? html`<section class="section va-press" aria-labelledby="va-press-h"><div class="wrap narrow">
+  <div class="label">In the press</div><h2 id="va-press-h">${a.name} in the news</h2>
+  <ul class="plain va-press-list">${a.press.map((p) => html`<li><a href="${p.url}" target="_blank" rel="noopener"><span class="va-src">${p.source}</span><b>${p.title} ↗</b></a>${p.note ? html`<p>${p.note}</p>` : ''}</li>`)}</ul>
+</div></section>` : ''}
 ${worldMap(a)}
 <section class="section va-invite" id="invite"><div class="wrap narrow"><div class="va-panel">
   <div class="label">Invite your friends</div><h2>Bring a crowd for ${a.name}</h2>
@@ -204,6 +208,16 @@ ${worldMap(a)}
 </div></nav>`,
   });
 }
+// Follow them: each link as a big tile, with the @handle where the link has one.
+const handleOf = (url) => { const m = /(?:instagram\.com|tiktok\.com\/@?|soundcloud\.com|twitter\.com|x\.com)\/@?([\w.]+)/i.exec(url); return m ? `@${m[1]}` : ''; };
+function follow(a) {
+  if (!a.links.length) return '';
+  return html`<section class="section va-follow" aria-labelledby="va-follow-h"><div class="wrap narrow">
+  <div class="label">Follow ${a.name}</div><h2 id="va-follow-h">Keep up with them</h2>
+  <ul class="plain va-socials">${a.links.map((k) => html`<li><a href="${k.url}" target="_blank" rel="noopener"><span class="va-net">${k.label}</span><b>${handleOf(k.url) || 'Listen and watch'}</b><i aria-hidden="true">↗</i></a></li>`)}</ul>
+</div></section>`;
+}
+
 // Where in the world: their vibe's star on each place they're from, and a line to TAM.
 function worldMap(a) {
   if (!a.places.length) return '';

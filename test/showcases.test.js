@@ -97,6 +97,15 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
       { name: 'The Lanterns', from: 'my, gb, xx', vibe: 'riot' }, { name: 'Bad Vibe', vibe: 'evil' }] }) })).json();
     assert.deepEqual(geo.acts[0].from, ['MY', 'GB']);
     assert.equal(geo.acts[1].vibe, 'stage');
+
+    // socials as Follow tiles with their @handle, and press (https links only)
+    const soc = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
+      { name: 'The Lanterns', from: 'MY', vibe: 'riot', links: ['https://www.instagram.com/the_lanterns/'],
+        press: [{ title: 'A headline', source: 'The Paper', url: 'https://paper.example/story', note: 'One line.' }, { title: 'Bad', url: 'javascript:alert(1)' }] }] }) })).json();
+    assert.equal(soc.acts[0].press.length, 1);
+    const sp = await (await fetch(actUrl)).text();
+    assert.match(sp, /<span class="va-net">Instagram<\/span><b>@the_lanterns<\/b>/);
+    assert.match(sp, /<span class="va-src">The Paper<\/span><b>A headline ↗<\/b><\/a><p>One line\.<\/p>/);
     const gp = await (await fetch(actUrl)).text();
     assert.match(gp, /vibe-riot/);
     assert.doesNotMatch(gp, /flags\//);

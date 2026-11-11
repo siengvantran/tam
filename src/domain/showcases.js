@@ -14,7 +14,13 @@ import { PLACES, placeOf } from '../lib/places.js';
 
 const MAX = 12, DEFAULT_ACTS = 6;
 const isDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
-const cleanLink = (u) => { const s = text(u, 300); return /^https?:\/\//i.test(s) ? s : s ? `https://${s.replace(/^\/+/, '')}` : ''; };
+// A web link: http(s) as given, a bare "site.com/…" gets https://, any other scheme (javascript:, data:…) is dropped.
+const cleanLink = (u) => {
+  const s = text(u, 300);
+  if (/^https?:\/\//i.test(s)) return s;
+  if (!s || /^[a-z][\w+.-]*:/i.test(s)) return '';
+  return `https://${s.replace(/^\/+/, '')}`;
+};
 const PHOTO = /^\/(uploads|img)\/[\w./-]+\.(jpe?g|png|webp)$/i;
 const VIDEO = /^\/(uploads|img)\/[\w./-]+\.(mp4|webm)$/i;
 // More photos and videos of an act, shown on its profile: site files only.
@@ -140,6 +146,10 @@ export function showcaseDomain(ctx) {
           name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
           photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200), media: cleanMedia(a && a.media),
           vibe: a && VIBES[a.vibe] ? a.vibe : 'stage',
+          // press: up to four pieces about them, each a headline, where it ran, a link, and a line in our words
+          press: (Array.isArray(a && a.press) ? a.press : []).slice(0, 4).map((p) => ({
+            title: text(p && p.title, 160), source: text(p && p.source, 80), url: cleanLink(p && p.url), note: text(p && p.note, 300),
+          })).filter((p) => p.title && /^https:\/\//.test(p.url)),
           from: [...new Set((Array.isArray(a && a.from) ? a.from : String((a && a.from) || '').split(/[\s,]+/)).map((c) => String(c).toUpperCase()).filter((c) => PLACES[c]))].slice(0, 3),
         })) : cur.acts || [];
         const count = Math.max(1, Math.min(MAX, parseInt(b.count, 10) || cur.count || acts.length || DEFAULT_ACTS));
