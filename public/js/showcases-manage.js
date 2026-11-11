@@ -9,7 +9,9 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const root = $('#sc-manage');
 let data = null, pick = null;
 
-const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>Act ${i + 1}</legend>
+const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>Act ${i + 1}${a.wants ? ` · ✦ ${a.wants} want them at Christmas` : ''}${a.href ? ` · <a href="${esc(a.href)}" target="_blank" rel="noopener">their page ↗</a>` : ''}</legend>
+  <div class="fields"><label class="field"><span>Their page’s vibe</span><select data-k="vibe">${Object.entries(data.vibes || {}).map(([k, v]) => `<option value="${k}" ${k === (a.vibe || 'stage') ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></label>
+  <label class="field"><span>Where they’re from (country codes)</span><input data-k="from" value="${esc((a.from || []).join(', '))}" maxlength="20" placeholder="e.g. MY, GB" list="sc-places"></label></div>
   <div class="fields"><label class="field"><span>Name</span><input data-k="name" value="${esc(a.name)}" maxlength="80" placeholder="Leave blank: to be announced"></label>
   <label class="field"><span>What they play</span><input data-k="plays" value="${esc(a.plays)}" maxlength="80" placeholder="e.g. soul trio"></label>
   <label class="field full"><span>Links, one per line</span><textarea data-k="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube…">${esc((a.links || []).map((k) => k.url || k).join('\n'))}</textarea></label>
@@ -35,7 +37,7 @@ function render(acts) {
     <button class="btn hot small" type="submit">Add</button> <span class="small muted" id="sc-new-msg"></span></form>`;
   if (!s) { root.innerHTML = `${tabs}<p class="muted">No showcases coming up. Add one below.</p>${add}`; return; }
   const list = acts || s.acts.map((a) => (a.tba ? {} : a));
-  root.innerHTML = `${tabs}<form id="sc-m"><h2>${esc(s.when)}</h2>
+  root.innerHTML = `${tabs}<datalist id="sc-places">${Object.entries(data.places || {}).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('')}</datalist><form id="sc-m"><h2>${esc(s.when)}</h2>
   <label class="field"><span>Part of which night</span><select name="night">${nightOptions(s.date, s.night && s.night.slug)}</select></label>
   <div id="sc-acts">${list.map(row).join('')}</div>
   <p><button class="btn ghost small" type="button" data-add>+ Add an act</button></p>

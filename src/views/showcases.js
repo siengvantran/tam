@@ -7,24 +7,27 @@
 import { html } from './html.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout, when, times, nightHref } from './layout.js';
+import { onMap, TAM } from '../lib/places.js';
 
 const PATH = '/sunday-showcases';
 
-// Lights on the tree: [left %, top %, colour, delay s], inside its outline.
-const LIGHTS = [[50, 14, 'w', 0], [44, 24, 'r', .7], [57, 27, 'g', 1.2], [38, 37, 'w', .4], [62, 40, 'r', 1.7], [48, 43, 'g', .9], [32, 53, 'r', 1.4], [55, 55, 'w', .2],
-  [68, 58, 'g', 2], [42, 62, 'w', 1.1], [26, 72, 'g', .6], [50, 73, 'r', 1.9], [74, 75, 'w', .3], [36, 80, 'r', 1.5], [62, 82, 'g', .8], [20, 88, 'w', 1.3], [48, 89, 'g', .1], [80, 89, 'r', 2.2]];
-
-// A named act gets a profile under the tree when there's more to show than the card.
-const hasProfile = (a) => !a.tba && Boolean(a.blurb || a.links.length || (a.media || []).length);
+// Lights on The Best Christmas Ever's Shard tree: [left %, top %, colour, delay s], inside its outline.
+const LIGHTS = [[50, 8, 'w', 0], [47, 18, 'r', .6], [54, 24, 'g', 1.1], [44, 31, 'w', .3], [57, 35, 'r', 1.6], [40, 42, 'g', .9], [52, 45, 'w', 2.1], [61, 50, 'w', .2],
+  [36, 55, 'r', 1.3], [48, 58, 'g', .5], [65, 62, 'r', 1.8], [31, 67, 'w', .7], [55, 68, 'w', 1.4], [42, 74, 'r', .1], [70, 76, 'g', 1.0], [26, 80, 'g', 1.7],
+  [50, 82, 'w', .4], [62, 86, 'r', 2.2], [20, 90, 'w', .8], [38, 92, 'g', 1.5], [76, 92, 'w', .25], [56, 95, 'r', 1.2]];
+const shardTree = (cls = '') => html`<div class="sc-shard ${cls}" aria-hidden="true">
+  <img class="sc-star" src="/img/christmas/tam-logo-gold.png" alt="" width="120" height="120">
+  <div class="sc-shard-body"><img src="/img/christmas/shard-tree-tip.png" alt="" width="720" height="1272">
+  ${LIGHTS.map(([x, y, c, d]) => html`<span class="sc-light ${c}" style="left:${x}%;top:${y}%;animation-delay:${d}s"></span>`)}</div></div>`;
 
 // The line-up as a futuristic 3D carousel (public/js/carousel.js, as the featured
 // show's): one slide per act, a live clip where there is one; acts still to be
-// named are a mystery slide. Tapping an act unwraps its present under the tree.
+// named are a mystery slide. Tapping an act opens its own page.
 export function lineupCarousel(l) {
   const named = l.acts.filter((a) => !a.tba);
   if (!named.length) return '';
   const label = (a) => (a.tba ? `Act ${a.n} · to be announced` : `Act ${a.n} · ${a.name}${a.plays ? ` · ${a.plays}` : ''}`);
-  const href = (a) => (a.tba ? '#this-sunday' : `#sc-p-${a.n}`);
+  const href = (a) => (a.tba ? '#this-sunday' : a.href);
   const clip = (a) => (a.media || []).find((m) => m.type === 'video');
   return html`<section class="fx-hero sc-fx" id="line-up" aria-label="${l.when}: the line-up">
   <div class="fx-grid" aria-hidden="true"></div>
@@ -33,7 +36,7 @@ export function lineupCarousel(l) {
       <div class="fx-kicker"><span class="fx-dot"></span>Sunday Showcase · the line-up</div>
       <h2 class="fx-title">${l.when.replace(/ \d{4}$/, '')}</h2>
       <p class="fx-when">${l.count} acts${l.night ? html` · ${l.night.title}${l.night.doors ? html` · doors ${l.night.doors}` : ''}` : ''}</p>
-      <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to open their present and hear their story.</p>
+      <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to step into their world, invite your friends, and vote them into the Christmas Showcase Special.</p>
       <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.href}">The night</a>` : ''}<a class="btn ghost" href="#this-sunday">Unwrap the tree</a></div>
     </div>
     <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="The acts">
@@ -41,10 +44,10 @@ export function lineupCarousel(l) {
         const v = clip(a);
         const pic = a.photo || (v && v.poster) || '';
         return html`<figure class="fx-slide${v ? ' is-video' : ''}${a.tba ? ' sc-fx-tba' : ''}" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} of ${l.acts.length}">${v
-          ? html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.n}"><video muted loop playsinline preload="metadata" poster="${v.poster || pic}" aria-label="${label(a)}"><source src="${v.src}" type="video/mp4"></video><img class="fx-alt" src="${pic}" alt="${label(a)}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
+          ? html`<a href="${href(a)}" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${v.poster || pic}" aria-label="${label(a)}"><source src="${v.src}" type="video/mp4"></video><img class="fx-alt" src="${pic}" alt="${label(a)}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
           : a.tba || !pic
-            ? html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.tba ? '' : a.n}" class="sc-fx-blank"><img src="/img/christmas/tam-logo-gold.png" alt="${label(a)}" width="400" height="400"><span>${a.tba ? '?' : a.name}</span></a>`
-            : html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.n}"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}</span></figcaption></figure>`;
+            ? html`<a href="${href(a)}" tabindex="-1" class="sc-fx-blank"><img src="/img/christmas/tam-logo-gold.png" alt="${label(a)}" width="400" height="400"><span>${a.tba ? '?' : a.name}</span></a>`
+            : html`<a href="${href(a)}" tabindex="-1"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}${(a.places || []).map((p) => html` <img class="sc-fx-flag" src="${p.flag}" alt="${p.name}" width="24" height="18">`)}</span></figcaption></figure>`;
       })}</div>
       <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous act">‹</button>
         <div class="fx-dots" role="tablist">${l.acts.map((a, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${label(a)}"></button>`)}</div>
@@ -60,29 +63,16 @@ export function treeSection(l) {
   if (!l || !l.count) return '';
   return html`<section class="section sc-xmas" id="this-sunday" aria-labelledby="sc-xmas-h"><div class="sc-snow" aria-hidden="true"></div><div class="wrap">
   <div class="head"><div class="label">This week’s showcase · ${l.count} acts</div><h2 class="chrome gold" id="sc-xmas-h">${l.when.replace(/ \d{4}$/, '')}</h2>
-    <p class="muted">${l.night ? html`At <a href="${l.night.href}">${l.night.title}</a>${l.night.doors ? html`, doors ${l.night.doors}` : ''}. ` : ''}${l.count} acts are waiting under the tree. Tap a present to unwrap it and meet the act.</p>${l.note ? html`<p>${l.note}</p>` : ''}</div>
+    <p class="muted">${l.night ? html`At <a href="${l.night.href}">${l.night.title}</a>${l.night.doors ? html`, doors ${l.night.doors}` : ''}. ` : ''}${l.count} acts are waiting under the Shard tree. Tap a present to unwrap it and meet the act.</p>${l.note ? html`<p>${l.note}</p>` : ''}</div>
   <div class="sc-scene">
-    <div class="sc-tree" aria-hidden="true">
-      <img class="sc-star" src="/img/christmas/tam-logo-gold.png" alt="" width="120" height="120">
-      <div class="sc-tiers"><i></i><i></i><i></i><i></i></div><div class="sc-trunk"></div>
-      ${LIGHTS.map(([x, y, c, d]) => html`<span class="sc-light ${c}" style="left:${x}%;top:${y}%;animation-delay:${d}s"></span>`)}
-    </div>
+    ${shardTree()}
     <ul class="plain sc-gifts">${l.acts.map((a, i) => html`<li class="sc-g c${i % 6}${a.tba ? ' tba' : ''}">
       <button class="sc-wrap" type="button" aria-expanded="false" aria-controls="sc-act-${a.n}" aria-label="Unwrap act ${a.n}"><span class="g-lid"></span><span class="g-l"></span><span class="g-r"></span><span class="g-bow"></span><span class="g-tag">Act ${a.n}</span></button>
       <div class="sc-card" id="sc-act-${a.n}"><div class="label">Act ${a.n}</div>
         ${a.tba ? html`<h3>To be announced</h3><p class="small muted">This act is still under wraps. Check back soon.</p>`
-          : html`${a.photo ? html`<img class="sc-pic" src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}${hasProfile(a) ? html`<a class="small" href="#sc-p-${a.n}">Meet ${a.name} ↓</a>` : ''}`}
+          : html`${a.photo ? html`<img class="sc-pic" src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}<a class="small" href="${a.href}">Meet ${a.name} →</a>`}
       </div></li>`)}</ul>
   </div>
-  <div class="sc-profiles">${l.acts.filter(hasProfile).map((a) => html`<article class="sc-prof" id="sc-p-${a.n}" hidden>
-    ${a.photo ? html`<img src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}
-    <div><div class="label">Act ${a.n}</div><h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}
-      ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
-      ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}
-      ${(a.media || []).length ? html`<div class="sc-media">${a.media.map((m) => (m.type === 'video'
-        ? html`<video src="${m.src}" ${m.poster ? html`poster="${m.poster}"` : ''} controls playsinline preload="none" aria-label="${a.name} live"></video>`
-        : html`<img src="${m.src}" alt="${a.name}" loading="lazy">`))}</div>` : ''}</div>
-  </article>`)}</div>
   <p class="sc-all"><button class="btn ghost" type="button" id="sc-unwrap-all">Unwrap them all</button></p>
 </div></section>`;
 }
@@ -143,6 +133,93 @@ ${thisWeek(ctx, showcase)}
   });
 }
 
+// One act's own page, in its own vibe: a hero image, a carousel of their
+// photos and clips, their story and links, a way to invite friends, and a
+// vote to bring them to the Christmas Showcase Special at The Best Christmas Ever.
+function actPage(ctx, showcase, { l, a }) {
+  const day = l.when.replace(/ \d{4}$/, '');
+  const url = `${ctx.cfg.siteUrl}${a.href}`;
+  const fest = showcase.festival();
+  const festUrl = fest ? (fest.home && fest.home.url) || fest.path : 'https://christmas.tam.tv';
+  const slides = [...(a.photo ? [{ type: 'image', src: a.photo }] : []), ...(a.media || [])];
+  const others = l.acts.filter((x) => !x.tba);
+  const i = others.findIndex((x) => x.slug === a.slug);
+  const prev = others[(i - 1 + others.length) % others.length], nxt = others[(i + 1) % others.length];
+  const invite = `Come and see ${a.name} at TAM's Sunday Showcase, ${day}${l.night && l.night.doors ? `, doors ${l.night.doors}` : ''}. TAM, Elephant & Castle. ${url}`;
+  const desc = `${a.name}${a.plays ? `, ${a.plays}` : ''}: Act ${a.n} at TAM's Sunday Showcase, ${l.when}. Invite your friends, and vote for ${a.name} at the Christmas Showcase Special.`;
+  return layout(ctx, {
+    title: `${a.name} · Sunday Showcase`, path: a.href, description: desc, og: a.photo || '/img/og.jpg', scripts: ['/js/showcase-act.js'], bodyClass: `sc-actpage vibe-${a.vibe}`, ambient: null,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'MusicEvent', name: `Sunday Showcase: ${a.name}`, startDate: l.date, url,
+      performer: { '@type': 'PerformingGroup', name: a.name, ...(a.links.length ? { sameAs: a.links.map((k) => k.url) } : {}) },
+      location: { '@type': 'MusicVenue', name: 'TAM, Temple of Art and Music', address: { '@type': 'PostalAddress', postalCode: 'SE1 6DR', addressLocality: 'London' } },
+      ...(a.photo ? { image: `${ctx.cfg.siteUrl}${a.photo}` } : {}) },
+    body: html`<section class="va-hero" style="${a.photo ? html`--hero:url('${a.photo}')` : ''}">
+  <div class="va-bg" aria-hidden="true"></div><div class="va-snow" aria-hidden="true"></div>
+  <div class="wrap va-in">
+    ${a.places.length ? html`<div class="va-flags">${a.places.map((p, k) => html`<img class="va-flag" src="${p.flag}" alt="${p.name}" title="${p.name}" width="64" height="48" style="animation-delay:${k * .6}s">`)}</div>` : ''}
+    <p class="va-kicker"><a href="${PATH}#line-up">Sunday Showcase</a> · Act ${a.n} · ${day}</p>
+    <h1 class="va-name">${a.name}</h1>
+    ${a.plays ? html`<p class="va-plays">${a.plays}</p>` : ''}
+    <p class="va-when">${l.night ? html`<a href="${l.night.href}">${l.night.title}</a>` : 'TAM'}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · TAM, Elephant & Castle</p>
+    <div class="ctas"><a class="btn va-btn" href="#invite">Invite your friends</a><a class="btn ghost" href="#xmas">Bring them to Christmas ✦</a></div>
+  </div>
+</section>
+${slides.length > 1 ? html`<section class="fx-hero va-car" aria-label="${a.name}: photos and clips"><div class="fx-grid" aria-hidden="true"></div><div class="wrap">
+  <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${a.name}">
+    <div class="fx-stage">${slides.map((m, k) => html`<figure class="fx-slide${m.type === 'video' ? ' is-video' : ''}" data-i="${k}" aria-roledescription="slide" aria-label="${k + 1} of ${slides.length}">${m.type === 'video'
+      ? html`<a href="#about" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${m.poster || a.photo}" aria-label="${a.name} live"><source src="${m.src}" type="video/mp4"></video><img class="fx-alt" src="${m.poster || a.photo}" alt="${a.name} live" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
+      : html`<a href="#about" tabindex="-1"><img src="${m.src}" alt="${a.name}" ${k > 2 ? html`loading="lazy"` : ''}></a>`}</figure>`)}</div>
+    <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous">‹</button>
+      <div class="fx-dots" role="tablist">${slides.map((m, k) => html`<button type="button" role="tab" data-go="${k}" aria-label="${k + 1} of ${slides.length}"></button>`)}</div>
+      <button type="button" class="fx-arrow" data-dir="1" aria-label="Next">›</button></div>
+    <p class="fx-caption" aria-live="polite"></p>
+  </div></div></section>` : ''}
+<section class="section va-about" id="about"><div class="wrap narrow">
+  ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
+  ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}
+</div></section>
+${worldMap(a)}
+<section class="section va-invite" id="invite"><div class="wrap narrow"><div class="va-panel">
+  <div class="label">Invite your friends</div><h2>Bring a crowd for ${a.name}</h2>
+  <p>Send your friends the night: ${day}${l.night && l.night.doors ? html`, doors ${l.night.doors}` : ''}, at TAM, Elephant & Castle.</p>
+  <div class="va-share" data-share data-url="${url}" data-text="${invite}" data-title="${a.name} at TAM's Sunday Showcase">
+    <button class="btn va-btn" type="button" data-native hidden>Send an invite</button>
+    <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(invite)}" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="btn ghost" href="mailto:?subject=${encodeURIComponent(`Come and see ${a.name} at TAM`)}&body=${encodeURIComponent(invite)}">Email</a>
+    <a class="btn ghost" href="sms:?&body=${encodeURIComponent(invite)}">Text</a>
+    <button class="btn ghost" type="button" data-copy>Copy link</button>
+  </div><p class="small muted" data-share-msg role="status" aria-live="polite"></p>
+</div></div></section>
+<section class="section va-xmas" id="xmas"><div class="sc-snow" aria-hidden="true"></div>${shardTree('va-tree')}<div class="wrap narrow"><div class="va-panel va-xpanel">
+  <div class="label">✦ The Best Christmas Ever ✦</div><h2>Want ${a.name} at the Christmas Showcase Special?</h2>
+  <p>The best of TAM’s Sunday Showcases get a spot at the Christmas Showcase Special, part of <a href="${festUrl}">The Best Christmas Ever</a>${fest && fest.dates ? html` (${dateRange(fest.dates)})` : ''}. Tell us you want to see ${a.name} there.</p>
+  <button class="btn hot va-want" type="button" data-want="/api/showcases/${l.date}/act/${a.slug}/want">✦ I want to see ${a.name} at Christmas</button>
+  <p class="va-count" data-want-count aria-live="polite">${a.wants ? `${a.wants} ${a.wants === 1 ? 'person wants' : 'people want'} to see ${a.name} at Christmas` : `Be the first to ask for ${a.name}`}</p>
+</div></div></section>
+<nav class="section va-nav" aria-label="More acts"><div class="wrap">
+  ${others.length > 1 ? html`<a class="btn ghost" href="${prev.href}">← ${prev.name}</a>` : ''}<a class="btn ghost" href="${PATH}#line-up">The whole line-up</a>${others.length > 1 ? html`<a class="btn ghost" href="${nxt.href}">${nxt.name} →</a>` : ''}
+</div></nav>`,
+  });
+}
+// Where in the world: a star on each place they're from, a line to TAM, and the flag.
+function worldMap(a) {
+  if (!a.places.length) return '';
+  const tam = onMap(TAM.lat, TAM.lon);
+  const away = a.places.filter((p) => p.code !== 'GB' || Math.abs(p.lon - TAM.lon) > 1);
+  const arc = (p) => { const m = onMap(p.lat, p.lon); const cx = (m.x + tam.x) / 2, cy = Math.min(m.y, tam.y) - Math.max(30, Math.abs(m.x - tam.x) * 0.22); return `M${m.x} ${m.y} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${tam.x} ${tam.y}`; };
+  return html`<section class="section va-world" aria-labelledby="va-world-h"><div class="wrap">
+  <div class="head"><div class="label">Where in the world</div><h2 id="va-world-h">${away.length ? html`From ${away.map((p) => p.name).join(' & ')} to TAM` : html`${a.name}: London’s own`}</h2></div>
+  <div class="va-map" role="img" aria-label="${a.name}: ${a.places.map((p) => p.name).join(', ')}, and TAM in London">
+    <div class="va-land"></div>
+    <svg class="va-arcs" viewBox="0 42 1000 370" preserveAspectRatio="none" aria-hidden="true">${away.map((p) => html`<path d="${arc(p)}" pathLength="1"></path>`)}</svg>
+    ${away.map((p) => { const m = onMap(p.lat, p.lon); return html`<span class="va-star" style="left:${m.left}%;top:${m.top}%"><i>★</i><img src="${p.flag}" alt="" width="40" height="30"><b>${p.name}</b></span>`; })}
+    ${(() => { const uk = a.places.find((p) => !away.includes(p)); return html`<span class="va-star${away.length ? ' va-tam' : ''}" style="left:${tam.left}%;top:${tam.top}%"><i>★</i>${uk ? html`<img src="${uk.flag}" alt="" width="40" height="30">` : ''}<b>${uk ? 'London · TAM' : TAM.label}</b></span>`; })()}
+  </div>
+</div></section>`;
+}
+
+const dateRange = (d) => { const [a, b] = [new Date(`${d.from}T12:00:00Z`), new Date(`${d.to}T12:00:00Z`)]; const m = (x) => x.toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' }); return `${a.getUTCDate()}${m(a) === m(b) ? '' : ` ${m(a)}`}–${b.getUTCDate()} ${m(b)}`; };
+
 // Staff: who's in this week's showcase, in running order.
 function manage(ctx) {
   return layout(ctx, {
@@ -159,5 +236,10 @@ export function routes(r, ctx, showcase) {
   if (!ctx.content.showcases) return;
   r.get(PATH, (req, res) => respond(res, page(ctx, showcase)));
   r.get(`${PATH}/manage`, (req, res) => respond(res, manage(ctx)));
+  r.get(`${PATH}/:date/:act`, (req, res, { params }) => {
+    const x = showcase.act(params.date, params.act);
+    if (!x) return respond(res, layout(ctx, { title: 'Not here', path: req.url, noindex: true, body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome">That act isn’t here</h1><p><a href="${PATH}#line-up">See the Sunday Showcase line-up</a>.</p></div></section>` }), 404);
+    respond(res, actPage(ctx, showcase, x));
+  });
   r.get('/showcases', (req, res) => redirect(res, PATH, 301));
 }

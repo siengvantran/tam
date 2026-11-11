@@ -56,13 +56,13 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.equal(set.status, 200);
     const after = await (await fetch(`${B}/sunday-showcases`)).text();
     assert.match(after, /<h3>The Lanterns<\/h3>/);
-    assert.match(after, /href="https:\/\/instagram\.com\/thelanterns"/);
+    assert.match(await (await fetch(`${B}/sunday-showcases/${date}/the-lanterns`)).text(), /href="https:\/\/instagram\.com\/thelanterns"/);
     assert.match(after, /&lt;b&gt;Ruby/);
     assert.equal((after.match(/To be announced/g) || []).length, 8); // 4 presents + 4 carousel slides
     // the line-up carousel: one slide per act, tapping one unwraps its present
     assert.match(after, /id="line-up"[\s\S]*data-carousel/);
     assert.equal((after.match(/<figure class="fx-slide/g) || []).length, 6);
-    assert.match(after, /href="#sc-p-1" tabindex="-1" data-unwrap="1"/);
+    assert.match(after, new RegExp(`href="/sunday-showcases/${date}/the-lanterns" tabindex="-1"`));
     // photos (site paths only), several links named by where they go, a bio in paragraphs
     const full = await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
       { name: 'The Lanterns', plays: 'Soul trio', photo: '/img/showcases/justyna.jpg', links: ['youtu.be/abc', 'https://www.instagram.com/thelanterns/'], blurb: 'One.\n\nTwo.' },
@@ -70,10 +70,38 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const fj = await full.json();
     assert.deepEqual(fj.acts[0].links.map((k) => k.label), ['YouTube', 'Instagram']);
     assert.equal(fj.acts[1].photo, '');
-    const prof = await (await fetch(`${B}/sunday-showcases`)).text();
-    assert.match(prof, /id="sc-p-1"[\s\S]*?<p>One\.<\/p><p>Two\.<\/p>/);
-    assert.match(prof, /class="sc-pic" src="\/img\/showcases\/justyna\.jpg"/);
-    assert.match(prof, /href="https:\/\/youtu\.be\/abc"/);
+    const main = await (await fetch(`${B}/sunday-showcases`)).text();
+    assert.match(main, /class="sc-pic" src="\/img\/showcases\/justyna\.jpg"/);
+    assert.match(main, /src="\/img\/christmas\/shard-tree-tip\.png"/); // the Shard tree behind the presents
+
+    // each act has its own page: hero, story, links, invites, the Christmas vote
+    const actUrl = `${B}/sunday-showcases/${date}/the-lanterns`;
+    const ap = await (await fetch(actUrl)).text();
+    assert.match(ap, /<h1 class="va-name">The Lanterns<\/h1>/);
+    assert.match(ap, /<p>One\.<\/p><p>Two\.<\/p>/);
+    assert.match(ap, /href="https:\/\/youtu\.be\/abc"/);
+    assert.match(ap, /class="sc-actpage vibe-stage/);
+    assert.match(ap, /href="https:\/\/wa\.me\/\?text=Come%20and%20see%20The%20Lanterns/);
+    assert.match(ap, /Christmas Showcase Special/);
+    assert.equal((await fetch(`${B}/sunday-showcases/${date}/nobody`)).status, 404);
+
+    // the vote: one per browser
+    const want = (id) => fetch(`${B}/api/showcases/${date}/act/the-lanterns/want`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) }).then((r) => r.json());
+    assert.equal((await want('browser-aaaaaaaaaaaaaaaa')).count, 1);
+    assert.equal((await want('browser-aaaaaaaaaaaaaaaa')).already, true);
+    assert.equal((await want('browser-bbbbbbbbbbbbbbbb')).count, 2);
+    assert.match(await (await fetch(actUrl)).text(), /2 people want to see The Lanterns at Christmas/);
+
+    // where they're from: a star on the map and the flag; a vibe of their own
+    const geo = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
+      { name: 'The Lanterns', from: 'my, gb, xx', vibe: 'riot' }, { name: 'Bad Vibe', vibe: 'evil' }] }) })).json();
+    assert.deepEqual(geo.acts[0].from, ['MY', 'GB']);
+    assert.equal(geo.acts[1].vibe, 'stage');
+    const gp = await (await fetch(actUrl)).text();
+    assert.match(gp, /vibe-riot/);
+    assert.match(gp, /class="va-flag" src="\/img\/flags\/my\.svg" alt="Malaysia"/);
+    assert.match(gp, /From Malaysia to TAM/);
+    assert.equal((await fetch(`${B}/img/flags/my.svg`)).status, 200);
     assert.equal((await fetch(`${B}/api/showcases/photo`, { method: 'POST', body: '{}' })).status, 401);
     // staff upload a photo: it's stored and comes back as a site path
     const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
@@ -89,7 +117,8 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const vid = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [{ name: 'Trio',
       media: [{ src: '/img/showcases/waris-albakri-1.mp4', poster: '/img/showcases/waris-albakri-1-poster.jpg' }, { src: '/img/showcases/waris-albakri-banjo.jpg' }, { src: 'https://evil.example/x.mp4' }] }] }) })).json();
     assert.deepEqual(vid.acts[0].media.map((m) => m.type), ['video', 'image']);
-    assert.match(await (await fetch(`${B}/sunday-showcases`)).text(), /<video src="\/img\/showcases\/waris-albakri-1\.mp4" poster=/);
+    // on the act's own page, its photos and clips are a carousel
+    assert.match(await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text(), /data-carousel[\s\S]*<source src="\/img\/showcases\/waris-albakri-1\.mp4" type="video\/mp4">/);
 
     // staff add a later showcase; the page keeps showing the next one, and moves on when it's removed
     const later = new Date(Date.parse(date) + 7 * 864e5).toISOString().slice(0, 10);
