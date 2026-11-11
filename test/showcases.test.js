@@ -21,6 +21,10 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
   for (const name of ['TAM Open Mic', 'The Original Singers Club', 'The Great British Blues Jam', 'Junior Open Mic / JOM', 'Open nights']) assert.ok(page.includes(name.replace('&', '&amp;')), name);
   assert.match(page, /href="\/great-british-blues-jam#jam"/);
   assert.match(page, /id="sc-form"/);
+  // each night sits under its own regular: JOM isn't listed as TAM Open Mic
+  const card = (name) => page.split('<article class="sc-night">').find((c) => c.includes(`<h3>${name}</h3>`));
+  const jom = app.ctx.content.upcoming(app.ctx.today()).find((n) => /\bjom\b/i.test(n.title));
+  if (jom) assert.ok(!card('TAM Open Mic').includes(`/events/${jom.slug}`));
 
   const old = await fetch(`${B}/showcases`, { redirect: 'manual' });
   assert.equal(old.status, 301);
