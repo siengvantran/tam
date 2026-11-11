@@ -7,6 +7,7 @@ import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { venueLd, placeLd, availability } from './ai.js';
 import { featuredNow, featuredHero } from './featured.js';
+import { christmasNow, christmasHero } from './christmas.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
 import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM } from './layout.js';
 import {
@@ -188,11 +189,17 @@ function home(ctx, d, req) {
     party: ['steps', 'forYou', 'fest', 'upcoming', 'visit'],
     brand: ['steps', 'fest', 'tv', 'legends', 'visit'],
   }[p && p.slug] || ['fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'];
+  // Christmas on the home page (src/views/christmas.js): its own hero replaces the festival banner
+  const xm = christmasNow(ctx);
+  const sections = xm ? ORDER.filter((k) => k !== 'fest') : ORDER;
   const questions = p ? p.questions : ['What’s on this weekend?', 'I’m a musician: how do I play here?', 'Can I hire the venue?', 'Christmas party for 12?'];
   return page(ctx, {
-    path: '/', ambient: 'stars', song: c.site.song, og: '/img/og.jpg', pathway: p,
+    path: '/', ambient: xm ? 'snow' : 'stars', song: xm ? songOf(ctx, xm) || c.site.song : c.site.song, og: '/img/og.jpg', pathway: p,
+    ...(xm ? { theme: themeOf(xm), festival: xm, scripts: [...featureScripts(xm), '/js/xmas.js'], data: { festival: festivalClient(ctx, xm) } } : {}),
     jsonLd: venueLd(ctx), // address, opening hours (Mondays closed), how to book: for search and AI assistants
     body: html`
+${xm ? christmasHero(ctx, xm) : ''}
+${xm ? songSection(ctx, { ...xm, features: { ...xm.features, cards: false } }) : ''}
 <section class="hero home-hero" aria-labelledby="hero-title">
   <div class="wrap">
     <div class="hero-copy">
@@ -207,7 +214,7 @@ function home(ctx, d, req) {
 </section>
 ${featuredHero(ctx, featuredNow(ctx))}
 ${ticker(c.site.ticker || [])}
-${ORDER.map((k) => S[k])}`,
+${sections.map((k) => S[k])}`,
   });
 }
 
