@@ -1205,3 +1205,6 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .va-playing .ss-lockup img { transform: rotate(calc(-4deg + var(--syn-beat, 0) * 12deg)) scale(calc(1 + var(--syn-beat, 0) * .12)); }
 .va-video-in { transition: border-color .15s; } .va-playing .va-video-in { border-color: var(--syn-color, var(--v-1)); }
 @media (prefers-reduced-motion: reduce) { .va-playing .va-name, .va-playing .va-vibe, .va-playing .va-star i, .va-playing .ss-lockup img, .va-playing .va-pulse { transform: none; } }
+/* keeping grassroots music live: the donation panel on /sunday-showcases */
+.sc-give-in { text-align: center; padding: clamp(22px, 4vw, 40px); border-radius: 22px; background: linear-gradient(140deg, rgba(212,255,60,.12), rgba(255,62,165,.14)); border: 2px solid #d4ff3c; box-shadow: 6px 6px 0 #ff3ea5; }
+.sc-give-in h2 { margin: 6px 0 10px; } .sc-give-in p { max-width: 52ch; margin: 0 auto 14px; }

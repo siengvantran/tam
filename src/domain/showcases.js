@@ -81,7 +81,8 @@ export function showcaseDomain(ctx) {
     const named = s.acts || [];
     const count = Math.max(named.length, s.count || n.acts || DEFAULT_ACTS);
     const slug = 'night' in s ? s.night : n.night;
-    const night = (slug && ctx.content.nights.find((x) => x.slug === slug)) || (slug === undefined ? nightsOn(date)[0] : null);
+    // the night it's part of; if that listing has been replaced (e.g. by a ticketed show), whatever is on that night now
+    const night = (slug && ctx.content.nights.find((x) => x.slug === slug)) || (slug === '' ? null : nightsOn(date)[0] || null);
     const seen = new Set();
     const wants = (db.showcaseWants || {})[date] || {};
     // set times go public only once the running order is published (after sound check)
@@ -90,7 +91,7 @@ export function showcaseDomain(ctx) {
     return {
       date, when: longDate(date), note: s.note || '', count,
       run: pub ? { published: true, start: pub.start, finish: pub.finish, intervalAt: pub.intervalAt, order: pub.slots.map((x) => ({ slug: x.slug, on: x.on, off: x.off })) } : null,
-      night: night ? { title: night.title, slug: night.slug, doors: night.doors || '', href: `/events/${night.slug}` } : null,
+      night: night ? { title: night.title, slug: night.slug, doors: night.doors || '', href: `/events/${night.slug}`, onSale: Boolean(night.sale), donate: night.donate || null } : null,
       acts: Array.from({ length: count }, (_, i) => {
         if (!(named[i] && named[i].name)) return { n: i + 1, tba: true };
         // the act's address is kept once made, so a new name (a band's name arriving later) keeps its page, votes and numbers

@@ -77,6 +77,11 @@ export function routes(r, ctx, d) {
   r.get('/events/:slug', (req, res, { params, url }) => {
     if (params.slug.endsWith('.ics')) return serveIcs(ctx, res, params.slug.slice(0, -4));
     const n = c.nightBy.get(params.slug);
+    // a Sunday Showcase night: its landing page is /sunday-showcases (tickets, the line-up, the tree).
+    // Booking confirmations (?booking=…) still show here.
+    const sc = ctx.showcase && ctx.showcase.next();
+    const scDate = sc && (params.slug.match(/-(\d{4}-\d{2}-\d{2})$/) || [])[1];
+    if (!url.search && sc && ((n && sc.night && sc.night.slug === n.slug) || (!n && scDate === sc.date))) return redirect(res, `/sunday-showcases${n && n.sale ? '#book' : '#this-sunday'}`, 302);
     if (n) return respond(res, eventPage(ctx, d, n, url));
     const past = c.pastBy.get(params.slug);
     if (past) return redirect(res, `/archive/night/${past.slug}`, 301);

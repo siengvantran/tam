@@ -7,6 +7,7 @@
 import { html } from './html.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout, when, times, nightHref } from './layout.js';
+import { bookingData, bookingSection } from './sections.js';
 import { onMap, TAM } from '../lib/places.js';
 import { VIBE_MARKS } from '../domain/showcases.js';
 
@@ -41,7 +42,7 @@ export function lineupCarousel(l, { base = '' } = {}) {
       <h2 class="fx-title">${l.when.replace(/ \d{4}$/, '')}</h2>
       <p class="fx-when">${l.count} acts${l.night ? html` · ${l.night.title}${l.night.doors ? html` · doors ${l.night.doors}` : ''}` : ''}</p>
       <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to step into their world, invite your friends, and vote them into the Christmas Showcase Special.</p>
-      <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.href}">The night</a>` : ''}<a class="btn ghost" href="${base}#this-sunday">Unwrap the tree</a>${base ? html`<a class="btn ghost" href="${base}">Play a showcase</a>` : ''}</div>
+      <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.onSale ? `${base || PATH}#book` : l.night.href}">${l.night.onSale ? 'Free tickets' : 'The night'}</a>` : ''}<a class="btn ghost" href="${base}#this-sunday">Unwrap the tree</a>${base ? html`<a class="btn ghost" href="${base}">Play a showcase</a>` : ''}</div>
     </div>
     <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="The acts">
       <div class="fx-stage">${l.acts.map((a, i) => {
@@ -98,8 +99,12 @@ function page(ctx, showcase) {
   const s = ctx.content.showcases;
   const circuit = s.circuit.map((r) => ({ ...r, nights: nightsFor(ctx, r) }));
   const desc = `${s.title}: want to play a showcase at TAM, Elephant & Castle? Start on the open mic circuit, meet the host, and register your interest.`;
+  // this week's night, when TAM's box office sells it: free tickets (and a donation) right here
+  const l = showcase && showcase.next();
+  const n = l && l.night && l.night.onSale ? ctx.content.nightBy.get(l.night.slug) : null;
   return layout(ctx, {
-    title: s.title, path: PATH, description: desc, scripts: ['/js/showcases.js'], og: '/img/og.jpg',
+    title: s.title, path: PATH, description: desc, scripts: ['/js/showcases.js', ...(n ? ['/js/festival.js'] : [])], og: '/img/og.jpg',
+    ...(n ? { data: { booking: { ...bookingData(ctx, [n], null), preselect: n.slug, via: '' } } } : {}),
     jsonLd: { '@context': 'https://schema.org', '@type': 'EventSeries', name: s.title, description: desc, url: `${ctx.cfg.siteUrl}${PATH}`,
       organizer: { '@type': 'Organization', name: 'TAM, Temple of Art and Music', url: ctx.cfg.siteUrl } },
     body: html`<section class="hero sc-hero"><div class="wrap">
@@ -108,9 +113,15 @@ function page(ctx, showcase) {
   <div class="label">${s.kicker}</div>
   <h1 class="chrome gold">${s.title}</h1>
   <p class="lede">${s.lede}</p>
-  <div class="ctas"><a class="btn hot" href="#circuit">Find an open night</a><a class="btn ghost" href="#register">Register your interest</a></div>
+  <div class="ctas">${n ? html`<a class="btn hot" href="#book">Free tickets · ${l.when.replace(/ \d{4}$/, '')}</a>` : ''}<a class="btn ${n ? 'ghost' : 'hot'}" href="#circuit">Find an open night</a><a class="btn ghost" href="#register">Register your interest</a></div>
 </div></section>
 ${thisWeek(ctx, showcase)}
+${n ? html`${bookingSection(ctx, { nights: [n], single: true, heading: `Free tickets · ${l.when.replace(/ \d{4}$/, '')}`, intro: `Entry is free: book your place and we'll email your tickets. Doors ${n.doors}.` })}
+<section class="section sc-give" id="donate"><div class="wrap narrow"><div class="sc-give-in">
+  <div class="label">Pay it forward</div><h2>Keep grassroots music live at TAM</h2>
+  <p>The Sunday Showcase is free, so new artists get a real stage, a real sound system and a real crowd. If you can, add a donation: it keeps the lights on and the stage open for the next act.</p>
+  ${n.donate ? html`<a class="btn hot" href="${n.donate}" target="_blank" rel="noopener">Donate ↗</a><p class="small muted">Donations are taken safely on Eventbrite.</p>` : html`<p class="small muted">You can also give on the night, at the bar.</p>`}
+</div></div></section>` : ''}
 <section class="section"><div class="wrap"><div class="head"><h2 class="chrome">How to get a showcase</h2></div>
   <ol class="sc-steps">${s.steps.map((st, i) => html`<li><span class="sc-n">${i + 1}</span><h3>${st.title}</h3><p>${st.text}</p></li>`)}</ol></div></section>
 <section class="section" id="circuit"><div class="wrap"><div class="head"><h2 class="chrome">The open mic circuit</h2><p class="muted">Every showcase artist starts here. Come and play, then tell us you'd like a showcase.</p></div>
