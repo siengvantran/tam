@@ -167,3 +167,71 @@ test('the showcase night: its event page goes to the landing page, which sells t
   const bk = await post('/api/bookings', { night: show.slug, type: 'free', qty: 2, name: 'Test Fan', email: 'fan@example.com' });
   assert.ok([200, 201].includes(bk.status), await bk.text());
 });
+
+test('artists sign in with their email and post to their wall; fans leave notes; emails stay private', async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-aw-'));
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', PIN_MODERATION: 'on' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const H = { 'x-staff-token': ADMIN, 'content-type': 'application/json' };
+  const J = { 'content-type': 'application/json' };
+  const { date } = app.ctx.content.showcases.next;
+  if (date < app.ctx.today()) return;
+  const post = (p, b, h = J) => fetch(B + p, { method: 'POST', headers: h, body: JSON.stringify(b) });
+  await post(`/api/showcases/${date}`, { count: 6, acts: [{ name: 'Justyna', vibe: 'disco', email: 'Justyna@Example.com' }, { name: 'Ariff A.B.', vibe: 'noir' }] }, H);
+
+  // the email is never public
+  const pub = await (await fetch(`${B}/api/showcases`)).text();
+  assert.doesNotMatch(pub, /example\.com/i);
+  assert.doesNotMatch(await (await fetch(`${B}/sunday-showcases/${date}/justyna`)).text(), /example\.com/i);
+  // staff see it in the editor, and a save from the public line-up (no email field) keeps it
+  const live = JSON.parse(pub);
+  await post(`/api/showcases/${date}`, { count: 6, acts: live.acts.filter((a) => !a.tba).map((a) => ({ slug: a.slug, name: a.name, vibe: a.vibe })) }, H);
+  const m = await (await fetch(`${B}/api/showcases/manage`, { headers: H })).json();
+  assert.equal(m.showcases[0].acts.find((a) => a.slug === 'justyna').email, 'justyna@example.com');
+
+  // a fan's note waits to be checked
+  const note = await (await post(`/api/showcases/${date}/act/justyna/wall`, { name: 'Sam', message: 'See you Sunday!' })).json();
+  assert.equal(note.status, 'pending');
+  assert.equal((await (await fetch(`${B}/api/showcases/${date}/act/justyna/wall`)).json()).items.length, 0);
+
+  // the artist asks for a sign-in link (email is off in tests: the link is logged)
+  const logged = [];
+  const warn = console.warn; console.warn = (...a) => { logged.push(a.join(' ')); };
+  try {
+    assert.equal((await post('/api/showcases/artist/link', { email: 'nobody@example.com' })).status, 200); // same answer for anyone
+    await post('/api/showcases/artist/link', { email: 'justyna@example.com' });
+  } finally { console.warn = warn; }
+  const link = logged.map((l) => /\/sunday-showcases\/artist\/sign-in\?t=([\w-]+)/.exec(l)).find(Boolean);
+  assert.ok(link, 'a sign-in link for Justyna only');
+  assert.equal(logged.filter((l) => /sign-in\?t=/.test(l)).length, 1);
+  const use = await post('/api/showcases/artist/link/use', { t: link[1] });
+  assert.equal(use.status, 200);
+  const cookie = use.headers.get('set-cookie').split(';')[0];
+  assert.equal((await post('/api/showcases/artist/link/use', { t: link[1] })).status, 400); // once only
+  const A = { ...J, cookie };
+  const me = await (await fetch(`${B}/api/showcases/artist/me`, { headers: A })).json();
+  assert.deepEqual(me.acts.map((a) => a.slug), ['justyna']);
+
+  // her wall: she sees the waiting note, shows it, and adds her YouTube and Instagram posts
+  const mine = await (await fetch(`${B}/api/showcases/${date}/act/justyna/wall`, { headers: A })).json();
+  assert.equal(mine.items[0].status, 'pending');
+  await post(`/api/showcases/${date}/act/justyna/wall/${mine.items[0].id}`, { status: 'shown' }, A);
+  assert.equal((await post(`/api/showcases/${date}/act/justyna/wall/post`, { url: 'https://www.youtube.com/watch?v=Z_c4NlhkWdY' }, A)).status, 201);
+  assert.equal((await post(`/api/showcases/${date}/act/justyna/wall/post`, { url: 'https://www.instagram.com/p/C1a2b3c4d5E/?igsh=x', caption: 'Rehearsal!' }, A)).status, 201);
+  assert.equal((await post(`/api/showcases/${date}/act/justyna/wall/post`, { url: 'https://evil.example/x' }, A)).status, 400);
+  // but not on someone else's wall, and not without signing in
+  assert.equal((await post(`/api/showcases/${date}/act/ariff-a-b/wall/post`, { url: 'https://youtu.be/Z_c4NlhkWdY' }, A)).status, 403);
+  assert.equal((await post(`/api/showcases/${date}/act/justyna/wall/post`, { url: 'https://youtu.be/Z_c4NlhkWdY' })).status, 403);
+
+  // the public wall shows the note and the posts
+  const page = await (await fetch(`${B}/sunday-showcases/${date}/justyna`)).text();
+  assert.match(page, /<blockquote>See you Sunday!<\/blockquote><figcaption>Sam<\/figcaption>/);
+  assert.match(page, /src="https:\/\/www\.youtube-nocookie\.com\/embed\/Z_c4NlhkWdY"/);
+  assert.match(page, /src="https:\/\/www\.instagram\.com\/p\/C1a2b3c4d5E\/embed"/);
+  assert.match((await fetch(`${B}/`)).headers.get('content-security-policy'), /frame-src [^;]*https:\/\/www\.instagram\.com/);
+  // the sign-in pages are there (and not taken for an act)
+  assert.equal((await fetch(`${B}/sunday-showcases/artist`)).status, 200);
+  assert.match(await (await fetch(`${B}/sunday-showcases/artist/sign-in?t=x`)).text(), /Signing you in/);
+});

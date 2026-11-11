@@ -545,7 +545,7 @@ function ticketPage(ctx, d, b, req) {
   const n = c.nightBy.get(b.night);
   const k = d.tickets.ticketKey(b.id);
   const staff = ctx.isDoor(req);
-  const status = { paid: 'Paid', reserved: ctx.stripe.enabled ? 'Reserved: pay online below' : 'Reserved: we’ll send an invoice', processing: 'Payment processing', awaiting_payment: 'Awaiting payment', cancelled: 'Cancelled' }[b.status] || b.status;
+  const status = { paid: 'Paid', reserved: !b.total ? 'Booked: free entry' : ctx.stripe.enabled ? 'Reserved: pay online below' : 'Reserved: we’ll send an invoice', processing: 'Payment processing', awaiting_payment: 'Awaiting payment', cancelled: 'Cancelled' }[b.status] || b.status;
   return page(ctx, {
     title: `Ticket ${b.id}`, path: `/ticket/${b.id}`, noindex: true, ambient: null, scripts: staff ? ['/js/door.js'] : [],
     data: staff ? { door: { ref: b.id, k } } : null,

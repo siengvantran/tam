@@ -34,13 +34,14 @@ ${after}<p style="color:#8a7f86;font-size:13px;margin-top:32px">TAM · Mercato M
 
 export function ticketEmail(b, night, link) {
   const paid = b.status === 'paid';
+  const free = !b.total; // free tickets: booked, nothing to pay
   return {
     to: b.email,
-    subject: `${paid ? 'Your tickets' : 'Booking reserved'}: ${night.title}, ${night.weekday} ${night.day} ${night.month} · ${b.id}`,
+    subject: `${paid || free ? 'Your tickets' : 'Booking reserved'}: ${night.title}, ${night.weekday} ${night.day} ${night.month} · ${b.id}`,
     ...layout({
-      heading: paid ? 'Your tickets are ready' : 'Your booking is reserved',
-      intro: paid ? 'Show the QR code on your ticket page at the door.' : 'We’ve held your tickets. We’ll be in touch about payment.',
-      rows: [['Reference', b.id], ['Night', `${night.title} · ${night.weekday} ${night.day} ${night.month}`], ['Tickets', `${b.qty} × ${b.ticketName || 'Ticket'}`], ['Total', pounds(b.total)]],
+      heading: paid || free ? 'Your tickets are ready' : 'Your booking is reserved',
+      intro: paid ? 'Show the QR code on your ticket page at the door.' : free ? 'You’re booked in: entry is free. Show the QR code on your ticket page at the door.' : 'We’ve held your tickets. We’ll be in touch about payment.',
+      rows: [['Reference', b.id], ['Night', `${night.title} · ${night.weekday} ${night.day} ${night.month}`], ['Tickets', `${b.qty} × ${b.ticketName || 'Ticket'}`], ['Total', free ? 'Free' : pounds(b.total)]],
       button: ['Open your ticket', link],
     }),
   };

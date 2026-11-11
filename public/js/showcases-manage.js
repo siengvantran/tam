@@ -18,6 +18,8 @@ const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>
   <label class="field full"><span>About them (their bio)</span><textarea data-k="blurb" rows="4" maxlength="1200">${esc(a.blurb)}</textarea></label>
   <div class="fields"><label class="field"><span>Song for their page (YouTube link)</span><input data-k="songUrl" value="${esc(a.song && a.song.youtubeId ? `https://www.youtube.com/watch?v=${a.song.youtubeId}` : '')}" maxlength="200" placeholder="Plays through Tamalume; the page moves with it"></label>
   <label class="field"><span>Song title</span><input data-k="songTitle" value="${esc((a.song && a.song.title) || '')}" maxlength="120"></label></div>
+  <div class="fields"><label class="field"><span>Their email (private: for signing in to their artist page)</span><input type="email" data-k="email" value="${esc(a.email || '')}" maxlength="200" placeholder="Never shown on the site"></label></div>
+  ${a.slug ? `<details class="sc-m-wall" data-wall="/api/showcases/${esc(data.showcases.find((x) => x.date === pick)?.date || '')}/act/${esc(a.slug)}/wall"><summary>Their wall: fans’ notes and posts</summary><ul class="plain"><li class="muted">Loading…</li></ul></details>` : ''}
   <input type="hidden" data-k="slug" value="${esc(a.slug || '')}">
   <input type="hidden" data-k="media" value="${esc(JSON.stringify(a.media || []))}">
   <input type="hidden" data-k="press" value="${esc(JSON.stringify(a.press || []))}">
@@ -111,4 +113,21 @@ root.addEventListener('submit', async (e) => {
     await load(pick);
     $('#sc-saved').textContent = `Saved. ${r.acts.filter((a) => !a.tba).length} of ${r.count} acts named.`;
   } catch (err) { $('#sc-saved').textContent = err.message; }
+});
+
+// ----- each act's wall: check fans' notes (they go up once shown), hide or remove posts -----
+const wallLine = (w) => `<li class="ar-w st-${esc(w.status)}" data-id="${esc(w.id)}"><div>${w.kind === 'note' ? `<b>${esc(w.name)}</b>: ${esc(w.message)}` : `${w.kind === 'youtube' ? 'YouTube' : 'Instagram'} post (${esc(w.by)})`} <span class="small muted">${esc(w.status === 'pending' ? 'waiting to be checked' : w.status)}</span></div>
+  <div class="ar-btns">${w.status !== 'shown' ? '<button class="btn hot small" type="button" data-wst="shown">Show</button>' : '<button class="btn ghost small" type="button" data-wst="hidden">Hide</button>'}<button class="sh-x" type="button" data-wst="removed" aria-label="Remove">×</button></div></li>`;
+async function loadWall(d) {
+  const { items } = await api(d.dataset.wall);
+  $('ul', d).innerHTML = items.length ? items.map(wallLine).join('') : '<li class="muted">Nothing on the wall yet.</li>';
+  $('summary', d).textContent = `Their wall${items.some((w) => w.status === 'pending') ? ` · ${items.filter((w) => w.status === 'pending').length} waiting` : ''}`;
+}
+root.addEventListener('toggle', (e) => { const d = e.target.closest && e.target.closest('details.sc-m-wall'); if (d && d.open) loadWall(d).catch(() => {}); }, true);
+root.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-wst]'); if (!b) return;
+  const d = b.closest('details.sc-m-wall');
+  if (b.dataset.wst === 'removed' && !confirm('Remove this from the wall?')) return;
+  await api(`${d.dataset.wall}/${b.closest('[data-id]').dataset.id}`, { method: 'POST', body: { status: b.dataset.wst } });
+  loadWall(d);
 });

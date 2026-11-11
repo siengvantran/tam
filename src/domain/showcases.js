@@ -8,7 +8,7 @@
 // Stored in db.showcases: { [date]: { night, count, acts: [{ name, plays, photo, links[], blurb }], note, removed } }
 
 import crypto from 'node:crypto';
-import { fail, send, readJson, text, rateLimiter } from '../lib/http.js';
+import { fail, send, readJson, text, rateLimiter, newId, email as cleanEmail } from '../lib/http.js';
 import { longDate } from '../lib/content.js';
 import { PLACES, placeOf } from '../lib/places.js';
 import { autoArrange, withTimes, checks, metrics, suggest, rewhy, isTime, DEFAULTS } from '../lib/running-order.js';
@@ -98,7 +98,8 @@ export function showcaseDomain(ctx) {
         let slug = /^[a-z0-9-]{1,60}$/.test(named[i].slug || '') ? named[i].slug : slugOf(named[i].name);
         if (seen.has(slug)) slug = `${slug}-${i + 1}`;
         seen.add(slug);
-        return { n: i + 1, ...named[i], slug, href: `/sunday-showcases/${date}/${slug}`, vibe: VIBES[named[i].vibe] ? named[i].vibe : 'stage', ...(timeOf.get(slug) || {}),
+        const { email: _private, ...pub } = named[i];
+        return { n: i + 1, ...pub, slug, href: `/sunday-showcases/${date}/${slug}`, vibe: VIBES[named[i].vibe] ? named[i].vibe : 'stage', ...(timeOf.get(slug) || {}),
           wants: (wants[slug] || {}).count || 0, places: (named[i].from || []).map(placeOf).filter(Boolean), links: cleanLinks(named[i]).map((url) => ({ url, label: linkName(url) })), link: undefined };
       }),
     };
@@ -111,6 +112,35 @@ export function showcaseDomain(ctx) {
   db.showcaseWants = db.showcaseWants || {};
   const wantLimited = rateLimiter({ max: 30 });
   const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex').slice(0, 32);
+
+  // ----- each act's wall -----
+  // db.showcaseWall[date][slug] = [{ id, kind: note|youtube|instagram, name, message | videoId | postId,
+  //   caption, at, status: pending|shown|hidden|removed, by: fan|artist|staff }]
+  // artists sign in by email: db.showcaseArtistLinks (one-time links), db.showcaseArtistSessions
+  db.showcaseWall = db.showcaseWall || {};
+  db.showcaseArtistLinks = db.showcaseArtistLinks || [];
+  db.showcaseArtistSessions = db.showcaseArtistSessions || [];
+  const ARTIST_COOKIE = 'tam_artist', LINK_MINUTES = 20, SESSION_DAYS = 30;
+  const artistCookie = (req) => (/(?:^|;\s*)tam_artist=([^;]+)/.exec(req.headers.cookie || '') || [])[1] || '';
+  const artistEmail = (req) => { const c = artistCookie(req); const s = c && db.showcaseArtistSessions.find((x) => x.hash === hash(`s:${c}`) && Date.parse(x.expires) > ctx.now()); return s ? s.email : ''; };
+  // every coming showcase act with this email (an artist may play more than one)
+  const actsFor = (mail) => !mail ? [] : upcoming().flatMap((d) => ((db.showcases[d] || {}).acts || []).filter((a) => a && a.email === mail).map((a) => {
+    const l = lineup(d); const x = l.acts.find((y) => !y.tba && y.name === a.name); return x ? { date: d, when: l.when, slug: x.slug, name: x.name, href: x.href } : null;
+  })).filter(Boolean);
+  const wallLimited = rateLimiter({ max: 6 });
+  const artistLinkLimited = rateLimiter({ max: 8 });
+  const wallOf = (date, slug) => { const d = (db.showcaseWall[date] = db.showcaseWall[date] || {}); return (d[slug] = d[slug] || []); };
+  const artistOk = (date, slug, req) => actsFor(artistEmail(req)).some((a) => a.date === date && a.slug === slug);
+  const staffOk = (req) => { try { ctx.team.guard(req, 'ops'); return true; } catch { return false; } };
+  // a YouTube video or an Instagram post (or reel), from any link form
+  const postOf = (u) => {
+    const s = String(u || '').trim();
+    const yt = /(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/.exec(s);
+    if (yt && /youtu/.test(s)) return { kind: 'youtube', videoId: yt[1] };
+    const ig = /instagram\.com\/(?:[\w.]+\/)?(p|reel|tv)\/([\w-]{5,40})/.exec(s);
+    if (ig) return { kind: 'instagram', postId: ig[2], postType: ig[1] === 'tv' ? 'p' : ig[1] };
+    return null;
+  };
 
   // ----- the running order (staff), and how visitors react to each act -----
   db.showcaseSignals = db.showcaseSignals || {};
@@ -157,7 +187,7 @@ export function showcaseDomain(ctx) {
   };
 
   return {
-    lineup, next, upcoming, act, runView, festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
+    lineup, next, upcoming, act, runView, wallShown: (date, slug) => wallOf(date, slug).filter((w) => w.status === 'shown').slice(-60).reverse(), festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
     routes(r) {
       r.get('/api/showcases', (req, res) => send(res, 200, next() || {}));
 
@@ -209,7 +239,8 @@ export function showcaseDomain(ctx) {
         if (missing.length) throw fail(409, `Not sound-checked yet: ${missing.map((x) => (l.acts.find((a) => a.slug === x.slug) || {}).name || x.slug).join(', ')}.`);
         const bySlugAct = new Map(l.acts.filter((a) => !a.tba).map((a) => [a.slug, a]));
         const keep = (a) => Object.fromEntries(['slug', 'name', 'plays', 'photo', 'links', 'blurb', 'media', 'vibe', 'from', 'press'].map((k) => [k, k === 'links' ? (a.links || []).map((x) => x.url || x) : a[k]]));
-        s.acts = [...run.slots.map((x) => keep(bySlugAct.get(x.slug))), ...(s.acts || []).filter((a) => !a || !a.name)];
+        const emailOf = (a) => ((s.acts || []).find((x) => x && x.name === a.name) || {}).email;
+        s.acts = [...run.slots.map((x) => { const a = bySlugAct.get(x.slug); return { ...keep(a), ...(emailOf(a) ? { email: emailOf(a) } : {}) }; }), ...(s.acts || []).filter((a) => !a || !a.name)];
         s.run = { ...run, status: 'published', publishedAt: new Date(ctx.now()).toISOString(), publishedBy: me.name || me.email || 'staff' };
         await save();
         send(res, 200, runView(params.date));
@@ -221,6 +252,96 @@ export function showcaseDomain(ctx) {
         s.run = { ...s.run, status: 'draft' };
         await save();
         send(res, 200, runView(params.date));
+      });
+
+      // ----- each act's wall: notes from fans, and the act's own YouTube and Instagram posts -----
+      r.get('/api/showcases/:date/act/:slug/wall', (req, res, { params, url }) => {
+        if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
+        const own = artistOk(params.date, params.slug, req) || staffOk(req);
+        send(res, 200, { items: wallOf(params.date, params.slug).filter((w) => own ? w.status !== 'removed' : w.status === 'shown').slice(-150).reverse(), moderated: ctx.cfg.pinModeration, own });
+      });
+      r.post('/api/showcases/:date/act/:slug/wall', async (req, res, { params }) => {
+        if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
+        if (wallLimited(req)) throw fail(429, 'That’s a lot of notes. Try again in a bit.');
+        const b = await readJson(req, 4096);
+        const name = text(b.name, 40), message = text(b.message, 280);
+        if (!name || !message) throw fail(400, 'Add your name and a note.');
+        const w = { id: newId('W'), kind: 'note', name, message, at: new Date(ctx.now()).toISOString(), status: ctx.cfg.pinModeration ? 'pending' : 'shown', by: 'fan' };
+        wallOf(params.date, params.slug).push(w);
+        await save();
+        send(res, 201, { ok: true, status: w.status });
+      });
+      // the act (with their private link) or staff: add a YouTube video or an Instagram post
+      r.post('/api/showcases/:date/act/:slug/wall/post', async (req, res, { params }) => {
+        const b = await readJson(req, 4096);
+        if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
+        if (!artistOk(params.date, params.slug, req) && !staffOk(req)) throw fail(403, 'This link isn’t valid any more. Ask TAM for a new one.');
+        const p = postOf(b.url);
+        if (!p) throw fail(400, 'Paste a YouTube video or an Instagram post link.');
+        const w = { id: newId('W'), ...p, caption: text(b.caption, 200), at: new Date(ctx.now()).toISOString(), status: 'shown', by: staffOk(req) ? 'staff' : 'artist' };
+        wallOf(params.date, params.slug).push(w);
+        await save();
+        send(res, 201, { ok: true, item: w });
+      });
+      // show, hide or remove a post: the act or staff
+      r.post('/api/showcases/:date/act/:slug/wall/:id', async (req, res, { params }) => {
+        const b = await readJson(req, 1024);
+        if (!artistOk(params.date, params.slug, req) && !staffOk(req)) throw fail(403, 'This link isn’t valid any more. Ask TAM for a new one.');
+        const w = wallOf(params.date, params.slug).find((x) => x.id === params.id);
+        if (!w) throw fail(404, 'That post isn’t on the wall.');
+        if (!['shown', 'hidden', 'removed'].includes(b.status)) throw fail(400, 'Show, hide or remove.');
+        w.status = b.status;
+        await save();
+        send(res, 200, { ok: true });
+      });
+      // ----- artists sign in with their email (Vivian adds it in the editor); a one-time link by email -----
+      // Always answers the same, so it never says whose email is on a line-up.
+      r.post('/api/showcases/artist/link', async (req, res) => {
+        if (artistLinkLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
+        const b = await readJson(req, 1024);
+        const mail = cleanEmail(b.email);
+        if (!mail) throw fail(400, 'Type the email TAM has for you.');
+        const t = Date.now();
+        db.showcaseArtistLinks = db.showcaseArtistLinks.filter((l) => Date.parse(l.expires) > t && !l.usedAt);
+        const mine = actsFor(mail);
+        if (mine.length) {
+          const tok = crypto.randomBytes(24).toString('base64url');
+          db.showcaseArtistLinks.push({ hash: hash(`l:${tok}`), email: mail, expires: new Date(ctx.now() + LINK_MINUTES * 60000).toISOString() });
+          await save();
+          const url = `${ctx.base(req)}/sunday-showcases/artist/sign-in?t=${tok}`;
+          const name = mine[0].name.replace(/[<>&]/g, '');
+          if (!ctx.mail.enabled()) console.warn(`Artist sign-in link for ${mail} (email is off): ${url}`);
+          else {
+            try {
+              await ctx.mail.send({ to: mail, subject: 'Your TAM artist page: sign in',
+                html: `<p>Hi ${name},</p><p>Sign in to your Sunday Showcase page to add your YouTube and Instagram posts to your wall, and see what fans are saying.</p><p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#d4ff3c;color:#111;border-radius:999px;text-decoration:none;font-weight:700">Sign in to your artist page</a></p><p style="color:#8a7f86;font-size:13px">The link works once, for ${LINK_MINUTES} minutes. If you didn’t ask for it, ignore this email.</p>`,
+                text: `Hi ${name},\n\nSign in to your Sunday Showcase page: ${url}\n\nThe link works once, for ${LINK_MINUTES} minutes. If you didn't ask for it, ignore this email.` });
+            } catch (e) { console.warn(`Artist sign-in email: ${e.message}`); throw fail(502, 'The email didn’t send. Try again in a minute.'); }
+          }
+        }
+        send(res, 200, { ok: true });
+      });
+      r.post('/api/showcases/artist/link/use', async (req, res) => {
+        const b = await readJson(req, 1024);
+        const l = db.showcaseArtistLinks.find((x) => x.hash === hash(`l:${String(b.t || '')}`));
+        if (!l || l.usedAt || Date.parse(l.expires) <= ctx.now()) throw fail(400, 'This link has expired or was already used. Ask for a new one.');
+        l.usedAt = new Date(ctx.now()).toISOString();
+        const sess = crypto.randomBytes(24).toString('base64url');
+        db.showcaseArtistSessions = db.showcaseArtistSessions.filter((x) => Date.parse(x.expires) > ctx.now());
+        db.showcaseArtistSessions.push({ hash: hash(`s:${sess}`), email: l.email, expires: new Date(ctx.now() + SESSION_DAYS * 86400000).toISOString() });
+        await save();
+        const secure = /^https:/.test(ctx.cfg.siteUrl) ? '; Secure' : '';
+        send(res, 200, { ok: true, acts: actsFor(l.email) }, { 'Set-Cookie': `${ARTIST_COOKIE}=${sess}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_DAYS * 86400}${secure}` });
+      });
+      r.get('/api/showcases/artist/me', (req, res) => {
+        const mail = artistEmail(req);
+        if (!mail) throw fail(401, 'Sign in first.');
+        send(res, 200, { acts: actsFor(mail) });
+      });
+      r.post('/api/showcases/artist/signout', async (req, res) => {
+        const c = artistCookie(req);
+        if (c) { db.showcaseArtistSessions = db.showcaseArtistSessions.filter((x) => x.hash !== hash(`s:${c}`)); await save(); }
+        send(res, 200, { ok: true }, { 'Set-Cookie': `${ARTIST_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0` });
       });
 
       r.post('/api/showcases/:date/act/:slug/want', async (req, res, { params }) => {
@@ -243,7 +364,8 @@ export function showcaseDomain(ctx) {
         const today = ctx.today();
         send(res, 200, {
           me, today, vibes: VIBES, places: Object.fromEntries(Object.entries(PLACES).map(([k, v]) => [k, v[0]])),
-          showcases: upcoming(today).map((d) => ({ ...lineup(d), saved: db.showcases[d] || {} })),
+          showcases: upcoming(today).map((d) => { const l = lineup(d), sv = db.showcases[d] || {};
+            return { ...l, saved: sv, acts: l.acts.map((a) => (a.tba ? a : { ...a, email: ((sv.acts || []).find((x) => x && x.name === a.name) || {}).email || '' })) }; }),
           // the nights on the listings a showcase can sit on
           nights: ctx.content.upcoming(today).filter((x) => !x.festival).slice(0, 200).map((x) => ({ date: x.date, slug: x.slug, title: x.title })),
         });
@@ -268,6 +390,8 @@ export function showcaseDomain(ctx) {
           name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
           photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200), media: cleanMedia(a && a.media),
           vibe: a && VIBES[a.vibe] ? a.vibe : 'stage',
+          // the act's email: private (never on the site), for signing in to their artist page
+          ...(cleanEmail(a && a.email) ? { email: cleanEmail(a.email) } : {}),
           // a song for their page: a YouTube video played through Tamalume, the page pulsing to it
           ...(songOf(a && a.song) ? { song: songOf(a.song) } : {}),
           ...(a && /^[a-z0-9-]{1,60}$/.test(a.slug || '') ? { slug: a.slug } : {}),
@@ -277,6 +401,8 @@ export function showcaseDomain(ctx) {
           })).filter((p) => p.title && /^https:\/\//.test(p.url)),
           from: [...new Set((Array.isArray(a && a.from) ? a.from : String((a && a.from) || '').split(/[\s,]+/)).map((c) => String(c).toUpperCase()).filter((c) => PLACES[c]))].slice(0, 3),
         })) : cur.acts || [];
+        // an act saved without an email field (e.g. from the public line-up) keeps the one it had
+        if ('acts' in b) acts.forEach((a, i) => { const src = b.acts[i] || {}; if (!('email' in src) && !a.email) { const was = (cur.acts || []).find((x) => x && x.email && ((a.slug && x.slug === a.slug) || x.name === a.name)); if (was) a.email = was.email; } });
         const count = Math.max(1, Math.min(MAX, parseInt(b.count, 10) || cur.count || acts.length || DEFAULT_ACTS));
         let night = 'night' in b ? text(b.night, 120) : cur.night;
         if (night && !nightsOn(date).some((x) => x.slug === night)) throw fail(400, 'That night isn’t on the listings for that date.');

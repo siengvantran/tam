@@ -204,3 +204,16 @@ if (clip) {
   const quiet = () => { cancelAnimationFrame(raf); document.body.classList.remove('va-playing'); root.setProperty('--syn-beat', '0'); root.setProperty('--syn-bass', '0'); };
   clip.addEventListener('pause', quiet); clip.addEventListener('ended', quiet);
 }
+
+// ----- the wall: fans leave a note -----
+const awf = document.getElementById('aw-form');
+if (awf) awf.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = awf.querySelector('[data-aw-msg]');
+  try {
+    const r = await api(awf.dataset.wall, { method: 'POST', body: { name: awf.name.value, message: awf.message.value } });
+    awf.reset();
+    msg.textContent = r.status === 'pending' ? 'Thanks! Your note goes up once it’s been checked.' : 'Thanks! It’s on the wall.';
+    if (window.tamTrack) window.tamTrack('showcase_wall_note', { act: SIG.split('/').pop() });
+  } catch (err) { msg.textContent = err.message; }
+});
