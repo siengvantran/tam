@@ -20,13 +20,13 @@ export function layout(ctx, {
   const image = og ? (og.startsWith('http') ? og : `${ctx.cfg.siteUrl}${og}`) : `${ctx.cfg.siteUrl}/img/og.jpg`;
   const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
   const desc = description || site.description;
-  const mods = new Set(['/js/site.js', ...(ctx.cfg.gaId ? ['/js/consent.js'] : []), ...scripts]);
+  const mods = new Set(['/js/site.js', ...(ctx.cfg.gaId || ctx.cfg.gtmId ? ['/js/consent.js'] : []), ...scripts]);
   if (String(body).includes('data-carousel')) mods.add('/js/carousel.js'); // the featured show's carousel
   const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
   if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); }
   if (song) mods.add('/js/tamalume.js');
   return '<!doctype html>' + html`
-<html lang="en-GB" data-theme="${theme}"${ctx.cfg.gaId ? html` data-ga="${ctx.cfg.gaId}"` : ''}>
+<html lang="en-GB" data-theme="${theme}"${ctx.cfg.gaId ? html` data-ga="${ctx.cfg.gaId}"` : ''}${ctx.cfg.gtmId ? html` data-gtm="${ctx.cfg.gtmId}"` : ''}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -132,7 +132,7 @@ function footer(ctx) {
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
+      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId || ctx.cfg.gtmId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}

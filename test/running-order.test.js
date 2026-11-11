@@ -113,6 +113,12 @@ test('Google Analytics only with a measurement ID, and only after consent', asyn
   assert.match(on, /src="\/js\/consent\.js"/);
   assert.match(on, /data-cookie-choices>Cookie choices</);
   assert.doesNotMatch(on, /googletagmanager/); // loads in the browser, only after a yes
+  // or a Google Tag Manager container, on the same terms
+  const tm = await (await fetch(`${await mk({ GTM_ID: 'GTM-KWR926JM' })}/`)).text();
+  assert.match(tm, /data-gtm="GTM-KWR926JM"/);
+  assert.match(tm, /src="\/js\/consent\.js"/);
+  assert.doesNotMatch(tm, /googletagmanager/);
+  assert.doesNotMatch(await (await fetch(`${await mk({ GTM_ID: 'GTM-<x>' })}/`)).text(), /data-gtm=/);
   const bad = await (await fetch(`${await mk({ GA_MEASUREMENT_ID: 'not-an-id"><script>' })}/`)).text();
   assert.doesNotMatch(bad, /data-ga=/);
 });
