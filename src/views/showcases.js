@@ -26,11 +26,12 @@ const shardTree = (cls = '') => html`<div class="sc-shard ${cls}" aria-hidden="t
 // The line-up as a futuristic 3D carousel (public/js/carousel.js, as the featured
 // show's): one slide per act, a live clip where there is one; acts still to be
 // named are a mystery slide. Tapping an act opens its own page.
-export function lineupCarousel(l) {
+// base: where the tree is (empty on the showcases page itself; '/sunday-showcases' elsewhere, e.g. the home page).
+export function lineupCarousel(l, { base = '' } = {}) {
   const named = l.acts.filter((a) => !a.tba);
   if (!named.length) return '';
   const label = (a) => (a.tba ? `Act ${a.n} · to be announced` : `Act ${a.n} · ${a.name}${a.plays ? ` · ${a.plays}` : ''}`);
-  const href = (a) => (a.tba ? '#this-sunday' : a.href);
+  const href = (a) => (a.tba ? `${base}#this-sunday` : a.href);
   const clip = (a) => (a.media || []).find((m) => m.type === 'video');
   return html`<section class="fx-hero sc-fx" id="line-up" aria-label="${l.when}: the line-up">
   <div class="fx-grid" aria-hidden="true"></div>
@@ -40,7 +41,7 @@ export function lineupCarousel(l) {
       <h2 class="fx-title">${l.when.replace(/ \d{4}$/, '')}</h2>
       <p class="fx-when">${l.count} acts${l.night ? html` · ${l.night.title}${l.night.doors ? html` · doors ${l.night.doors}` : ''}` : ''}</p>
       <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to step into their world, invite your friends, and vote them into the Christmas Showcase Special.</p>
-      <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.href}">The night</a>` : ''}<a class="btn ghost" href="#this-sunday">Unwrap the tree</a></div>
+      <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.href}">The night</a>` : ''}<a class="btn ghost" href="${base}#this-sunday">Unwrap the tree</a>${base ? html`<a class="btn ghost" href="${base}">Play a showcase</a>` : ''}</div>
     </div>
     <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="The acts">
       <div class="fx-stage">${l.acts.map((a, i) => {

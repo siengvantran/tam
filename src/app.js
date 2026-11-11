@@ -107,6 +107,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const social = socialPublisher(ctx, env);
   const shows = showsDomain(ctx, { tickets, eventbrite, social, writer: showWriter(cfg) });
   const showcase = showcaseDomain(ctx); // this week's Sunday Showcase line-up: presents under the tree
+  ctx.showcase = showcase; // the home page shows the line-up carousel too
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
