@@ -14,6 +14,14 @@ const MAX = 12, DEFAULT_ACTS = 6;
 const isDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
 const cleanLink = (u) => { const s = text(u, 300); return /^https?:\/\//i.test(s) ? s : s ? `https://${s.replace(/^\/+/, '')}` : ''; };
 const PHOTO = /^\/(uploads|img)\/[\w./-]+\.(jpe?g|png|webp)$/i;
+const VIDEO = /^\/(uploads|img)\/[\w./-]+\.(mp4|webm)$/i;
+// More photos and videos of an act, shown on its profile: site files only.
+const cleanMedia = (list) => (Array.isArray(list) ? list : []).slice(0, 8).map((m) => {
+  const src = m && typeof m.src === 'string' ? m.src : '';
+  if (VIDEO.test(src)) return { type: 'video', src, ...(PHOTO.test(m.poster || '') ? { poster: m.poster } : {}) };
+  if (PHOTO.test(src)) return { type: 'image', src };
+  return null;
+}).filter(Boolean);
 // Up to four links: a list, or one per line (the old single "link" still reads).
 const cleanLinks = (a) => [].concat(a.links || [], a.link || []).flatMap((x) => String((x && typeof x === 'object' ? x.url : x) || '').split(/\s+/)).map(cleanLink).filter(Boolean).slice(0, 4);
 const LINK_NAMES = [[/instagram\.com/, 'Instagram'], [/youtu\.?be/, 'YouTube'], [/spotify\.com/, 'Spotify'], [/soundcloud\.com/, 'SoundCloud'], [/tiktok\.com/, 'TikTok'], [/bandcamp\.com/, 'Bandcamp'], [/music\.apple\.com/, 'Apple Music'], [/facebook\.com/, 'Facebook']];
@@ -77,7 +85,7 @@ export function showcaseDomain(ctx) {
         const cur = db.showcases[date] || {};
         const acts = 'acts' in b ? (Array.isArray(b.acts) ? b.acts : []).slice(0, MAX).map((a) => ({
           name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
-          photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200),
+          photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200), media: cleanMedia(a && a.media),
         })) : cur.acts || [];
         const count = Math.max(1, Math.min(MAX, parseInt(b.count, 10) || cur.count || acts.length || DEFAULT_ACTS));
         let night = 'night' in b ? text(b.night, 120) : cur.night;

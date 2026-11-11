@@ -14,6 +14,9 @@ const PATH = '/sunday-showcases';
 const LIGHTS = [[50, 14, 'w', 0], [44, 24, 'r', .7], [57, 27, 'g', 1.2], [38, 37, 'w', .4], [62, 40, 'r', 1.7], [48, 43, 'g', .9], [32, 53, 'r', 1.4], [55, 55, 'w', .2],
   [68, 58, 'g', 2], [42, 62, 'w', 1.1], [26, 72, 'g', .6], [50, 73, 'r', 1.9], [74, 75, 'w', .3], [36, 80, 'r', 1.5], [62, 82, 'g', .8], [20, 88, 'w', 1.3], [48, 89, 'g', .1], [80, 89, 'r', 2.2]];
 
+// A named act gets a profile under the tree when there's more to show than the card.
+const hasProfile = (a) => !a.tba && Boolean(a.blurb || a.links.length || (a.media || []).length);
+
 // This week's showcase: a Christmas tree with one present per act. Tap to unwrap.
 export function treeSection(l) {
   if (!l || !l.count) return '';
@@ -30,14 +33,17 @@ export function treeSection(l) {
       <button class="sc-wrap" type="button" aria-expanded="false" aria-controls="sc-act-${a.n}" aria-label="Unwrap act ${a.n}"><span class="g-lid"></span><span class="g-l"></span><span class="g-r"></span><span class="g-bow"></span><span class="g-tag">Act ${a.n}</span></button>
       <div class="sc-card" id="sc-act-${a.n}"><div class="label">Act ${a.n}</div>
         ${a.tba ? html`<h3>To be announced</h3><p class="small muted">This act is still under wraps. Check back soon.</p>`
-          : html`${a.photo ? html`<img class="sc-pic" src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}${a.blurb || a.links.length ? html`<a class="small" href="#sc-p-${a.n}">Meet ${a.name} ↓</a>` : ''}`}
+          : html`${a.photo ? html`<img class="sc-pic" src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}${hasProfile(a) ? html`<a class="small" href="#sc-p-${a.n}">Meet ${a.name} ↓</a>` : ''}`}
       </div></li>`)}</ul>
   </div>
-  <div class="sc-profiles">${l.acts.filter((a) => !a.tba && (a.blurb || a.links.length)).map((a) => html`<article class="sc-prof" id="sc-p-${a.n}" hidden>
+  <div class="sc-profiles">${l.acts.filter(hasProfile).map((a) => html`<article class="sc-prof" id="sc-p-${a.n}" hidden>
     ${a.photo ? html`<img src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}
     <div><div class="label">Act ${a.n}</div><h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}
       ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
-      ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}</div>
+      ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}
+      ${(a.media || []).length ? html`<div class="sc-media">${a.media.map((m) => (m.type === 'video'
+        ? html`<video src="${m.src}" ${m.poster ? html`poster="${m.poster}"` : ''} controls playsinline preload="none" aria-label="${a.name} live"></video>`
+        : html`<img src="${m.src}" alt="${a.name}" loading="lazy">`))}</div>` : ''}</div>
   </article>`)}</div>
   <p class="sc-all"><button class="btn ghost" type="button" id="sc-unwrap-all">Unwrap them all</button></p>
 </div></section>`;
