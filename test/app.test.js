@@ -453,3 +453,27 @@ test('Videos play on iPhones: files answer byte-range requests', async () => {
   assert.equal((await fetch(`${s.base}/img/jom-2026/jom-sessions.mp4`, { headers: { range: `bytes=${size + 5}-` } })).status, 416);
   await s.close();
 });
+
+test('The home page goes Christmas from 1 November until the festival ends', async () => {
+  const keep = clock.t;
+  try {
+    clock.t = Date.parse('2026-11-20T12:00:00Z');
+    let s = await start();
+    let home = (await s.call('/')).body;
+    assert.match(home, /class="xm-hero"/);
+    assert.match(home, /shard-tree-tip\.png/);
+    assert.match(home, /class="xm-holo"/);
+    assert.match(home, /id="vidbox" data-youtube="cXdu_jnTcPI"/); // The Best Christmas Ever
+    assert.match(home, /data-theme="christmas"/);
+    assert.match(home, /data-kind="snow"/);
+    assert.match(home, /\/js\/xmas\.js/);
+    assert.doesNotMatch(home, /class="section fest-banner/);
+    await s.close();
+    clock.t = Date.parse('2026-10-20T12:00:00Z');
+    s = await start();
+    home = (await s.call('/')).body;
+    assert.doesNotMatch(home, /class="xm-hero"/);
+    assert.match(home, /data-theme="tam"/);
+    await s.close();
+  } finally { clock.t = keep; }
+});

@@ -56,7 +56,7 @@ ${jsonLd ? raw(`<script type="application/ld+json">${JSON.stringify(jsonLd).repl
 <body class="${bodyClass}">
 <a class="skip" href="#main">Skip to content</a>
 ${header(ctx, festival, pathway)}
-${friday(ctx) && isFriday(ctx) && !festival && !bodyClass.includes('staff') ? fridayRibbon(ctx) : ''}
+${friday(ctx) && isFriday(ctx) && (!festival || path === '/') && !bodyClass.includes('staff') ? fridayRibbon(ctx) : ''}
 <main id="main">${body}</main>
 ${footer(ctx)}
 ${ambient ? html`<canvas class="ambient" id="ambient" data-kind="${ambient}" aria-hidden="true"></canvas>` : ''}
