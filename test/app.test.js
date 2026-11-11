@@ -439,3 +439,17 @@ test('An enquiry email replies straight to the person who enquired', async () =>
   await s.close();
   resend.closeAllConnections(); resend.close();
 });
+
+test('Videos play on iPhones: files answer byte-range requests', async () => {
+  const s = await start();
+  const full = await fetch(`${s.base}/img/jom-2026/jom-sessions.mp4`);
+  assert.equal(full.headers.get('content-type'), 'video/mp4');
+  assert.equal(full.headers.get('accept-ranges'), 'bytes');
+  const size = Number(full.headers.get('content-length'));
+  const part = await fetch(`${s.base}/img/jom-2026/jom-sessions.mp4`, { headers: { range: 'bytes=0-1' } });
+  assert.equal(part.status, 206);
+  assert.equal(part.headers.get('content-range'), `bytes 0-1/${size}`);
+  assert.equal((await part.arrayBuffer()).byteLength, 2);
+  assert.equal((await fetch(`${s.base}/img/jom-2026/jom-sessions.mp4`, { headers: { range: `bytes=${size + 5}-` } })).status, 416);
+  await s.close();
+});

@@ -172,9 +172,24 @@ export async function serveStatic(res, root, rel, cache = 'public, max-age=3600'
   try { stat = await fs.stat(file); } catch { return false; }
   if (!stat.isFile()) return false;
   const body = await fs.readFile(file);
+  const type = MIME[path.extname(file).toLowerCase()] || 'application/octet-stream';
+  // Byte ranges: Safari (every iPhone) only plays video from a server that answers them.
+  const range = /^bytes=(\d*)-(\d*)$/.exec(String((res.req && res.req.headers.range) || ''));
+  if (range && (range[1] || range[2])) {
+    let start = range[1] ? Number(range[1]) : Math.max(0, body.length - Number(range[2]));
+    let end = range[1] && range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
+    if (start >= body.length || start > end) {
+      send(res, 416, '', { 'Content-Range': `bytes */${body.length}`, 'Accept-Ranges': 'bytes' });
+      return true;
+    }
+    const part = body.subarray(start, end + 1);
+    send(res, 206, part, { 'Content-Type': type, 'Cache-Control': cache, 'Accept-Ranges': 'bytes', 'Content-Range': `bytes ${start}-${end}/${body.length}`, 'Content-Length': part.length });
+    return true;
+  }
   send(res, 200, body, {
-    'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream',
+    'Content-Type': type,
     'Cache-Control': cache,
+    'Accept-Ranges': 'bytes',
     'Content-Length': body.length,
   });
   return true;

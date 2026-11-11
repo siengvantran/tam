@@ -29,7 +29,9 @@ export function featuredHero(ctx, f, { heading = 'h2', compact = false } = {}) {
       ${f.note ? html`<p class="fx-note">${f.note}</p>` : ''}
     </div>
     <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${f.title}: the line-up">
-      <div class="fx-stage">${f.slides.map((s, i) => html`<figure class="fx-slide" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} of ${f.slides.length}"><a href="${href}" tabindex="-1"><img src="${s.src}" alt="${s.alt}" ${i > 2 ? html`loading="lazy"` : ''} width="1080" height="1350"></a></figure>`)}</div>
+      <div class="fx-stage">${f.slides.map((s, i) => html`<figure class="fx-slide${s.video ? ' is-video' : ''}" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} of ${f.slides.length}">${s.video
+        ? html`<a href="${href}" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${s.src}" aria-label="${s.alt}"><source src="${s.video}" type="video/mp4"></video><img class="fx-alt" src="${s.src}" alt="${s.alt}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
+        : html`<a href="${href}" tabindex="-1"><img src="${s.src}" alt="${s.alt}" ${i > 2 ? html`loading="lazy"` : ''} width="1080" height="1350"></a>`}</figure>`)}</div>
       <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous">‹</button>
         <div class="fx-dots" role="tablist">${f.slides.map((s, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${s.alt}"></button>`)}</div>
         <button type="button" class="fx-arrow" data-dir="1" aria-label="Next">›</button></div>
