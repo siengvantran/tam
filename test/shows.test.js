@@ -243,6 +243,7 @@ test('A free guest-list show books without a card, and nights from the schedule 
   const r = await s.call('/api/bookings', { method: 'POST', body: { night: made.slug, type: 'guest', qty: 2, name: 'Ali', email: 'ali@example.com' } });
   assert.equal(r.status, 201, JSON.stringify(r.body));
   assert.equal(s.app.ctx.db.bookings.at(-1).status, 'reserved'); // no card for a free place
+  assert.match((await s.call('/whats-on')).body, /Album Launch[\s\S]{0,400}Free tickets/); // not “From £0”
   assert.ok(!m.calls.some((x) => x.path.startsWith('/stripe')));
 
   // a night from TAM's schedule, brought into Shows to manage

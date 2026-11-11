@@ -189,7 +189,7 @@ export function nightCard(ctx, n, avail) {
       ${f ? html`<div class="label">${f.name}</div>` : fri ? html`<div class="label fri-label">${tonight ? 'Tonight · ' : ''}${fri.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
-      ${n.sale ? html`<p class="price">${from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
+      ${n.sale ? html`<p class="price">${from === 0 ? 'Free tickets' : from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
     </div>
   </a>
 </article>`;
