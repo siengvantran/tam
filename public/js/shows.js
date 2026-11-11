@@ -141,8 +141,8 @@ const field = (id, label, input, hint = '') => `<label class="field" for="${id}"
 const rowLineup = (x = {}) => `<div class="sh-row" data-row="lineup"><input aria-label="Name" placeholder="Name" value="${esc(x.name)}" data-k="name" maxlength="80"><input aria-label="Role" placeholder="Role (e.g. host, band)" value="${esc(x.role)}" data-k="role" maxlength="80"><label class="small sh-check"><input type="checkbox" data-k="revealed" ${x.revealed === false ? '' : 'checked'}> Revealed</label><button type="button" class="sh-x" data-del aria-label="Remove">×</button></div>`;
 const rowSchedule = (x = ['', '']) => `<div class="sh-row" data-row="schedule"><input aria-label="Time" placeholder="19:30" value="${esc(x[0])}" data-k="0" maxlength="5" class="t"><input aria-label="What happens" placeholder="Doors / first set / headliner…" value="${esc(x[1])}" data-k="1" maxlength="140"><button type="button" class="sh-x" data-del aria-label="Remove">×</button></div>`;
 const rowTicket = (t = {}) => `<div class="sh-row sh-ticket" data-row="ticket"><input type="hidden" data-k="id" value="${esc(t.id)}"><input aria-label="Ticket name" placeholder="General admission" value="${esc(t.name)}" data-k="name" maxlength="60">
-  <span class="sh-money">£<input aria-label="Price in pounds" inputmode="decimal" placeholder="10" value="${t.price === undefined ? '' : pounds(t.price)}" data-k="price"></span>
-  <input aria-label="Limit (optional)" placeholder="Limit" inputmode="numeric" value="${esc(t.limit || '')}" data-k="limit" class="t"><input aria-label="Description" placeholder="What it includes (optional)" value="${esc(t.blurb)}" data-k="blurb" maxlength="300" class="wide"><button type="button" class="sh-x" data-del aria-label="Remove">×</button></div>`;
+  <span class="sh-money">£<input aria-label="Price in pounds" inputmode="decimal" placeholder="10" value="${t.price === undefined || t.donation ? '' : pounds(t.price)}" data-k="price" ${t.donation ? 'disabled' : ''}></span>
+  <input aria-label="Limit (optional)" placeholder="Limit" inputmode="numeric" value="${esc(t.limit || '')}" data-k="limit" class="t"><input aria-label="Description" placeholder="What it includes (optional)" value="${esc(t.blurb)}" data-k="blurb" maxlength="300" class="wide"><label class="small sh-check sh-don"><input type="checkbox" data-k="donation" ${t.donation ? 'checked' : ''}> Donation (pay what you like, on Eventbrite)</label><button type="button" class="sh-x" data-del aria-label="Remove">×</button></div>`;
 
 function editor() {
   const s = show, sl = s.sales, eb = s.eventbrite, so = s.social || {}, c = setup.connections;
@@ -189,7 +189,7 @@ function editor() {
       ${mode === 'both' ? field('f-alloc', 'On Eventbrite', `<input id="f-alloc" name="eventbriteAllocation" inputmode="numeric" value="${esc(sl.eventbriteAllocation || '')}" placeholder="40">`, 'Comes out of the capacity.') : ''}
       ${['tam', 'both', 'rsvp'].includes(mode) ? field('f-max', 'Max per booking', `<input id="f-max" name="maxPerBooking" inputmode="numeric" value="${esc(sl.maxPerBooking || 10)}">`, 'Tickets in one order.') : ''}</div>
     ${['tam', 'both', 'eventbrite'].includes(mode) ? `<div id="tickets">${(sl.tickets || []).map(rowTicket).join('')}</div><button class="btn ghost small" type="button" data-add="ticket">+ Add a ticket type</button>
-      <p class="small muted">Price 0 makes a free ticket (a supporter ticket next to it works well).</p>` : ''}
+      <p class="small muted">Price 0 makes a free ticket. Tick <b>Donation</b> for a pay-what-you-like ticket: Eventbrite takes the payment, so it goes on the Eventbrite listing only.</p>` : ''}
     ${st.boxOffice || st.sold ? `<p class="sh-stats"><b>${st.sold}</b> booked on tam.tv${st.left !== null && st.left !== undefined ? ` · <b>${st.left}</b> left` : ''}${eb ? ` · <b>${st.eventbriteSold}</b> sold on Eventbrite` : ''}</p>` : ''}
   </section>
 
@@ -265,7 +265,7 @@ function collect() {
     sales: {
       mode, capacity: num('capacity') ?? show.sales.capacity, maxPerBooking: num('maxPerBooking') ?? show.sales.maxPerBooking,
       eventbriteAllocation: num('eventbriteAllocation') ?? show.sales.eventbriteAllocation,
-      tickets: f.querySelector('#tickets') ? rows('ticket').map((r) => ({ id: val(r, 'id'), name: val(r, 'name'), price: val(r, 'price'), blurb: val(r, 'blurb'), limit: val(r, 'limit') }))
+      tickets: f.querySelector('#tickets') ? rows('ticket').map((r) => ({ id: val(r, 'id'), name: val(r, 'name'), price: val(r, 'donation') ? '0' : val(r, 'price'), blurb: val(r, 'blurb'), limit: val(r, 'limit'), donation: val(r, 'donation') }))
         : (show.sales.tickets || []).map((t) => ({ ...t, price: pounds(t.price) })),
     },
   };
@@ -298,6 +298,7 @@ function bindEditor() {
   const f = $('#sh-form');
   f.addEventListener('input', (e) => { if (!e.target.closest('[data-post], #w-notes, #c-date, #c-weeks')) markDirty(); if (e.target.id === 'f-summary') $('#sum-count').textContent = `${e.target.value.length}/140`; });
   f.addEventListener('change', async (e) => {
+    if (e.target.dataset.k === 'donation') { const p = e.target.closest('.sh-row').querySelector('[data-k="price"]'); p.disabled = e.target.checked; if (e.target.checked) p.value = ''; }
     if (e.target.name === 'mode') { const body = collect(); show = { ...show, ...body, sales: { ...show.sales, ...body.sales, tickets: body.sales.tickets.map((t) => ({ ...t, price: Math.round(Number(t.price || 0) * 100) })) } }; markDirty(); editor(); return; }
     if (e.target.id === 'f-artist' && e.target.value) { if (!$(`[data-artist="${e.target.value}"]`)) $('#artists').insertAdjacentHTML('beforeend', artistChip(e.target.value)); e.target.value = ''; markDirty(); }
     if (e.target.id === 'f-image' && e.target.files[0]) {

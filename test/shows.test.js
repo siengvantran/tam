@@ -255,3 +255,24 @@ test('A free guest-list show books without a card, and nights from the schedule 
     assert.match(adopted.history[0].what, /schedule/);
   }
 });
+
+test('A donation ticket goes on Eventbrite as pay-what-you-like; tam.tv keeps the free tickets', async (t) => {
+  const m = await mocks();
+  const s = await start(m);
+  t.after(() => { s.close(); m.close(); });
+  const H = { 'x-staff-token': ADMIN };
+  const date = showDate();
+  const made = (await s.call('/api/shows', { method: 'POST', headers: H, body: { date, title: 'Youth Sessions', doors: '12:00', ends: '19:30', summary: 'Young bands, free entry.',
+    sales: { mode: 'both', capacity: 150, eventbriteAllocation: 40, tickets: [{ name: 'Free ticket', price: '0' }, { name: 'Donation', price: '', donation: true, blurb: 'Support JOM and TAM' }] } } })).body;
+  assert.equal(made.sales.tickets[1].donation, true);
+  assert.equal(made.sales.tickets[1].price, 0);
+  await s.call(`/api/shows/${made.id}/status`, { method: 'POST', headers: H, body: { status: 'published' } });
+  // tam.tv sells only the free ticket; the donation isn't a box-office ticket
+  assert.deepEqual(s.app.ctx.content.nightBy.get(made.slug).sale.tickets.map((x) => x.name), ['Free ticket']);
+  const eb = await s.call(`/api/shows/${made.id}/eventbrite/create`, { method: 'POST', headers: H, body: {} });
+  assert.equal(eb.status, 200, JSON.stringify(eb.body));
+  const tcs = m.calls.filter((x) => x.path === '/eb/events/9001/ticket_classes/').map((x) => x.body.ticket_class);
+  assert.deepEqual(tcs.map((x) => [x.name, Boolean(x.free), Boolean(x.donation), x.cost || null]), [['Free ticket', true, false, null], ['Donation', false, true, null]]);
+  assert.equal(s.app.ctx.content.nightBy.get(made.slug).sale.capacity, 110); // 40 on Eventbrite
+  assert.match((await s.call(`/events/${made.slug}`)).body, /Make a donation on Eventbrite/);
+});
