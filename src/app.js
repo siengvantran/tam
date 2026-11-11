@@ -22,6 +22,7 @@ import { bluesDomain } from './domain/blues.js';
 import * as bluesPages from './views/blues.js';
 import * as aiPages from './views/ai.js';
 import * as showcasePages from './views/showcases.js';
+import { showcaseDomain } from './domain/showcases.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -102,6 +103,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
     organizer: env.EVENTBRITE_ORGANIZER || '33409225909', orgId: env.EVENTBRITE_ORG_ID || '', publicDir: path.join(ROOT, 'public'), uploadsDir: store.uploads });
   const social = socialPublisher(ctx, env);
   const shows = showsDomain(ctx, { tickets, eventbrite, social, writer: showWriter(cfg) });
+  const showcase = showcaseDomain(ctx); // this week's Sunday Showcase line-up: presents under the tree
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
@@ -110,7 +112,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -134,7 +136,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   pathwayPages.routes(site, ctx, d);
   bluesPages.routes(site, ctx, blues, qr);
   aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
-  showcasePages.routes(site, ctx); // /sunday-showcases: the call-out for artists
+  showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 
