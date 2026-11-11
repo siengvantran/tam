@@ -17,6 +17,44 @@ const LIGHTS = [[50, 14, 'w', 0], [44, 24, 'r', .7], [57, 27, 'g', 1.2], [38, 37
 // A named act gets a profile under the tree when there's more to show than the card.
 const hasProfile = (a) => !a.tba && Boolean(a.blurb || a.links.length || (a.media || []).length);
 
+// The line-up as a futuristic 3D carousel (public/js/carousel.js, as the featured
+// show's): one slide per act, a live clip where there is one; acts still to be
+// named are a mystery slide. Tapping an act unwraps its present under the tree.
+export function lineupCarousel(l) {
+  const named = l.acts.filter((a) => !a.tba);
+  if (!named.length) return '';
+  const label = (a) => (a.tba ? `Act ${a.n} · to be announced` : `Act ${a.n} · ${a.name}${a.plays ? ` · ${a.plays}` : ''}`);
+  const href = (a) => (a.tba ? '#this-sunday' : `#sc-p-${a.n}`);
+  const clip = (a) => (a.media || []).find((m) => m.type === 'video');
+  return html`<section class="fx-hero sc-fx" id="line-up" aria-label="${l.when}: the line-up">
+  <div class="fx-grid" aria-hidden="true"></div>
+  <div class="wrap fx-in">
+    <div class="fx-copy">
+      <div class="fx-kicker"><span class="fx-dot"></span>Sunday Showcase · the line-up</div>
+      <h2 class="fx-title">${l.when.replace(/ \d{4}$/, '')}</h2>
+      <p class="fx-when">${l.count} acts${l.night ? html` · ${l.night.title}${l.night.doors ? html` · doors ${l.night.doors}` : ''}` : ''}</p>
+      <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to open their present and hear their story.</p>
+      <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.href}">The night</a>` : ''}<a class="btn ghost" href="#this-sunday">Unwrap the tree</a></div>
+    </div>
+    <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="The acts">
+      <div class="fx-stage">${l.acts.map((a, i) => {
+        const v = clip(a);
+        const pic = a.photo || (v && v.poster) || '';
+        return html`<figure class="fx-slide${v ? ' is-video' : ''}${a.tba ? ' sc-fx-tba' : ''}" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} of ${l.acts.length}">${v
+          ? html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.n}"><video muted loop playsinline preload="metadata" poster="${v.poster || pic}" aria-label="${label(a)}"><source src="${v.src}" type="video/mp4"></video><img class="fx-alt" src="${pic}" alt="${label(a)}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
+          : a.tba || !pic
+            ? html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.tba ? '' : a.n}" class="sc-fx-blank"><img src="/img/christmas/tam-logo-gold.png" alt="${label(a)}" width="400" height="400"><span>${a.tba ? '?' : a.name}</span></a>`
+            : html`<a href="${href(a)}" tabindex="-1" data-unwrap="${a.n}"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}</span></figcaption></figure>`;
+      })}</div>
+      <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous act">‹</button>
+        <div class="fx-dots" role="tablist">${l.acts.map((a, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${label(a)}"></button>`)}</div>
+        <button type="button" class="fx-arrow" data-dir="1" aria-label="Next act">›</button></div>
+      <p class="fx-caption" aria-live="polite"></p>
+    </div>
+  </div>
+</section>`;
+}
+
 // This week's showcase: a Christmas tree with one present per act. Tap to unwrap.
 export function treeSection(l) {
   if (!l || !l.count) return '';
@@ -52,7 +90,7 @@ export function treeSection(l) {
 // The tree shows the next showcase still to come.
 function thisWeek(ctx, showcase) {
   const l = showcase && showcase.next();
-  return l ? treeSection(l) : '';
+  return l ? html`${lineupCarousel(l)}${treeSection(l)}` : '';
 }
 
 // The coming nights for one circuit regular, from everything on the site.

@@ -32,3 +32,13 @@ document.querySelectorAll('.sc-g').forEach((g) => g.querySelector('.sc-wrap').ad
   const p = document.getElementById(id); if (p) p.hidden = false;
 }));
 if (all) all.addEventListener('click', () => document.querySelectorAll('.sc-prof').forEach((p) => { p.hidden = false; }));
+
+// tapping an act in the line-up carousel opens its present and its story
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('[data-unwrap]');
+  if (!a || !a.dataset.unwrap || !a.closest('.fx-slide.on')) return;
+  const card = document.getElementById(`sc-act-${a.dataset.unwrap}`);
+  if (card) unwrap(card.closest('.sc-g'));
+  const p = document.getElementById(`sc-p-${a.dataset.unwrap}`);
+  if (p) p.hidden = false;
+});
