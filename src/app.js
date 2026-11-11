@@ -5,7 +5,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { Router, HttpError, send, html, redirect, serveStatic, rateLimiter, baseUrl } from './lib/http.js';
+import { Router, HttpError, send, html, redirect, serveStatic, rateLimiter, baseUrl, allowAnalytics } from './lib/http.js';
 import { openStore } from './lib/store.js';
 import { loadContent, londonToday } from './lib/content.js';
 import { stripeClient } from './services/stripe.js';
@@ -72,6 +72,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const store = await openStore(cfg.dataDir);
   if (!store.db.meta.secret) { store.db.meta.secret = crypto.randomBytes(32).toString('hex'); await store.save(); }
   cfg.siteUrl = cfg.siteUrl || content.site.url || 'http://localhost:3000';
+  if (cfg.gaId || cfg.gtmId) allowAnalytics(); // Google's tag (still only after a yes on the cookie banner)
 
   // TAM's live Eventbrite listing outranks the schedule (src/services/eventbrite-live.js)
   const live = eventbriteLive({ content, dataDir: cfg.dataDir, organizer: env.EVENTBRITE_ORGANIZER || '33409225909',

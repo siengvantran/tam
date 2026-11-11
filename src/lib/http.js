@@ -63,6 +63,19 @@ const SECURITY_HEADERS = {
   ].join('; '),
 };
 
+// With Google Analytics or Tag Manager switched on (GA_MEASUREMENT_ID / GTM_ID),
+// the policy lets in Google's tag script and the hits it sends, the hosts
+// Google lists for GA4 and Tag Manager. The tag still loads only after a yes
+// on the cookie banner (public/js/consent.js).
+export function allowAnalytics() {
+  const add = { 'script-src': 'https://*.googletagmanager.com', 'img-src': 'https://*.google-analytics.com https://*.googletagmanager.com',
+    'connect-src': 'https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com' };
+  SECURITY_HEADERS['Content-Security-Policy'] = SECURITY_HEADERS['Content-Security-Policy'].split('; ').map((d) => {
+    const name = d.split(' ')[0];
+    return add[name] && !d.includes(add[name].split(' ')[0]) ? `${d} ${add[name]}` : d;
+  }).join('; ');
+}
+
 export function send(res, status, body, headers = {}) {
   if (res.headersSent) return;
   let payload = body;

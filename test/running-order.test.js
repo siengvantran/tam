@@ -113,6 +113,10 @@ test('Google Analytics only with a measurement ID, and only after consent', asyn
   assert.match(on, /src="\/js\/consent\.js"/);
   assert.match(on, /data-cookie-choices>Cookie choices</);
   assert.doesNotMatch(on, /googletagmanager/); // loads in the browser, only after a yes
+  // the security policy lets Google's tag and its hits through once analytics is on
+  const csp = (await fetch(`${await mk({ GA_MEASUREMENT_ID: 'G-TEST1234' })}/`)).headers.get('content-security-policy');
+  assert.match(csp, /script-src [^;]*https:\/\/\*\.googletagmanager\.com/);
+  assert.match(csp, /connect-src [^;]*https:\/\/\*\.google-analytics\.com/);
   const bad = await (await fetch(`${await mk({ GA_MEASUREMENT_ID: 'not-an-id"><script>' })}/`)).text();
   assert.doesNotMatch(bad, /data-ga=/);
 });
