@@ -1022,10 +1022,10 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .sc-shard-body > img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 40px rgba(120,200,255,.25)); opacity: .9; }
 .sc-shard .sc-light { width: 7px; height: 7px; }
 .sc-gifts { position: relative; z-index: 1; }
-.sc-fx-flag { width: 22px; height: auto; vertical-align: -3px; margin-left: 4px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.25); animation: va-flash 2.4s ease-in-out infinite; }
 
 /* ---------- An act's own page (src/views/showcases.js actPage): each vibe sets the colours ---------- */
 .sc-actpage { --v-bg: #0b0709; --v-ink: #fff6e6; --v-1: #e8c77a; --v-2: #ff2ea6; --v-3: #22e1ff; --v-font: var(--f-space); }
+.vibe-stage { --v-bg: #0b0709; --v-1: #e8c77a; --v-2: #ff2ea6; --v-3: #22e1ff; }
 .vibe-disco { --v-bg: #160a1c; --v-1: #ffd54a; --v-2: #ff4fb8; --v-3: #b38cff; }
 .vibe-noir { --v-bg: #070405; --v-1: #ff2a3d; --v-2: #8a0f22; --v-3: #f4e6d8; }
 .vibe-campfire { --v-bg: #0d0b06; --v-1: #ffb347; --v-2: #3d8b4f; --v-3: #f2d6a2; }
@@ -1045,8 +1045,6 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .va-plays { margin: 12px 0 4px; font: italic 600 clamp(18px, 2.2vw, 26px) var(--f-body); color: var(--v-1); }
 .va-when { margin: 0 0 18px; color: #e9e1d6; } .va-when a { color: inherit; }
 .va-btn { background: var(--v-1); color: #0b0709; border-color: var(--v-1); box-shadow: 0 0 24px color-mix(in srgb, var(--v-1) 55%, transparent); }
-.va-flags { display: flex; gap: 10px; margin-bottom: 14px; }
-.va-flag { width: 64px; height: auto; border-radius: 6px; box-shadow: 0 0 0 2px rgba(255,255,255,.7), 0 0 26px color-mix(in srgb, var(--v-1) 70%, transparent); animation: va-flash 2.4s ease-in-out infinite; }
 @keyframes va-flash { 0%, 100% { filter: brightness(1); transform: scale(1); } 12% { filter: brightness(1.9) saturate(1.4); transform: scale(1.12) rotate(-3deg); } 24% { filter: brightness(1); transform: scale(1); } 36% { filter: brightness(1.6); transform: scale(1.08) rotate(3deg); } 48% { filter: brightness(1); transform: scale(1); } }
 .va-car { --fx: var(--v-1); --fx2: var(--v-2); --fx3: var(--v-3); padding-top: 20px; }
 .va-car .fx-car { max-width: 760px; margin: 0 auto; }
@@ -1073,10 +1071,19 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 @keyframes va-draw { to { stroke-dashoffset: 0; } }
 .va-star { position: absolute; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 2px; z-index: 2; }
 .va-star i { font-style: normal; font-size: clamp(22px, 3vw, 38px); line-height: 1; color: var(--v-1); text-shadow: 0 0 14px var(--v-1), 0 0 30px var(--v-2); animation: va-twinkle 1.6s ease-in-out infinite; }
-.va-star img { width: clamp(26px, 3vw, 40px); height: auto; border-radius: 3px; box-shadow: 0 0 0 1px #fff; animation: va-flash 2.4s ease-in-out infinite; }
 .va-star b { font: 400 clamp(11px, 1.2vw, 14px) var(--f-space); letter-spacing: .14em; text-transform: uppercase; color: #fff; white-space: nowrap; text-shadow: 0 1px 4px #000; }
 .va-tam i { color: #fff; font-size: clamp(16px, 2vw, 26px); }
 @keyframes va-twinkle { 50% { transform: scale(1.35) rotate(18deg); opacity: .8; } }
-@media (prefers-reduced-motion: reduce) { .va-bg, .va-snow, .va-flag, .va-star i, .va-star img, .sc-fx-flag { animation: none; } .va-arcs path { animation: none; stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .va-bg, .va-snow, .va-vibe, .va-star i, .sc-fx-vibe i { animation: none; } .va-arcs path { animation: none; stroke-dashoffset: 0; } }
 @media (max-width: 700px) { .va-xmas .va-tree { opacity: .28; right: -10%; } .va-hero { min-height: 82vh; } }
 .sc-xmas .sc-scene { margin-top: clamp(56px, 7vw, 90px); }
+
+/* each act's vibe, flashing: on their page and on the line-up slides */
+.va-vibes { margin-bottom: 14px; }
+.va-vibe { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 10px; border-radius: 999px; color: #0b0709;
+  background: linear-gradient(100deg, var(--v-1), var(--v-2)); box-shadow: 0 0 0 2px rgba(255,255,255,.55), 0 0 30px color-mix(in srgb, var(--v-1) 70%, transparent); animation: va-flash 2.4s ease-in-out infinite; }
+.va-vibe i { font-style: normal; font-size: 26px; line-height: 1; color: #fff; text-shadow: 0 0 10px var(--v-3); }
+.va-vibe b { font: 400 20px/1 var(--f-space); letter-spacing: .22em; text-transform: uppercase; }
+.sc-fx-vibe { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; color: var(--v-1); }
+.sc-fx-vibe i { font-style: normal; font-size: 15px; text-shadow: 0 0 8px var(--v-1); animation: va-flash 2.4s ease-in-out infinite; }
+.sc-fx-vibe b { font: inherit; letter-spacing: inherit; color: var(--v-1); }

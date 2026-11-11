@@ -39,6 +39,8 @@ export const VIBES = {
   spotlight: 'Spotlight: violet and white beams',
   riot: 'Riot: acid green and magenta',
 };
+// Each vibe's mark: its name and a sign, flashing on the act's page and the line-up.
+export const VIBE_MARKS = { stage: ['Stage', '★'], disco: ['Disco', '✺'], noir: ['Noir', '☾'], campfire: ['Campfire', '✹'], mist: ['Mist', '≋'], spotlight: ['Spotlight', '✧'], riot: ['Riot', '✶'] };
 const slugOf = (name) => String(name || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'act';
 
 export function showcaseDomain(ctx) {
