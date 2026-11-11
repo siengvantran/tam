@@ -106,6 +106,13 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const sp = await (await fetch(actUrl)).text();
     assert.match(sp, /<span class="va-net">Instagram<\/span><b>@the_lanterns<\/b>/);
     assert.match(sp, /<span class="va-src">The Paper<\/span><b>A headline ↗<\/b><\/a><p>One line\.<\/p>/);
+
+    // the invite card: "Sunday Showcase × TAM", the Sunday Showcase mark, a picture to choose (the hero by default)
+    const ic = await (await fetch(actUrl)).text();
+    assert.match(ic, /class="va-card" data-card data-name="The Lanterns"/);
+    assert.match(ic, /<span class="ss-title">[\s\S]*Showcase[\s\S]*class="ss-x">×[\s\S]*TAM<\/span>/);
+    assert.match(ic, /src="\/img\/sunday-showcase-mark\.svg"/);
+    assert.equal((await fetch(`${B}/img/sunday-showcase-mark.svg`)).status, 200);
     const gp = await (await fetch(actUrl)).text();
     assert.match(gp, /vibe-riot/);
     assert.doesNotMatch(gp, /flags\//);
@@ -129,6 +136,8 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.deepEqual(vid.acts[0].media.map((m) => m.type), ['video', 'image']);
     // on the act's own page, its photos and clips are a carousel
     assert.match(await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text(), /data-carousel[\s\S]*<source src="\/img\/showcases\/waris-albakri-1\.mp4" type="video\/mp4">/);
+    // with more than one picture, the invite card lets you choose: the first (hero) is chosen to start
+    assert.match(await (await fetch(`${B}/sunday-showcases/${date}/trio`)).text(), /<input type="radio" name="card-pic" value="\/img\/showcases\/waris-albakri-1-poster\.jpg" checked>/);
 
     // staff add a later showcase; the page keeps showing the next one, and moves on when it's removed
     const later = new Date(Date.parse(date) + 7 * 864e5).toISOString().slice(0, 10);

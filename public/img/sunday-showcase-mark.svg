@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- The Sunday Showcase mark: a sun rising over the stage, its rays as spotlight beams, a star at the top. -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#f0a83a"/></linearGradient>
+    <linearGradient id="b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff5aa5" stop-opacity=".95"/><stop offset="1" stop-color="#ff5aa5" stop-opacity="0"/></linearGradient>
+    <clipPath id="c"><circle cx="100" cy="100" r="88"/></clipPath>
+  </defs>
+  <circle cx="100" cy="100" r="94" fill="#12080f" stroke="url(#g)" stroke-width="6"/>
+  <g clip-path="url(#c)">
+    <!-- spotlight rays -->
+    <g fill="url(#b)">
+      <path d="M100 128 L58 20 L74 18 Z"/><path d="M100 128 L92 12 L108 12 Z"/><path d="M100 128 L126 18 L142 20 Z"/>
+      <path d="M100 128 L30 46 L40 36 Z"/><path d="M100 128 L160 36 L170 46 Z"/>
+    </g>
+    <!-- the rising sun -->
+    <path d="M52 128 A48 48 0 0 1 148 128 Z" fill="url(#g)"/>
+    <g stroke="#12080f" stroke-width="4"><line x1="56" y1="116" x2="144" y2="116"/><line x1="62" y1="104" x2="138" y2="104"/></g>
+    <!-- the stage -->
+    <rect x="12" y="128" width="176" height="10" fill="url(#g)"/>
+    <rect x="12" y="142" width="176" height="60" fill="#2a0f22"/>
+    <g fill="#f0a83a" opacity=".55"><rect x="30" y="152" width="140" height="3"/><rect x="44" y="164" width="112" height="3"/></g>
+  </g>
+  <!-- the star -->
+  <path d="M100 26 l5.3 11.6 12.7 1.4-9.5 8.6 2.7 12.5L100 53.8 88.8 60.1l2.7-12.5-9.5-8.6 12.7-1.4Z" fill="#fff4cf" stroke="#f0a83a" stroke-width="1.5"/>
+</svg>
