@@ -6,6 +6,7 @@ import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
 import { serveIcs } from './seo.js';
 import { venueLd, placeLd, availability } from './ai.js';
+import { featuredNow, featuredHero } from './featured.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
 import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM } from './layout.js';
 import {
@@ -204,6 +205,7 @@ function home(ctx, d, req) {
   </div>
   <div class="wrap">${pathwayTiles(ctx, p)}${p ? html`<p class="small"><button type="button" class="linkish" data-forget-path>Not you? Choose again</button></p>` : ''}</div>
 </section>
+${featuredHero(ctx, featuredNow(ctx))}
 ${ticker(c.site.ticker || [])}
 ${ORDER.map((k) => S[k])}`,
   });
@@ -222,9 +224,10 @@ function whatsOn(ctx, d) {
     data: { booking: bookingData(ctx, up, null) },
     body: html`<section class="section"><div class="wrap">
   <div class="label">Temple of Art and Music</div><h1 class="chrome gold">What’s on</h1>
-  ${fridayTile(ctx)}
+  ${featuredNow(ctx) ? featuredHero(ctx, featuredNow(ctx), { compact: true }) : fridayTile(ctx)}
   ${up.length ? months.map((m) => html`<h2 class="month">${m}</h2><div class="nights-grid">${up.filter((n) => `${n.month} ${n.year}` === m).map((n) => nightCard(ctx, n, d.tickets.nightAvailability(n)))}</div>`)
     : html`<p>New nights are announced soon. <a href="/archive">See past nights</a>.</p>`}
+  ${featuredNow(ctx) ? fridayTile(ctx) : ''}
 </div></section>
 ${bookingSection(ctx, { nights: up, festival: null, heading: 'Book any night', intro: 'Every night sold here is sold by TAM itself.' })}`,
   });
@@ -342,6 +345,7 @@ function eventPage(ctx, d, n, url) {
   </div>
   ${n.image ? html`<img class="ev-art" src="${n.image}" alt="" loading="lazy">` : ''}
 </div></section>
+${!isPast && featuredNow(ctx) && featuredNow(ctx).slug === n.slug ? featuredHero(ctx, featuredNow(ctx), { compact: true }) : ''}
 ${!isPast ? ebTickets(n) : ''}
 ${n.description ? html`<section class="section"><div class="wrap narrow prose">${n.description.split(/\n{2,}/).map((p) => html`<p>${p}</p>`)}</div></section>` : ''}
 ${!artists.length && ((n.lineup || []).length || n.lineupHidden) ? html`<section class="section" id="lineup"><div class="wrap"><div class="head"><h2 class="chrome">The line-up</h2></div>

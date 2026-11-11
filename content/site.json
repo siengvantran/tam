@@ -31,5 +31,66 @@
     "tagline": "Find your Friday",
     "blurb": "Great nights. Real places. People worth discovering. Every Friday, TAM's own guide to who's playing, with the line-up revealed song by song.",
     "image": "https://friday.tam.tv/og/friday-night-live.jpg"
+  },
+  "featured": {
+    "slug": "jom-sessions-2026-2026-11-15",
+    "until": "2026-11-15",
+    "kicker": "TAM x JOM Youth Music",
+    "title": "TAM x JOM Sessions 2026",
+    "when": "Sunday 15 November · 12pm to 7:30pm",
+    "lede": "Thirty young bands and singers take over TAM: the JOM Junior Open Mic from 12, the Youth Open Mic from 2, and a special extended set from Yellowhammer.",
+    "cta": "Get free tickets",
+    "note": "Free entry · under-18s with a parent · sign in at the door",
+    "credit": "Plates by JOM Youth Music",
+    "slides": [
+      {
+        "src": "/img/jom-2026/poster.jpg",
+        "alt": "TAM x JOM Sessions 2026: the full line-up"
+      },
+      {
+        "src": "/img/jom-2026/yellowhammer.jpg",
+        "alt": "Yellowhammer: special extended set, 6:30–7:30pm"
+      },
+      {
+        "src": "/img/jom-2026/lavender-drumming.jpg",
+        "alt": "Lavender Drumming: Junior Open Mic, 12–2pm"
+      },
+      {
+        "src": "/img/jom-2026/immy-eloise.jpg",
+        "alt": "Immy Eloise: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/twenty-twelve.jpg",
+        "alt": "Twenty Twelve: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/zayne.jpg",
+        "alt": "Zayne: Junior Open Mic, 12–2pm"
+      },
+      {
+        "src": "/img/jom-2026/maksym-oleksa.jpg",
+        "alt": "Maksym Oleksa: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/the-whippets.jpg",
+        "alt": "The Whippets: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/miscellaneous.jpg",
+        "alt": "Miscellaneous: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/dont-send-flowers.jpg",
+        "alt": "Don’t Send Flowers: Youth Open Mic, 2–7pm"
+      },
+      {
+        "src": "/img/jom-2026/colette.jpg",
+        "alt": "Colette: Junior Open Mic, 12–2pm"
+      },
+      {
+        "src": "/img/jom-2026/the-dreamcatchers.jpg",
+        "alt": "The Dreamcatchers: Youth Open Mic, 2–7pm"
+      }
+    ]
   }
 }
