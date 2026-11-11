@@ -120,3 +120,50 @@ test('Google Analytics only with a measurement ID, and only after consent', asyn
   const bad = await (await fetch(`${await mk({ GA_MEASUREMENT_ID: 'not-an-id"><script>' })}/`)).text();
   assert.doesNotMatch(bad, /data-ga=/);
 });
+
+test('the showcase night: its event page goes to the landing page, which sells the free tickets', async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-sct-'));
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const H = { 'x-staff-token': ADMIN, 'content-type': 'application/json' };
+  const { date, night } = app.ctx.content.showcases.next;
+  if (date < app.ctx.today()) return;
+  const post = (p, b) => fetch(B + p, { method: 'POST', headers: H, body: JSON.stringify(b) });
+  await post(`/api/showcases/${date}`, { count: 6, acts: [{ name: 'Justyna', vibe: 'disco' }] });
+
+  // before tickets: the listed night's page takes people to the showcase page
+  const r1 = await fetch(`${B}/events/${night}`, { redirect: 'manual' });
+  assert.equal(r1.status, 302);
+  assert.equal(r1.headers.get('location'), '/sunday-showcases#this-sunday');
+
+  // Vivian makes the night a ticketed show: free tickets, and a donation ticket (taken on Eventbrite)
+  const show = await (await post('/api/shows', { title: 'Sunday Showcase × TAM', date, doors: '19:30', ends: '22:30',
+    summary: 'Six new acts, one stage. Free entry: book your place.', image: '/img/showcases/justyna.jpg',
+    sales: { mode: 'tam', capacity: 100, maxPerBooking: 6, tickets: [{ id: 'free', name: 'Free ticket', price: '0' }, { id: 'give', name: 'Keep grassroots music live at TAM', donation: true }] } })).json();
+  const pub = await post(`/api/shows/${show.id}/status`, { status: 'published' });
+  assert.equal(pub.status, 200, await pub.text());
+
+  // the calendar shows the Sunday Showcase in place of the listed night
+  const on = (await (await fetch(`${B}/whats-on.json`)).json()).nights.filter((x) => x.date === date).map((x) => x.title);
+  assert.ok(on.includes('Sunday Showcase × TAM'));
+  assert.ok(!on.includes('Singers @ Sunday Spot'));
+  assert.match(await (await fetch(`${B}/calendar.ics`)).text(), /SUMMARY:Sunday Showcase × TAM/);
+
+  // the show's page and the old listing's address both go to the landing page's tickets
+  const r2 = await fetch(`${B}/events/${show.slug}`, { redirect: 'manual' });
+  assert.equal(r2.headers.get('location'), '/sunday-showcases#book');
+  assert.equal((await fetch(`${B}/events/${night}`, { redirect: 'manual' })).headers.get('location'), '/sunday-showcases#this-sunday');
+  assert.equal((await fetch(`${B}/events/${show.slug}?booking=TAM-X&k=y`, { redirect: 'manual' })).status, 200); // confirmations still show
+
+  // the landing page sells the free tickets, and asks for a donation
+  const land = await (await fetch(`${B}/sunday-showcases`)).text();
+  assert.match(land, /<section class="section tix" id="book"/);
+  assert.match(land, /Free tickets · /);
+  assert.match(land, /Keep grassroots music live at TAM/);
+  assert.match(land, /src="\/js\/festival\.js"/);
+  // and a free booking works
+  const bk = await post('/api/bookings', { night: show.slug, type: 'free', qty: 2, name: 'Test Fan', email: 'fan@example.com' });
+  assert.ok([200, 201].includes(bk.status), await bk.text());
+});
