@@ -1167,3 +1167,41 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .ro-table th, .ro-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; } .ro-table th:nth-child(2), .ro-table td:nth-child(2) { text-align: left; }
 .ro-sugg li { padding: 8px 0; border-bottom: 1px solid var(--line); }
 @media (max-width: 600px) { .ro-slot { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Sunday Showcase brand, Gen Z: wavy sun-and-mic sticker, lowercase type, a lime "showcase" sticker ---------- */
+.ss-lockup { gap: 10px; }
+.ss-lockup img { filter: none; transform: rotate(-4deg); }
+.ss-word { gap: 4px; justify-items: start; }
+.ss-word i { font: 700 28px/0.9 var(--f-body); font-style: normal; letter-spacing: -.04em; text-transform: lowercase; color: #fff; }
+.ss-word b { font: 700 15px/1 var(--f-body); letter-spacing: -.01em; text-transform: lowercase; color: #111; background: #d4ff3c; padding: 4px 10px 5px; border-radius: 999px;
+  border: 2px solid #111; box-shadow: 3px 3px 0 #ff3ea5; transform: rotate(-4deg); }
+.ss-lockup.big .ss-word i { font-size: 52px; } .ss-lockup.big .ss-word b { font-size: 26px; padding: 6px 16px 8px; box-shadow: 5px 5px 0 #ff3ea5; }
+.va-card .ss-word i { font-size: 22px; } .va-card .ss-word b { font-size: 12px; }
+.ss-t-ss i { font: 700 1.05em var(--f-body); font-style: normal; letter-spacing: -.04em; text-transform: lowercase; color: #fff; }
+.ss-t-ss b { font: 700 .8em var(--f-body); letter-spacing: -.01em; text-transform: lowercase; color: #111; background: #d4ff3c; padding: 3px 9px 4px; border-radius: 999px; border: 2px solid #111; box-shadow: 2px 2px 0 #ff3ea5; display: inline-block; transform: rotate(-3deg); }
+
+/* ---------- An act's page dancing to their music (Tamalume's --syn-beat / --syn-bass / --syn-color) ---------- */
+.va-listen .head { display: block; text-align: center; }
+.va-video { position: relative; max-width: 900px; margin: 0 auto; }
+.va-video-in { position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000; border: 3px solid var(--v-1); z-index: 1; }
+.va-video-in iframe, .va-video-in #va-player, .va-video-in video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.va-clip .va-video-in { aspect-ratio: auto; max-height: 80vh; } .va-clip video { position: static !important; display: block; max-height: 80vh; margin: 0 auto; }
+.va-video .vthumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.va-video .vplay { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 16px 26px; border-radius: 999px; border: 0; cursor: pointer;
+  font: 400 22px var(--f-space); letter-spacing: .08em; text-transform: uppercase; background: var(--v-1); color: #0b0709; box-shadow: 0 0 40px var(--v-1); }
+.va-video.playing .vthumb, .va-video.playing .vplay { display: none; }
+.va-pulse { position: absolute; inset: -14px; border-radius: 28px; z-index: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--syn-color, var(--v-1)) 70%, transparent), transparent); filter: blur(18px); }
+.va-playing .va-pulse { opacity: calc(.25 + var(--syn-bass, 0) * .9); transform: scale(calc(1 + var(--syn-beat, 0) * .05)); }
+/* the whole page, while it plays */
+.va-playing .va-name { transform: scale(calc(1 + var(--syn-beat, 0) * .045)); transform-origin: left bottom;
+  text-shadow: calc(3px + var(--syn-beat, 0) * 6px) calc(3px + var(--syn-beat, 0) * 6px) 0 var(--syn-color, var(--v-2)), 0 0 calc(30px + var(--syn-bass, 0) * 60px) var(--syn-color, var(--v-1)); }
+.va-playing .va-bg { filter: brightness(calc(.85 + var(--syn-bass, 0) * .5)) saturate(calc(1 + var(--syn-beat, 0) * .6)); }
+.va-playing .va-hero::after { opacity: calc(1 - var(--syn-beat, 0) * .25); }
+.va-playing .va-vibe { animation: none; transform: scale(calc(1 + var(--syn-beat, 0) * .14)) rotate(calc(var(--syn-beat, 0) * -4deg)); }
+.va-playing .va-panel, .va-playing .va-socials a, .va-playing .va-card { box-shadow: 0 0 calc(20px + var(--syn-bass, 0) * 70px) color-mix(in srgb, var(--syn-color, var(--v-1)) 55%, transparent); border-color: var(--syn-color, var(--v-1)); }
+.va-playing .va-star i { transform: scale(calc(1 + var(--syn-beat, 0) * .7)); }
+.va-playing .va-arcs path { stroke: var(--syn-color, var(--v-1)); }
+.va-playing .ss-lockup img { transform: rotate(calc(-4deg + var(--syn-beat, 0) * 12deg)) scale(calc(1 + var(--syn-beat, 0) * .12)); }
+.va-video-in { transition: border-color .15s; } .va-playing .va-video-in { border-color: var(--syn-color, var(--v-1)); }
+@media (prefers-reduced-motion: reduce) { .va-playing .va-name, .va-playing .va-vibe, .va-playing .va-star i, .va-playing .ss-lockup img, .va-playing .va-pulse { transform: none; } }
