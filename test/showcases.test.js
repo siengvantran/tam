@@ -59,6 +59,18 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.match(after, /href="https:\/\/instagram\.com\/thelanterns"/);
     assert.match(after, /&lt;b&gt;Ruby/);
     assert.equal((after.match(/To be announced/g) || []).length, 4);
+    // photos (site paths only), several links named by where they go, a bio in paragraphs
+    const full = await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
+      { name: 'The Lanterns', plays: 'Soul trio', photo: '/img/showcases/justyna.jpg', links: ['youtu.be/abc', 'https://www.instagram.com/thelanterns/'], blurb: 'One.\n\nTwo.' },
+      { name: 'Bad Photo', photo: 'javascript:alert(1)' }, { name: '<b>Ruby</b>' }] }) });
+    const fj = await full.json();
+    assert.deepEqual(fj.acts[0].links.map((k) => k.label), ['YouTube', 'Instagram']);
+    assert.equal(fj.acts[1].photo, '');
+    const prof = await (await fetch(`${B}/sunday-showcases`)).text();
+    assert.match(prof, /id="sc-p-1"[\s\S]*?<p>One\.<\/p><p>Two\.<\/p>/);
+    assert.match(prof, /class="sc-pic" src="\/img\/showcases\/justyna\.jpg"/);
+    assert.match(prof, /href="https:\/\/youtu\.be\/abc"/);
+    assert.equal((await fetch(`${B}/api/showcases/photo`, { method: 'POST', body: '{}' })).status, 401);
     const pub = await (await fetch(`${B}/api/showcases`)).json();
     assert.equal(pub.acts[0].name, 'The Lanterns');
     assert.equal(pub.count, 6);
