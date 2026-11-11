@@ -46,7 +46,7 @@ if (form && B && B.nights.length) {
     if (!opts.some((o) => o.id === state.type)) state.type = (opts.find((o) => o.left !== 0) || opts[0] || {}).id;
     typesEl.innerHTML = opts.map((o) => `<label class="type"><input type="radio" name="type" value="${esc(o.id)}" ${o.id === state.type ? 'checked' : ''} ${o.left === 0 ? 'disabled' : ''}>
       ${o.tag ? `<span class="tag">${esc(o.tag)}</span>` : ''}<h4>${esc(o.name)}</h4>
-      <p class="tp">${pounds(o.price)}${o.pack ? ' a head' : ''}${o.left !== null && o.left !== undefined && o.left < 30 ? ` · ${o.left} left` : ''}</p>
+      <p class="tp">${o.price === 0 ? 'Free' : pounds(o.price)}${o.pack ? ' a head' : ''}${o.left !== null && o.left !== undefined && o.left < 30 ? ` · ${o.left} left` : ''}</p>
       ${o.blurb || (o.pack && o.pack.blurb) ? `<p>${esc(o.blurb || o.pack.blurb)}</p>` : ''}
       ${o.until ? `<p>This price until ${esc(new Date(o.until).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }))}</p>` : ''}</label>`).join('');
     const note = $('#b-type-note');
@@ -106,7 +106,7 @@ if (form && B && B.nights.length) {
       $('#s-tix').textContent = `${q.qty} × ${pounds(q.unit)}`;
       $('#s-deal').textContent = q.label || q.name || 'Standard';
       $('#s-save').textContent = q.saving ? pounds(q.saving) : '–';
-      $('#s-total').textContent = pounds(q.total + (gift.amount || 0));
+      $('#s-total').textContent = q.total + (gift.amount || 0) === 0 ? 'Free' : pounds(q.total + (gift.amount || 0));
       $('#b-qty-hint').textContent = gift.error || '';
       $('#b-pay').disabled = Boolean(gift.error);
     }
