@@ -26,3 +26,9 @@ const unwrap = (g) => { g.classList.add('open'); g.querySelector('.sc-wrap').set
 document.querySelectorAll('.sc-g').forEach((g) => g.querySelector('.sc-wrap').addEventListener('click', () => unwrap(g)));
 const all = document.getElementById('sc-unwrap-all');
 if (all) all.addEventListener('click', () => document.querySelectorAll('.sc-g:not(.open)').forEach((g, i) => setTimeout(() => unwrap(g), i * 260)));
+// an unwrapped act's full story appears under the tree
+document.querySelectorAll('.sc-g').forEach((g) => g.querySelector('.sc-wrap').addEventListener('click', () => {
+  const id = g.querySelector('.sc-card').id.replace('sc-act-', 'sc-p-');
+  const p = document.getElementById(id); if (p) p.hidden = false;
+}));
+if (all) all.addEventListener('click', () => document.querySelectorAll('.sc-prof').forEach((p) => { p.hidden = false; }));

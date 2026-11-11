@@ -30,9 +30,15 @@ export function treeSection(l) {
       <button class="sc-wrap" type="button" aria-expanded="false" aria-controls="sc-act-${a.n}" aria-label="Unwrap act ${a.n}"><span class="g-lid"></span><span class="g-l"></span><span class="g-r"></span><span class="g-bow"></span><span class="g-tag">Act ${a.n}</span></button>
       <div class="sc-card" id="sc-act-${a.n}"><div class="label">Act ${a.n}</div>
         ${a.tba ? html`<h3>To be announced</h3><p class="small muted">This act is still under wraps. Check back soon.</p>`
-          : html`<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}${a.blurb ? html`<p class="small">${a.blurb}</p>` : ''}${a.link ? html`<a class="small" href="${a.link}" target="_blank" rel="noopener">Listen ↗</a>` : ''}`}
+          : html`${a.photo ? html`<img class="sc-pic" src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}<h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}${a.blurb || a.links.length ? html`<a class="small" href="#sc-p-${a.n}">Meet ${a.name} ↓</a>` : ''}`}
       </div></li>`)}</ul>
   </div>
+  <div class="sc-profiles">${l.acts.filter((a) => !a.tba && (a.blurb || a.links.length)).map((a) => html`<article class="sc-prof" id="sc-p-${a.n}" hidden>
+    ${a.photo ? html`<img src="${a.photo}" alt="${a.name}" loading="lazy">` : ''}
+    <div><div class="label">Act ${a.n}</div><h3>${a.name}</h3>${a.plays ? html`<p class="sc-plays">${a.plays}</p>` : ''}
+      ${(a.blurb || '').split(/\n\s*\n|\n/).filter(Boolean).map((p) => html`<p>${p}</p>`)}
+      ${a.links.length ? html`<p class="sc-links">${a.links.map((k) => html`<a class="btn ghost small" href="${k.url}" target="_blank" rel="noopener">${k.label} ↗</a>`)}</p>` : ''}</div>
+  </article>`)}</div>
   <p class="sc-all"><button class="btn ghost" type="button" id="sc-unwrap-all">Unwrap them all</button></p>
 </div></section>`;
 }

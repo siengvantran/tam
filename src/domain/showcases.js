@@ -5,7 +5,7 @@
 // "to be announced". The page shows the next showcase still to come.
 //
 // content/showcases.json "next": { date, night (event slug), acts } is a starting one.
-// Stored in db.showcases: { [date]: { night, count, acts: [{ name, plays, link, blurb }], note, removed } }
+// Stored in db.showcases: { [date]: { night, count, acts: [{ name, plays, photo, links[], blurb }], note, removed } }
 
 import { fail, send, readJson, text } from '../lib/http.js';
 import { longDate } from '../lib/content.js';
@@ -13,6 +13,11 @@ import { longDate } from '../lib/content.js';
 const MAX = 12, DEFAULT_ACTS = 6;
 const isDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
 const cleanLink = (u) => { const s = text(u, 300); return /^https?:\/\//i.test(s) ? s : s ? `https://${s.replace(/^\/+/, '')}` : ''; };
+const PHOTO = /^\/(uploads|img)\/[\w./-]+\.(jpe?g|png|webp)$/i;
+// Up to four links: a list, or one per line (the old single "link" still reads).
+const cleanLinks = (a) => [].concat(a.links || [], a.link || []).flatMap((x) => String((x && typeof x === 'object' ? x.url : x) || '').split(/\s+/)).map(cleanLink).filter(Boolean).slice(0, 4);
+const LINK_NAMES = [[/instagram\.com/, 'Instagram'], [/youtu\.?be/, 'YouTube'], [/spotify\.com/, 'Spotify'], [/soundcloud\.com/, 'SoundCloud'], [/tiktok\.com/, 'TikTok'], [/bandcamp\.com/, 'Bandcamp'], [/music\.apple\.com/, 'Apple Music'], [/facebook\.com/, 'Facebook']];
+export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Website'])[1];
 
 export function showcaseDomain(ctx) {
   const { db, save } = ctx;
@@ -40,7 +45,9 @@ export function showcaseDomain(ctx) {
     return {
       date, when: longDate(date), note: s.note || '', count,
       night: night ? { title: night.title, slug: night.slug, doors: night.doors || '', href: `/events/${night.slug}` } : null,
-      acts: Array.from({ length: count }, (_, i) => (named[i] && named[i].name ? { n: i + 1, ...named[i] } : { n: i + 1, tba: true })),
+      acts: Array.from({ length: count }, (_, i) => (named[i] && named[i].name
+        ? { n: i + 1, ...named[i], links: cleanLinks(named[i]).map((url) => ({ url, label: linkName(url) })), link: undefined }
+        : { n: i + 1, tba: true })),
     };
   }
   const next = () => lineup(upcoming()[0]);
@@ -69,7 +76,8 @@ export function showcaseDomain(ctx) {
         const b = await readJson(req, 16384);
         const cur = db.showcases[date] || {};
         const acts = 'acts' in b ? (Array.isArray(b.acts) ? b.acts : []).slice(0, MAX).map((a) => ({
-          name: text(a && a.name, 80), plays: text(a && a.plays, 80), link: cleanLink(a && a.link), blurb: text(a && a.blurb, 240),
+          name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
+          photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200),
         })) : cur.acts || [];
         const count = Math.max(1, Math.min(MAX, parseInt(b.count, 10) || cur.count || acts.length || DEFAULT_ACTS));
         let night = 'night' in b ? text(b.night, 120) : cur.night;
@@ -80,6 +88,14 @@ export function showcaseDomain(ctx) {
         };
         await save();
         send(res, 200, { ok: true, ...lineup(date) });
+      });
+
+      // An act's photo: a data URL from the editor, shrunk in the browser first.
+      r.post('/api/showcases/photo', async (req, res) => {
+        ctx.team.guard(req, 'ops');
+        const b = await readJson(req, 2_000_000);
+        const photo = await ctx.saveImage(b.image, `showcase-${Date.now().toString(36)}`, { maxKB: 900, what: 'The photo' });
+        send(res, 200, { photo });
       });
 
       r.post('/api/showcases/:date/remove', async (req, res, { params }) => {

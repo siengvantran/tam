@@ -3,7 +3,7 @@
 // under the tree on /sunday-showcases; a blank name reads "to be announced".
 // The public page shows the next showcase still to come.
 
-import { $, $$, api } from './lib.js';
+import { $, $$, api, shrinkImage } from './lib.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const root = $('#sc-manage');
@@ -12,8 +12,11 @@ let data = null, pick = null;
 const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>Act ${i + 1}</legend>
   <div class="fields"><label class="field"><span>Name</span><input data-k="name" value="${esc(a.name)}" maxlength="80" placeholder="Leave blank: to be announced"></label>
   <label class="field"><span>What they play</span><input data-k="plays" value="${esc(a.plays)}" maxlength="80" placeholder="e.g. soul trio"></label>
-  <label class="field full"><span>Link</span><input data-k="link" value="${esc(a.link)}" maxlength="300" placeholder="Instagram, Spotify, YouTube…"></label>
-  <label class="field full"><span>One line about them</span><input data-k="blurb" value="${esc(a.blurb)}" maxlength="240"></label></div>
+  <label class="field full"><span>Links, one per line</span><textarea data-k="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube…">${esc((a.links || []).map((k) => k.url || k).join('\n'))}</textarea></label>
+  <label class="field full"><span>About them (their bio)</span><textarea data-k="blurb" rows="4" maxlength="1200">${esc(a.blurb)}</textarea></label>
+  <div class="field full sc-m-photo"><span>Photo</span><input type="hidden" data-k="photo" value="${esc(a.photo)}">
+    ${a.photo ? `<img src="${esc(a.photo)}" alt="" width="72" height="72">` : ''}<input type="file" accept="image/*" data-photo aria-label="Photo for act ${i + 1}">
+    ${a.photo ? '<button class="btn ghost small" type="button" data-nophoto>Remove photo</button>' : ''}</div></div>
   <button class="sh-x" type="button" data-del aria-label="Remove act ${i + 1}">×</button></fieldset>`;
 
 const nightOptions = (date, chosen) => {
@@ -39,7 +42,22 @@ function render(acts) {
     <button class="btn ghost small" type="button" data-remove style="float:right">Remove this showcase</button></p></form>${add}`;
 }
 
-const current = () => $$('[data-row]', root).map((f) => Object.fromEntries($$('[data-k]', f).map((i) => [i.dataset.k, i.value.trim()])));
+const current = () => $$('[data-row]', root).map((f) => {
+  const a = Object.fromEntries($$('[data-k]', f).map((i) => [i.dataset.k, i.value.trim()]));
+  return { ...a, links: a.links ? a.links.split(/\s+/).filter(Boolean) : [] };
+});
+const rowOf = (el) => $$('[data-row]', root).indexOf(el.closest('[data-row]'));
+
+// a photo for an act: shrunk in the browser, uploaded, then saved with the line-up
+root.addEventListener('change', async (e) => {
+  const inp = e.target.closest('[data-photo]'); if (!inp || !inp.files[0]) return;
+  const box = inp.closest('.sc-m-photo');
+  try {
+    const { photo } = await api('/api/showcases/photo', { method: 'POST', body: { image: await shrinkImage(inp.files[0], 1000, 0.84) } });
+    const acts = current(); acts[rowOf(inp)].photo = photo; render(acts);
+    $('#sc-saved').textContent = 'Photo added. Press Save to put it on the page.';
+  } catch (err) { box.insertAdjacentHTML('beforeend', `<p class="err">${esc(err.message)}</p>`); }
+});
 
 async function load(go) {
   data = await api('/api/showcases/manage');
@@ -53,6 +71,7 @@ root.addEventListener('click', async (e) => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.pick) { pick = b.dataset.pick; render(); }
   if (b.hasAttribute('data-add')) render([...current(), {}]);
+  if (b.hasAttribute('data-nophoto')) { const acts = current(); acts[rowOf(b)].photo = ''; render(acts); }
   if (b.hasAttribute('data-del')) { const all = current(); all.splice($$('[data-row]', root).indexOf(b.closest('[data-row]')), 1); render(all); }
   if (b.hasAttribute('data-remove') && confirm('Remove this showcase? It comes off the page.')) {
     await api(`/api/showcases/${pick}/remove`, { method: 'POST', body: {} }); pick = null; await load();
