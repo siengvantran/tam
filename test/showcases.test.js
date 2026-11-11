@@ -7,9 +7,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { createApp } from '../src/app.js';
 
+const ADMIN = 'admin-token-for-tests';
+
 test('Sunday Showcases: the circuit, live dates, and a register-of-interest that lands as an enquiry', async (t) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-sc-'));
-  const app = await createApp({ env: { DATA_DIR: dir, EVENTBRITE_SYNC: 'off' } });
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off' } });
   await new Promise((r) => app.listen(0, r));
   t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
   const B = `http://127.0.0.1:${app.server.address().port}`;
@@ -41,4 +43,24 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
   const e = app.ctx.db.enquiries.find((x) => x.email === 'act@example.com');
   assert.equal(e.kind, 'perform');
   assert.equal(e.pathway, 'showcase');
+
+  // this week's showcase: a tree with six wrapped presents, to be announced until staff name the acts
+  const date = app.ctx.content.showcases.next.date;
+  if (date >= app.ctx.today()) {
+    assert.equal((page.match(/class="sc-g /g) || []).length, 6);
+    assert.equal((page.match(/To be announced/g) || []).length, 6);
+    assert.equal((await fetch(`${B}/api/showcases/manage`)).status, 401);
+    const H = { 'x-staff-token': ADMIN, 'content-type': 'application/json' };
+    const set = await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H,
+      body: JSON.stringify({ count: 6, acts: [{ name: 'The Lanterns', plays: 'Soul trio', link: 'instagram.com/thelanterns' }, {}, { name: '<b>Ruby</b>' }] }) });
+    assert.equal(set.status, 200);
+    const after = await (await fetch(`${B}/sunday-showcases`)).text();
+    assert.match(after, /<h3>The Lanterns<\/h3>/);
+    assert.match(after, /href="https:\/\/instagram\.com\/thelanterns"/);
+    assert.match(after, /&lt;b&gt;Ruby/);
+    assert.equal((after.match(/To be announced/g) || []).length, 4);
+    const pub = await (await fetch(`${B}/api/showcases`)).json();
+    assert.equal(pub.acts[0].name, 'The Lanterns');
+    assert.equal(pub.count, 6);
+  }
 });

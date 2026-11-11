@@ -20,3 +20,9 @@ if (f) {
     } catch (err) { formMessage(f, err.message); }
   });
 }
+
+// This week's showcase: tap a present under the tree to unwrap it.
+const unwrap = (g) => { g.classList.add('open'); g.querySelector('.sc-wrap').setAttribute('aria-expanded', 'true'); };
+document.querySelectorAll('.sc-g').forEach((g) => g.querySelector('.sc-wrap').addEventListener('click', () => unwrap(g)));
+const all = document.getElementById('sc-unwrap-all');
+if (all) all.addEventListener('click', () => document.querySelectorAll('.sc-g:not(.open)').forEach((g, i) => setTimeout(() => unwrap(g), i * 260)));
