@@ -8,6 +8,9 @@ import { html } from './html.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout, when, times, nightHref } from './layout.js';
 import { onMap, TAM } from '../lib/places.js';
+import { VIBE_MARKS } from '../domain/showcases.js';
+
+const vibeMark = (a, cls = 'va-vibe') => { const [name, sign] = VIBE_MARKS[a.vibe] || VIBE_MARKS.stage; return html`<span class="${cls} vibe-${a.vibe || 'stage'}" title="${name}"><i aria-hidden="true">${sign}</i><b>${name}</b></span>`; };
 
 const PATH = '/sunday-showcases';
 
@@ -47,7 +50,7 @@ export function lineupCarousel(l) {
           ? html`<a href="${href(a)}" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${v.poster || pic}" aria-label="${label(a)}"><source src="${v.src}" type="video/mp4"></video><img class="fx-alt" src="${pic}" alt="${label(a)}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
           : a.tba || !pic
             ? html`<a href="${href(a)}" tabindex="-1" class="sc-fx-blank"><img src="/img/christmas/tam-logo-gold.png" alt="${label(a)}" width="400" height="400"><span>${a.tba ? '?' : a.name}</span></a>`
-            : html`<a href="${href(a)}" tabindex="-1"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}${(a.places || []).map((p) => html` <img class="sc-fx-flag" src="${p.flag}" alt="${p.name}" width="24" height="18">`)}</span></figcaption></figure>`;
+            : html`<a href="${href(a)}" tabindex="-1"><img src="${pic}" alt="${label(a)}" ${i > 2 ? html`loading="lazy"` : ''} width="900" height="1125"></a>`}<figcaption class="sc-fx-name"><b>${a.tba ? 'To be announced' : a.name}</b><span>Act ${a.n}${a.tba ? '' : html` ${vibeMark(a, 'sc-fx-vibe')}`}</span></figcaption></figure>`;
       })}</div>
       <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous act">‹</button>
         <div class="fx-dots" role="tablist">${l.acts.map((a, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${label(a)}"></button>`)}</div>
@@ -156,7 +159,7 @@ function actPage(ctx, showcase, { l, a }) {
     body: html`<section class="va-hero" style="${a.photo ? html`--hero:url('${a.photo}')` : ''}">
   <div class="va-bg" aria-hidden="true"></div><div class="va-snow" aria-hidden="true"></div>
   <div class="wrap va-in">
-    ${a.places.length ? html`<div class="va-flags">${a.places.map((p, k) => html`<img class="va-flag" src="${p.flag}" alt="${p.name}" title="${p.name}" width="64" height="48" style="animation-delay:${k * .6}s">`)}</div>` : ''}
+    <div class="va-vibes">${vibeMark(a)}</div>
     <p class="va-kicker"><a href="${PATH}#line-up">Sunday Showcase</a> · Act ${a.n} · ${day}</p>
     <h1 class="va-name">${a.name}</h1>
     ${a.plays ? html`<p class="va-plays">${a.plays}</p>` : ''}
@@ -201,7 +204,7 @@ ${worldMap(a)}
 </div></nav>`,
   });
 }
-// Where in the world: a star on each place they're from, a line to TAM, and the flag.
+// Where in the world: their vibe's star on each place they're from, and a line to TAM.
 function worldMap(a) {
   if (!a.places.length) return '';
   const tam = onMap(TAM.lat, TAM.lon);
@@ -212,8 +215,8 @@ function worldMap(a) {
   <div class="va-map" role="img" aria-label="${a.name}: ${a.places.map((p) => p.name).join(', ')}, and TAM in London">
     <div class="va-land"></div>
     <svg class="va-arcs" viewBox="0 42 1000 370" preserveAspectRatio="none" aria-hidden="true">${away.map((p) => html`<path d="${arc(p)}" pathLength="1"></path>`)}</svg>
-    ${away.map((p) => { const m = onMap(p.lat, p.lon); return html`<span class="va-star" style="left:${m.left}%;top:${m.top}%"><i>★</i><img src="${p.flag}" alt="" width="40" height="30"><b>${p.name}</b></span>`; })}
-    ${(() => { const uk = a.places.find((p) => !away.includes(p)); return html`<span class="va-star${away.length ? ' va-tam' : ''}" style="left:${tam.left}%;top:${tam.top}%"><i>★</i>${uk ? html`<img src="${uk.flag}" alt="" width="40" height="30">` : ''}<b>${uk ? 'London · TAM' : TAM.label}</b></span>`; })()}
+    ${away.map((p) => { const m = onMap(p.lat, p.lon); return html`<span class="va-star" style="left:${m.left}%;top:${m.top}%"><i>${(VIBE_MARKS[a.vibe] || VIBE_MARKS.stage)[1]}</i><b>${p.name}</b></span>`; })}
+    ${(() => { const uk = a.places.find((p) => !away.includes(p)); return html`<span class="va-star${away.length ? ' va-tam' : ''}" style="left:${tam.left}%;top:${tam.top}%"><i>${uk ? (VIBE_MARKS[a.vibe] || VIBE_MARKS.stage)[1] : '★'}</i><b>${uk ? 'London · TAM' : TAM.label}</b></span>`; })()}
   </div>
 </div></section>`;
 }

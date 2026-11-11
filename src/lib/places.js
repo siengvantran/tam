@@ -1,7 +1,6 @@
-// Where an act is from, for the star on their world map and their flag.
+// Where an act is from, for the star on their world map.
 // Country code (ISO 3166-1 alpha-2) → name and a point to put the star
-// (the capital, or a main city), [lat, lon]. Flags are in public/img/flags
-// (from flag-icons, MIT). The map is public/img/world-land.svg (Natural
+// (the capital, or a main city), [lat, lon]. The map is public/img/world-land.svg (Natural
 // Earth via world-atlas): equirectangular, 1000 wide, cropped to 75°N–58°S.
 
 export const PLACES = {
@@ -42,5 +41,5 @@ export function onMap(lat, lon) {
 
 export const placeOf = (code) => {
   const p = PLACES[String(code || '').toUpperCase()];
-  return p ? { code: String(code).toUpperCase(), name: p[0], lat: p[1], lon: p[2], flag: `/img/flags/${String(code).toLowerCase()}.svg` } : null;
+  return p ? { code: String(code).toUpperCase(), name: p[0], lat: p[1], lon: p[2] } : null;
 };

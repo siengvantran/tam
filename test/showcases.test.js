@@ -92,16 +92,17 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.equal((await want('browser-bbbbbbbbbbbbbbbb')).count, 2);
     assert.match(await (await fetch(actUrl)).text(), /2 people want to see The Lanterns at Christmas/);
 
-    // where they're from: a star on the map and the flag; a vibe of their own
+    // where they're from: a star on the map; no flags, their vibe instead
     const geo = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
       { name: 'The Lanterns', from: 'my, gb, xx', vibe: 'riot' }, { name: 'Bad Vibe', vibe: 'evil' }] }) })).json();
     assert.deepEqual(geo.acts[0].from, ['MY', 'GB']);
     assert.equal(geo.acts[1].vibe, 'stage');
     const gp = await (await fetch(actUrl)).text();
     assert.match(gp, /vibe-riot/);
-    assert.match(gp, /class="va-flag" src="\/img\/flags\/my\.svg" alt="Malaysia"/);
+    assert.doesNotMatch(gp, /flags\//);
+    assert.match(gp, /<span class="va-vibe vibe-riot" title="Riot"><i aria-hidden="true">✶<\/i><b>Riot<\/b><\/span>/);
     assert.match(gp, /From Malaysia to TAM/);
-    assert.equal((await fetch(`${B}/img/flags/my.svg`)).status, 200);
+    assert.match(await (await fetch(`${B}/sunday-showcases`)).text(), /class="sc-fx-vibe vibe-riot"/);
     assert.equal((await fetch(`${B}/api/showcases/photo`, { method: 'POST', body: '{}' })).status, 401);
     // staff upload a photo: it's stored and comes back as a site path
     const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
