@@ -62,5 +62,18 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     const pub = await (await fetch(`${B}/api/showcases`)).json();
     assert.equal(pub.acts[0].name, 'The Lanterns');
     assert.equal(pub.count, 6);
+
+    // staff add a later showcase; the page keeps showing the next one, and moves on when it's removed
+    const later = new Date(Date.parse(date) + 7 * 864e5).toISOString().slice(0, 10);
+    assert.equal((await fetch(`${B}/api/showcases/${later}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 4, night: 'not-a-night' }) })).status, 400);
+    assert.equal((await fetch(`${B}/api/showcases/${later}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 4, night: '' }) })).status, 200);
+    const m = await (await fetch(`${B}/api/showcases/manage`, { headers: H })).json();
+    assert.deepEqual(m.showcases.map((x) => [x.date, x.count]), [[date, 6], [later, 4]]);
+    assert.equal((await fetch(`${B}/api/showcases/2020-01-05`, { method: 'POST', headers: H, body: '{}' })).status, 400); // been
+    assert.equal((await fetch(`${B}/api/showcases/${date}/remove`, { method: 'POST', headers: H, body: '{}' })).status, 200);
+    const now = await (await fetch(`${B}/api/showcases`)).json();
+    assert.equal(now.date, later);
+    assert.equal(now.count, 4);
+    assert.equal(now.night, null);
   }
 });

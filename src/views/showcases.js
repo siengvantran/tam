@@ -37,10 +37,10 @@ export function treeSection(l) {
 </div></section>`;
 }
 
-// The tree shows until the showcase night has been.
+// The tree shows the next showcase still to come.
 function thisWeek(ctx, showcase) {
-  const l = showcase && showcase.lineup();
-  return l && l.date >= ctx.today() ? treeSection(l) : '';
+  const l = showcase && showcase.next();
+  return l ? treeSection(l) : '';
 }
 
 // The coming nights for one circuit regular, from everything on the site.
@@ -98,7 +98,7 @@ function manage(ctx) {
   return layout(ctx, {
     title: 'Sunday Showcase: line-up', path: `${PATH}/manage`, noindex: true, ambient: null, scripts: ['/js/showcases-manage.js'], bodyClass: 'staff',
     body: html`<section class="section"><div class="wrap narrow">
-    <div class="label">TAM back office</div><h1 class="chrome gold">Sunday Showcase line-up</h1>
+    <div class="label">TAM back office</div><h1 class="chrome gold">Sunday Showcases</h1>
     <p><a class="btn ghost small" href="${PATH}#this-sunday" target="_blank" rel="noopener">See the tree ↗</a> <a class="btn ghost small" href="/shows">Shows</a></p>
     <div class="formbox" id="team-login" hidden><h3>Sign in</h3><p class="small muted">Sign in at <a href="/shows">/shows</a> with your work email, then come back here.</p></div>
     <div id="sc-manage" hidden></div></div></section>`,

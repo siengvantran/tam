@@ -1,11 +1,13 @@
-// Staff: this week's Sunday Showcase acts, in running order. Each one is a
-// present under the tree on /sunday-showcases; a blank name reads "to be announced".
+// Staff: Sunday Showcases. Add a showcase (date, the night it's part of, how
+// many acts), then name the acts in running order. Each act is a present
+// under the tree on /sunday-showcases; a blank name reads "to be announced".
+// The public page shows the next showcase still to come.
 
 import { $, $$, api } from './lib.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const root = $('#sc-manage');
-let data = null;
+let data = null, pick = null;
 
 const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>Act ${i + 1}</legend>
   <div class="fields"><label class="field"><span>Name</span><input data-k="name" value="${esc(a.name)}" maxlength="80" placeholder="Leave blank: to be announced"></label>
@@ -14,33 +16,65 @@ const row = (a = {}, i) => `<fieldset class="sh-card sc-m-act" data-row><legend>
   <label class="field full"><span>One line about them</span><input data-k="blurb" value="${esc(a.blurb)}" maxlength="240"></label></div>
   <button class="sh-x" type="button" data-del aria-label="Remove act ${i + 1}">×</button></fieldset>`;
 
+const nightOptions = (date, chosen) => {
+  const on = data.nights.filter((n) => n.date === date);
+  return `<option value="">Not part of a listed night</option>${on.map((n) => `<option value="${esc(n.slug)}" ${n.slug === chosen ? 'selected' : ''}>${esc(n.title)}</option>`).join('')}`;
+};
+
 function render(acts) {
-  root.innerHTML = `<form id="sc-m"><h2>${esc(data.when)}</h2>${data.night ? `<p class="muted">${esc(data.night.title)}</p>` : ''}
-  <div id="sc-acts">${acts.map(row).join('')}</div>
+  const s = data.showcases.find((x) => x.date === pick);
+  const tabs = `<div class="admin-tabs">${data.showcases.map((x, i) => `<button class="chip" type="button" data-pick="${x.date}" aria-pressed="${x.date === pick}">${esc(x.when.replace(/ \d{4}$/, ''))}${i === 0 ? ' · on the page' : ''}</button>`).join('')}</div>`;
+  const add = `<form class="sh-card" id="sc-new"><h3>Add a showcase</h3><div class="fields">
+    <label class="field"><span>Date</span><input type="date" name="date" min="${data.today}" required></label>
+    <label class="field"><span>How many acts</span><input name="count" inputmode="numeric" value="6"></label></div>
+    <button class="btn hot small" type="submit">Add</button> <span class="small muted" id="sc-new-msg"></span></form>`;
+  if (!s) { root.innerHTML = `${tabs}<p class="muted">No showcases coming up. Add one below.</p>${add}`; return; }
+  const list = acts || s.acts.map((a) => (a.tba ? {} : a));
+  root.innerHTML = `${tabs}<form id="sc-m"><h2>${esc(s.when)}</h2>
+  <label class="field"><span>Part of which night</span><select name="night">${nightOptions(s.date, s.night && s.night.slug)}</select></label>
+  <div id="sc-acts">${list.map(row).join('')}</div>
   <p><button class="btn ghost small" type="button" data-add>+ Add an act</button></p>
-  <label class="field"><span>Note on the page (optional)</span><input name="note" value="${esc(data.saved.note)}" maxlength="200"></label>
-  <p><button class="btn hot" type="submit">Save</button> <span class="small muted" id="sc-saved"></span></p></form>`;
+  <label class="field"><span>Note on the page (optional)</span><input name="note" value="${esc(s.saved.note)}" maxlength="200"></label>
+  <p><button class="btn hot" type="submit">Save</button> <span class="small muted" id="sc-saved"></span>
+    <button class="btn ghost small" type="button" data-remove style="float:right">Remove this showcase</button></p></form>${add}`;
 }
 
 const current = () => $$('[data-row]', root).map((f) => Object.fromEntries($$('[data-k]', f).map((i) => [i.dataset.k, i.value.trim()])));
 
-async function load() {
+async function load(go) {
   data = await api('/api/showcases/manage');
-  render(data.acts.map((a) => (a.tba ? {} : a)));
+  pick = go || (data.showcases.some((x) => x.date === pick) ? pick : (data.showcases[0] || {}).date);
+  render();
 }
 
 load().then(() => { root.hidden = false; }).catch(() => { $('#team-login').hidden = false; });
-root.addEventListener('click', (e) => {
+
+root.addEventListener('click', async (e) => {
   const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.pick) { pick = b.dataset.pick; render(); }
   if (b.hasAttribute('data-add')) render([...current(), {}]);
   if (b.hasAttribute('data-del')) { const all = current(); all.splice($$('[data-row]', root).indexOf(b.closest('[data-row]')), 1); render(all); }
+  if (b.hasAttribute('data-remove') && confirm('Remove this showcase? It comes off the page.')) {
+    await api(`/api/showcases/${pick}/remove`, { method: 'POST', body: {} }); pick = null; await load();
+  }
 });
+
 root.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (e.target.id === 'sc-new') {
+    const f = e.target, date = f.date.value;
+    try {
+      // a new showcase goes on the night listed that day, if there is one
+      const on = data.nights.find((n) => n.date === date);
+      await api(`/api/showcases/${date}`, { method: 'POST', body: { count: f.count.value, acts: [], night: on ? on.slug : '' } });
+      await load(date);
+    } catch (err) { $('#sc-new-msg').textContent = err.message; }
+    return;
+  }
   const acts = current();
   try {
-    const r = await api(`/api/showcases/${data.date}`, { method: 'POST', body: { acts, count: acts.length, note: $('[name=note]', root).value } });
-    data = { ...data, ...r, saved: { note: $('[name=note]', root).value } };
+    const r = await api(`/api/showcases/${pick}`, { method: 'POST', body: { acts, count: acts.length, note: $('[name=note]', root).value, night: $('[name=night]', root).value } });
+    await load(pick);
     $('#sc-saved').textContent = `Saved. ${r.acts.filter((a) => !a.tba).length} of ${r.count} acts named.`;
   } catch (err) { $('#sc-saved').textContent = err.message; }
 });
