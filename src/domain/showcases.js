@@ -7,8 +7,10 @@
 // content/showcases.json "next": { date, night (event slug), acts } is a starting one.
 // Stored in db.showcases: { [date]: { night, count, acts: [{ name, plays, photo, links[], blurb }], note, removed } }
 
-import { fail, send, readJson, text } from '../lib/http.js';
+import crypto from 'node:crypto';
+import { fail, send, readJson, text, rateLimiter } from '../lib/http.js';
 import { longDate } from '../lib/content.js';
+import { PLACES, placeOf } from '../lib/places.js';
 
 const MAX = 12, DEFAULT_ACTS = 6;
 const isDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
@@ -26,6 +28,18 @@ const cleanMedia = (list) => (Array.isArray(list) ? list : []).slice(0, 8).map((
 const cleanLinks = (a) => [].concat(a.links || [], a.link || []).flatMap((x) => String((x && typeof x === 'object' ? x.url : x) || '').split(/\s+/)).map(cleanLink).filter(Boolean).slice(0, 4);
 const LINK_NAMES = [[/instagram\.com/, 'Instagram'], [/youtu\.?be/, 'YouTube'], [/spotify\.com/, 'Spotify'], [/soundcloud\.com/, 'SoundCloud'], [/tiktok\.com/, 'TikTok'], [/bandcamp\.com/, 'Bandcamp'], [/music\.apple\.com/, 'Apple Music'], [/facebook\.com/, 'Facebook']];
 export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Website'])[1];
+
+// Each act's page has its own look: a vibe staff pick in the editor.
+export const VIBES = {
+  stage: 'TAM stage: gold and black',
+  disco: 'Disco: glitter gold and pink',
+  noir: 'Noir: crimson and shadow',
+  campfire: 'Campfire: warm wood and forest green',
+  mist: 'Mist: hazy teal and sage',
+  spotlight: 'Spotlight: violet and white beams',
+  riot: 'Riot: acid green and magenta',
+};
+const slugOf = (name) => String(name || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'act';
 
 export function showcaseDomain(ctx) {
   const { db, save } = ctx;
@@ -50,26 +64,55 @@ export function showcaseDomain(ctx) {
     const count = Math.max(named.length, s.count || n.acts || DEFAULT_ACTS);
     const slug = 'night' in s ? s.night : n.night;
     const night = (slug && ctx.content.nights.find((x) => x.slug === slug)) || (slug === undefined ? nightsOn(date)[0] : null);
+    const seen = new Set();
+    const wants = (db.showcaseWants || {})[date] || {};
     return {
       date, when: longDate(date), note: s.note || '', count,
       night: night ? { title: night.title, slug: night.slug, doors: night.doors || '', href: `/events/${night.slug}` } : null,
-      acts: Array.from({ length: count }, (_, i) => (named[i] && named[i].name
-        ? { n: i + 1, ...named[i], links: cleanLinks(named[i]).map((url) => ({ url, label: linkName(url) })), link: undefined }
-        : { n: i + 1, tba: true })),
+      acts: Array.from({ length: count }, (_, i) => {
+        if (!(named[i] && named[i].name)) return { n: i + 1, tba: true };
+        let slug = slugOf(named[i].name);
+        if (seen.has(slug)) slug = `${slug}-${i + 1}`;
+        seen.add(slug);
+        return { n: i + 1, ...named[i], slug, href: `/sunday-showcases/${date}/${slug}`, vibe: VIBES[named[i].vibe] ? named[i].vibe : 'stage',
+          wants: (wants[slug] || {}).count || 0, places: (named[i].from || []).map(placeOf).filter(Boolean), links: cleanLinks(named[i]).map((url) => ({ url, label: linkName(url) })), link: undefined };
+      }),
     };
   }
+  const act = (date, slug) => { const l = lineup(date); const a = l && l.acts.find((x) => x.slug === slug); return a ? { l, a } : null; };
   const next = () => lineup(upcoming()[0]);
 
+  // "I want to see them at the Christmas Showcase Special": one per browser
+  // (a random id the page keeps; only its hash is stored), rate-limited by address.
+  db.showcaseWants = db.showcaseWants || {};
+  const wantLimited = rateLimiter({ max: 30 });
+  const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex').slice(0, 32);
+
   return {
-    lineup, next, upcoming,
+    lineup, next, upcoming, act, festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
     routes(r) {
       r.get('/api/showcases', (req, res) => send(res, 200, next() || {}));
+
+      r.post('/api/showcases/:date/act/:slug/want', async (req, res, { params }) => {
+        const x = act(params.date, params.slug);
+        if (!x) throw fail(404, 'That act isn’t in this showcase.');
+        if (wantLimited(req)) throw fail(429, 'That’s a lot of votes. Try again later.');
+        const b = await readJson(req, 1024);
+        const id = text(b.id, 80);
+        if (id.length < 16) throw fail(400, 'Missing browser id.');
+        const day = (db.showcaseWants[params.date] = db.showcaseWants[params.date] || {});
+        const w = (day[params.slug] = day[params.slug] || { count: 0, ids: [] });
+        const h = hash(id);
+        const already = w.ids.includes(h);
+        if (!already) { w.ids.push(h); w.count += 1; await save(); }
+        send(res, 200, { ok: true, count: w.count, already });
+      });
 
       r.get('/api/showcases/manage', (req, res) => {
         const me = ctx.team.guard(req, 'ops');
         const today = ctx.today();
         send(res, 200, {
-          me, today,
+          me, today, vibes: VIBES, places: Object.fromEntries(Object.entries(PLACES).map(([k, v]) => [k, v[0]])),
           showcases: upcoming(today).map((d) => ({ ...lineup(d), saved: db.showcases[d] || {} })),
           // the nights on the listings a showcase can sit on
           nights: ctx.content.upcoming(today).filter((x) => !x.festival).slice(0, 200).map((x) => ({ date: x.date, slug: x.slug, title: x.title })),
@@ -94,6 +137,8 @@ export function showcaseDomain(ctx) {
         const acts = 'acts' in b ? (Array.isArray(b.acts) ? b.acts : []).slice(0, MAX).map((a) => ({
           name: text(a && a.name, 80), plays: text(a && a.plays, 80), links: cleanLinks(a || {}),
           photo: a && typeof a.photo === 'string' && PHOTO.test(a.photo) ? a.photo : '', blurb: text(a && a.blurb, 1200), media: cleanMedia(a && a.media),
+          vibe: a && VIBES[a.vibe] ? a.vibe : 'stage',
+          from: [...new Set((Array.isArray(a && a.from) ? a.from : String((a && a.from) || '').split(/[\s,]+/)).map((c) => String(c).toUpperCase()).filter((c) => PLACES[c]))].slice(0, 3),
         })) : cur.acts || [];
         const count = Math.max(1, Math.min(MAX, parseInt(b.count, 10) || cur.count || acts.length || DEFAULT_ACTS));
         let night = 'night' in b ? text(b.night, 120) : cur.night;
