@@ -1,0 +1,17 @@
+{
+  "title": "TAM Sunday Showcases",
+  "kicker": "Sunday nights at TAM · artists wanted",
+  "lede": "TAM's Sunday Showcases put the best acts from our open nights on a proper stage: a full set, a real audience, sound and lights, filmed in the Temple. Want to play one? The way in is the open mic circuit.",
+  "steps": [
+    { "title": "Come to an open night", "text": "Pick a night on the circuit below and come and play. Every showcase artist starts here: it's how we hear you live, in the room." },
+    { "title": "Say hello to the host", "text": "Introduce yourself to the night's host. Our hosts are the people who recommend acts for the Sunday Showcases." },
+    { "title": "Register your interest", "text": "Tell us about your act with the form below, including which open night you've played or are coming to. We'll be in touch when a showcase fits." }
+  ],
+  "circuit": [
+    { "name": "TAM Open Mic", "when": "Wednesdays", "host": "Patrick Hinds", "for": "Singer-songwriters, bands and solo players of every style.", "match": "open mic(?!.*junior)", "series": "open-mic" },
+    { "name": "The Original Singers Club", "when": "Sundays", "for": "Singers: bring a song, sing it live with an audience and get filmed and recorded.", "match": "singers", "series": "singers-sunday-spot" },
+    { "name": "The Great British Blues Jam", "when": "Saturday afternoons", "host": "MAZZA", "for": "Blues players: sign up for a Saturday and the host calls you up with the house band.", "match": "blues jam", "link": "/great-british-blues-jam#jam" },
+    { "name": "Junior Open Mic / JOM", "when": "Selected Sundays", "for": "Young musicians, with JOM Youth Music. Under-18s come with a parent.", "match": "junior|\\bjom\\b" },
+    { "name": "Open nights", "when": "Through the year", "for": "TAM's other open nights and jams, as they're announced.", "match": "open night|new developments|jam session" }
+  ]
+}

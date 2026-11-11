@@ -920,3 +920,19 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 @keyframes xm-swing { from { transform: rotateY(-48deg) rotateX(10deg); } to { transform: rotateY(48deg) rotateX(4deg); } }
 @media (max-width: 860px) { .xm-tree { width: min(46vw, 210px); } .xm-hero { padding-top: 18px; } }
 @media (max-width: 860px) { .xm-tree { width: min(36vw, 160px); } }
+
+/* ---------- TAM Sunday Showcases (src/views/showcases.js) ---------- */
+.sc-hero { position: relative; overflow: hidden; }
+.sc-hero .wrap { display: block; position: relative; }
+.sc-spot { position: absolute; top: -40%; right: -10%; width: 70%; height: 180%; pointer-events: none; z-index: -1;
+  background: conic-gradient(from 200deg at 70% 0%, transparent 0deg, rgba(255,230,170,.16) 14deg, transparent 30deg); filter: blur(6px); }
+.sc-hero h1 { max-width: 12ch; }
+.sc-steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; counter-reset: s; }
+.sc-steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; }
+.sc-n { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--acid); color: #0b0709; font: 400 22px var(--f-space); margin-bottom: 8px; }
+.sc-steps h3 { margin: 4px 0 6px; }
+.sc-circuit { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; }
+.sc-night { background: linear-gradient(170deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; }
+.sc-night h3 { margin: 4px 0 4px; font-size: 22px; } .sc-host { margin: 0 0 6px; color: var(--ink-dim); }
+.sc-dates { margin: 10px 0 0; border-top: 1px solid var(--line); padding-top: 8px; } .sc-dates li { padding: 4px 0; }
+.sc-form .field select, .sc-form .field input, .sc-form .field textarea { width: 100%; }

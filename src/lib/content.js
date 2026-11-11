@@ -60,6 +60,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
   const archive = readJson(dir, 'archive/events.json', []);
   const handmade = readJson(dir, 'events.json', []);
   const legacy = readJson(dir, 'legacy/pages.json', []);
+  const showcases = readJson(dir, 'showcases.json', null); // the Sunday Showcases call-out (src/views/showcases.js)
   const videos = readJson(dir, 'videos.json', []);
   const invites = readJson(dir, 'invites.json', []);
   const stories = readJson(dir, 'stories.json', []);
@@ -386,7 +387,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
 
   return {
     applyLive: (live) => build(live), liveCounts: () => liveCount,
-    applyShows: (shows) => build(undefined, shows), slugify, sameNight,
+    applyShows: (shows) => build(undefined, shows), slugify, sameNight, showcases,
     pathways, pathwayBy, nightsForPathway, canonicalElsewhere,
     site, venues, venueBy, artists: [...artistBy.values()].sort((a, b) => a.name.localeCompare(b.name)), artistBy,
     series, festivals, festivalBy, festivalAt, nights, nightBy, past, pastBy, legacy, legacyBy, videos,

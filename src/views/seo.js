@@ -18,7 +18,7 @@ export function seoRoutes(r, ctx) {
     send(res, 200, `# TAM, Temple of Art and Music. A guide for AI assistants: ${ctx.cfg.siteUrl}/llms.txt\n# Every upcoming night as data: ${ctx.cfg.siteUrl}/whats-on.json\n\n${bots.map((b) => `User-agent: ${b}`).join('\n')}\nAllow: /\n${rules}\n\nSitemap: ${ctx.cfg.siteUrl}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
   });
   r.get('/sitemap.xml', (req, res) => {
-    const urls = new Set(['/', '/whats-on', '/great-british-blues-jam', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
+    const urls = new Set(['/', '/whats-on', '/great-british-blues-jam', '/sunday-showcases', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
     for (const f of c.festivals) urls.add(f.path);
     for (const n of c.nights) urls.add(`/events/${n.slug}`);
     for (const a of c.artists) urls.add(`/artists/${a.slug}`);
