@@ -58,7 +58,11 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.match(after, /<h3>The Lanterns<\/h3>/);
     assert.match(after, /href="https:\/\/instagram\.com\/thelanterns"/);
     assert.match(after, /&lt;b&gt;Ruby/);
-    assert.equal((after.match(/To be announced/g) || []).length, 4);
+    assert.equal((after.match(/To be announced/g) || []).length, 8); // 4 presents + 4 carousel slides
+    // the line-up carousel: one slide per act, tapping one unwraps its present
+    assert.match(after, /id="line-up"[\s\S]*data-carousel/);
+    assert.equal((after.match(/<figure class="fx-slide/g) || []).length, 6);
+    assert.match(after, /href="#sc-p-1" tabindex="-1" data-unwrap="1"/);
     // photos (site paths only), several links named by where they go, a bio in paragraphs
     const full = await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [
       { name: 'The Lanterns', plays: 'Soul trio', photo: '/img/showcases/justyna.jpg', links: ['youtu.be/abc', 'https://www.instagram.com/thelanterns/'], blurb: 'One.\n\nTwo.' },
