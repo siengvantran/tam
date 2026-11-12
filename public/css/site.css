@@ -1027,6 +1027,7 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .sc-actpage { --v-bg: #0b0709; --v-ink: #fff6e6; --v-1: #e8c77a; --v-2: #ff2ea6; --v-3: #22e1ff; --v-font: var(--f-space); }
 .vibe-stage { --v-bg: #0b0709; --v-1: #e8c77a; --v-2: #ff2ea6; --v-3: #22e1ff; }
 .vibe-disco { --v-bg: #160a1c; --v-1: #ffd54a; --v-2: #ff4fb8; --v-3: #b38cff; }
+.vibe-pop { --v-bg: #14081a; --v-1: #ff5cc8; --v-2: #3d7bff; --v-3: #ffe14d; }
 .vibe-noir { --v-bg: #070405; --v-1: #ff2a3d; --v-2: #8a0f22; --v-3: #f4e6d8; }
 .vibe-campfire { --v-bg: #0d0b06; --v-1: #ffb347; --v-2: #3d8b4f; --v-3: #f2d6a2; }
 .vibe-mist { --v-bg: #07100f; --v-1: #9fe3d6; --v-2: #5e8f7a; --v-3: #d9f3ea; }

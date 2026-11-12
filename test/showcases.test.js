@@ -123,6 +123,10 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
     assert.match(gp, /<span class="va-vibe vibe-riot" title="Riot"><i aria-hidden="true">✶<\/i><b>Riot<\/b><\/span>/);
     assert.match(gp, /From Malaysia to TAM/);
     assert.match(await (await fetch(`${B}/sunday-showcases`)).text(), /class="sc-fx-vibe vibe-riot"/);
+    // a Pop vibe too
+    const pop = await (await fetch(`${B}/api/showcases/${date}`, { method: 'POST', headers: H, body: JSON.stringify({ count: 6, acts: [{ name: 'The Lanterns', vibe: 'pop' }] }) })).json();
+    assert.equal(pop.acts[0].vibe, 'pop');
+    assert.match(await (await fetch(actUrl)).text(), /<span class="va-vibe vibe-pop" title="Pop"><i aria-hidden="true">♥<\/i><b>Pop<\/b>/);
     assert.equal((await fetch(`${B}/api/showcases/photo`, { method: 'POST', body: '{}' })).status, 401);
     // staff upload a photo: it's stored and comes back as a site path
     const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';

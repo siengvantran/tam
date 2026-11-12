@@ -11,7 +11,7 @@
 // unwrapped), and are only offered when a change keeps the show's shape.
 
 // How much energy each vibe brings to the room, low to high.
-export const ENERGY = { campfire: 1, mist: 2, noir: 3, spotlight: 4, stage: 4, disco: 5, riot: 6 };
+export const ENERGY = { campfire: 1, mist: 2, noir: 3, spotlight: 4, stage: 4, pop: 5, disco: 5, riot: 6 };
 const energy = (a) => ENERGY[(a && a.vibe) || 'stage'] || 4;
 
 const VIBE_WHY = {
@@ -21,6 +21,7 @@ const VIBE_WHY = {
   spotlight: 'a big, theatrical voice that takes hold of a room',
   stage: 'a strong all-round set',
   disco: 'feel-good and danceable: this is where people start moving',
+  pop: 'big hooks and feel-good pop: this is where people start singing along',
   riot: 'the loudest set of the night, with a full band',
 };
 
