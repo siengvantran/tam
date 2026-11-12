@@ -129,6 +129,14 @@ export function showcaseDomain(ctx) {
     const l = lineup(d); const x = l.acts.find((y) => !y.tba && y.name === a.name); return x ? { date: d, when: l.when, slug: x.slug, name: x.name, href: x.href } : null;
   })).filter(Boolean);
   const wallLimited = rateLimiter({ max: 6 });
+  const crewLimited = rateLimiter({ max: 6 });
+  db.showcaseCrew = Array.isArray(db.showcaseCrew) ? db.showcaseCrew : [];
+  // everyone who has played (or is playing) a Sunday Showcase, newest first
+  const alumni = () => dates().slice().reverse().flatMap((d) => { const l = lineup(d); return l.acts.filter((a) => !a.tba).map((a) => ({ ...a, date: d, when: l.when })); });
+  // the newest shown notes and posts from every act's wall
+  const latestWall = (n = 12) => Object.entries(db.showcaseWall).flatMap(([d, bySlug]) => Object.entries(bySlug).flatMap(([slug, list]) => {
+    const x = act(d, slug); return x ? list.filter((w) => w.status === 'shown').map((w) => ({ ...w, act: { name: x.a.name, href: x.a.href, vibe: x.a.vibe } })) : [];
+  })).sort((a, b) => (a.at < b.at ? 1 : -1)).slice(0, n);
   const artistLinkLimited = rateLimiter({ max: 8 });
   const wallOf = (date, slug) => { const d = (db.showcaseWall[date] = db.showcaseWall[date] || {}); return (d[slug] = d[slug] || []); };
   const artistOk = (date, slug, req) => actsFor(artistEmail(req)).some((a) => a.date === date && a.slug === slug);
@@ -188,7 +196,7 @@ export function showcaseDomain(ctx) {
   };
 
   return {
-    lineup, next, upcoming, act, runView, wallShown: (date, slug) => wallOf(date, slug).filter((w) => w.status === 'shown').slice(-60).reverse(), festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
+    lineup, next, upcoming, act, runView, alumni, latestWall, crewCount: () => db.showcaseCrew.length, wallShown: (date, slug) => wallOf(date, slug).filter((w) => w.status === 'shown').slice(-60).reverse(), festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
     routes(r) {
       r.get('/api/showcases', (req, res) => send(res, 200, next() || {}));
 
@@ -343,6 +351,29 @@ export function showcaseDomain(ctx) {
         const c = artistCookie(req);
         if (c) { db.showcaseArtistSessions = db.showcaseArtistSessions.filter((x) => x.hash !== hash(`s:${c}`)); await save(); }
         send(res, 200, { ok: true }, { 'Set-Cookie': `${ARTIST_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0` });
+      });
+
+      // ----- the Showcase Crew: the community around the showcases (showcase.tam.tv) -----
+      // Fans and musicians who want to hear about showcases: name, email, which they are, and their consent.
+      r.post('/api/showcases/crew', async (req, res) => {
+        if (crewLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
+        const b = await readJson(req, 2048);
+        const mail = cleanEmail(b.email), name = text(b.name, 60);
+        if (!name || !mail) throw fail(400, 'Add your name and email.');
+        if (b.consent !== true) throw fail(400, 'Tick the box so we can email you.');
+        const role = ['fan', 'musician'].includes(b.role) ? b.role : 'fan';
+        const have = db.showcaseCrew.find((x) => x.email === mail);
+        if (have) Object.assign(have, { name, role, at: have.at });
+        else db.showcaseCrew.push({ name, email: mail, role, at: new Date(ctx.now()).toISOString(), consent: 'Yes, email me about TAM’s Sunday Showcases.' });
+        await save();
+        send(res, 201, { ok: true, count: db.showcaseCrew.length });
+      });
+      // staff: the crew list, for emailing
+      r.get('/api/showcases/crew.csv', (req, res) => {
+        ctx.team.guard(req, 'ops');
+        const q = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+        const rows = [['Name', 'Email', 'Fan or musician', 'Joined', 'Consent'], ...db.showcaseCrew.map((x) => [x.name, x.email, x.role, x.at, x.consent])];
+        send(res, 200, rows.map((r) => r.map(q).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="showcase-crew.csv"' });
       });
 
       r.post('/api/showcases/:date/act/:slug/want', async (req, res, { params }) => {

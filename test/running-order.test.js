@@ -235,3 +235,49 @@ test('artists sign in with their email and post to their wall; fans leave notes;
   assert.equal((await fetch(`${B}/sunday-showcases/artist`)).status, 200);
   assert.match(await (await fetch(`${B}/sunday-showcases/artist/sign-in?t=x`)).text(), /Signing you in/);
 });
+
+test('showcase.tam.tv: the microsite promotes the next showcase, shows the way in, and gathers the crew', async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-ssx-'));
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', PIN_MODERATION: 'off', SITE_URL: 'https://www.tam.tv', INDEXING: 'on' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const H = { 'x-staff-token': ADMIN, 'content-type': 'application/json' };
+  const { date } = app.ctx.content.showcases.next;
+  if (date < app.ctx.today()) return;
+  const post = (p, b, h = { 'content-type': 'application/json' }) => fetch(B + p, { method: 'POST', headers: h, body: JSON.stringify(b) });
+  await post(`/api/showcases/${date}`, { count: 6, acts: [{ name: 'Justyna', vibe: 'pop', photo: '/img/showcases/justyna.jpg' }] }, H);
+  await post(`/api/showcases/${date}/act/justyna/wall`, { name: 'Sam', message: 'See you Sunday!' });
+  const SH = { 'x-forwarded-host': 'showcase.tam.tv' }; // as Railway passes the address on
+
+  // the microsite on its own address, indexable, with its own canonical
+  const r = await fetch(`${B}/`, { headers: SH });
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get('x-robots-tag'), null);
+  const page = await r.text();
+  assert.match(page, /<link rel="canonical" href="https:\/\/showcase\.tam\.tv\/">/);
+  assert.match(page, /Your stage starts here\./);
+  assert.match(page, /id="line-up"[\s\S]*data-carousel/); // the next showcase
+  assert.match(page, /How to get on the line-up/);
+  assert.match(page, /Where it can lead/);
+  assert.match(page, /<blockquote>See you Sunday!<\/blockquote>/); // the walls
+  assert.match(page, /Who's played the showcase[\s\S]*Justyna/); // everyone who's played
+  assert.match(page, /id="crew"/);
+  // every other page is on www.tam.tv
+  const away = await fetch(`${B}/sunday-showcases/${date}/justyna?x=1`, { headers: SH, redirect: 'manual' });
+  assert.equal(away.status, 302);
+  assert.equal(away.headers.get('location'), `https://www.tam.tv/sunday-showcases/${date}/justyna?x=1`);
+  assert.match(await (await fetch(`${B}/sitemap.xml`, { headers: SH })).text(), /<loc>https:\/\/showcase\.tam\.tv\/<\/loc>/);
+  assert.match(await (await fetch(`${B}/robots.txt`, { headers: SH })).text(), /Sitemap: https:\/\/showcase\.tam\.tv\/sitemap\.xml/);
+  // www.tam.tv's home is still its own
+  assert.doesNotMatch(await (await fetch(`${B}/`, { headers: { 'x-forwarded-host': 'www.tam.tv' } })).text(), /Your stage starts here/);
+
+  // joining the crew: consent needed; staff get the list
+  assert.equal((await post('/api/showcases/crew', { name: 'Sam', email: 'sam@example.com', role: 'fan' })).status, 400);
+  assert.equal((await post('/api/showcases/crew', { name: 'Sam', email: 'sam@example.com', role: 'fan', consent: true })).status, 201);
+  assert.equal((await post('/api/showcases/crew', { name: 'Sam B', email: 'SAM@example.com', role: 'musician', consent: true })).status, 201); // same person, updated
+  assert.equal((await fetch(`${B}/api/showcases/crew.csv`)).status, 401);
+  const csv = await (await fetch(`${B}/api/showcases/crew.csv`, { headers: H })).text();
+  assert.equal(csv.trim().split('\n').length, 2);
+  assert.match(csv, /"Sam B","sam@example\.com","musician"/);
+});

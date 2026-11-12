@@ -1229,3 +1229,40 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .ar-btns { display: flex; gap: 6px; flex-shrink: 0; } .ar-w.st-pending { background: rgba(255, 200, 80, .08); } .ar-w.st-hidden { opacity: .6; }
 .sc-m-wall { margin: 8px 0; } .sc-m-wall summary { cursor: pointer; font-weight: 600; }
 .sc-artist .ar-act h2 { margin: 0 0 4px; } .sc-artist .ar-add { margin: 12px 0; }
+
+/* ---------- showcase.tam.tv: the Sunday Showcase microsite, for a Gen Z crowd ---------- */
+.ss-site { --v-bg: #0d0614; --v-1: #d4ff3c; --v-2: #ff3ea5; --v-3: #4d7cff; --v-ink: #fff; background: #0d0614; }
+.ssx-hero { position: relative; overflow: hidden; padding: clamp(60px, 10vw, 130px) 0 clamp(40px, 6vw, 80px); text-align: center;
+  background: radial-gradient(circle at 20% 20%, rgba(255,62,165,.28), transparent 45%), radial-gradient(circle at 80% 30%, rgba(77,124,255,.28), transparent 45%), radial-gradient(circle at 50% 100%, rgba(212,255,60,.18), transparent 50%); }
+.ssx-lock { display: flex; justify-content: center; margin-bottom: 18px; }
+.ssx-tag { margin: 0 auto; max-width: 14ch; font: 700 clamp(48px, 9vw, 120px)/.9 var(--f-body); letter-spacing: -.05em; color: #fff; text-transform: lowercase; text-shadow: 6px 6px 0 #ff3ea5; }
+.ssx-lede { max-width: 56ch; margin: 22px auto 18px; font-size: clamp(17px, 1.8vw, 21px); color: #e8e0f0; }
+.ssx-next { font-size: 18px; } .ssx-pill { display: inline-block; padding: 3px 12px 4px; border-radius: 999px; background: #d4ff3c; color: #111; font-weight: 700; border: 2px solid #111; box-shadow: 3px 3px 0 #ff3ea5; transform: rotate(-3deg); }
+.ssx-hero .ctas { justify-content: center; }
+.ssx-btn { background: #d4ff3c; color: #111; border: 2px solid #111; box-shadow: 4px 4px 0 #ff3ea5; font-weight: 700; }
+.ssx-btn:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 #ff3ea5; }
+.ss-site .head { display: block; text-align: center; } .ss-site .head h2 { font: 700 clamp(34px, 5vw, 60px)/1 var(--f-body); letter-spacing: -.04em; text-transform: lowercase; color: #fff; }
+.ss-site .label { color: #d4ff3c; }
+.ssx-steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.ssx-steps li, .ssx-ladder li { position: relative; padding: 22px; border-radius: 22px; background: #1a0f24; border: 2px solid #111; box-shadow: 6px 6px 0 #4d7cff; }
+.ssx-steps li:nth-child(2) { box-shadow: 6px 6px 0 #ff3ea5; transform: rotate(1deg); } .ssx-steps li:nth-child(3) { box-shadow: 6px 6px 0 #d4ff3c; transform: rotate(-1deg); }
+.ssx-n { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #d4ff3c; color: #111; font: 700 22px var(--f-body); border: 2px solid #111; }
+.ssx-steps h3, .ssx-ladder h3 { margin: 10px 0 6px; color: #fff; font-size: 22px; }
+.ssx-circuit { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 22px 0; }
+.ssx-night { display: grid; gap: 2px; padding: 12px 16px; border-radius: 16px; background: #1a0f24; border: 1px solid #3a2a4a; color: #fff; text-decoration: none; min-width: 190px; }
+.ssx-night:hover { border-color: #d4ff3c; } .ssx-night span { font-size: 13px; color: #b9a9c9; } .ssx-night em { font-style: normal; font-size: 13px; color: #d4ff3c; }
+.ssx-cta { text-align: center; }
+.ssx-ladder { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; counter-reset: l; }
+.ssx-ladder li:not(:last-child)::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); z-index: 2; font: 700 26px var(--f-body); color: #d4ff3c; }
+.ssx-step { font: 700 40px/1 var(--f-body); letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px #ff3ea5; }
+.ssx-h3 { text-align: center; margin: 30px 0 14px; font: 700 26px var(--f-body); letter-spacing: -.03em; text-transform: lowercase; color: #fff; }
+.ss-site .aw-note figcaption a { color: #d4ff3c; }
+.ssx-alumni { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; max-width: 1000px; margin: 0 auto; }
+.ssx-alumni a { display: grid; justify-items: center; gap: 6px; padding: 14px 10px; border-radius: 18px; background: #1a0f24; color: #fff; text-decoration: none; text-align: center; border: 2px solid transparent; }
+.ssx-alumni a:hover { border-color: var(--v-1); transform: rotate(-2deg); }
+.ssx-alumni img, .ssx-ph { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--v-1); }
+.ssx-ph { display: grid; place-items: center; font: 700 40px var(--f-body); background: #2a1a3a; } .ssx-alumni span { font-size: 12px; color: #b9a9c9; }
+.ssx-join { max-width: 640px; margin: 34px auto 0; padding: clamp(22px, 4vw, 34px); border-radius: 24px; background: #1a0f24; border: 2px solid #d4ff3c; box-shadow: 8px 8px 0 #ff3ea5; }
+.ssx-join h3 { margin: 0 0 6px; font: 700 30px var(--f-body); letter-spacing: -.03em; text-transform: lowercase; color: #fff; }
+.ssx-role { border: 0; padding: 0; margin: 10px 0; display: flex; gap: 16px; align-items: center; } .ssx-role legend { padding: 0 8px 0 0; float: left; }
+@media (max-width: 700px) { .ssx-ladder li:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -22px; transform: translateX(50%); } }

@@ -23,6 +23,7 @@ import * as bluesPages from './views/blues.js';
 import * as aiPages from './views/ai.js';
 import * as showcasePages from './views/showcases.js';
 import { showcaseDomain } from './domain/showcases.js';
+import { serveMicrosite } from './views/showcase-site.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -54,6 +55,8 @@ export function configFrom(env = process.env) {
     pinModeration: env.PIN_MODERATION !== 'off',
     // Google Analytics 4 measurement ID (G-…): loaded only for visitors who say yes on the cookie banner
     gaId: /^G-[A-Z0-9]{4,16}$/.test(env.GA_MEASUREMENT_ID || '') ? env.GA_MEASUREMENT_ID : '',
+    // the Sunday Showcase microsite's own address
+    showcaseHost: (env.SHOWCASE_HOST || 'showcase.tam.tv').toLowerCase(),
     holdMinutes: 30,
     anthropicKey: env.ANTHROPIC_API_KEY || '',
     anthropicBaseUrl: env.ANTHROPIC_BASE_URL || '',
@@ -151,7 +154,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   async function handle(req, res) {
     res.req = req;
     // Only the real address is indexed: the Railway preview and any other host stay out of search.
-    req.indexable = cfg.indexing && requestHost(req) === siteHost;
+    const onShowcase = requestHost(req) === cfg.showcaseHost; // showcase.tam.tv, the Sunday Showcase microsite
+    req.indexable = cfg.indexing && (requestHost(req) === siteHost || onShowcase);
     if (!req.indexable) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const url = new URL(req.url, 'http://x');
     const p = url.pathname;
@@ -174,6 +178,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
         if (p.startsWith('/uploads/') && await serveStatic(res, store.uploads, p.slice(9), 'public, max-age=86400')) return;
         if (p === '/favicon.ico') return serveStatic(res, path.join(ROOT, 'public/img'), 'favicon-48.png');
       }
+      if (onShowcase && serveMicrosite(ctx, showcase, req, res, url)) return;
       const m = site.match(req.method, p);
       if (m) return await m.handler(req, res, { url, params: m.params });
       // Every page of the old www.tam.tv still answers at its address.
