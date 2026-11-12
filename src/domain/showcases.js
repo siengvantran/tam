@@ -49,6 +49,7 @@ export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Web
 export const VIBES = {
   stage: 'TAM stage: gold and black',
   disco: 'Disco: glitter gold and pink',
+  pop: 'Pop: candy pink and electric blue',
   noir: 'Noir: crimson and shadow',
   campfire: 'Campfire: warm wood and forest green',
   mist: 'Mist: hazy teal and sage',
@@ -56,7 +57,7 @@ export const VIBES = {
   riot: 'Riot: acid green and magenta',
 };
 // Each vibe's mark: its name and a sign, flashing on the act's page and the line-up.
-export const VIBE_MARKS = { stage: ['Stage', '★'], disco: ['Disco', '✺'], noir: ['Noir', '☾'], campfire: ['Campfire', '✹'], mist: ['Mist', '≋'], spotlight: ['Spotlight', '✧'], riot: ['Riot', '✶'] };
+export const VIBE_MARKS = { stage: ['Stage', '★'], disco: ['Disco', '✺'], pop: ['Pop', '♥'], noir: ['Noir', '☾'], campfire: ['Campfire', '✹'], mist: ['Mist', '≋'], spotlight: ['Spotlight', '✧'], riot: ['Riot', '✶'] };
 const slugOf = (name) => String(name || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'act';
 
 export function showcaseDomain(ctx) {
