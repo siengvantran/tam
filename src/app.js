@@ -24,6 +24,8 @@ import * as aiPages from './views/ai.js';
 import * as showcasePages from './views/showcases.js';
 import { showcaseDomain } from './domain/showcases.js';
 import { serveMicrosite } from './views/showcase-site.js';
+import { clubDomain } from './domain/club.js';
+import * as clubPages from './views/club.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -58,6 +60,7 @@ export function configFrom(env = process.env) {
     // the Sunday Showcase microsite's own address
     showcaseHost: (env.SHOWCASE_HOST || 'showcase.tam.tv').toLowerCase(),
     holdMinutes: 30,
+    mailGapMs: env.MAIL_GAP_MS !== undefined ? Number(env.MAIL_GAP_MS) : 600, // between newsletter emails (Resend's rate limit)
     anthropicKey: env.ANTHROPIC_API_KEY || '',
     anthropicBaseUrl: env.ANTHROPIC_BASE_URL || '',
     aiModel: env.TAM_AI_MODEL || 'claude-opus-5-5',
@@ -98,6 +101,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.isAdmin = ctx.team.isAdmin;
   ctx.isDoor = ctx.team.isDoor;
 
+  // The TAM Club: the email list and the loyalty card. Other domains give points through ctx.club.
+  ctx.club = clubDomain(ctx);
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
   const collections = collectionsDomain(ctx, tickets);
@@ -119,7 +124,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -144,6 +149,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   bluesPages.routes(site, ctx, blues, qr);
   aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
+  clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
+  ctx.club.pageRoutes(site); // /c/…: newsletter link clicks
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 

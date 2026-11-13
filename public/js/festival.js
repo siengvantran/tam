@@ -154,7 +154,7 @@ if (form && B && B.nights.length) {
       const r = await api('/api/bookings', { method: 'POST', body: {
         night: state.night, type: state.type, qty: Number(qty.value), name: f.get('name'), email: f.get('email'), company: f.get('company'),
         teamName: f.get('teamName'), blurb: f.get('blurb'), mix: f.get('mix') || 'none', tableId: f.get('tableId'),
-        tableRequest: f.get('tableRequest') === 'on', tableNote: f.get('tableNote'), donation: gift.amount || 0, via: B.via || new URLSearchParams(location.search).get('via') || '',
+        tableRequest: f.get('tableRequest') === 'on', tableNote: f.get('tableNote'), donation: gift.amount || 0, joinClub: f.get('joinClub') === 'on', ref: (() => { try { return sessionStorage.getItem('tam:ref') || ''; } catch { return ''; } })(), via: B.via || new URLSearchParams(location.search).get('via') || '',
       } });
       if (r.checkoutUrl) { location.href = r.checkoutUrl; return; }
       showBooked(r.booking);

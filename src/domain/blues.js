@@ -121,6 +121,7 @@ export function bluesDomain(ctx) {
       const key = crypto.randomBytes(16).toString('base64url');
       const x = { id: newId('JAM', 5), date, name, instrument, email: mail, at: new Date(ctx.now()).toISOString(), order: (list.at(-1)?.order || 0) + 1, status: 'waiting', keyHash: hash(key) };
       B.signups.push(x);
+      if (ctx.club) { if (mail) ctx.club.awardEmail(mail, 'blues', date); ctx.club.awardReq(req, 'blues', date); }
       await save();
       send(res, 201, { id: x.id, key, position: list.length + 1, night: publicNight(date) });
     });

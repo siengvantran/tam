@@ -119,6 +119,7 @@ export function communityDomain(ctx) {
           token: crypto.randomBytes(16).toString('hex'), consent: `Yes, email me about ${a.name}’s gigs and news from TAM.` };
         db.follows.push(f);
       }
+      if (ctx.club) ctx.club.awardEmail(mail, 'follow', a.slug);
       await save();
       if (ctx.mail.enabled()) {
         ctx.mail.send(followEmail(f, a, `${cfg.siteUrl}/artists/${a.slug}`, `${cfg.siteUrl}/unfollow?t=${f.token}`))

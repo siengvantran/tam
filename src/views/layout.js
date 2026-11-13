@@ -23,7 +23,7 @@ export function layout(ctx, {
   const mods = new Set(['/js/site.js', ...(ctx.cfg.gaId ? ['/js/consent.js'] : []), ...scripts]);
   if (String(body).includes('data-carousel')) mods.add('/js/carousel.js'); // the featured show's carousel
   const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
-  if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); }
+  if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); mods.add('/js/club.js'); } // club.js: the footer sign-up and your card's points
   if (song) mods.add('/js/tamalume.js');
   return '<!doctype html>' + html`
 <html lang="en-GB" data-theme="${theme}"${ctx.cfg.gaId ? html` data-ga="${ctx.cfg.gaId}"` : ''}>
@@ -122,18 +122,24 @@ function header(ctx, festival, pathway) {
 </header>`;
 }
 
+// The TAM Club sign-up at the foot of every page (src/views/club.js, public/js/club.js).
+const clubStrip = () => html`<div class="wrap cl-strip"><div><b>The TAM list</b> <span>What’s on, picked for you, and points toward <b>half a pint on us</b>.</span> <a href="/club">How it works</a></div>
+  <form class="cl-join compact" data-club-join data-source="footer"><label class="field"><span class="sr">Email</span><input name="email" type="email" autocomplete="email" placeholder="Your email" required></label>
+  <label class="check"><input type="checkbox" name="consent" required> Yes, email me about TAM. Unsubscribe any time.</label><button class="btn hot" type="submit">Join</button><p class="err" role="status" aria-live="polite"></p></form></div>`;
+
 function footer(ctx) {
   const { site, venueBy } = ctx.content;
   const v = venueBy.get(site.defaultVenue);
   return html`<footer class="foot">
-  <div class="wrap">
+  ${clubStrip()}
+  <div class="wrap foot-grid">
     <div>
       <img src="/img/tam-logo-640.png" alt="TAM · Temple of Art and Music" width="120" height="120" class="foot-logo">
       <p class="addr">${v ? v.name : 'TAM'}<br>${v ? v.place : ''}<br>${v ? v.address : ''}</p>
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
+      <a href="/archive">Archive</a><a href="/club">TAM Club</a><a href="/newsletter">Newsletter</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}
