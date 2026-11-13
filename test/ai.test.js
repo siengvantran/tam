@@ -86,3 +86,11 @@ test('a night sold on another TAM site (immersive.tam.tv) is listed, linked ther
   assert.match(wo, /Immersive Creator Huddle 17/);
   assert.doesNotMatch(wo, /Immersive Creator Huddle 17[\s\S]{0,800}?Tickets on Eventbrite/);
 });
+
+test('the header links to the Great British Blues Jam', async (t) => {
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-nav-')), EVENTBRITE_SYNC: 'off' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const page = await (await fetch(`http://127.0.0.1:${app.server.address().port}/whats-on`)).text();
+  assert.match(page, /<nav class="nav" id="nav"[\s\S]*<a href="\/great-british-blues-jam#jam" class="blues-link">Blues Jam<\/a>[\s\S]*<\/nav>/);
+});

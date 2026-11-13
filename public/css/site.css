@@ -1266,3 +1266,9 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .ssx-join h3 { margin: 0 0 6px; font: 700 30px var(--f-body); letter-spacing: -.03em; text-transform: lowercase; color: #fff; }
 .ssx-role { border: 0; padding: 0; margin: 10px 0; display: flex; gap: 16px; align-items: center; } .ssx-role legend { padding: 0 8px 0 0; float: left; }
 @media (max-width: 700px) { .ssx-ladder li:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -22px; transform: translateX(50%); } }
+/* the header between phone and wide screens: tighter, so every link fits on one line */
+@media (min-width: 921px) and (max-width: 1240px) {
+  .nav { gap: 14px; } .nav a { font-size: 14px; }
+  .top .for-you { display: none; } /* "Who are you?" is on the home page and in the menu below this */
+}
+@media (min-width: 921px) and (max-width: 1060px) { .nav { gap: 10px; } .nav a { font-size: 13px; } .brand span { display: none; } }

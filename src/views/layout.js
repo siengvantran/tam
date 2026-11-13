@@ -107,6 +107,7 @@ function header(ctx, festival, pathway) {
     <nav class="nav" id="nav" aria-label="Main">
       <a href="/whats-on">What's on</a>
       ${friday(ctx) ? html`<a class="fri-link${isFriday(ctx) ? ' lit' : ''}" href="${fridayUrl(ctx, 'nav')}" target="_blank" rel="noopener" title="${friday(ctx).name} ${friday(ctx).by} · friday.tam.tv">Fridays</a>` : ''}
+      <a href="${BLUES_JAM}" class="blues-link">Blues Jam</a>
       ${fest ? html`<a href="${fest.path}" class="fest-link">${fest.name}</a>` : ''}
       <a href="/artists">Artists</a>
       <a href="/tv">TAM TV</a>
