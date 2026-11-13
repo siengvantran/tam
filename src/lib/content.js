@@ -147,6 +147,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       image: e.image || (f && f.og) || '/img/og.jpg',
       stories: e.stories || null, collection: e.collection || null,
       handmade: Boolean(e.title), url: e.url || '', sale,
+      ...(e.priceText ? { priceText: e.priceText } : {}), ...(/^https:\/\//.test(e.canonical || '') ? { canonical: e.canonical } : {}),
     };
   }
 
