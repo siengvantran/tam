@@ -70,3 +70,19 @@ test('tam.tv can be read by AI: venue, opening hours, what’s on, prices and ti
   assert.match(blues, /<b>Host:<\/b>/);
   assert.ok(ld(blues).find((x) => x['@type'] === 'EventSeries').subEvent.length >= 6);
 });
+
+test('a night sold on another TAM site (immersive.tam.tv) is listed, linked there, and points search there', async (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-imm-'));
+  const app = await createApp({ env: { DATA_DIR: dir, EVENTBRITE_SYNC: 'off' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const n = app.ctx.content.nightBy.get('immersive-creator-huddle-17-2026-11-16');
+  if (!n || n.date < app.ctx.today()) return;
+  const page = await (await fetch(`${B}/events/${n.slug}`)).text();
+  assert.match(page, /<link rel="canonical" href="https:\/\/immersive\.tam\.tv\/">/);
+  assert.match(page, /href="https:\/\/immersive\.tam\.tv\/#tickets"[^>]*>Tickets on immersive\.tam\.tv · £5–£10 ↗/);
+  const wo = await (await fetch(`${B}/whats-on`)).text();
+  assert.match(wo, /Immersive Creator Huddle 17/);
+  assert.doesNotMatch(wo, /Immersive Creator Huddle 17[\s\S]{0,800}?Tickets on Eventbrite/);
+});

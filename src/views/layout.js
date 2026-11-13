@@ -167,6 +167,8 @@ export function ticker(items) {
 export const when = (n) => `${n.weekday} ${n.day} ${n.month}`;
 export const times = (n) => (n.timesTbc ? 'Times announced soon' : n.source === 'eventbrite' ? `Starts ${n.doors}` : `Doors ${n.doors}${n.ends ? ` · until ${n.ends}` : ''}`);
 // What a night costs on Eventbrite, from the live listing.
+// Where a night's tickets are sold when it isn't TAM's box office: Eventbrite, or another site (e.g. immersive.tam.tv).
+export const ticketSite = (url) => { try { const h = new URL(url).hostname.replace(/^www\./, ''); return /eventbrite\./.test(h) ? 'Eventbrite' : h; } catch { return 'Eventbrite'; } };
 export const listingPrice = (l) => (!l ? '' : l.soldOut ? 'Sold out' : l.free ? 'Free entry' : Number.isFinite(l.from) ? `From ${pounds(l.from)}` : l.priceText || 'Tickets on Eventbrite');
 // One Eventbrite ticket type's price and state, for lists.
 export const ticketPrice = (t) => (t.kind === 'free' ? 'Free' : t.kind === 'donation' ? 'Pay what you like' : pounds(t.price));
@@ -190,7 +192,7 @@ export function nightCard(ctx, n, avail) {
       ${f ? html`<div class="label">${f.name}</div>` : fri ? html`<div class="label fri-label">${tonight ? 'Tonight · ' : ''}${fri.name}</div>` : ''}
       <h3>${n.label && n.label !== n.title ? n.label : n.title}</h3>
       <p class="muted">${times(n)}</p>
-      ${n.sale ? html`<p class="price">${from === 0 ? 'Free tickets' : from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? 'Tickets on Eventbrite' : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
+      ${n.sale ? html`<p class="price">${from === 0 ? 'Free tickets' : from !== null && from !== undefined ? `${n.sale.mode === 'own' ? 'From ' : ''}${pounds(from)}` : 'Sold out'}</p>` : html`<p class="price${n.eventbrite && !n.eventbrite.soldOut ? '' : ' muted'}">${n.eventbrite ? listingPrice(n.eventbrite) : n.url ? (n.priceText || `Tickets on ${ticketSite(n.url)}`) : n.source === 'schedule' ? 'Details →' : 'Tickets soon'}</p>`}
     </div>
   </a>
 </article>`;

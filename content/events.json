@@ -1,40 +1,104 @@
 [
-  {
-    "slug": "big-christmas-hootenanny",
-    "date": "2026-12-04",
-    "festival": "best-christmas-ever",
-    "title": "The Big Christmas Hootenanny",
-    "presenters": "Baker’s Dozen × The Best Christmas Ever",
-    "image": "/img/hootenanny/og.jpg",
-    "summary": "Opening night of The Best Christmas Ever: Baker’s Dozen and special guests, two sets of originals, covers and Christmas classics. VIP doors 6pm, GA 6:30pm, show 7pm, after party until 1am (included with every ticket).",
-    "doors": "18:00",
-    "ends": "01:00",
-    "artists": ["bakers-dozen", "hugh-baker", "matt-hootenanny-host", "thomas-caulfield", "queenie-slinger", "molly-chadwick", "haydn-bardoe", "ger-ohanlon", "felix-cassell"],
-    "schedule": [
-      ["18:00", "Doors for guestlist and VIP. The piano starts"],
-      ["18:30", "Doors for general admission"],
-      ["19:00", "Show starts. First set: Baker’s Dozen and guests, originals and well-loved covers"],
-      ["20:15", "Interval"],
-      ["20:30", "Second set: Christmas classics to sing along to"],
-      ["21:45", "Live show ends (approx.)"],
-      ["22:00", "Hootenanny After Party, until 1am. Included with every ticket"]
-    ],
-    "tickets": [
-      { "id": "robin", "name": "Robin", "tag": "Early bird", "price": 700, "blurb": "Our early bird ticket. Grab them fast!" },
-      { "id": "ga", "name": "General Admission", "price": 1000, "blurb": "Admission to our Hootenanny! Doors 6:30pm." },
-      { "id": "vip", "name": "VIP", "price": 1500, "tableRequest": true, "blurb": "Reserved seating and early doors at 6pm. Coming as a group? Request a table, and make sure everyone in the group has a VIP ticket." }
-    ]
-  },
-  {
-    "slug": "dana-gillespie-live",
-    "date": "2026-12-16",
-    "festival": "best-christmas-ever",
-    "title": "Dana Gillespie Live",
-    "image": "/img/dana/bowie4.jpg",
-    "summary": "Dana Gillespie live at TAM: Bowie’s friend, the first London Mary Magdalene and the Queen of the Blues.",
-    "timesTbc": true,
-    "artists": ["danagillespie", "gemma-schito"],
-    "stories": "dana-gillespie",
-    "collection": "dana-108"
-  }
+ {
+  "slug": "big-christmas-hootenanny",
+  "date": "2026-12-04",
+  "festival": "best-christmas-ever",
+  "title": "The Big Christmas Hootenanny",
+  "presenters": "Baker’s Dozen × The Best Christmas Ever",
+  "image": "/img/hootenanny/og.jpg",
+  "summary": "Opening night of The Best Christmas Ever: Baker’s Dozen and special guests, two sets of originals, covers and Christmas classics. VIP doors 6pm, GA 6:30pm, show 7pm, after party until 1am (included with every ticket).",
+  "doors": "18:00",
+  "ends": "01:00",
+  "artists": [
+   "bakers-dozen",
+   "hugh-baker",
+   "matt-hootenanny-host",
+   "thomas-caulfield",
+   "queenie-slinger",
+   "molly-chadwick",
+   "haydn-bardoe",
+   "ger-ohanlon",
+   "felix-cassell"
+  ],
+  "schedule": [
+   [
+    "18:00",
+    "Doors for guestlist and VIP. The piano starts"
+   ],
+   [
+    "18:30",
+    "Doors for general admission"
+   ],
+   [
+    "19:00",
+    "Show starts. First set: Baker’s Dozen and guests, originals and well-loved covers"
+   ],
+   [
+    "20:15",
+    "Interval"
+   ],
+   [
+    "20:30",
+    "Second set: Christmas classics to sing along to"
+   ],
+   [
+    "21:45",
+    "Live show ends (approx.)"
+   ],
+   [
+    "22:00",
+    "Hootenanny After Party, until 1am. Included with every ticket"
+   ]
+  ],
+  "tickets": [
+   {
+    "id": "robin",
+    "name": "Robin",
+    "tag": "Early bird",
+    "price": 700,
+    "blurb": "Our early bird ticket. Grab them fast!"
+   },
+   {
+    "id": "ga",
+    "name": "General Admission",
+    "price": 1000,
+    "blurb": "Admission to our Hootenanny! Doors 6:30pm."
+   },
+   {
+    "id": "vip",
+    "name": "VIP",
+    "price": 1500,
+    "tableRequest": true,
+    "blurb": "Reserved seating and early doors at 6pm. Coming as a group? Request a table, and make sure everyone in the group has a VIP ticket."
+   }
+  ]
+ },
+ {
+  "slug": "dana-gillespie-live",
+  "date": "2026-12-16",
+  "festival": "best-christmas-ever",
+  "title": "Dana Gillespie Live",
+  "image": "/img/dana/bowie4.jpg",
+  "summary": "Dana Gillespie live at TAM: Bowie’s friend, the first London Mary Magdalene and the Queen of the Blues.",
+  "timesTbc": true,
+  "artists": [
+   "danagillespie",
+   "gemma-schito"
+  ],
+  "stories": "dana-gillespie",
+  "collection": "dana-108"
+ },
+ {
+  "slug": "immersive-creator-huddle-17-2026-11-16",
+  "date": "2026-11-16",
+  "title": "Immersive Creator Huddle 17",
+  "presenters": "Immersive Experience Network × TAM",
+  "image": "/img/immersive/huddle-17.jpg",
+  "summary": "The Immersive Experience Network’s networking night for everyone making live immersive and interactive work: theatre, escape rooms, immersive art, scare attractions, ARG and transmedia, location-based VR and AR, and themed attractions. Structured networking, an ‘Ask the Community’ session, and a network board for what you offer and what you need. Powered by TAM.",
+  "doors": "19:30",
+  "ends": "22:30",
+  "url": "https://immersive.tam.tv/#tickets",
+  "priceText": "£5–£10",
+  "canonical": "https://immersive.tam.tv/"
+ }
 ]

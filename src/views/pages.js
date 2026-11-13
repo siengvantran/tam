@@ -10,7 +10,7 @@ import { venueLd, placeLd, availability } from './ai.js';
 import { featuredNow, featuredHero } from './featured.js';
 import { christmasNow, christmasHero } from './christmas.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
-import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM } from './layout.js';
+import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM , ticketSite } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
   wallSection, sponsorSection, songSection, visitSection, countdown,
@@ -339,7 +339,7 @@ function eventPage(ctx, d, n, url) {
   const col = n.collection ? c.collectionBy.get(n.collection) : null;
   const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(n.title)}&dates=${n.timesTbc ? `${n.date.replace(/-/g, '')}/${n.date.replace(/-/g, '')}` : `${n.start.replace(/[-:]/g, '').slice(0, 15)}Z/${n.end.replace(/[-:]/g, '').slice(0, 15)}Z`}&location=${encodeURIComponent(v ? `${v.name}, ${v.address}` : 'TAM')}&details=${encodeURIComponent(`${ctx.cfg.siteUrl}/events/${n.slug}`)}`;
   return page(ctx, {
-    title: `${n.title} · ${when(n)}`, path: `/events/${n.slug}`, theme: themeOf(f), ambient: ambientOf(f), song: songOf(ctx, f), festival: f,
+    title: `${n.title} · ${when(n)}`, path: `/events/${n.slug}`, ...(n.canonical ? { canonical: n.canonical } : {}), theme: themeOf(f), ambient: ambientOf(f), song: songOf(ctx, f), festival: f,
     og: n.image, description: n.summary || `${n.title} at TAM, ${longDate(n.date)}.`, jsonLd: eventLd(ctx, n, d),
     scripts: ['/js/festival.js'],
     data: { booking: { ...bookingData(ctx, [n], f), preselect: n.slug, via }, festival: f ? { slug: f.slug, features: f.features, song: f.song ? { bpm: f.song.bpm, bars: f.song.bars } : null } : null, night: n.slug },
@@ -351,7 +351,7 @@ function eventPage(ctx, d, n, url) {
     ${n.presenters ? html`<p class="presenters">${n.presenters}</p>` : ''}
     <div class="meta"><span>${longDate(n.date).toUpperCase()}</span><span>${times(n).toUpperCase()}</span><span>${(v ? v.name : 'TAM').toUpperCase()}</span></div>
     ${n.summary ? html`<p class="lede">${n.summary}</p>` : ''}
-    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : n.eventbrite && n.eventbrite.free ? 'Free entry · reserve on Eventbrite ↗' : `Tickets on Eventbrite${n.eventbrite && Number.isFinite(n.eventbrite.from) ? ` · from ${pounds(n.eventbrite.from)}` : ''} ↗`}</a>${n.eventbrite && n.eventbrite.tickets && n.eventbrite.tickets.length ? html`<a class="btn ghost" href="#tickets">Ticket types</a>` : ''}` : ''}
+    <div class="ctas">${!isPast && n.sale ? html`<a class="btn hot" href="#book">Get tickets</a>` : n.url ? html`<a class="btn hot" href="${n.url}" target="_blank" rel="noopener">${n.eventbrite && n.eventbrite.soldOut ? 'Sold out · join the waitlist on Eventbrite ↗' : n.eventbrite && n.eventbrite.free ? 'Free entry · reserve on Eventbrite ↗' : `Tickets on ${ticketSite(n.url)}${n.eventbrite && Number.isFinite(n.eventbrite.from) ? ` · from ${pounds(n.eventbrite.from)}` : n.priceText ? ` · ${n.priceText}` : ''} ↗`}</a>${n.eventbrite && n.eventbrite.tickets && n.eventbrite.tickets.length ? html`<a class="btn ghost" href="#tickets">Ticket types</a>` : ''}` : ''}
       ${!f && n.weekday === 'Friday' && friday(ctx) ? html`<a class="btn ghost fri-btn" href="${fridayUrl(ctx, 'event')}" target="_blank" rel="noopener">On ${friday(ctx).name} ↗</a>` : ''}
       ${/blues jam/i.test(n.title) ? html`<a class="btn ghost" href="/great-british-blues-jam#jam">Sign up to jam →</a>` : ''}
       ${!isPast && n.donate ? html`<a class="btn ghost" href="${n.donate}" target="_blank" rel="noopener">Make a donation on Eventbrite ↗</a>` : ''}
