@@ -108,6 +108,7 @@ export function ticketsDomain(ctx) {
     const lapsed = !holds(b);
     b.status = 'paid';
     b.paidAt = new Date(ctx.now()).toISOString();
+    if (ctx.club) { ctx.club.awardEmail(b.email, 'booking', b.night); ctx.club.awardEmail(b.email, 'spend', b.id, { pts: Math.min(50, Math.floor((b.total || 0) / 100)) }); }
     const n = c.nightBy.get(b.night);
     if (lapsed && n && n.sale && n.sale.capacity && salesFor(b.night).sold > n.sale.capacity) {
       b.needsAttention = 'Paid after its hold lapsed and the night is now over capacity.';
@@ -196,6 +197,9 @@ export function ticketsDomain(ctx) {
       if (b.status === 'awaiting_payment') {
         try { checkoutUrl = await startCheckout(req, b); } catch (e) { b.status = 'cancelled'; await save(); throw e; }
       }
+      // the TAM Club: join from the booking form (ticked box), and points for booking
+      if (ctx.club && body.joinClub === true) await ctx.club.join({ email: b.email, name: b.name, consent: true, source: 'booking', ref: body.ref }).catch(() => {});
+      if (ctx.club && b.status === 'reserved') ctx.club.awardEmail(b.email, 'booking', b.night);
       await save();
       if (b.status === 'reserved') notify(b);
       send(res, 201, { booking: bookingView(b, true), checkoutUrl });
@@ -278,6 +282,7 @@ export function ticketsDomain(ctx) {
       if (now < 0) throw fail(400, 'Nothing to undo.');
       b.checkedIn = now;
       b.checkins = (b.checkins || []).concat({ at: new Date(ctx.now()).toISOString(), count }).slice(-20);
+      if (count > 0 && ctx.club) ctx.club.awardEmail(b.email, 'attend', `door:${b.night}`);
       await save();
       send(res, 200, { booking: doorView(b) });
     });

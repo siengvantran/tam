@@ -85,7 +85,7 @@ async function drawCard() {
 // ----- invites: send the card, save it, or send the link -----
 const share = document.querySelector('[data-share]');
 if (share) {
-  const { url, text, title, file } = share.dataset;
+  const { text, title, file } = share.dataset; // the url is read when used: a TAM Club member's link carries their referral code (club.js)
   const msg = document.querySelector('[data-share-msg]');
   const native = share.querySelector('[data-native]');
   if (navigator.share) {
@@ -93,7 +93,7 @@ if (share) {
     native.addEventListener('click', async () => {
       try {
         const f = card && new File([await drawCard()], file, { type: 'image/png' });
-        const data = f && navigator.canShare && navigator.canShare({ files: [f] }) ? { files: [f], title, text } : { title, text, url };
+        const data = f && navigator.canShare && navigator.canShare({ files: [f] }) ? { files: [f], title, text } : { title, text, url: share.dataset.url };
         await navigator.share(data);
       } catch (err) { if (err && err.name !== 'AbortError') msg.textContent = 'Couldn’t open sharing here. Save the card instead.'; }
     });
@@ -109,8 +109,8 @@ if (share) {
     save.disabled = false;
   });
   share.querySelector('[data-copy]').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(url); msg.textContent = 'Link copied. Paste it anywhere.'; }
-    catch { msg.textContent = url; }
+    try { await navigator.clipboard.writeText(share.dataset.url); msg.textContent = 'Link copied. Paste it anywhere.'; }
+    catch { msg.textContent = share.dataset.url; }
   });
 }
 

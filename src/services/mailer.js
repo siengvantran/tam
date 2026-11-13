@@ -82,3 +82,17 @@ export function broadcastEmail(f, artist, { subject, message, link, linkLabel },
   const m = layout({ heading: subject, intro: '', button: link ? [linkLabel || 'Find out more', link] : null, after: `${paras}<p style="font-size:13px"><a href="${e(unsubUrl)}" style="color:#8a7f86">Unsubscribe from ${e(artist.name)}</a></p>` });
   return { to: f.email, subject, html: m.html, text: `${message}\n\nUnsubscribe: ${unsubUrl}`, headers: { 'List-Unsubscribe': `<${unsubUrl}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } };
 }
+
+// The TAM Club's emails (src/domain/club.js): the same dark shell, with a
+// hidden preheader and a footer that always carries the unsubscribe link.
+export function clubShell(inner, { preheader = '', footer = '' } = {}) {
+  return `<!doctype html><body style="margin:0;background:#0b0709;color:#f6efe6;font:16px/1.6 system-ui,sans-serif">
+<span style="display:none!important;max-height:0;overflow:hidden;opacity:0">${e(preheader)}</span>
+<div style="max-width:600px;margin:0 auto;padding:32px 20px">
+<p style="letter-spacing:.2em;font-size:12px;color:#f3c35b;margin:0 0 18px">TAM · TEMPLE OF ART AND MUSIC</p>
+${inner}
+<div style="color:#8a7f86;font-size:13px;margin-top:36px;border-top:1px solid #2a2026;padding-top:16px">${footer}
+<p style="margin:8px 0 0">TAM · Mercato Metropolitano · 42 Newington Causeway · London SE1 6DR</p></div></div></body>`;
+}
+
+export const clubButton = (label, href) => `<p style="margin:22px 0"><a href="${e(href)}" style="display:inline-block;background:#ff2d6f;color:#fff;padding:13px 22px;border-radius:999px;text-decoration:none;font-weight:700">${e(label)}</a></p>`;

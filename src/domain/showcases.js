@@ -277,6 +277,7 @@ export function showcaseDomain(ctx) {
         if (!name || !message) throw fail(400, 'Add your name and a note.');
         const w = { id: newId('W'), kind: 'note', name, message, at: new Date(ctx.now()).toISOString(), status: ctx.cfg.pinModeration ? 'pending' : 'shown', by: 'fan' };
         wallOf(params.date, params.slug).push(w);
+        if (ctx.club) ctx.club.awardReq(req, 'wall', w.id); // a TAM Club point, if they're signed in
         await save();
         send(res, 201, { ok: true, status: w.status });
       });
@@ -388,6 +389,7 @@ export function showcaseDomain(ctx) {
         const h = hash(id);
         const already = w.ids.includes(h);
         if (!already) { w.ids.push(h); w.count += 1; await save(); }
+        if (ctx.club) ctx.club.awardReq(req, 'vote', `${params.date}:${params.slug}`);
         send(res, 200, { ok: true, count: w.count, already });
       });
 
