@@ -113,7 +113,7 @@ function page(ctx, showcase) {
   <div class="label">${s.kicker}</div>
   <h1 class="chrome gold">${s.title}</h1>
   <p class="lede">${s.lede}</p>
-  <div class="ctas">${n ? html`<a class="btn hot" href="#book">Free tickets · ${l.when.replace(/ \d{4}$/, '')}</a>` : ''}<a class="btn ${n ? 'ghost' : 'hot'}" href="#circuit">Find an open night</a><a class="btn ghost" href="#register">Register your interest</a></div>
+  <div class="ctas">${n ? html`<a class="btn hot" href="#book">Free tickets · ${l.when.replace(/ \d{4}$/, '')}</a>` : ''}<a class="btn ${n ? 'ghost' : 'hot'}" href="#circuit">Find an open night</a><a class="btn ghost" href="#register">Register your interest</a><a class="btn ghost" href="https://${ctx.cfg.showcaseHost}/#crew">Join the Showcase Crew ↗</a></div>
 </div></section>
 ${thisWeek(ctx, showcase)}
 ${n ? html`${bookingSection(ctx, { nights: [n], single: true, heading: `Free tickets · ${l.when.replace(/ \d{4}$/, '')}`, intro: `Entry is free: book your place and we'll email your tickets. Doors ${n.doors}.` })}
@@ -338,7 +338,7 @@ function manage(ctx) {
     title: 'Sunday Showcase: line-up', path: `${PATH}/manage`, noindex: true, ambient: null, scripts: ['/js/showcases-manage.js', '/js/running-order.js'], bodyClass: 'staff',
     body: html`<section class="section"><div class="wrap narrow">
     <div class="label">TAM back office</div><h1 class="chrome gold">Sunday Showcases</h1>
-    <p><a class="btn ghost small" href="${PATH}#this-sunday" target="_blank" rel="noopener">See the tree ↗</a> <a class="btn ghost small" href="/shows">Shows</a></p>
+    <p><a class="btn ghost small" href="${PATH}#this-sunday" target="_blank" rel="noopener">See the tree ↗</a> <a class="btn ghost small" href="https://${ctx.cfg.showcaseHost}/" target="_blank" rel="noopener">showcase.tam.tv ↗</a> <a class="btn ghost small" href="/api/showcases/crew.csv">The Showcase Crew (CSV)</a> <a class="btn ghost small" href="/shows">Shows</a></p>
     <div class="formbox" id="team-login" hidden><h3>Sign in</h3><p class="small muted">Sign in at <a href="/shows">/shows</a> with your work email, then come back here.</p></div>
     <div id="sc-manage" hidden></div></div></section>`,
   });

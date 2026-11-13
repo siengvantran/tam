@@ -57,5 +57,29 @@
       "for": "TAM's other open nights and jams, as they're announced.",
       "match": "open night|new developments|jam session"
     }
-  ]
+  ],
+  "microsite": {
+    "title": "TAM Sunday Showcase",
+    "tagline": "Your stage starts here.",
+    "lede": "Every Sunday Showcase puts the best new acts from TAM's open nights on a real stage, in front of a real crowd, at the Temple of Art and Music in Elephant & Castle. Come and watch for free, get on the circuit, or join the crew.",
+    "leads": [
+      {
+        "title": "Open nights",
+        "text": "Where it starts: play TAM Open Mic, The Original Singers Club, the Blues Jam or Junior Open Mic, and meet the hosts."
+      },
+      {
+        "title": "Sunday Showcase",
+        "text": "A full set with a real sound system and crowd, plus your own page on tam.tv with a fan wall and invite cards to share."
+      },
+      {
+        "title": "Christmas Showcase Special",
+        "text": "Fans vote for the acts they want to see at The Best Christmas Ever, TAM's Christmas festival."
+      },
+      {
+        "title": "TAM's own nights",
+        "text": "Acts the crowd loves can be invited back to TAM's own nights and onto TAM TV."
+      }
+    ],
+    "crew": "The Showcase Crew is everyone who loves new music at TAM: fans who come to cheer, and musicians on their way up. Join to hear about each showcase first, who's playing, and how to get on the line-up."
+  }
 }

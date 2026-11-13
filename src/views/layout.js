@@ -10,11 +10,11 @@ const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat
 
 export function layout(ctx, {
   title, description, path = '/', theme = 'tam', body, og, scripts = [], noindex = false, jsonLd = null,
-  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null, fonts = '',
+  ambient = 'stars', song = null, festival = null, data = null, bodyClass = '', pathway = null, fonts = '', canonical = null,
 }) {
   const { site } = ctx.content;
   const elsewhere = ctx.content.canonicalElsewhere.get(path);
-  const url = elsewhere || `${ctx.cfg.siteUrl}${path}`;
+  const url = canonical || elsewhere || `${ctx.cfg.siteUrl}${path}`; // canonical: a page on another TAM address (e.g. showcase.tam.tv)
   if (elsewhere) jsonLd = null; // the event listing belongs to the canonical page, not this copy
   if (!ctx.cfg.indexing) noindex = true;
   const image = og ? (og.startsWith('http') ? og : `${ctx.cfg.siteUrl}${og}`) : `${ctx.cfg.siteUrl}/img/og.jpg`;
