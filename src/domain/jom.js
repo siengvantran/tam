@@ -32,7 +32,7 @@ export const RELATIONS = { parent: 'Parent', guardian: 'Guardian', adult: 'I’m
 export function jomDomain(ctx) {
   const { db, save, cfg, content: c } = ctx;
   const J = c.jom || { acts: [], groups: {}, sessions: [] };
-  for (const k of ['jomClaims', 'jomPending', 'jomLinks', 'jomSessions', 'jomPledges', 'jomExtra']) if (!Array.isArray(db[k])) db[k] = [];
+  for (const k of ['jomClaims', 'jomPending', 'jomLinks', 'jomSessions', 'jomPledges', 'jomExtra', 'jomApplications']) if (!Array.isArray(db[k])) db[k] = [];
   if (!db.jomActs || typeof db.jomActs !== 'object') db.jomActs = {}; // per-act overrides: { name, photos[], bio, links[], claimedBy[], hidden }
   const iso = (t = ctx.now()) => new Date(t).toISOString();
   const site = () => cfg.siteUrl;
@@ -127,6 +127,30 @@ export function jomDomain(ctx) {
       send(res, 201, { ok: true });
     });
 
+    // ----- applications to play The Best Christmas Ever (a parent or guardian applies for under-18s) -----
+    r.post('/api/jom/apply-christmas', async (req, res) => {
+      if (claimLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
+      const b = await readJson(req, 8 * 1024);
+      const mail = cleanEmail(b.email);
+      const actName = text(b.act, 80);
+      if (!actName) throw fail(400, 'Add the act’s name.');
+      if (!text(b.name, 80)) throw fail(400, 'Add your name.');
+      if (!mail) throw fail(400, 'Add a valid email address.');
+      if (!RELATIONS[b.relation]) throw fail(400, 'Tell us how you’re connected to the act.');
+      if (!['junior', 'youth'].includes(b.group)) throw fail(400, 'Pick Junior (4 to 15) or Youth (12 to 18).');
+      if (b.consent !== true) throw fail(400, 'Tick the box to confirm.');
+      const links = (Array.isArray(b.links) ? b.links : String(b.links || '').split(/[\n,\s]+/)).map((x) => String(x).trim()).filter(Boolean);
+      const bad = links.find((l) => !MUSIC.test(l));
+      if (bad) throw fail(400, `Links can go to YouTube, Spotify, SoundCloud, Bandcamp, Apple Music, Instagram, TikTok or Facebook. This one can’t: ${bad.slice(0, 80)}`);
+      const known = all().find((x) => x.name.toLowerCase().replace(/[’']/g, '') === actName.toLowerCase().replace(/[’']/g, ''));
+      const a = { id: newId('JX', 6), at: iso(), act: actName, slug: known ? known.slug : '', group: b.group, plays: text(b.plays, 160), members: Math.max(1, Math.min(12, parseInt(b.members, 10) || 1)),
+        links: links.slice(0, 6), played: text(b.played, 300), notes: text(b.notes, 1000), name: text(b.name, 80), email: mail, relation: b.relation, status: 'new' };
+      db.jomApplications.push(a);
+      await save();
+      tell(mail, 'JOM × TAM: your application for The Best Christmas Ever', 'Thanks for applying', `<p>We’ve got ${e(actName)}’s application to play The Best Christmas Ever at TAM. The JOM date is still to be announced: we’ll be in touch with JOM once it’s set.</p>${known ? `<p>Fans can pledge to see ${e(actName)} on their page: <a href="${e(site())}/jom/${e(known.slug)}">${e(site())}/jom/${e(known.slug)}</a>. Share it!</p>` : ''}`);
+      send(res, 201, { ok: true, page: known ? known.slug : null });
+    });
+
     // ----- parents: claim a page -----
     r.post('/api/jom/:slug/claim', async (req, res, { params }) => {
       const a = act(params.slug);
@@ -212,6 +236,7 @@ export function jomDomain(ctx) {
         changes: db.jomPending.filter((x) => x.status === 'pending').map((x) => ({ ...x, current: acts.find((a) => a.slug === x.act) })),
         acts: acts.map((a) => ({ ...a, parents: (db.jomActs[a.slug] || {}).claimedBy || [] })).sort((x, y) => y.pledges - x.pledges),
         pledges: db.jomPledges.reduce((t, p) => t + p.n, 0),
+        applications: db.jomApplications.slice().reverse().map((x) => ({ ...x, pledges: x.slug ? (acts.find((a) => a.slug === x.slug) || {}).pledges || 0 : 0 })),
       });
     });
     r.post('/api/jom/manage/claims/:id', async (req, res, { params }) => {
@@ -270,6 +295,16 @@ export function jomDomain(ctx) {
         while (act(slug) || ['me', 'in', 'sign-in', 'manage', 'claim'].includes(slug)) slug = `${slugOf(name)}-${i++}`;
         db.jomExtra.push({ slug, name, group: J.groups[b.group] ? b.group : 'youth', sessions: c.nightBy.has(b.session) ? [b.session] : [] });
       }
+      await save();
+      send(res, 200, { ok: true });
+    });
+    r.post('/api/jom/manage/applications/:id', async (req, res, { params }) => {
+      guard(req);
+      const x = db.jomApplications.find((y) => y.id === params.id);
+      if (!x) throw fail(404, 'No such application.');
+      const b = await readJson(req, 1024);
+      if (!['new', 'shortlist', 'booked', 'not-this-time'].includes(b.status)) throw fail(400, 'Unknown status.');
+      x.status = b.status;
       await save();
       send(res, 200, { ok: true });
     });

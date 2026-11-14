@@ -1507,7 +1507,7 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .anr-stars { display: grid; gap: 4px; font-size: 13px; } .anr-note { display: flex; gap: 8px; } .anr-note input { flex: 1; min-width: 0; }
 @media (max-width: 960px) { .anr-wrap { grid-template-columns: minmax(0, 1fr); } .anr-detail { position: static; max-height: none; } }
 /* ---------- JOM Youth Music × TAM: jom.tam.tv (src/views/jom.js) ---------- */
-.jm-hero-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); gap: 32px; align-items: center; }
+.jm-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: center; }
 .jm-poster { border-radius: 18px; box-shadow: 0 30px 70px rgba(0, 0, 0, .5); transform: rotate(2deg); }
 .jm-next { display: grid; gap: 4px; justify-items: start; background: var(--panel); border: 1px solid var(--gold-deep); border-radius: 18px; padding: 16px 18px; margin-top: 18px; max-width: 520px; }
 .jm-next b { font-size: 20px; } .jm-next .btn { margin-top: 8px; }
@@ -1539,3 +1539,13 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .jmm-diff { display: grid; gap: 4px; padding: 8px 0; border-top: 1px solid var(--line); }
 .jmm-diff del { color: #ff8a8a; white-space: pre-wrap; } .jmm-diff ins { color: #7fe0a8; text-decoration: none; white-space: pre-wrap; }
 @media (max-width: 860px) { .jm-hero-grid, .jm-two, .jm-act-grid { grid-template-columns: minmax(0, 1fr); } .jm-poster { max-width: 320px; margin: 0 auto; } }
+/* JOM: posters that shouldn't be cropped in the carousel, the next dates, the Christmas call-out */
+.fx-slide.fit img { object-fit: contain; background: #0b0709; }
+.jm-hero { overflow: hidden; } /* the fanned slides stay on screen, like the home page's featured carousel */
+.jm-car { margin-top: 8px; } .jm-car .fx-stage { height: clamp(360px, 44vw, 560px); }
+.jm-dates { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.jm-date { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.jm-date img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+.jm-date div { padding: 14px 16px; display: grid; gap: 4px; } .jm-date b { font-size: 20px; } .jm-date span { color: var(--ink-dim); font-size: 15px; }
+.jm-xmas { background: radial-gradient(120% 140% at 100% 0, rgba(255, 59, 78, .25), transparent 55%), var(--panel); border: 1px solid #7a2a33; border-radius: 24px; padding: clamp(20px, 4vw, 40px); }
+.jm-xmas form { display: grid; gap: 12px; margin-top: 14px; }

@@ -33,7 +33,7 @@ async function start() {
 const diff = (label, was, now) => (String(was || '') === String(now || '') ? '' : `<div class="jmm-diff"><b>${label}</b><del>${esc(was || '(empty)')}</del><ins>${esc(now || '(empty)')}</ins></div>`);
 
 function draw() {
-  root.innerHTML = `<nav class="cm-tabs">${[['claims', `Claims to check (${D.claims.length})`], ['changes', `Changes to approve (${D.changes.length})`], ['acts', `Acts and pledges (${D.acts.length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="jmm-body"></div>`;
+  root.innerHTML = `<nav class="cm-tabs">${[['claims', `Claims to check (${D.claims.length})`], ['changes', `Changes to approve (${D.changes.length})`], ['xmas', `Christmas applications (${D.applications.length})`], ['acts', `Acts and pledges (${D.acts.length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="jmm-body"></div>`;
   const b = $('#jmm-body');
   if (tab === 'claims') {
     b.innerHTML = D.claims.length ? D.claims.map((c) => `<div class="formbox jmm-item" data-claim="${c.id}"><h3>${esc(c.actName)}</h3>
@@ -51,6 +51,13 @@ function draw() {
       <label class="field"><span>Note if you reject (emailed to them)</span><input name="message" maxlength="600"></label>
       <div class="row-btn"><button class="btn hot small" data-do="approve">Approve: put it on the page</button><button class="btn ghost small" data-do="reject">Reject</button></div></div>`; }).join('')
       : '<p class="muted">No changes waiting.</p>';
+  } else if (tab === 'xmas') {
+    const ST = { new: 'New', shortlist: 'Shortlisted', booked: 'Booked', 'not-this-time': 'Not this time' };
+    b.innerHTML = D.applications.length ? `<p class="small muted">Applications to play The Best Christmas Ever (JOM date to be announced). Pledges are the fans signed up on the act’s page.</p>
+    <table class="cm-table"><thead><tr><th>Act</th><th>Pledged</th><th>Parent or guardian</th><th>Status</th></tr></thead><tbody>${D.applications.map((x) => `<tr><td><b>${esc(x.act)}</b>${x.slug ? ` <a class="small" href="/jom/${esc(x.slug)}" target="_blank">page ↗</a>` : ''}<br><small>${esc(D.groups[x.group] || x.group)} · ${x.members} in the act${x.plays ? ` · ${esc(x.plays)}` : ''}</small>
+      ${x.played ? `<br><small class="muted">Played: ${esc(x.played)}</small>` : ''}${x.links.length ? `<br><small>${x.links.map((l) => `<a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.replace(/^https:\/\/(www\.)?/, '').slice(0, 40))}</a>`).join(' · ')}</small>` : ''}${x.notes ? `<br><small>“${esc(x.notes)}”</small>` : ''}</td>
+      <td>${x.pledges}</td><td><small>${esc(x.name)} (${esc(D.relations[x.relation] || x.relation)})<br><a href="mailto:${esc(x.email)}">${esc(x.email)}</a><br>${esc(when(x.at))}</small></td>
+      <td><select data-app="${x.id}">${Object.entries(ST).map(([k, v]) => `<option value="${k}" ${x.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table>` : '<p class="muted">No applications yet. The form is on the JOM hub, under the acts.</p>';
   } else {
     b.innerHTML = `<p>${D.pledges} people pledged in all. <a class="btn ghost small" href="/api/jom/manage/pledges.csv">Download pledges (CSV)</a> <a class="btn ghost small" href="/jom" target="_blank">The JOM hub ↗</a></p>
     <table class="cm-table"><thead><tr><th>Act</th><th>Pledged</th><th>Parents</th><th></th></tr></thead><tbody>${D.acts.map((a) => `<tr><td><b>${esc(a.name)}</b>${a.hidden ? ' <small class="err">hidden</small>' : ''}<br><small class="muted">${esc(a.groupName)} · ${a.sessions.length} session(s)</small></td><td>${a.pledges}</td>
@@ -77,6 +84,11 @@ root.addEventListener('click', async (e) => {
       await api('/api/jom/manage/acts', { method: 'POST', body: { slug: t.dataset.act, action: t.dataset.a } }); await load(); draw();
     }
   } catch (err) { alert(err.message); }
+});
+root.addEventListener('change', async (e) => {
+  if (!e.target.dataset.app) return;
+  try { await api(`/api/jom/manage/applications/${e.target.dataset.app}`, { method: 'POST', body: { status: e.target.value } }); await load(); }
+  catch (err) { alert(err.message); }
 });
 root.addEventListener('submit', async (e) => {
   e.preventDefault();

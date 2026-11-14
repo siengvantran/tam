@@ -24,28 +24,74 @@ function card(req, a) {
     <div class="jm-card-body"><b>${a.name}</b><small>${a.groupName}</small>${a.pledges ? html`<small class="jm-pl">🎄 ${a.pledges} pledged</small>` : ''}</div></a>`;
 }
 
+// The carousel at the top: JOM's banners, then every act with a photo (each to their page).
+function carousel(ctx, req, jom) {
+  const J = jom.J;
+  const href = (h) => (h.startsWith('#') ? h : h.startsWith('/events/') ? `${ctx.cfg.siteUrl}${h}` : h);
+  const slides = (J.banners || []).map((b) => ({ ...b, href: href(b.href || '#') }))
+    .concat(jom.shown().filter((a) => a.photo).map((a) => ({ src: a.photo, alt: `${a.name}: ${a.groupName}`, href: L(req, `/${a.slug}`) })));
+  if (!slides.length) return '';
+  return html`<div class="fx-car jm-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="JOM at TAM: banners and acts">
+    <div class="fx-stage">${slides.map((s, i) => html`<figure class="fx-slide${s.video ? ' is-video' : ''}${s.fit ? ' fit' : ''}" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} of ${slides.length}">${s.video
+      ? html`<a href="${s.href}" tabindex="-1"><video muted loop playsinline preload="metadata" poster="${s.src}" aria-label="${s.alt}"><source src="${s.video}" type="video/mp4"></video><img class="fx-alt" src="${s.src}" alt="${s.alt}" hidden></a><button type="button" class="fx-sound" aria-pressed="false" aria-label="Sound on">🔇</button>`
+      : html`<a href="${s.href}" tabindex="-1"><img src="${s.src}" alt="${s.alt}" ${i > 2 ? html`loading="lazy"` : ''} width="1080" height="1350"></a>`}</figure>`)}</div>
+    <div class="fx-ctrl"><button type="button" class="fx-arrow" data-dir="-1" aria-label="Previous">‹</button>
+      <div class="fx-dots" role="tablist">${slides.map((s, i) => html`<button type="button" role="tab" data-go="${i}" aria-label="${s.alt}"></button>`)}</div>
+      <button type="button" class="fx-arrow" data-dir="1" aria-label="Next">›</button></div>
+    <p class="fx-caption" aria-live="polite"></p><p class="fx-credit">Plates and banners by JOM Youth Music</p></div>`;
+}
+
+const dayOf = (d) => longDate(d).replace(/ \d{4}$/, '');
+
 function hub(ctx, req, jom) {
   const J = jom.J;
   const acts = jom.shown();
   const next = jom.nextSession();
+  const later = (J.upcoming || []).filter((u) => u.date >= ctx.today());
   const f = jom.festival();
+  const X = J.christmas;
   const top = acts.filter((a) => a.pledges).sort((x, y) => y.pledges - x.pledges).slice(0, 6);
   const groups = Object.entries(J.groups).map(([k, v]) => [v, acts.filter((a) => a.group === k)]).filter(([, l]) => l.length);
+  const nextCard = next
+    ? html`<div class="jm-next"><span class="label">Next JOM session at TAM</span><b>${next.title}</b><span>${when(next)} · Doors ${next.doors}</span>
+        <a class="btn hot" href="${ctx.cfg.siteUrl}/events/${next.slug}#book">Get free tickets</a></div>`
+    : later.length ? html`<div class="jm-next"><span class="label">Next JOM dates</span><b>${later.map((u) => u.title).join(' and ')}</b><span>${dayOf(later[0].date)} · ${later[0].venue.split(',')[0]}</span>
+        <a class="btn hot" href="#next-dates">See the dates</a></div>`
+    : html`<p class="jm-next"><b>The next JOM session is coming soon.</b> <span>Watch this page, or <a href="${ctx.cfg.siteUrl}/club">join the TAM list</a>.</span></p>`;
   return page(ctx, req, {
     title: 'JOM Youth Music × TAM', sub: '/', og: (J.sessions[0] || {}).poster,
-    description: 'Young bands and singers on a real stage: JOM Youth Music at TAM. Every act’s own page, their music, the nights they’ve played, and pledges to see them at The Best Christmas Ever.',
+    description: 'Young bands and singers on a real stage: JOM Youth Music at TAM. Every act’s own page, their music, the nights they’ve played, the next JOM dates, and how to play The Best Christmas Ever.',
     body: html`<section class="section jm-hero"><div class="wrap jm-hero-grid"><div>
-      <div class="label">${J.title}</div><h1 class="chrome gold">JOM at TAM</h1><p class="lede">${J.lede}</p>
-      ${next ? html`<div class="jm-next"><span class="label">Next JOM session</span><b>${next.title}</b><span>${when(next)} · Doors ${next.doors}</span>
-        <a class="btn hot" href="${ctx.cfg.siteUrl}/events/${next.slug}#book">Get free tickets</a></div>` : html`<p class="jm-next"><b>The next JOM session is coming soon.</b> <span>Watch this page, or <a href="${ctx.cfg.siteUrl}/club">join the TAM list</a>.</span></p>`}
-      </div>${J.sessions[0] && J.sessions[0].poster ? html`<img class="jm-poster" src="${J.sessions[0].poster}" alt="${J.sessions[0].title}: the line-up" width="432" height="540">` : ''}</div></section>
+      <div class="label">${J.title}</div><h1 class="chrome gold">JOM at TAM</h1><p class="lede">${J.lede}</p>${nextCard}
+      ${X ? html`<p class="small"><a href="#christmas">🎄 ${X.title}: apply now</a></p>` : ''}
+      </div>${carousel(ctx, req, jom)}</div></section>
     ${top.length ? html`<section class="section"><div class="wrap"><h2 class="chrome">Most pledged for Christmas</h2>
       <p>Fans are pledging to see these acts at ${f ? f.name : 'The Best Christmas Ever'}. Pledge for your favourite on their page.</p><div class="jm-grid">${top.map((a) => card(req, a))}</div></div></section>` : ''}
     ${groups.map(([name, list]) => html`<section class="section jm-group"><div class="wrap"><h2 class="chrome">${name}</h2><div class="jm-grid">${list.map((a) => card(req, a))}</div></div></section>`)}
+    ${X ? html`<section class="section" id="christmas"><div class="wrap narrow"><div class="jm-xmas"><div class="label">🎄 ${f ? f.name : 'The Best Christmas Ever'} · TAM · date to be announced</div>
+      <h2 class="chrome gold">${X.title}</h2><p>${X.lede}</p><p class="small muted">${X.note}</p>
+      <form id="jm-xmas" novalidate>
+        <div class="fields"><label class="field"><span>The act’s name</span><input name="act" maxlength="80" required list="jm-acts"></label>
+        <label class="field"><span>Which open mic</span><select name="group" required><option value="">Choose…</option><option value="junior">Junior (ages 4 to 15)</option><option value="youth">Youth (ages 12 to 18)</option></select></label>
+        <label class="field"><span>What they play</span><input name="plays" maxlength="160" placeholder="e.g. a four-piece rock band, a singer with ukulele"></label>
+        <label class="field"><span>How many in the act</span><input name="members" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
+        <label class="field full"><span>Links to their music (optional, one per line)</span><textarea name="links" rows="2" placeholder="YouTube, Spotify, SoundCloud, Instagram…"></textarea></label>
+        <label class="field full"><span>JOM sessions they’ve played</span><input name="played" maxlength="300" placeholder="e.g. TAM x JOM Sessions, Nov 2026; Hootananny, Oct 2026"></label>
+        <label class="field full"><span>Anything else (dates you can’t do in December, equipment…)</span><textarea name="notes" rows="2" maxlength="1000"></textarea></label>
+        <label class="field"><span>Your name</span><input name="name" maxlength="80" required autocomplete="name"></label>
+        <label class="field"><span>Your email</span><input name="email" type="email" required autocomplete="email"></label></div>
+        <fieldset class="cl-chips"><legend>You are</legend>${Object.entries(RELATIONS).map(([k, v], i) => html`<label class="cl-chip"><input type="radio" name="relation" value="${k}" ${i ? '' : 'checked'}><span>${v}</span></label>`)}</fieldset>
+        <label class="check"><input type="checkbox" name="consent" required> I’m the parent or guardian of the under-18s in this act (or I’m in it and 18+), and I’m happy for TAM to contact me about playing the festival.</label>
+        <button class="btn hot" type="submit">Apply to play</button><p class="err" role="status" aria-live="polite"></p>
+        <datalist id="jm-acts">${acts.map((a) => html`<option value="${a.name}">`)}</datalist></form></div></div></section>` : ''}
     <section class="section"><div class="wrap jm-two"><div><h2 class="chrome">About JOM</h2><p>${J.about}</p>
       ${J.sessions.map((s) => html`<p class="small">Played at TAM: <a href="${ctx.cfg.siteUrl}/events/${s.slug}">${s.title}, ${longDate(s.date)}</a></p>`)}</div>
       <div class="formbox"><h2>Parents and guardians</h2><p>Every act has a page that stays, so they can share it for years. If you’re a parent or guardian of someone in the act, open their page and tap <b>Claim this page</b>. We check every claim, then you can add photos, a short bio and links to their music.</p>
-      <p class="small muted">We check every change before it goes on the page. We never show ages, schools or where anyone lives, and you can ask us to take a page down at any time. <a href="${L(req, '/sign-in')}">Already claimed? Sign in</a></p></div></div></section>`,
+      <p class="small muted">We check every change before it goes on the page. We never show ages, schools or where anyone lives, and you can ask us to take a page down at any time. <a href="${L(req, '/sign-in')}">Already claimed? Sign in</a></p></div></div></section>
+    ${later.length ? html`<section class="section" id="next-dates"><div class="wrap"><h2 class="chrome">Next JOM dates</h2>
+      <div class="jm-dates">${later.map((u) => html`<article class="jm-date">${u.poster ? html`<img src="${u.poster}" alt="${u.title}: ${dayOf(u.date)}, ${u.time}, ${u.venue}" loading="lazy" width="640" height="640">` : ''}
+        <div><b>${u.title}</b><span>${longDate(u.date)} · ${u.time}</span><span>${u.venue}</span><span>${u.who}. To play, email <a href="mailto:${u.contact}">${u.contact}</a></span></div></article>`)}</div>
+      <p class="small muted">JOM’s open mics happen at Hootananny Brixton as well as TAM. Every JOM night at TAM is on <a href="${ctx.cfg.siteUrl}/whats-on">TAM’s listings</a>.</p></div></section>` : ''}`,
   });
 }
 
