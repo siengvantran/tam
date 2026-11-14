@@ -139,7 +139,7 @@ function footer(ctx) {
     </div>
     <nav aria-label="More">
       <a href="/whats-on">What's on</a><a href="/festivals">Festivals</a><a href="/artists">Artists</a><a href="/tv">TAM TV</a>
-      <a href="/archive">Archive</a><a href="/club">TAM Club</a><a href="/newsletter">Newsletter</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
+      <a href="/archive">Archive</a><a href="/club">TAM Club</a><a href="/stage">The TAM Stage</a><a href="/newsletter">Newsletter</a><a href="${BLUES_JAM}">The Great British Blues Jam</a>${navLinks(ctx, 'footer').map((l) => html`<a href="${l.path}">${l.label}</a>`)}<a href="/verify">Verify a certificate</a><a href="/privacy">Privacy</a>${ctx.cfg.gaId ? html`<a href="/privacy#analytics" data-cookie-choices>Cookie choices</a>` : ''}
     </nav>
     <nav aria-label="Elsewhere">
       ${Object.entries(site.socials || {}).filter(([, u]) => u).map(([k, u]) => html`<a href="${u}" rel="noopener" target="_blank">${k[0].toUpperCase() + k.slice(1)} ↗</a>`)}

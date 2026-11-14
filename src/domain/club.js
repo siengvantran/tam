@@ -73,6 +73,8 @@ export const RULES = {
   click: { pts: 1, label: 'Open a link in our newsletter', hint: 'each issue' },
   photo: { pts: 1, label: 'Add a photo to your card', max: 1 },
   room: { pts: 2, label: 'Open the doors of The Analogue Room', perDay: 1, hint: 'a new room each morning' },
+  boost: { pts: 1, label: 'Boost an act on the TAM Stage', perDay: 3 },
+  scout: { pts: 3, label: 'An act you boosted moves up a planet', hint: 'scout bonus' },
   half: { pts: -HALF, label: 'A drink on the house', hidden: true },
   refund: { pts: HALF, label: 'Unused drink: points back', hidden: true },
   gift: { pts: 0, label: 'From the TAM team', hidden: true, unit: true },
@@ -85,7 +87,7 @@ const BADGES = [
   ['First night', '🎟️', (n) => n.attend >= 1], ['Front row', '🎸', (n) => n.attend >= 5],
   ['Scout', '🔭', (n) => n.vote >= 3], ['Connector', '🔗', (n) => n.referral >= 3],
   ['On a streak', '🔥', (n) => n.streak >= 1], ['Bar regular', '🍺', (n) => n.bar >= 3],
-  ['On the house', '🏆', (n) => n.half >= 1], ['Wall writer', '✍️', (n) => n.wall >= 3],
+  ['On the house', '🏆', (n) => n.half >= 1], ['Wall writer', '✍️', (n) => n.wall >= 3], ['Talent scout', '🌟', (n) => n.scout >= 1],
 ];
 export const SEGMENTS = {
   all: 'Everyone',

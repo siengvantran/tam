@@ -27,6 +27,11 @@ export function enquiriesDomain(ctx) {
     db.enquiries.push(e);
     await save();
     notify(e);
+    // every request to play also starts the act's TAM Stage page (src/domain/stage.js)
+    if (e.kind === 'perform' && ctx.stage) {
+      ctx.stage.apply({ email: e.email, name: e.name, act: e.company, message: e.message, links: (e.message.match(/https:\/\/[^\s,]+/g) || []) },
+        e.source === 'agent' ? 'Ask TAM' : e.pathway === 'showcase' ? 'Sunday Showcase call-out' : 'play enquiry').catch((err) => console.warn(`Stage from ${e.id}: ${err.message}`));
+    }
     return e;
   }
 

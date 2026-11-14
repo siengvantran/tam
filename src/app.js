@@ -25,6 +25,8 @@ import * as showcasePages from './views/showcases.js';
 import { showcaseDomain } from './domain/showcases.js';
 import { serveMicrosite } from './views/showcase-site.js';
 import { clubDomain } from './domain/club.js';
+import { stageDomain } from './domain/stage.js';
+import * as stagePages from './views/stage.js';
 import * as clubPages from './views/club.js';
 import { roomDomain } from './domain/room.js';
 import * as roomPages from './views/room.js';
@@ -105,6 +107,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
 
   // The TAM Club: the email list and the loyalty card. Other domains give points through ctx.club.
   ctx.club = clubDomain(ctx);
+  // The TAM Stage: every request to play becomes an act with its own microverse (A&R, as a game)
+  ctx.stage = stageDomain(ctx);
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
   const collections = collectionsDomain(ctx, tickets);
@@ -127,7 +131,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -153,6 +157,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
+  stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
   ctx.club.pageRoutes(site); // /c/…: newsletter link clicks
   roomPages.routes(site, ctx, room); // /analogue-room: today's escape room
   ctx.links.classify(site); // which old pages only the old site has
