@@ -2,6 +2,7 @@
 // (/api/room). Progress is kept in this browser; the answers never are.
 
 import { $, api, store } from '/js/lib.js';
+import { visit, signal } from '/js/room-invite.js';
 
 const root = $('[data-room]');
 const NUM = ['I', 'II', 'III', 'IV'];
@@ -38,6 +39,8 @@ function slip(key, msg) { run().slips++; flash = { [key]: msg }; keep(); draw();
 async function check(body, key) {
   if (busy) return null;
   busy = true;
+  const r = run();
+  if (!r.started) { r.started = true; keep(); signal('start'); } // the first move, once a room
   try { return await api('/api/room/check', { method: 'POST', body: { date: room.date, ...body } }); }
   catch (e) { flash = { [key]: e.message }; draw(); return null; }
   finally { busy = false; }
@@ -67,10 +70,10 @@ async function openDoors() {
   busy = true;
   try {
     const got = await api('/api/room/open', { method: 'POST', body: {
-      date: room.date, cards: room.cards.map((_, i) => r.cards[i].record), code: r.code, picks: room.gates.map((_, i) => r.gates[i].pick), word } });
+      date: room.date, cards: room.cards.map((_, i) => r.cards[i].record), code: r.code, picks: room.gates.map((_, i) => r.gates[i].pick), word, ...visit() } });
     busy = false;
     if (!got.ok) return slip('word', 'The doors stay shut. Read the brass again, top to bottom.');
-    r.open = { word: word.toUpperCase(), epilogue: got.epilogue, points: got.points, member: got.member };
+    r.open = { word: word.toUpperCase(), epilogue: got.epilogue, points: got.points, member: got.member, artist: got.artist };
     flash = {}; keep(); draw();
     $('#ar-open').scrollIntoView({ block: 'start' });
   } catch (e) { busy = false; flash = { word: e.message }; draw(); }
@@ -143,6 +146,7 @@ function draw() {
     out.push(el('section', { class: 'ar-lock ar-open', id: 'ar-open' },
       el('header', null, el('h2', null, 'Doors open'), el('span', { class: 'label' }, `${fmt(r.secs)} · ${r.slips} ${r.slips === 1 ? 'slip' : 'slips'}`)),
       o.epilogue.map((t) => el('p', null, t)), club,
+      o.artist ? el('p', null, 'The real room is on Newington Causeway, and it needs players. ', el('a', { href: '/for/musician' }, 'Play at TAM')) : null,
       el('p', { class: 'small muted' }, 'The next room is built tomorrow morning from the day’s news.')));
   }
   out.push(el('div', { class: 'ar-sources small muted' }, 'On the record today:', el('ul', null, room.sources.map((s) => el('li', null, link(s))))));

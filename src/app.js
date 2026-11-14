@@ -119,7 +119,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const showcase = showcaseDomain(ctx); // this week's Sunday Showcase line-up: presents under the tree
   ctx.showcase = showcase; // the home page shows the line-up carousel too
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
-  const room = roomDomain(ctx, { dir: contentDir || path.join(ROOT, 'content') }); // The Analogue Room: a daily escape room, worth club points
+  const room = ctx.room = roomDomain(ctx, { dir: contentDir || path.join(ROOT, 'content') }); // The Analogue Room: a daily escape room, worth club points
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };

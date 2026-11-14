@@ -22,13 +22,13 @@ async function setup(t) {
   });
   await new Promise((r) => resend.listen(0, r));
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-room-'));
-  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: 'x', EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're_test', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0' } });
+  const app = await createApp({ env: { DATA_DIR: dir, ADMIN_TOKEN: 'admin-token-for-tests', EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're_test', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0' } });
   await new Promise((r) => app.listen(0, r));
   t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(() => resend.close(r)); }));
   const B = `http://127.0.0.1:${app.server.address().port}`;
   app.ctx.cfg.siteUrl = B;
-  const call = async (p, { method = 'GET', body, cookie = '' } = {}) => {
-    const r = await fetch(`${B}${p}`, { method, redirect: 'manual', headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(cookie ? { cookie } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const call = async (p, { method = 'GET', body, cookie = '', headers = {} } = {}) => {
+    const r = await fetch(`${B}${p}`, { method, redirect: 'manual', headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(cookie ? { cookie } : {}), ...headers }, body: body ? JSON.stringify(body) : undefined });
     const type = r.headers.get('content-type') || '';
     return { status: r.status, headers: r.headers, body: type.includes('json') ? await r.json() : await r.text() };
   };
@@ -109,4 +109,56 @@ test('opening the doors: solved rooms only, 2 points for members, once a day', a
   assert.equal((await open(answers, cookie)).body.points, 0, 'once a day');
   assert.equal(app.ctx.db.clubLedger.filter((x) => x.rule === 'room').length, 1);
   assert.equal((await call('/api/room', { cookie })).body.banked, true);
+});
+
+test('the home page and every public page invite people in; artists get their own words', async (t) => {
+  const { call } = await setup(t);
+  const home = await call('/');
+  assert.match(home.body, /data-room-tile data-aud="public"/);
+  assert.match(home.body, /\/js\/room-invite\.js/);
+  assert.match(home.body, /built from the day’s real news/);
+  const artistHome = await call('/', { cookie: 'tam_path=musician' });
+  assert.match(artistHome.body, /data-room-tile data-aud="artist"/);
+  assert.match(artistHome.body, /played once, by people, and never copied/);
+  assert.match((await call('/whats-on')).body, /\/js\/room-invite\.js/);
+
+  const pub = (await call('/api/room/invite?src=search&page=/whats-on')).body.invite;
+  assert.equal(pub.aud, 'public');
+  assert.equal(pub.src, 'search');
+  assert.equal(pub.href, '/analogue-room');
+  assert.ok(['points', 'news', 'drink'].includes(pub.id));
+  const byCookie = (await call('/api/room/invite?src=social&page=/', { cookie: 'tam_path=musician' })).body.invite;
+  const byPage = (await call('/api/room/invite?src=nonsense&page=/sunday-showcases')).body.invite;
+  for (const v of [byCookie, byPage]) { assert.equal(v.aud, 'artist'); assert.ok(['stage', 'once', 'card'].includes(v.id)); }
+  assert.equal(byPage.src, 'other', 'unknown sources are counted as other');
+});
+
+test('counts are totals by source, and the wording that opens doors wins', async (t) => {
+  const { call, app, member, answers } = await setup(t);
+  const room = app.ctx.room;
+  const sig = (body, headers) => call('/api/room/signal', { method: 'POST', body, headers });
+  assert.equal((await sig({ type: 'shown', src: 'search', variant: 'news', aud: 'public' })).status, 200);
+  assert.equal((await sig({ type: 'click', src: 'search', variant: 'news', aud: 'public' })).status, 200);
+  assert.equal((await sig({ type: 'paid', src: 'search' })).status, 400);
+  const cookie = await member('kim@example.com');
+  const opened = await call('/api/room/open', { method: 'POST', cookie, body: { ...answers, src: 'search', variant: 'news', aud: 'public' } });
+  assert.equal(opened.body.points, 2);
+  const row = room.totals().find((r) => r.variant === 'news');
+  assert.deepEqual({ ...row }, { aud: 'public', src: 'search', variant: 'news', shown: 1, click: 1, start: 0, open: 1, points: 1 });
+  assert.ok(!JSON.stringify(app.ctx.db.roomStats).includes('kim@'), 'nothing about who');
+
+  // with plenty of showings, the best wording for that source is the one shown (when not exploring)
+  for (let i = 0; i < 80; i++) room.count('shown', { aud: 'public', src: 'social', variant: 'drink' });
+  for (let i = 0; i < 30; i++) room.count('open', { aud: 'public', src: 'social', variant: 'drink' });
+  for (let i = 0; i < 80; i++) room.count('shown', { aud: 'public', src: 'social', variant: 'points' });
+  assert.equal(room.choose('public', 'social', () => 0.99).id, 'drink');
+  assert.equal(room.choose('public', 'email', () => 0.99).id, 'drink', 'a source with few showings goes by everyone');
+  assert.ok(['stage', 'once', 'card'].includes(room.choose('artist', 'social', () => 0.99).id));
+  assert.equal(room.choose('public', 'social', () => 0).id, 'points', 'one in five is shown a wording at random');
+
+  assert.equal((await call('/api/room/stats')).status, 401);
+  const stats = await call('/api/room/stats', { headers: { 'x-staff-token': 'admin-token-for-tests' } });
+  assert.ok(stats.body.rows.length >= 2);
+  assert.equal((await call('/analogue-room/stats')).status, 302);
+  assert.match((await call('/analogue-room/stats', { headers: { 'x-staff-token': 'admin-token-for-tests' } })).body, /Where they came from/);
 });
