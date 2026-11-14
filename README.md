@@ -72,7 +72,10 @@ A daily escape room built from the day's news and set in a TAM of five years fro
 - **No answers in the page**: the page asks `/api/room/check` whether each move is right, and `/api/room/open` only opens the doors (and gives the points) when the whole room is sent back solved.
 - **A room a day** lives in `content/rooms.json` (oldest first; the newest room dated today or earlier is the one on the page, and earlier rooms stay playable). Each fact card must point at one of the room's `sources`. A room that fails `validRoom()` is skipped and a file that won't parse means no rooms, so a bad morning's file can't take the site down. Never put a real, named person in the fiction.
 
-See `src/domain/room.js`, `src/views/room.js`, `public/js/room.js`, `test/room.test.js`.
+- **On the home page** as a tile (the musician pathway gets its own words), and **on every public page** as one line inviting the visitor in (`public/js/room-invite.js`). The wording is picked for artists or the public, and for where the visit came from: search, social, AI assistants, email, ticket sites, other TAM sites, direct. The site learns which wording gets doors opened; one visitor in five sees a wording at random so it keeps learning. Add or change wordings in `INVITES` in `src/domain/room.js`.
+- **Who plays** (`/analogue-room/stats`, for admins): shown, followed, started, doors opened and points banked, by source, audience and wording, over 30 days. Totals only, kept 90 days: no cookie, nothing about who anyone is. The kind of source is kept for the visit in the browser's sessionStorage; the privacy notice says so.
+
+See `src/domain/room.js`, `src/views/room.js`, `public/js/room.js`, `public/js/room-invite.js`, `test/room.test.js`.
 
 ## Shows: the back office for creating nights (/shows)
 
