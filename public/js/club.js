@@ -42,7 +42,7 @@ for (const form of $$('[data-club-join]')) {
         consent: true, source: form.dataset.source || 'tam.tv', ref: ss.get('tam:ref') || '',
       } });
       msg.classList.add('ok');
-      msg.textContent = 'Nearly there: check your inbox and tap the link to confirm. That’s 20 points on your card.';
+      msg.textContent = 'Nearly there: check your inbox and tap the link to confirm. That starts your card with 10 points.';
       form.querySelectorAll('input, button').forEach((x) => { x.disabled = true; });
       track('club_join', { source: form.dataset.source || 'tam.tv' });
     } catch (err) { msg.textContent = err.message; btn.disabled = false; }
@@ -140,29 +140,29 @@ function renderCard(m) {
   const fill = m.balance / m.half;
   const when = (iso) => new Date(iso).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
   const reward = m.reward
-    ? `<div class="cl-reward live"><div class="label">Your half pint</div><p class="cl-code">${esc(m.reward.code)}</p><p>Show this code and your card at the TAM bar. Good until ${esc(when(m.reward.expires))}.</p></div>`
-    : m.canClaim ? '<div class="cl-reward ready"><p><b>Your half is ready.</b> Claim it now and show the code at the bar.</p><button class="btn hot" type="button" data-claim>Claim my half 🍺</button></div>'
-      : m.nextClaimAt ? `<div class="cl-reward"><p>One half a week: your next one unlocks ${esc(when(m.nextClaimAt))}.</p></div>`
-        : `<div class="cl-reward"><p><b>${m.toHalf}</b> more point${m.toHalf === 1 ? '' : 's'} to half a pint on us.</p></div>`;
+    ? `<div class="cl-reward live"><div class="label">Your drink on us · ${esc(m.reward.drinkName)}</div><p class="cl-code">${esc(m.reward.code)}</p><p>Show this code and your card at the TAM bar. Good until ${esc(when(m.reward.expires))}.</p></div>`
+    : m.canClaim ? `<div class="cl-reward ready"><p><b>Your drink is ready.</b> Pick one, then show the code at the bar.</p><div class="row-btn cl-drinks">${Object.entries(m.drinks).map(([k, v]) => `<button class="btn hot" type="button" data-claim="${k}">${{ half: '🍺', wine: '🍷', water: '🫗' }[k] || ''} ${esc(v)}</button>`).join('')}</div></div>`
+      : m.nextClaimAt ? `<div class="cl-reward"><p>One drink a week: your next one unlocks ${esc(when(m.nextClaimAt))}.</p></div>`
+        : `<div class="cl-reward"><p><b>${m.toHalf}</b> more point${m.toHalf === 1 ? '' : 's'} to a drink on us: half a pint, a glass of wine or an infused water.</p></div>`;
   const socials = Object.entries(m.socialLinks || {});
   cardRoot.innerHTML = `
-  ${m.status !== 'active' ? '<p class="cl-pending">Check your inbox and tap the link to confirm your email: that starts your card with 20 points.</p>' : ''}
+  ${m.status !== 'active' ? '<p class="cl-pending">Check your inbox and tap the link to confirm your email: that starts your card with 10 points.</p>' : ''}
   <div class="cl-card">
     ${glassSvg(fill)}
     <div class="cl-card-main"><div class="label">TAM Club · ${esc(m.tier.name)}</div>
       <h1 class="chrome gold">${m.firstName ? `${esc(m.firstName)}’s card` : 'Your card'}</h1>
       <p class="cl-points"><b data-count="${m.balance}">${m.balance}</b> points</p>
-      <div class="cl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${m.half}" aria-valuenow="${Math.min(m.half, m.balance)}" aria-label="Points toward half a pint"><i style="width:${Math.min(100, (m.balance / m.half) * 100)}%"></i></div>
+      <div class="cl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${m.half}" aria-valuenow="${Math.min(m.half, m.balance)}" aria-label="Points toward a drink on us"><i style="width:${Math.min(100, (m.balance / m.half) * 100)}%"></i></div>
       ${reward}
-      <p class="small muted">${m.streakDays ? `🔥 ${m.streakDays} day${m.streakDays > 1 ? 's' : ''} this week${m.streakDays < 3 ? ` · visit on ${3 - m.streakDays} more for +5` : ''} · ` : ''}${m.tier.next ? `${m.tier.toNext} points earned to ${esc(m.tier.next)}` : 'Top level: Legend'}</p>
+      <p class="small muted">${m.streakDays ? `🔥 ${m.streakDays} day${m.streakDays > 1 ? 's' : ''} this week${m.streakDays < 3 ? ` · visit on ${3 - m.streakDays} more for +2` : ''} · ` : ''}${m.tier.next ? `${m.tier.toNext} points earned to ${esc(m.tier.next)}` : 'Top level: Legend'}</p>
     </div>
     <div class="cl-qr"><img src="/club/card/${esc(m.card)}/qr.svg" alt="Your TAM Club card QR code" width="150" height="150"><small>Show this at the bar and door · ${esc(m.card)}</small></div>
   </div>
 
   <div class="cl-grid">
-    <section class="cl-panel"><h2>Bring your friends</h2><p>Share your link: <b>+2</b> when someone opens it, <b>+15</b> when a friend joins.</p>
+    <section class="cl-panel"><h2>Bring your friends</h2><p>Share your link: <b>+1</b> when someone opens it, <b>+5</b> when a friend joins.</p>
       <div class="cl-ref"><input readonly value="${esc(m.refLink)}" aria-label="Your link"><button class="btn ghost small" type="button" data-copy-ref>Copy</button>${navigator.share ? '<button class="btn hot small" type="button" data-share-ref data-club-share>Share</button>' : ''}</div>
-      ${socials.length ? `<h3>Follow TAM</h3><p class="cl-socials">${socials.map(([k, u]) => `<a class="btn ghost small ${m.socials.includes(k) ? 'done' : ''}" href="${esc(u)}" target="_blank" rel="noopener" data-social="${k}">${m.socials.includes(k) ? '✓ ' : ''}${NET[k] || k}${m.socials.includes(k) ? '' : ' · +3'}</a>`).join('')}</p>` : ''}
+      ${socials.length ? `<h3>Follow TAM</h3><p class="cl-socials">${socials.map(([k, u]) => `<a class="btn ghost small ${m.socials.includes(k) ? 'done' : ''}" href="${esc(u)}" target="_blank" rel="noopener" data-social="${k}">${m.socials.includes(k) ? '✓ ' : ''}${NET[k] || k}${m.socials.includes(k) ? '' : ' · +1'}</a>`).join('')}</p>` : ''}
     </section>
     <section class="cl-panel"><h2>Ways to earn</h2><ul class="cl-ways">${m.missions.map((x) => `<li class="${x.done ? 'done' : ''}"><b>${esc(x.pts)}</b><span>${esc(x.label)}${x.hint ? ` <small>${esc(x.hint)}</small>` : ''}</span>${x.done ? '<i aria-label="done for now">✓</i>' : ''}</li>`).join('')}</ul></section>
     <section class="cl-panel"><h2>Badges</h2><ul class="cl-badges">${m.allBadges.map((b) => `<li class="${m.badges.some((x) => x.name === b.name) ? 'got' : ''}"><span>${b.icon}</span>${esc(b.name)}</li>`).join('')}</ul>
@@ -182,11 +182,12 @@ if (cardRoot) {
   INTERESTS = { gigs: 'Gigs and live bands', showcases: 'Sunday Showcase and new acts', blues: 'The Great British Blues Jam', christmas: 'Christmas at TAM', fridays: 'Friday nights', immersive: 'Immersive and creators' };
   FREQ = { weekly: 'Every week', monthly: 'Once a month', big: 'Only big news' };
   const load = async () => { try { renderCard((await api('/api/club/me')).member); } catch (err) { cardRoot.innerHTML = `<p>${esc(err.message)} <a href="/club" data-signout>Join or get a new link</a>.</p>`; } };
-  load().then(() => { if (new URLSearchParams(location.search).get('welcome')) toast('Welcome to the TAM Club: +20 points 🍻'); });
+  load().then(() => { if (new URLSearchParams(location.search).get('welcome')) toast('Welcome to the TAM Club: +10 points 🍻'); });
   cardRoot.addEventListener('click', async (e) => {
     const t = e.target;
-    if (t.closest('[data-claim]')) {
-      try { renderCard((await api('/api/club/claim', { method: 'POST', body: {} })).member); track('club_claim_half'); } catch (err) { toast(err.message); }
+    const pick = t.closest('[data-claim]');
+    if (pick) {
+      try { renderCard((await api('/api/club/claim', { method: 'POST', body: { drink: pick.dataset.claim } })).member); track('club_claim_drink', { drink: pick.dataset.claim }); } catch (err) { toast(err.message); }
     }
     if (t.closest('[data-copy-ref]')) { try { await navigator.clipboard.writeText(me.refLink); toast('Link copied: send it to a friend'); } catch { /* old browser */ } }
     if (t.closest('[data-share-ref]')) { try { await navigator.share({ title: 'TAM', text: 'Come to a night at TAM with me, and join the TAM list:', url: me.refLink }); } catch { /* cancelled */ } }
@@ -220,8 +221,8 @@ if (staff) {
   const code = staff.dataset.card;
   const draw = (c, note = '') => {
     staff.innerHTML = `<div class="formbox cl-staff"><p class="label">Staff · ${esc(c.name)} · ${esc(c.tier)} · <b>${c.balance}</b> points</p>
-      ${c.reward ? `<div class="cl-reward live"><p class="cl-code">${esc(c.reward.code)}</p><p>Half pint to pour. Check the code on their phone matches.</p><button class="btn hot" type="button" data-pour>Poured it ✓</button></div>` : '<p class="muted">No half to pour right now.</p>'}
-      <div class="row-btn"><button class="btn ghost" type="button" data-here>They’re here tonight (+15)</button></div>
+      ${c.reward ? `<div class="cl-reward live"><p class="cl-code">${esc(c.reward.code)}</p><p><b>${esc(c.reward.drinkName)}</b> to pour. Check the code on their phone matches.</p><button class="btn hot" type="button" data-pour>Poured it ✓</button></div>` : '<p class="muted">No drink to pour right now.</p>'}
+      <div class="row-btn"><button class="btn ghost" type="button" data-here>They’re here tonight (+5)</button></div>
       <form data-bar class="cl-barform"><label class="field"><span>Bar spend (£)</span><input name="pounds" type="number" min="0.5" step="0.01" inputmode="decimal" required></label><button class="btn hot" type="submit">Add points</button></form>
       ${c.today.length ? `<p class="small">Today: ${c.today.map((x) => `${esc(x.label)} (${x.pts > 0 ? '+' : ''}${x.pts})`).join(' · ')}</p>` : ''}
       <p class="err" role="status" aria-live="polite">${esc(note)}</p></div>`;

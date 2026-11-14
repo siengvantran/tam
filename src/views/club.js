@@ -6,7 +6,7 @@
 import { html, raw } from './html.js';
 import { html as respond, redirect, send } from '../lib/http.js';
 import { layout } from './layout.js';
-import { INTERESTS, FREQUENCIES, RULES, HALF, TIERS } from '../domain/club.js';
+import { INTERESTS, FREQUENCIES, RULES, HALF, TIERS, DRINK_LINE } from '../domain/club.js';
 import { escape } from './html.js';
 
 const page = (ctx, o) => layout(ctx, { ambient: 'stars', scripts: ['/js/club.js'], ...o });
@@ -25,7 +25,7 @@ function joinForm(ctx, { source = 'tam.tv', compact = false } = {}) {
   return html`<form class="cl-join ${compact ? 'compact' : ''}" data-club-join data-source="${source}">
     ${compact ? '' : html`<div class="fields"><label class="field"><span>First name</span><input name="name" autocomplete="given-name" maxlength="60"></label>
     <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label></div>
-    <fieldset class="cl-chips"><legend>What are you into? <small>(+5 points)</small></legend>
+    <fieldset class="cl-chips"><legend>What are you into? <small>(+${RULES.profile.pts} points)</small></legend>
       ${Object.entries(INTERESTS).map(([k, v]) => html`<label class="cl-chip"><input type="checkbox" name="interests" value="${k}"><span>${v.label}</span></label>`)}</fieldset>
     <fieldset class="cl-chips"><legend>How often?</legend>
       ${Object.entries(FREQUENCIES).map(([k, v], i) => html`<label class="cl-chip"><input type="radio" name="frequency" value="${k}" ${i === 0 ? 'checked' : ''}><span>${v}</span></label>`)}</fieldset>`}
@@ -42,25 +42,25 @@ function clubPage(ctx, req) {
   const top = m ? html`<section class="section cl-me"><div class="wrap"><div id="club-card" data-club-card><p class="muted">Loading your card…</p></div></div></section>` : html`
   <section class="section cl-hero"><div class="wrap cl-hero-grid">
     <div><div class="label">The TAM Club · free</div><h1 class="chrome gold">Get the list.<br>Drink on us.</h1>
-    <p class="lede">TAM’s email, picked for what you’re into, and a card that fills up as you come to gigs, share nights and bring your friends. At <b>${HALF} points</b>, half a pint is on the house at the TAM bar.</p>
+    <p class="lede">TAM’s email, picked for what you’re into, and a card that fills up as you come to gigs, share nights and bring your friends. At <b>${HALF} points</b>, a drink is on the house at the TAM bar: ${DRINK_LINE}.</p>
     ${joinForm(ctx, { source: 'club page' })}
     <p class="small muted">Already in? <button class="linkish" type="button" data-club-signin>Email me my card</button></p></div>
-    <div class="cl-hero-glass">${glass(0.62, 'A pint glass filling up to the half-pint line')}<p class="cl-glass-cap">Every gig, share and friend fills your glass.</p></div>
+    <div class="cl-hero-glass">${glass(0.62, 'A pint glass filling up to the half-pint line')}<p class="cl-glass-cap">Every round at the bar fills your glass.</p></div>
   </div></section>`;
   return page(ctx, {
     title: 'TAM Club: the list and your card', path: '/club',
-    description: `Join TAM’s email list and earn points for gigs, shares and friends. ${HALF} points is half a pint on the house at the TAM bar.`,
+    description: `Join TAM’s email list and earn points for gigs, shares and friends. ${HALF} points is a drink on the house at the TAM bar: ${DRINK_LINE}.`,
     body: html`${top}
     <section class="section"><div class="wrap cl-how">
-      <div><h2 class="chrome">How it works</h2><ol class="cl-steps"><li><b>Join</b> and confirm your email: 20 points to start.</li><li><b>Fill your glass</b> by coming to nights, sharing and bringing friends.</li><li><b>Claim your half</b> at ${HALF} points and show the code at the bar.</li></ol>
+      <div><h2 class="chrome">How it works</h2><ol class="cl-steps"><li><b>Join</b> and confirm your email: ${RULES.join.pts} points to start.</li><li><b>Fill your glass</b>, fastest by showing your card at the bar and booking on tam.tv.</li><li><b>Claim your drink</b> at ${HALF} points (${DRINK_LINE}) and show the code at the bar.</li></ol>
       <h3>Levels</h3><p class="cl-tiers">${TIERS.map((t) => html`<span>${t.name}<small>${t.at ? `${t.at}+ earned` : 'to start'}</small></span>`)}</p></div>
       <div>${m ? '' : html`<h2 class="chrome">Ways to earn</h2><ul class="cl-ways">${ways()}</ul>`}
-      <p class="small muted">Fair play: daily limits apply, one half a week, and a claimed half is good for 30 days (unused points come back). Over 18s only for drinks: we’ll pour a soft drink for anyone else.</p></div>
+      <p class="small muted">Fair play: daily limits apply, one drink a week, and a claimed drink is good for 30 days (unused points come back). Wine and beer are for over 18s: anyone else gets an infused water or a soft drink.</p></div>
     </div></section>
     <section class="section"><div class="wrap"><h2 class="chrome">In your inbox</h2>
       <div class="cl-perks"><div><b>What’s on, for you</b><p>Only the nights you’re into, every week, once a month or just the big news. You choose.</p></div>
       <div><b>First dibs</b><p>Hear about Christmas, showcases and sell-out nights before they’re everywhere.</p></div>
-      <div><b>Your points</b><p>Every email shows how close you are to your half.</p></div></div>
+      <div><b>Your points</b><p>Every email shows how close you are to your drink on us.</p></div></div>
       ${issues.length ? html`<h3>Latest issues</h3><ul class="cl-archive">${issues.map((x) => html`<li><a href="/newsletter/${x.slug}">${x.title || x.subject}</a> <small>${String(x.sentAt).slice(0, 10)}</small></li>`)}</ul><p><a href="/newsletter">All issues</a> · <a href="/newsletter/feed.xml">RSS</a></p>` : ''}
     </div></section>`,
   });
@@ -74,7 +74,7 @@ const buttonPage = (ctx, title, path, id, intro, btn) => page(ctx, {
 
 export function routes(r, ctx, qr) {
   r.get('/club', (req, res) => respond(res, clubPage(ctx, req), 200, { 'Cache-Control': 'no-store' }));
-  r.get('/club/confirm', (req, res) => respond(res, buttonPage(ctx, 'Confirm your email', '/club/confirm', 'club-confirm', 'One tap and you’re on the TAM list, with 20 points on your card.', 'Yes, I’m in')));
+  r.get('/club/confirm', (req, res) => respond(res, buttonPage(ctx, 'Confirm your email', '/club/confirm', 'club-confirm', `One tap and you’re on the TAM list, with ${RULES.join.pts} points on your card.`, 'Yes, I’m in')));
   r.get('/club/in', (req, res) => respond(res, buttonPage(ctx, 'Your TAM Club card', '/club/in', 'club-in', 'Open your card on this device.', 'Open my card')));
   r.get('/club/unsubscribe', (req, res) => respond(res, page(ctx, {
     title: 'Your TAM emails', path: '/club/unsubscribe', noindex: true,
@@ -104,7 +104,7 @@ export function routes(r, ctx, qr) {
       body: html`<section class="section"><div class="wrap narrow">${p ? html`
         <div class="cl-mini"><div class="label">TAM Club card</div><h1 class="chrome gold">${p.firstName || 'TAM Club member'}</h1><p class="cl-tier">${p.tier}${p.badges.length ? html` · ${p.badges.map((b) => b.icon).join(' ')}` : ''}</p></div>
         <div id="club-staff" data-card="${m.card}"></div>
-        <p class="small muted">Staff: sign in on <a href="/door">the door page</a> on this phone to add points and pour halves.</p>`
+        <p class="small muted">Staff: sign in on <a href="/door">the door page</a> on this phone to add points and pour drinks.</p>`
         : html`<h1 class="chrome">That card isn’t here</h1><p><a href="/club">Join the TAM Club</a>.</p>`}</div></section>`,
     }), p ? 200 : 404);
   });
@@ -115,7 +115,7 @@ export function routes(r, ctx, qr) {
     respond(res, page(ctx, {
       title: 'The TAM newsletter', path: '/newsletter', description: 'Every issue of TAM’s newsletter: what’s on, new acts and news from the Temple of Art and Music.',
       body: html`<section class="section"><div class="wrap narrow"><div class="label">The TAM newsletter</div><h1 class="chrome gold">Every issue</h1>
-      <p>Get the next one in your inbox, and points toward half a pint on us. <a href="/club">Join the TAM Club</a> · <a href="/newsletter/feed.xml">RSS</a></p>
+      <p>Get the next one in your inbox, and points toward a drink on us. <a href="/club">Join the TAM Club</a> · <a href="/newsletter/feed.xml">RSS</a></p>
       ${list.length ? html`<ul class="cl-archive big">${list.map((x) => html`<li><a href="/newsletter/${x.slug}">${x.title || x.subject}</a><small>${String(x.sentAt).slice(0, 10)}</small>${x.preheader ? html`<p>${x.preheader}</p>` : ''}</li>`)}</ul>` : html`<p class="muted">The first issue is on its way.</p>`}
       ${joinForm(ctx, { source: 'newsletter archive', compact: true })}</div></section>`,
     }));

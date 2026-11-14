@@ -123,7 +123,7 @@ function header(ctx, festival, pathway) {
 }
 
 // The TAM Club sign-up at the foot of every page (src/views/club.js, public/js/club.js).
-const clubStrip = () => html`<div class="wrap cl-strip"><div><b>The TAM list</b> <span>What’s on, picked for you, and points toward <b>half a pint on us</b>.</span> <a href="/club">How it works</a></div>
+const clubStrip = () => html`<div class="wrap cl-strip"><div><b>The TAM list</b> <span>What’s on, picked for you, and points toward <b>a drink on us</b>.</span> <a href="/club">How it works</a></div>
   <form class="cl-join compact" data-club-join data-source="footer"><label class="field"><span class="sr">Email</span><input name="email" type="email" autocomplete="email" placeholder="Your email" required></label>
   <label class="check"><input type="checkbox" name="consent" required> Yes, email me about TAM. Unsubscribe any time.</label><button class="btn hot" type="submit">Join</button><p class="err" role="status" aria-live="polite"></p></form></div>`;
 

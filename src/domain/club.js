@@ -22,8 +22,11 @@ import { clubShell, clubButton } from '../services/mailer.js';
 import { escape as e } from '../views/html.js';
 import { londonToday } from '../lib/content.js';
 
-export const HALF = 100; // points for half a pint
-const REWARD_DAYS = 30; // a claimed half is good for 30 days
+export const HALF = 108; // points for a drink on the house: half a pint, a glass of wine or infused water
+// The drinks a member can choose when they claim (staff see which on the card).
+export const DRINKS = { half: 'Half a pint', wine: 'A glass of wine', water: 'Infused water' };
+export const DRINK_LINE = 'half a pint, a glass of wine or an infused water';
+const REWARD_DAYS = 30; // a claimed drink is good for 30 days
 const CLAIM_GAP_DAYS = 7; // one half a week, at most
 const COOKIE = 'tam_club';
 const SESSION_DAYS = 180;
@@ -45,27 +48,29 @@ export const FREQUENCIES = {
 const KINDS = { weekly: ['weekly'], monthly: ['monthly', 'big'], big: ['big'] }; // which issues each frequency gets
 const ISSUE_KINDS = { weekly: 'Weekly (everyone on every week)', monthly: 'Monthly (weekly and monthly readers)', big: 'Big news (everyone)' };
 
-// How points are earned. Caps keep it fair: per day, per week, per month or ever.
+// How points are earned. Spending at TAM (paid tickets, the bar) earns the
+// most; everything else earns a little. Caps keep it fair: per day, week, month or ever.
 export const RULES = {
-  join: { pts: 20, label: 'Join the list (confirm your email)', max: 1 },
-  profile: { pts: 5, label: 'Tell us what you’re into', max: 1 },
+  bar: { pts: 1, label: 'Every £1 at the TAM bar', unit: true, perDayPts: 30, hint: 'show your card', paid: true },
+  spend: { pts: 1, label: 'Every £1 on tickets at tam.tv', unit: true, paid: true },
+  booking: { pts: 10, label: 'Book paid tickets on tam.tv', paid: true, hint: 'plus the £1s' },
+  freeBooking: { pts: 2, label: 'Book free tickets on tam.tv' },
+  attend: { pts: 5, label: 'Come to a night at TAM', perDay: 1, hint: 'checked in at the door' },
+  join: { pts: 10, label: 'Join the list (confirm your email)', max: 1 },
+  profile: { pts: 2, label: 'Tell us what you’re into', max: 1 },
+  referral: { pts: 5, label: 'A friend joins with your link', perMonth: 5 },
+  blues: { pts: 3, label: 'Sign up to play the Blues Jam' },
   visit: { pts: 1, label: 'Visit tam.tv', perDay: 1, hint: 'once a day' },
-  streak: { pts: 5, label: 'Visit on 3 days in a week', perWeek: 1, hint: 'bonus' },
-  share: { pts: 1, label: 'Share a TAM page', perDay: 2, hint: 'up to 2 a day' },
-  refVisit: { pts: 2, label: 'Someone opens a link you shared', perDay: 5, hint: 'up to 5 a day' },
-  referral: { pts: 15, label: 'A friend joins with your link', perMonth: 5 },
-  follow: { pts: 3, label: 'Follow an artist on tam.tv', max: 5 },
-  social: { pts: 3, label: 'Follow TAM on Instagram and YouTube', max: 4, hint: 'each' },
-  vote: { pts: 2, label: 'Back a Sunday Showcase act for Christmas', perDay: 3 },
-  wall: { pts: 3, label: 'Leave a note on an artist’s wall', perDay: 1 },
+  streak: { pts: 2, label: 'Visit on 3 days in a week', perWeek: 1, hint: 'bonus' },
+  share: { pts: 1, label: 'Share a TAM page', perDay: 1, hint: 'once a day' },
+  refVisit: { pts: 1, label: 'Someone opens a link you shared', perDay: 3, hint: 'up to 3 a day' },
+  follow: { pts: 1, label: 'Follow an artist on tam.tv', max: 5 },
+  social: { pts: 1, label: 'Follow TAM on Instagram and YouTube', max: 4, hint: 'each' },
+  vote: { pts: 1, label: 'Back a Sunday Showcase act for Christmas', perDay: 3 },
+  wall: { pts: 1, label: 'Leave a note on an artist’s wall', perDay: 1 },
   click: { pts: 1, label: 'Open a link in our newsletter', hint: 'each issue' },
-  booking: { pts: 10, label: 'Book tickets on tam.tv' },
-  spend: { pts: 1, label: 'Every £1 on tickets at tam.tv', unit: true },
-  attend: { pts: 15, label: 'Come to a night at TAM', perDay: 1, hint: 'checked in at the door' },
-  bar: { pts: 1, label: 'Every £1 at the TAM bar', unit: true, perDayPts: 30, hint: 'show your card' },
-  blues: { pts: 10, label: 'Sign up to play the Blues Jam' },
-  half: { pts: -HALF, label: 'Half a pint on the house', hidden: true },
-  refund: { pts: HALF, label: 'Unused half: points back', hidden: true },
+  half: { pts: -HALF, label: 'A drink on the house', hidden: true },
+  refund: { pts: HALF, label: 'Unused drink: points back', hidden: true },
   gift: { pts: 0, label: 'From the TAM team', hidden: true, unit: true },
 };
 export const SOCIALS = ['instagram', 'tiktok', 'facebook', 'youtube'];
@@ -76,7 +81,7 @@ const BADGES = [
   ['First night', '🎟️', (n) => n.attend >= 1], ['Front row', '🎸', (n) => n.attend >= 5],
   ['Scout', '🔭', (n) => n.vote >= 3], ['Connector', '🔗', (n) => n.referral >= 3],
   ['On a streak', '🔥', (n) => n.streak >= 1], ['Bar regular', '🍺', (n) => n.bar >= 3],
-  ['Half-pint hero', '🏆', (n) => n.half >= 1], ['Wall writer', '✍️', (n) => n.wall >= 3],
+  ['On the house', '🏆', (n) => n.half >= 1], ['Wall writer', '✍️', (n) => n.wall >= 3],
 ];
 export const SEGMENTS = {
   all: 'Everyone',
@@ -196,7 +201,7 @@ export function clubDomain(ctx) {
       badges: BADGES.filter(([, , ok]) => ok(n)).map(([name, icon]) => ({ name, icon })),
       allBadges: BADGES.map(([name, icon]) => ({ name, icon })),
       streakDays: week,
-      reward: live ? { code: live.code, expires: live.expires } : null,
+      reward: live ? { code: live.code, expires: live.expires, drink: live.drink || 'half', drinkName: DRINKS[live.drink || 'half'] } : null, drinks: DRINKS,
       canClaim: !live && balance >= HALF && next <= ctx.now(), nextClaimAt: next > ctx.now() ? iso(next) : null,
       socials: mine.filter((x) => x.rule === 'social').map((x) => x.key), socialLinks: Object.fromEntries(socials().map((k) => [k, c.site.socials[k]])),
       missions: Object.entries(RULES).filter(([, r]) => !r.hidden).map(([id, r]) => {
@@ -224,7 +229,7 @@ export function clubDomain(ctx) {
     if (!ctx.mail.enabled()) return;
     const url = `${site()}/club/${purpose === 'confirm' ? 'confirm' : 'in'}?t=${t}`;
     const msg = purpose === 'confirm'
-      ? { subject: 'Confirm you’re on the TAM list (and grab 20 points)', heading: 'One tap and you’re in', body: `Confirm your email and we’ll start your TAM Club card with <b>20 points</b>. ${HALF} points is half a pint on us at the TAM bar.`, button: 'Yes, I’m in' }
+      ? { subject: `Confirm you’re on the TAM list (and grab ${RULES.join.pts} points)`, heading: 'One tap and you’re in', body: `Confirm your email and we’ll start your TAM Club card with <b>${RULES.join.pts} points</b>. ${HALF} points is a drink on us at the TAM bar: ${DRINK_LINE}.`, button: 'Yes, I’m in' }
       : { subject: 'Your TAM Club card', heading: 'Here’s your card', body: 'Tap to open your TAM Club card on this phone. The link works once, for 30 minutes.', button: 'Open my card' };
     const inner = `<h1 style="font-size:28px;margin:0 0 10px">${msg.heading}</h1><p>${msg.body}</p>${clubButton(msg.button, url)}
       <p style="font-size:13px;color:#8a7f86">Didn’t ask for this? Ignore it and nothing happens.</p>`;
@@ -237,16 +242,16 @@ export function clubDomain(ctx) {
   }
   function welcome(m) {
     const inner = `<h1 style="font-size:28px;margin:0 0 10px">You’re in${firstName(m) ? `, ${e(firstName(m))}` : ''} 🍻</h1>
-      <p>Your TAM Club card has <b>${balanceOf(m)} points</b>. At <b>${HALF}</b> you get half a pint on the house at the TAM bar.</p>
-      <p><b>Quick wins:</b> tell us what you’re into (+5), follow TAM on Instagram or TikTok (+3 each), share a gig with a friend (+2 when they open it, +15 if they join).</p>
-      <p><b>Big ones:</b> come to a night (+15), book on tam.tv (+10, plus a point per £1), and show your card at the bar (a point per £1).</p>
+      <p>Your TAM Club card has <b>${balanceOf(m)} points</b>. At <b>${HALF}</b> you get a drink on the house at the TAM bar: ${DRINK_LINE}.</p>
+      <p><b>The quickest way:</b> show your card at the bar (a point for every £1) and book paid tickets on tam.tv (+${RULES.booking.pts}, plus a point for every £1).</p>
+      <p><b>Little extras:</b> come to a night (+${RULES.attend.pts}), bring a friend who joins (+${RULES.referral.pts}), and a point a day for visiting tam.tv.</p>
       ${clubButton('Open my card', `${site()}/club`)}`;
-    sendQuiet({ to: m.email, subject: 'Welcome to the TAM Club: your card is live', html: clubShell(inner, { preheader: `You have ${balanceOf(m)} points. ${HALF} = half a pint on us.`, footer: footerFor(m) }), text: `You're in. Your card: ${site()}/club`, headers: listHeaders(m) }, 'welcome');
+    sendQuiet({ to: m.email, subject: 'Welcome to the TAM Club: your card is live', html: clubShell(inner, { preheader: `You have ${balanceOf(m)} points. ${HALF} = a drink on us.`, footer: footerFor(m) }), text: `You're in. Your card: ${site()}/club`, headers: listHeaders(m) }, 'welcome');
   }
   function nudge(m) {
-    const inner = `<h1 style="font-size:28px;margin:0 0 10px">Your half is ready 🍺</h1>
-      <p>You’ve reached ${HALF} points. Claim your half pint on your card, then show the code at the TAM bar on your next night.</p>${clubButton('Claim my half', `${site()}/club`)}`;
-    sendQuiet({ to: m.email, subject: 'You’ve earned half a pint at TAM', html: clubShell(inner, { preheader: 'Claim it on your card and show the code at the bar.', footer: footerFor(m) }), text: `You've earned half a pint. Claim it: ${site()}/club`, headers: listHeaders(m) }, 'nudge');
+    const inner = `<h1 style="font-size:28px;margin:0 0 10px">Your drink is ready 🍻</h1>
+      <p>You’ve reached ${HALF} points. Choose ${DRINK_LINE} on your card, then show the code at the TAM bar on your next night.</p>${clubButton('Claim my drink', `${site()}/club`)}`;
+    sendQuiet({ to: m.email, subject: 'You’ve earned a drink at TAM', html: clubShell(inner, { preheader: 'Choose it on your card and show the code at the bar.', footer: footerFor(m) }), text: `You've earned a drink on us. Claim it: ${site()}/club`, headers: listHeaders(m) }, 'nudge');
   }
 
   // ---------- joining ----------
@@ -343,8 +348,8 @@ export function clubDomain(ctx) {
     const list = upcoming(m);
     const whatsOn = list.length ? `<table style="width:100%;border-collapse:collapse;margin:8px 0 16px">${list.map((n) => `<tr><td style="padding:10px 0;border-bottom:1px solid #2a2026;vertical-align:top;width:92px;color:#f3c35b;font-weight:700">${e(n.weekday.slice(0, 3))} ${e(n.day)} ${e(n.month.slice(0, 3))}</td><td style="padding:10px 0;border-bottom:1px solid #2a2026"><a href="${e(link(nightHref(n)))}" style="color:#f6efe6;font-weight:700;text-decoration:none">${e(n.title)}</a><br><span style="color:#8a7f86;font-size:14px">Doors ${e(n.doors)}</span></td></tr>`).join('')}</table>` : '<p>New nights are on the way: keep an eye on <a href="https://www.tam.tv/whats-on" style="color:#ff5c8a">what’s on</a>.</p>';
     const card = m
-      ? `<div style="background:#1a1116;border:1px solid #3a2a33;border-radius:16px;padding:16px 18px;margin:18px 0"><b style="color:#f3c35b">Your TAM Club card: ${bal} points</b><br>${bal >= HALF ? 'Your half pint is ready to claim.' : `${HALF - bal} more for half a pint on us.`} <a href="${e(`${site()}/club`)}" style="color:#ff5c8a">Open your card</a></div>`
-      : `<div style="background:#1a1116;border:1px solid #3a2a33;border-radius:16px;padding:16px 18px;margin:18px 0"><b style="color:#f3c35b">Join the TAM Club</b><br>Get this in your inbox and earn your way to half a pint on us. <a href="${e(`${site()}/club`)}" style="color:#ff5c8a">Join free</a></div>`;
+      ? `<div style="background:#1a1116;border:1px solid #3a2a33;border-radius:16px;padding:16px 18px;margin:18px 0"><b style="color:#f3c35b">Your TAM Club card: ${bal} points</b><br>${bal >= HALF ? 'Your drink on us is ready to claim.' : `${HALF - bal} more for a drink on us.`} <a href="${e(`${site()}/club`)}" style="color:#ff5c8a">Open your card</a></div>`
+      : `<div style="background:#1a1116;border:1px solid #3a2a33;border-radius:16px;padding:16px 18px;margin:18px 0"><b style="color:#f3c35b">Join the TAM Club</b><br>Get this in your inbox and earn your way to a drink on us. <a href="${e(`${site()}/club`)}" style="color:#ff5c8a">Join free</a></div>`;
     const body = markdown(fill(issue.body), { link, blocks: { whats_on: whatsOn, card } });
     const subject = fill(variant === 'b' && issue.subjectB ? issue.subjectB : issue.subject);
     const inner = `<h1 style="font-size:30px;line-height:1.15;margin:0 0 14px">${e(fill(issue.title || issue.subject))}</h1>${body}`;
@@ -422,9 +427,9 @@ export function clubDomain(ctx) {
     const first = list[0];
     const issue = {
       kind: 'weekly', subject: first ? `This week at TAM: ${first.title}${list.length > 1 ? ` and ${list.length - 1} more` : ''}` : 'This week at TAM',
-      subjectB: '{{first_name|Hey}}, here’s your week at TAM 🎶', preheader: 'What’s on, picked for you, and how close you are to a free half.',
+      subjectB: '{{first_name|Hey}}, here’s your week at TAM 🎶', preheader: 'What’s on, picked for you, and how close you are to a drink on us.',
       title: 'This week at TAM',
-      body: `Hey {{first_name|there}},\n\nHere’s what’s on at TAM, picked for what you’re into:\n\n{{whats_on}}\n\n## Bring a friend\n\nShare a night with your link and get **2 points** when they open it, **15** if they join the list.\n\n{{card}}\n\nSee you at the bar,\nTAM`,
+      body: `Hey {{first_name|there}},\n\nHere’s what’s on at TAM, picked for what you’re into:\n\n{{whats_on}}\n\n## Bring a friend\n\nShow your TAM Club card at the bar: every £1 is a point toward a drink on us.\n\n{{card}}\n\nSee you at the bar,\nTAM`,
       segment: { interests: [], engagement: 'all' },
     };
     return saveIssue(issue, who);
@@ -545,10 +550,12 @@ export function clubDomain(ctx) {
       const m = me(req);
       if (m.status !== 'active') throw fail(409, 'Confirm your email first.');
       const v = view(m);
-      if (v.reward) throw fail(409, 'You already have a half to pour: show the code at the bar.');
+      if (v.reward) throw fail(409, 'You already have a drink waiting: show the code at the bar.');
       if (v.balance < HALF) throw fail(409, `You need ${HALF - v.balance} more points.`);
-      if (v.nextClaimAt) throw fail(409, 'One half a week: your next one unlocks soon.');
-      const rw = { id: newId('HALF', 6), m: m.id, code: code(6), issuedAt: iso(), expires: iso(ctx.now() + REWARD_DAYS * DAY) };
+      if (v.nextClaimAt) throw fail(409, 'One drink a week: your next one unlocks soon.');
+      const b = await readJson(req, 512).catch(() => ({}));
+      const drink = DRINKS[b.drink] ? b.drink : 'half';
+      const rw = { id: newId('HALF', 6), m: m.id, code: code(6), drink, issuedAt: iso(), expires: iso(ctx.now() + REWARD_DAYS * DAY) };
       db.clubRewards.push(rw);
       db.clubLedger.push({ id: newId('PT', 8), m: m.id, rule: 'half', key: rw.id, pts: -HALF, at: iso(), day: today() });
       await save();
@@ -585,7 +592,7 @@ export function clubDomain(ctx) {
       const m = staffCard(req, params.card);
       const b = await readJson(req, 512);
       const rw = liveReward(m);
-      if (!rw) throw fail(409, 'No half to pour on this card.');
+      if (!rw) throw fail(409, 'No drink to pour on this card.');
       if (b.code && String(b.code).toUpperCase() !== rw.code) throw fail(400, 'That code doesn’t match their card.');
       rw.redeemedAt = iso();
       rw.by = (ctx.team.whoAmI(req) || {}).name || 'Door';
