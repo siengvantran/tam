@@ -27,6 +27,7 @@ import { serveMicrosite } from './views/showcase-site.js';
 import { clubDomain } from './domain/club.js';
 import * as clubPages from './views/club.js';
 import { roomDomain } from './domain/room.js';
+import { roomTranslator } from './services/room-translator.js';
 import * as roomPages from './views/room.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
@@ -119,7 +120,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const showcase = showcaseDomain(ctx); // this week's Sunday Showcase line-up: presents under the tree
   ctx.showcase = showcase; // the home page shows the line-up carousel too
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
-  const room = ctx.room = roomDomain(ctx, { dir: contentDir || path.join(ROOT, 'content') }); // The Analogue Room: a daily escape room, worth club points
+  const room = ctx.room = roomDomain(ctx, { dir: contentDir || path.join(ROOT, 'content'), translator: roomTranslator(cfg) }); // The Analogue Room: a daily escape room, worth club points
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };

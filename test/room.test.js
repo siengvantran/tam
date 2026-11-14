@@ -162,3 +162,55 @@ test('counts are totals by source, and the wording that opens doors wins', async
   assert.equal((await call('/analogue-room/stats')).status, 302);
   assert.match((await call('/analogue-room/stats', { headers: { 'x-staff-token': 'admin-token-for-tests' } })).body, /Where they came from/);
 });
+
+test('any language: translated once and kept, answers unchanged, English when it cannot', async (t) => {
+  const { call, app, room, answers } = await setup(t);
+  const { langOf, conform } = await import('../src/domain/room.js');
+  assert.equal(langOf('en-GB'), '');
+  assert.equal(langOf('fr-CA'), 'fr');
+  assert.equal(langOf('zh-TW'), 'zh-Hant');
+  assert.equal(langOf('zh'), 'zh-Hans');
+  assert.equal(langOf('not a language'), '');
+  assert.deepEqual(conform({ a: 'Lock {n}', b: ['x', 'y'], c: { d: 'z' } }, { a: 'Serrure', b: ['X'], c: 'nope' }), { a: 'Lock {n}', b: ['X', 'y'], c: { d: 'z' } }, 'broken or missing lines stay in English');
+
+  // no translator (no API key): English, and no picker
+  const plain = (await call('/api/room?lang=fr')).body;
+  assert.equal(plain.lang, 'en');
+  assert.equal(plain.translates, false);
+  assert.equal(plain.ui.desk, 'The sorting desk');
+
+  // a stand-in translator: every line gets the language in front
+  let calls = 0;
+  const mark = (v, l) => (typeof v === 'string' ? (v ? `[${l}] ${v}` : v) : Array.isArray(v) ? v.map((x) => mark(x, l)) : Object.fromEntries(Object.entries(v).map(([k, x]) => [k, mark(x, l)])));
+  app.ctx.room.setTranslator(async (lang, name, doc) => { calls++; assert.ok(name); return mark(doc, lang); });
+  const fr = (await call('/api/room?lang=fr-FR')).body;
+  assert.equal(fr.lang, 'fr');
+  assert.equal(fr.dir, 'ltr');
+  assert.equal(fr.translates, true);
+  assert.equal(fr.ui.desk, '[fr] The sorting desk');
+  assert.equal(fr.ui.lock, '[fr] Lock {n}');
+  assert.equal(fr.room.cards[0].text, `[fr] ${room.cards[0].text}`);
+  assert.equal(fr.room.sources[0].u, room.sources[0].u, 'sources stay the originals');
+  assert.ok(fr.languages.some(([c]) => c === 'ja'));
+  const raw = JSON.stringify(fr);
+  assert.ok(!raw.includes('"record"') && !raw.includes('"answer"') && !raw.includes(`"${room.word}"`));
+  await call('/api/room?lang=fr');
+  assert.equal(calls, 1, 'translated once, then kept');
+  assert.equal((await call('/api/room?lang=ar')).body.dir, 'rtl');
+
+  // moves answer in their language; the answers are the same
+  const card = await call('/api/room/check', { method: 'POST', body: { date: room.date, lang: 'fr', lock: 'card', i: 0, value: answers.cards[0] } });
+  assert.equal(card.body.note, `[fr] ${room.cards[0].note}`);
+  const gate = await call('/api/room/check', { method: 'POST', body: { date: room.date, lang: 'fr', lock: 'gate', i: 0, value: answers.picks[0] } });
+  assert.equal(gate.body.letter, room.word[0]);
+  assert.match(gate.body.rule, /^\[fr\] /);
+  const opened = await call('/api/room/open', { method: 'POST', body: { ...answers, lang: 'fr' } });
+  assert.equal(opened.body.ok, true);
+  assert.match(opened.body.epilogue[0], /^\[fr\] /);
+
+  // a translator that fails falls back to English
+  app.ctx.room.setTranslator(async () => { throw new Error('down'); });
+  const de = (await call('/api/room?lang=de')).body;
+  assert.equal(de.lang, 'en');
+  assert.equal(de.ui.desk, 'The sorting desk');
+});

@@ -20,6 +20,68 @@ import path from 'node:path';
 import { fail, send, readJson, text } from '../lib/http.js';
 import { RULES } from './club.js';
 
+// Languages: the room can be played in any language. A day's room and the
+// game's own words are translated once per language (src/services/
+// room-translator.js) and kept here. The answers don't change: the dial is
+// digits, and the letters spell the same English word everywhere.
+export const UI = {
+  note: 'The news in this room is real and sourced. The future it is set in is fiction.',
+  pointsLine: 'Open the doors and TAM Club members bank +{pts} points, once a day. {half} points is a drink on the house.',
+  lock: 'Lock {n}', locksCleared: '{n} of 4 locks cleared', language: 'Language',
+  autoTranslated: 'Translated automatically from English. The linked sources are the originals.',
+  desk: 'The sorting desk', deskIntro: '{n} lines came down the wire. File each one: is it on the record, or is it a story?',
+  onRecord: 'On the record', story: 'Story', source: 'Source',
+  notReported: 'Nobody has reported that. Look again.', isReported: 'That one is reported. Look again.',
+  dial: 'The dial', dialTurned: 'The dial turned at {code}.', turnDial: 'Turn the dial', codeLabel: 'Four-digit code',
+  opensDesk: 'Opens when the desk is clear.', askHint: 'Ask for a hint', hideHint: 'Hide the hint', dialStuck: 'The dial does not turn. Check the record.',
+  gate: 'The gate', gateIntro: 'Things want to cross the wall tonight. Every crossing has a contract, and you are the one accountable for it. A right ruling stamps a letter in the brass.',
+  opensDial: 'Opens when the dial has turned.',
+  doors: 'The doors', wordNote: 'The letters spell a word in English. Type them in the order you earned them.', wordLabel: 'The word', wordWas: 'The word was {code}.',
+  openDoors: 'Open the doors', opensGate: 'Opens when the gate has ruled.', doorsShut: 'The doors stay shut. Read the brass again, top to bottom.',
+  doorsOpen: 'Doors open', slips: 'Slips: {n}',
+  pointsWon: '+{pts} points on your TAM Club card.', seeCard: 'See your card', hadPoints: 'You have had today’s room points. A new room opens tomorrow morning.',
+  joinLine: 'Join the TAM Club and the next room banks {pts} points.', joinFree: 'Join free',
+  nextRoom: 'The next room is built tomorrow morning from the day’s news.',
+  artistLine: 'The real room is on Newington Causeway in London, and it needs players.', playAtTam: 'Play at TAM',
+  sourcesToday: 'On the record today:', quiet: 'The gatehouse is quiet today. A new room opens tomorrow morning.',
+};
+// The picker's list, each in its own name. Any other language a browser asks for works too.
+export const LANGUAGES = [['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano'], ['pt', 'Português'], ['nl', 'Nederlands'],
+  ['pl', 'Polski'], ['uk', 'Українська'], ['ru', 'Русский'], ['tr', 'Türkçe'], ['el', 'Ελληνικά'], ['ro', 'Română'], ['hu', 'Magyar'], ['cs', 'Čeština'],
+  ['sv', 'Svenska'], ['da', 'Dansk'], ['no', 'Norsk'], ['fi', 'Suomi'], ['cy', 'Cymraeg'], ['ga', 'Gaeilge'],
+  ['ar', 'العربية'], ['he', 'עברית'], ['fa', 'فارسی'], ['ur', 'اردو'], ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['pa', 'ਪੰਜਾਬੀ'], ['gu', 'ગુજરાતી'], ['mr', 'मराठी'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'],
+  ['zh-Hans', '简体中文'], ['zh-Hant', '繁體中文'], ['ja', '日本語'], ['ko', '한국어'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'], ['id', 'Bahasa Indonesia'], ['ms', 'Bahasa Melayu'], ['tl', 'Filipino'],
+  ['sw', 'Kiswahili'], ['am', 'አማርኛ'], ['yo', 'Yorùbá'], ['ig', 'Igbo'], ['ha', 'Hausa'], ['zu', 'isiZulu'], ['so', 'Soomaali']];
+const RTL = new Set(['ar', 'he', 'fa', 'ur', 'ps', 'sd', 'yi', 'dv', 'ckb', 'ug']);
+const NEW_LANGS_A_DAY = 60; // new translations a day, so nobody can run up the bill by asking for every language
+const NAMES = new Intl.DisplayNames(['en'], { type: 'language' });
+
+// A browser's language tag → the one we translate into ('' for English or anything unknown).
+export function langOf(tag) {
+  try {
+    const l = new Intl.Locale(Intl.getCanonicalLocales(String(tag || '').slice(0, 35))[0]);
+    if (!l.language || l.language === 'en') return '';
+    const code = l.language === 'zh' ? `zh-${l.maximize().script === 'Hant' ? 'Hant' : 'Hans'}` : l.language;
+    const name = NAMES.of(code);
+    return name && name !== code ? code : '';
+  } catch { return ''; }
+}
+const tokens = (s) => (String(s).match(/\{[a-z]+\}/g) || []).sort().join();
+// The translation, forced into the original's shape: anything missing, empty or with broken placeholders stays in English.
+export function conform(orig, got) {
+  if (typeof orig === 'string') return typeof got === 'string' && got.trim() && tokens(got) === tokens(orig) ? got.trim().slice(0, 2000) : orig;
+  if (Array.isArray(orig)) return orig.map((x, i) => conform(x, Array.isArray(got) ? got[i] : undefined));
+  if (orig && typeof orig === 'object') return Object.fromEntries(Object.entries(orig).map(([k, v]) => [k, conform(v, got && typeof got === 'object' ? got[k] : undefined)]));
+  return orig;
+}
+// The words of a room that get translated (never the answers).
+const wordsOf = (r) => ({
+  setting: r.setting, briefing: r.briefing, cards: r.cards.map((c) => ({ text: c.text, note: c.note })),
+  code: { clue: r.code.clue, hint: r.code.hint || '' },
+  gates: r.gates.map((g) => ({ clause: g.clause || '', ask: g.ask, rule: g.rule, opts: g.opts.map((o) => ({ t: o.t, why: o.why || '' })) })),
+  wordClue: r.wordClue, epilogue: r.epilogue,
+});
+
 // Where a visit came from, as the page works it out (public/js/room-invite.js).
 export const SOURCES = ['direct', 'search', 'social', 'ai', 'email', 'tickets', 'tam', 'other'];
 // The invitations. The first of each list is shown until the counts say otherwise.
@@ -67,19 +129,46 @@ export function loadRooms(dir) {
   } catch { return []; }
 }
 
-export function roomDomain(ctx, { dir }) {
+export function roomDomain(ctx, { dir, translator = null }) {
   const rooms = loadRooms(dir);
   const open = () => rooms.filter((r) => r.date <= ctx.today()); // a room dated tomorrow waits for tomorrow
   const pick = (date) => { const o = open(); return (date ? o.find((r) => r.date === date) : o[o.length - 1]) || null; };
   const must = (date) => { const r = pick(text(date, 10)); if (!r) throw fail(404, 'That room isn’t open.'); return r; };
 
-  // What the page may see: the puzzle, never the answers.
-  const view = (r) => ({
-    date: r.date, label: r.label, setting: r.setting, briefing: r.briefing,
-    cards: r.cards.map((c) => ({ text: c.text })),
-    code: { clue: r.code.clue, hint: r.code.hint || '' },
-    gates: r.gates.map((g) => ({ clause: g.clause || '', ask: g.ask, opts: g.opts.map((o) => o.t) })),
-    wordLength: r.word.length, wordClue: r.wordClue, sources: r.sources,
+  // ---------- languages ----------
+  if (!ctx.db.roomLang || typeof ctx.db.roomLang !== 'object' || Array.isArray(ctx.db.roomLang)) ctx.db.roomLang = {};
+  const kept = ctx.db.roomLang; // { 'date|lang': { ui, room, day } }
+  const making = new Map();
+  const peek = (r, lang) => (lang && kept[`${r.date}|${lang}`]) || null;
+  async function words(r, lang) {
+    if (!lang || !translator) return null;
+    const key = `${r.date}|${lang}`;
+    if (kept[key]) return kept[key];
+    if (making.has(key)) return making.get(key);
+    const day = ctx.today();
+    if (Object.values(kept).filter((x) => x.day === day).length >= NEW_LANGS_A_DAY) return null;
+    const job = (async () => {
+      try {
+        const orig = { ui: UI, room: wordsOf(r) };
+        const got = conform(orig, await translator(lang, NAMES.of(lang), orig));
+        const live = new Set(open().slice(-14).map((x) => x.date)); // keep the last fortnight's rooms
+        for (const k of Object.keys(kept)) if (!live.has(k.split('|')[0])) delete kept[k];
+        kept[key] = { ...got, day };
+        ctx.save();
+        return kept[key];
+      } catch (e) { console.warn(`Room translation (${lang}): ${e.message}`); return null; } finally { making.delete(key); }
+    })();
+    making.set(key, job);
+    return job;
+  }
+
+  // What the page may see: the puzzle, never the answers. `w` is the room's words in another language.
+  const view = (r, w = wordsOf(r)) => ({
+    date: r.date, label: r.label, setting: w.setting, briefing: w.briefing,
+    cards: w.cards.map((c) => ({ text: c.text })),
+    code: { clue: w.code.clue, hint: w.code.hint },
+    gates: w.gates.map((g) => ({ clause: g.clause, ask: g.ask, opts: g.opts.map((o) => o.t) })),
+    wordLength: r.word.length, wordClue: w.wordClue, sources: r.sources,
   });
   // ---------- invitations and their counts ----------
   if (!ctx.db.roomStats || typeof ctx.db.roomStats !== 'object' || Array.isArray(ctx.db.roomStats)) ctx.db.roomStats = {};
@@ -133,11 +222,14 @@ export function roomDomain(ctx, { dir }) {
     && String(b.word || '').trim().toUpperCase() === r.word;
 
   function routes(r) {
-    r.get('/api/room', (req, res, { url }) => {
+    r.get('/api/room', async (req, res, { url }) => {
       const room = pick(text(url.searchParams.get('date'), 10));
       const m = ctx.club.memberOf(req);
+      const asked = langOf(url.searchParams.get('lang'));
+      const w = room ? await words(room, asked) : null;
       send(res, 200, {
-        room: room ? view(room) : null, rooms: open().map((x) => ({ date: x.date, label: x.label })),
+        lang: w ? asked : 'en', dir: w && RTL.has(asked.split('-')[0]) ? 'rtl' : 'ltr', ui: w ? w.ui : UI, languages: LANGUAGES, translates: Boolean(translator),
+        room: room ? view(room, w ? w.room : undefined) : null, rooms: open().map((x) => ({ date: x.date, label: x.label })),
         member: Boolean(m && m.status === 'active'), banked: room ? banked(m, room) : false, points: RULES.room.pts,
       }, { 'Cache-Control': 'no-store' });
     });
@@ -167,11 +259,12 @@ export function roomDomain(ctx, { dir }) {
       const b = await readJson(req);
       const room = must(b.date);
       const i = Number(b.i);
+      const w = (peek(room, langOf(b.lang)) || { room: wordsOf(room) }).room; // the words in their language, if we have them
       if (b.lock === 'card') {
         const c = room.cards[i];
         if (!c) throw fail(400, 'No such card.');
         return send(res, 200, b.value === c.record
-          ? { ok: true, record: c.record, note: c.note, source: c.src === undefined || c.src === null ? null : room.sources[c.src] }
+          ? { ok: true, record: c.record, note: w.cards[i].note, source: c.src === undefined || c.src === null ? null : room.sources[c.src] }
           : { ok: false });
       }
       if (b.lock === 'code') return send(res, 200, { ok: String(b.value || '') === room.code.answer });
@@ -179,7 +272,8 @@ export function roomDomain(ctx, { dir }) {
         const g = room.gates[i];
         const o = g && g.opts[Number(b.value)];
         if (!o) throw fail(400, 'No such ruling.');
-        return send(res, 200, o.ok ? { ok: true, rule: g.rule, letter: g.letter } : { ok: false, why: o.why || 'Not that one.' });
+        const wo = w.gates[i].opts[Number(b.value)];
+        return send(res, 200, o.ok ? { ok: true, rule: w.gates[i].rule, letter: g.letter } : { ok: false, why: wo.why || w.gates[i].rule });
       }
       throw fail(400, 'No such lock.');
     });
@@ -195,9 +289,10 @@ export function roomDomain(ctx, { dir }) {
       const from = clean(b, req);
       count('open', from, req);
       if (got) count('points', from, req);
-      send(res, 200, { ok: true, epilogue: room.epilogue, member: active, points: got ? got.pts : 0, artist: audienceOf(req) === 'artist' });
+      const w = peek(room, langOf(b.lang));
+      send(res, 200, { ok: true, epilogue: w ? w.room.epilogue : room.epilogue, member: active, points: got ? got.pts : 0, artist: audienceOf(req) === 'artist' });
     });
   }
 
-  return { routes, today: () => pick(), open, view, choose, count, totals };
+  return { routes, today: () => pick(), open, view, choose, count, totals, setTranslator: (f) => { translator = f; } };
 }

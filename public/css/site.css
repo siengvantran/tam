@@ -1414,3 +1414,10 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .ar-stats { width: 100%; border-collapse: collapse; margin: 0 0 28px; font-variant-numeric: tabular-nums; }
 .ar-stats th, .ar-stats td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); }
 .table-wrap { overflow-x: auto; }
+
+/* The Analogue Room in other languages */
+.ar-lang { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; }
+.ar-lang select { font: inherit; padding: 8px 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; max-width: 100%; }
+[dir="rtl"] .ar-note { border-left: 0; border-right: 3px solid var(--gold); padding-left: 0; padding-right: 14px; }
+[dir="rtl"] .ar-opt { text-align: right; }
+[dir="rtl"] .ar-input { letter-spacing: .3em; direction: ltr; }

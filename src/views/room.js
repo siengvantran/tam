@@ -16,10 +16,10 @@ function page(ctx, room) {
     body: html`<section class="section ar"><div class="wrap narrow">
       <div class="label">TAM · a new room every morning</div>
       <h1 class="chrome gold">The Analogue Room</h1>
-      <p class="ar-note">The news in this room is real and sourced. The future it is set in is fiction.</p>
-      ${r ? html`<p class="ar-setting">${r.setting}</p>
-      <div class="ar-briefing">${r.briefing.map((p) => html`<p>${p}</p>`)}</div>
-      <p class="ar-points">Open the doors and <a href="/club">TAM Club</a> members bank <b>+${pts} points</b>, once a day. ${HALF} points is a drink on the house.</p>
+      <p class="ar-note" data-room-note>The news in this room is real and sourced. The future it is set in is fiction.</p>
+      ${r ? html`<p class="ar-setting" data-room-setting>${r.setting}</p>
+      <div class="ar-briefing" data-room-briefing>${r.briefing.map((p) => html`<p>${p}</p>`)}</div>
+      <p class="ar-points"><span data-room-points data-pts="${pts}" data-half="${HALF}">Open the doors and TAM Club members bank +${pts} points, once a day. ${HALF} points is a drink on the house.</span> <a href="/club">TAM Club</a></p>
       <div id="room" data-room><p class="muted">Unlocking the gatehouse…</p></div>
       <noscript><p class="muted">The locks need JavaScript switched on.</p></noscript>`
     : html`<p class="lede">The gatehouse is quiet today. A new room opens tomorrow morning.</p>`}

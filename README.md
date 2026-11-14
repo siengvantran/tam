@@ -75,7 +75,9 @@ A daily escape room built from the day's news and set in a TAM of five years fro
 - **On the home page** as a tile (the musician pathway gets its own words), and **on every public page** as one line inviting the visitor in (`public/js/room-invite.js`). The wording is picked for artists or the public, and for where the visit came from: search, social, AI assistants, email, ticket sites, other TAM sites, direct. The site learns which wording gets doors opened; one visitor in five sees a wording at random so it keeps learning. Add or change wordings in `INVITES` in `src/domain/room.js`.
 - **Who plays** (`/analogue-room/stats`, for admins): shown, followed, started, doors opened and points banked, by source, audience and wording, over 30 days. Totals only, kept 90 days: no cookie, nothing about who anyone is. The kind of source is kept for the visit in the browser's sessionStorage; the privacy notice says so.
 
-See `src/domain/room.js`, `src/views/room.js`, `public/js/room.js`, `public/js/room-invite.js`, `test/room.test.js`.
+- **Any language.** The room opens in the visitor's browser language, with a picker of 48 languages in their own names (any other language a browser asks for works too). Claude translates the day's room and the game's own words once per language and the site keeps the result (`src/services/room-translator.js`, the same `ANTHROPIC_API_KEY` and `TAM_AI_MODEL` as Ask TAM; without a key the room is English only and the picker is hidden). The page says the translation is automatic, and source links stay the originals. Right-to-left languages are laid out right to left. The answers are the same everywhere: the dial is digits and the letters spell the same English word. At most 60 new translations a day, so nobody can run up the bill; past that, or if a translation fails, the room is in English. A translated line that comes back empty or with a broken `{placeholder}` stays in English.
+
+See `src/domain/room.js`, `src/services/room-translator.js`, `src/views/room.js`, `public/js/room.js`, `public/js/room-invite.js`, `test/room.test.js`.
 
 ## Shows: the back office for creating nights (/shows)
 
