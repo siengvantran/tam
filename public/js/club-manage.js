@@ -46,7 +46,7 @@ function draw() {
 function overview() {
   const s = D.stats;
   $('#cm-body').innerHTML = `<div class="cm-tiles">
-    ${[['On the list', s.members], ['Getting emails', s.emailsOn], ['New this week', s.joined7], ['New in 30 days', s.joined30], ['Not confirmed yet', s.pending], ['Points earned this week', s.pointsWeek], ['Halves poured', s.rewards.poured], ['Halves waiting at the bar', s.rewards.live]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
+    ${[['On the list', s.members], ['Getting emails', s.emailsOn], ['New this week', s.joined7], ['New in 30 days', s.joined30], ['Not confirmed yet', s.pending], ['Points earned this week', s.pointsWeek], ['Drinks poured', s.rewards.poured], ['Drinks waiting at the bar', s.rewards.live]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
   <div class="cm-cols"><section><h3>What they’re into</h3>${bars(s.byInterest, D.interests)}</section><section><h3>How often</h3>${bars(s.byFrequency, D.frequencies)}</section>
   <section><h3>Levels</h3>${bars(s.byTier)}</section><section><h3>Where they joined</h3>${bars(s.bySource)}</section></div>
   <h3>Latest points</h3><ul class="plain cm-recent">${s.recent.map((x) => `<li><b>${x.pts > 0 ? '+' : ''}${x.pts}</b> ${esc(x.who)} · ${esc(x.label)} <small class="muted">${esc(when(x.at))}</small></li>`).join('') || '<li class="muted">No points yet.</li>'}</ul>
@@ -120,12 +120,12 @@ async function members() {
 
 function points() {
   const s = D.stats;
-  $('#cm-body').innerHTML = `<div class="cm-tiles">${[['Halves claimed', s.rewards.issued], ['Poured', s.rewards.poured], ['Waiting at the bar', s.rewards.live], ['Expired, points back', s.rewards.expired]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
+  $('#cm-body').innerHTML = `<div class="cm-tiles">${[['Drinks claimed', s.rewards.issued], ['Poured', s.rewards.poured], ['Waiting at the bar', s.rewards.live], ['Expired, points back', s.rewards.expired]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
   <h3>Ways to earn <small class="muted">(last 30 days)</small></h3><table class="cm-table"><thead><tr><th>What</th><th>Points</th><th>Times</th></tr></thead><tbody>
   ${Object.entries(D.rules).map(([k, r]) => `<tr><td>${esc(r.label)}${r.hint ? ` <small class="muted">${esc(r.hint)}</small>` : ''}</td><td>${r.unit ? `${r.pts} per £1` : `+${r.pts}`}</td><td>${s.byRule[k] || 0}</td></tr>`).join('')}</tbody></table>
-  <h3>At the bar</h3><ol class="small"><li>The member opens their card on tam.tv/club (or scans their QR with the bar phone).</li><li>Staff signed in to the door page see the buttons: <b>They’re here tonight</b> (+15), <b>Bar spend</b> (a point per £1, up to 30 a day), and <b>Poured it</b> for a claimed half.</li>
-  <li>Check the code on their phone matches the one on the staff screen. One half a week; a claimed half is good for 30 days.</li></ol>
-  <p class="small muted">Levels: ${D.tiers.map((t) => `${esc(t.name)} ${t.at}+`).join(' · ')}. ${D.half} points = half a pint.</p>`;
+  <h3>At the bar</h3><ol class="small"><li>The member opens their card on tam.tv/club (or scans their QR with the bar phone).</li><li>Staff signed in to the door page see the buttons: <b>They’re here tonight</b> (+5), <b>Bar spend</b> (a point per £1, up to 30 a day), and <b>Poured it</b> for a claimed drink.</li>
+  <li>Check the code on their phone matches the one on the staff screen. They choose half a pint, a glass of wine or an infused water; the staff screen shows which. One drink a week; a claimed drink is good for 30 days.</li></ol>
+  <p class="small muted">Levels: ${D.tiers.map((t) => `${esc(t.name)} ${t.at}+`).join(' · ')}. ${D.half} points = a drink on us.</p>`;
 }
 
 root.addEventListener('click', async (e) => {

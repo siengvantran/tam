@@ -65,7 +65,7 @@ export function bookingSection(ctx, { nights, festival: f, single = false, headi
         ${donation ? html`<fieldset class="give"><legend>Add a donation <small>optional</small></legend><p class="hint">${f.donation.blurb}</p><div class="give-opts" id="b-give"></div>
           <label class="give-other" id="b-give-other" hidden><span>£</span><input name="donationOther" type="number" inputmode="decimal" min="1" step="0.01" aria-label="Donation amount in pounds" placeholder="Amount"></label></fieldset>` : ''}
         <div class="total"><span>Total</span><b id="s-total">£0</b></div>
-        <label class="check cl-book"><input type="checkbox" name="joinClub"> Join the TAM list too: what’s on by email, and points toward half a pint on us. <a href="/club">TAM Club</a></label>
+        <label class="check cl-book"><input type="checkbox" name="joinClub"> Join the TAM list too: what’s on by email, and points toward a drink on us. <a href="/club">TAM Club</a></label>
         <button class="btn hot" type="submit" id="b-pay" disabled>Book tickets</button>
         <p class="hint" id="b-pay-note"></p>
         <p class="hint small">We use your details to send your tickets. <a href="/privacy">Privacy notice</a>.</p>

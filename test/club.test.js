@@ -49,12 +49,12 @@ async function setup(t, extra = {}) {
   return { app, B, call, sent, waitMail, member, linkIn, staff: { 'x-staff-token': ADMIN } };
 }
 
-test('joining: double opt-in, 20 points, the welcome email, and nobody can test who is on the list', async (t) => {
+test('joining: double opt-in, 10 points, the welcome email, and nobody can test who is on the list', async (t) => {
   const { call, sent, waitMail, member, app } = await setup(t);
   // every page has the sign-up; /club explains the card
   const home = await call('/');
   assert.match(home.body, /data-club-join data-source="footer"/);
-  assert.match(home.body, /half a pint on us/);
+  assert.match(home.body, /a drink on us/);
   const club = await call('/club');
   assert.match(club.body, /Get the list\.<br>Drink on us\./);
   assert.match(club.body, /Come to a night at TAM/);
@@ -65,7 +65,7 @@ test('joining: double opt-in, 20 points, the welcome email, and nobody can test 
   const cookie = await member('ali@example.com', { interests: ['blues', 'bogus'], frequency: 'monthly' });
   const me = (await call('/api/club/me', { cookie })).body.member;
   assert.equal(me.status, 'active');
-  assert.equal(me.balance, 25); // joined (20) + told us what they're into (5)
+  assert.equal(me.balance, 12); // joined (10) + told us what they're into (2)
   assert.deepEqual(me.interests, ['blues']);
   assert.equal(me.frequency, 'monthly');
   assert.equal(me.tier.name, 'Fan');
@@ -89,24 +89,30 @@ test('joining: double opt-in, 20 points, the welcome email, and nobody can test 
   assert.equal(app.ctx.db.members.length, 1);
 });
 
-test('points: daily caps, a streak, shares, referrals, bookings and a half pint poured at the bar', async (t) => {
+test('points: spending earns most; daily caps, a streak, shares, referrals, and a drink of their choice poured at the bar', async (t) => {
   const { app, call, member, staff } = await setup(t);
   let now = Date.parse('2026-11-16T12:00:00Z');
   app.ctx.now = () => now;
   const cookie = await member('ali@example.com');
   const bal = async () => (await call('/api/club/me', { cookie })).body.member.balance;
-  assert.equal(await bal(), 20);
+  assert.equal(await bal(), 10);
+  // paying customers earn more than everything else
+  const { RULES, HALF, DRINKS } = await import('../src/domain/club.js');
+  assert.equal(HALF, 108);
+  assert.deepEqual(Object.keys(DRINKS), ['half', 'wine', 'water']);
+  assert.ok(RULES.freeBooking.pts < RULES.booking.pts);
+  for (const [k, r] of Object.entries(RULES)) if (!r.paid && !r.hidden && !r.unit) assert.ok(r.pts <= 10, `${k} earns ${r.pts}`);
 
   // a point a day for visiting, and a streak bonus on the third day of a week
   assert.equal((await call('/api/club/ping', { method: 'POST', body: {}, cookie })).body.got, 1);
   assert.equal((await call('/api/club/ping', { method: 'POST', body: {}, cookie })).body.got, 0);
   for (const d of [17, 18]) { now = Date.parse(`2026-11-${d}T12:00:00Z`); await call('/api/club/ping', { method: 'POST', body: {}, cookie }); }
-  assert.equal(await bal(), 20 + 3 + 5);
-  // shares: two a day
+  assert.equal(await bal(), 10 + 3 + 2);
+  // shares: one a day
   for (const p of ['/a', '/b', '/c']) await call('/api/club/share', { method: 'POST', body: { path: p }, cookie });
-  assert.equal(await bal(), 30);
+  assert.equal(await bal(), 16);
 
-  // a friend opens my link (+2, once per visitor a day), then joins with it (+15)
+  // a friend opens my link (+1, once per visitor a day), then joins with it (+5)
   const me = (await call('/api/club/me', { cookie })).body.member;
   const code = me.refLink.split('/').pop();
   const r = await call(`/r/${code}?to=/sunday-showcases`);
@@ -116,54 +122,59 @@ test('points: daily caps, a streak, shares, referrals, bookings and a half pint 
   await call('/api/club/ref-visit', { method: 'POST', body: { r: code } });
   await call('/api/club/ref-visit', { method: 'POST', body: { r: code } });
   await call('/api/club/ref-visit', { method: 'POST', body: { r: code }, cookie }); // opening your own link doesn't count
-  assert.equal(await bal(), 32);
+  assert.equal(await bal(), 17);
   await member('friend@example.com', { ref: code });
-  assert.equal(await bal(), 47);
+  assert.equal(await bal(), 22);
 
-  // booking on tam.tv (reserved, no card needed here) and joining from the booking form
+  // a paid booking earns when it's paid, not while it's only held
   const b = await call('/api/bookings', { method: 'POST', body: { night: 'best-christmas-ever-2026-12-08', type: 'standard', qty: 2, name: 'Ali', email: 'ali@example.com' } });
   assert.equal(b.status, 201, JSON.stringify(b.body));
-  assert.equal(await bal(), 57);
-  await call('/api/bookings', { method: 'POST', body: { night: 'best-christmas-ever-2026-12-08', type: 'standard', qty: 1, name: 'Ali', email: 'ali@example.com' } });
-  assert.equal(await bal(), 57); // one booking bonus per night
+  assert.equal(await bal(), 22);
   await call('/api/bookings', { method: 'POST', body: { night: 'best-christmas-ever-2026-12-08', type: 'standard', qty: 1, name: 'Sam', email: 'sam@example.com', joinClub: true } });
   assert.ok(app.ctx.db.members.some((m) => m.email === 'sam@example.com' && m.status === 'pending' && m.source === 'booking'));
 
-  // at the bar: staff only, a point per £1 up to 30 a day, here tonight once
+  // at the bar: staff only, a point per £1 up to 30 a day, here tonight once (+5)
   const card = me.card;
   assert.equal((await call(`/api/club/card/${card}`)).status, 401);
   const page = await call(`/club/card/${card}`);
   assert.match(page.body, /Ali/);
   assert.doesNotMatch(page.body, /ali@example\.com/);
-  assert.equal((await call(`/api/club/card/${card}/here`, { method: 'POST', body: {}, headers: staff })).body.got, 15);
+  assert.equal((await call(`/api/club/card/${card}/here`, { method: 'POST', body: {}, headers: staff })).body.got, 5);
   assert.equal((await call(`/api/club/card/${card}/here`, { method: 'POST', body: {}, headers: staff })).body.got, 0);
   assert.equal((await call(`/api/club/card/${card}/bar`, { method: 'POST', body: { pounds: 12.5 }, headers: staff })).body.got, 12);
   assert.equal((await call(`/api/club/card/${card}/bar`, { method: 'POST', body: { pounds: 40 }, headers: staff })).body.got, 18);
-  assert.equal(await bal(), 57 + 15 + 30);
+  assert.equal(await bal(), 22 + 5 + 30);
+  assert.equal((await call('/api/club/claim', { method: 'POST', body: { drink: 'wine' }, cookie })).status, 409); // not 108 yet
 
-  // claim the half: a code, 100 points off, one a week; staff pour it
-  const claim = await call('/api/club/claim', { method: 'POST', body: {}, cookie });
+  // claim a drink (their choice): a code, 108 points off, one a week; staff pour it
+  const x0 = app.ctx.db.members.find((y) => y.email === 'ali@example.com');
+  app.ctx.club.award(x0, 'gift', 'g0', { pts: 60 });
+  const claim = await call('/api/club/claim', { method: 'POST', body: { drink: 'wine' }, cookie });
   assert.equal(claim.status, 201);
   const reward = claim.body.member.reward;
   assert.match(reward.code, /^[A-Z0-9]{6}$/);
-  assert.equal(claim.body.member.balance, 2);
+  assert.equal(reward.drinkName, 'A glass of wine');
+  assert.equal(claim.body.member.balance, 117 - 108);
+  assert.equal((await call(`/api/club/card/${card}`, { headers: staff })).body.card.reward.drinkName, 'A glass of wine');
   assert.equal((await call('/api/club/claim', { method: 'POST', body: {}, cookie })).status, 409);
   assert.equal((await call(`/api/club/card/${card}/pour`, { method: 'POST', body: { code: 'WRONG1' }, headers: staff })).status, 400);
   assert.equal((await call(`/api/club/card/${card}/pour`, { method: 'POST', body: { code: reward.code }, headers: staff })).body.poured, true);
   assert.equal((await call(`/api/club/card/${card}/pour`, { method: 'POST', body: {}, headers: staff })).status, 409);
   const m = (await call('/api/club/me', { cookie })).body.member;
-  assert.ok(m.badges.some((x) => x.name === 'Half-pint hero'));
+  assert.ok(m.badges.some((x) => x.name === 'On the house'));
   assert.ok(m.badges.some((x) => x.name === 'First night'));
 
   // an unused half gives the points back after 30 days
   const x = app.ctx.db.members.find((y) => y.email === 'ali@example.com');
   app.ctx.club.award(x, 'gift', 'g1', { pts: 100 });
   now += 8 * 86400000;
-  assert.equal((await call('/api/club/claim', { method: 'POST', body: {}, cookie })).status, 201);
+  const water = await call('/api/club/claim', { method: 'POST', body: {}, cookie });
+  assert.equal(water.status, 201);
+  assert.equal(water.body.member.reward.drink, 'half'); // no choice sent: half a pint
   now += 31 * 86400000;
   const after = (await call('/api/club/me', { cookie })).body.member;
   assert.equal(after.reward, null);
-  assert.equal(after.balance, 102);
+  assert.equal(after.balance, 109);
 });
 
 test('the newsletter: segments, personal tokens, A/B subjects, click points, one-click unsubscribe, the archive', async (t) => {
@@ -203,7 +214,7 @@ test('the newsletter: segments, personal tokens, A/B subjects, click points, one
   assert.deepEqual(got.map((m) => m.subject).sort(), ['Ali, the jam is back', 'Blues this Saturday']); // A/B: one each
   const toAli = got.find((m) => m.to[0] === 'ali@example.com');
   assert.match(toAli.html, /Hey Ali,/);
-  assert.match(toAli.html, /Your TAM Club card: 25 points/);
+  assert.match(toAli.html, /Your TAM Club card: 12 points/);
   assert.match(toAli.headers['List-Unsubscribe'], /unsubscribe\?t=[0-9a-f]{32}/);
 
   // a click: counted, a point, then on to the link
@@ -211,7 +222,7 @@ test('the newsletter: segments, personal tokens, A/B subjects, click points, one
   const c = await call(link.replace(/^https?:\/\/[^/]+/, ''));
   assert.equal(c.status, 302);
   assert.match(c.headers.get('location'), /\/great-british-blues-jam#jam$/);
-  assert.equal((await call('/api/club/me', { cookie: ali })).body.member.balance, 26);
+  assert.equal((await call('/api/club/me', { cookie: ali })).body.member.balance, 13);
   assert.equal((await call(link.replace(/^https?:\/\/[^/]+/, '').replace(/\/c\/([^/]+)\/([^/]+)\/[^/?]+/, '/c/$1/$2/0000000000000000'))).headers.get('location'), '/'); // a forged link goes nowhere
   const res = (await call(`/api/club/issues/${issue.id}`, { headers: staff })).body.issue;
   assert.equal(res.stats.sent, 2);
@@ -223,7 +234,7 @@ test('the newsletter: segments, personal tokens, A/B subjects, click points, one
   assert.equal(u.status, 200);
   const aliNow = (await call('/api/club/me', { cookie: ali })).body.member;
   assert.equal(aliNow.emails, false);
-  assert.equal(aliNow.balance, 26); // the card stays
+  assert.equal(aliNow.balance, 13); // the card stays
 
   // the archive and its feed
   const arch = await call('/newsletter');

@@ -199,7 +199,7 @@ export function ticketsDomain(ctx) {
       }
       // the TAM Club: join from the booking form (ticked box), and points for booking
       if (ctx.club && body.joinClub === true) await ctx.club.join({ email: b.email, name: b.name, consent: true, source: 'booking', ref: body.ref }).catch(() => {});
-      if (ctx.club && b.status === 'reserved') ctx.club.awardEmail(b.email, 'booking', b.night);
+      if (ctx.club && !b.total) ctx.club.awardEmail(b.email, 'freeBooking', b.night); // free tickets: a small thank-you; paid ones earn when paid (markPaid)
       await save();
       if (b.status === 'reserved') notify(b);
       send(res, 201, { booking: bookingView(b, true), checkoutUrl });
