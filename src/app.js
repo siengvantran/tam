@@ -87,7 +87,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
 
   const auth = staffAuth(cfg, store.db.meta.secret);
   const ctx = {
-    db: store.db, save: store.save, saveImage: store.saveImage, content, cfg, now, live,
+    db: store.db, save: store.save, saveImage: store.saveImage, uploadsDir: store.uploads, content, cfg, now, live,
     secret: store.db.meta.secret,
     today: () => londonToday(new Date(now())),
     stripe: stripeClient(cfg.stripeKey, cfg.stripeApi),

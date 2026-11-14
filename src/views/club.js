@@ -99,10 +99,13 @@ export function routes(r, ctx, qr) {
   r.get('/club/card/:card', (req, res, { params }) => {
     const m = ctx.club.byCard(params.card);
     const p = m && ctx.club.publicCard(m);
+    // the photo is for the bar: only staff (and the member themselves) see it
+    const me = ctx.club.memberOf(req);
+    if (p && !ctx.isDoor(req) && !(me && me.id === m.id)) p.photo = '';
     respond(res, page(ctx, {
       title: 'TAM Club card', path: `/club/card/${params.card}`, noindex: true,
       body: html`<section class="section"><div class="wrap narrow">${p ? html`
-        <div class="cl-mini"><div class="label">TAM Club card</div><h1 class="chrome gold">${p.firstName || 'TAM Club member'}</h1><p class="cl-tier">${p.tier}${p.badges.length ? html` · ${p.badges.map((b) => b.icon).join(' ')}` : ''}</p></div>
+        <div class="cl-mini">${p.photo ? html`<img class="cl-face big" src="${p.photo}" alt="${p.firstName || 'Member'}’s photo" width="160" height="160">` : ''}<div class="label">TAM Club card</div><h1 class="chrome gold">${p.firstName || 'TAM Club member'}</h1><p class="cl-tier">${p.tier}${p.badges.length ? html` · ${p.badges.map((b) => b.icon).join(' ')}` : ''}</p></div>
         <div id="club-staff" data-card="${m.card}"></div>
         <p class="small muted">Staff: sign in on <a href="/door">the door page</a> on this phone to add points and pour drinks.</p>`
         : html`<h1 class="chrome">That card isn’t here</h1><p><a href="/club">Join the TAM Club</a>.</p>`}</div></section>`,
