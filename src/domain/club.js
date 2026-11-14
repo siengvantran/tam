@@ -72,6 +72,7 @@ export const RULES = {
   wall: { pts: 1, label: 'Leave a note on an artist’s wall', perDay: 1 },
   click: { pts: 1, label: 'Open a link in our newsletter', hint: 'each issue' },
   photo: { pts: 1, label: 'Add a photo to your card', max: 1 },
+  room: { pts: 2, label: 'Open the doors of The Analogue Room', perDay: 1, hint: 'a new room each morning' },
   half: { pts: -HALF, label: 'A drink on the house', hidden: true },
   refund: { pts: HALF, label: 'Unused drink: points back', hidden: true },
   gift: { pts: 0, label: 'From the TAM team', hidden: true, unit: true },

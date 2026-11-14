@@ -26,6 +26,8 @@ import { showcaseDomain } from './domain/showcases.js';
 import { serveMicrosite } from './views/showcase-site.js';
 import { clubDomain } from './domain/club.js';
 import * as clubPages from './views/club.js';
+import { roomDomain } from './domain/room.js';
+import * as roomPages from './views/room.js';
 import { eventbritePublisher } from './services/eventbrite-publish.js';
 import { socialPublisher } from './services/social.js';
 import { showWriter } from './services/writer.js';
@@ -117,6 +119,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   const showcase = showcaseDomain(ctx); // this week's Sunday Showcase line-up: presents under the tree
   ctx.showcase = showcase; // the home page shows the line-up carousel too
   const blues = bluesDomain(ctx); // The Great British Blues Jam: sign-ups, the wall, the big screen
+  const room = ctx.room = roomDomain(ctx, { dir: contentDir || path.join(ROOT, 'content') }); // The Analogue Room: a daily escape room, worth club points
   const admin = adminDomain(ctx, { tickets, collections, raffle });
   const enquiries = enquiriesDomain(ctx);
   const d = { tickets, community, collections, raffle, admin, enquiries, qr };
@@ -124,7 +127,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -151,6 +154,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   ctx.club.pageRoutes(site); // /c/…: newsletter link clicks
+  roomPages.routes(site, ctx, room); // /analogue-room: today's escape room
   ctx.links.classify(site); // which old pages only the old site has
   seoRoutes(site, ctx);
 

@@ -23,7 +23,7 @@ export function layout(ctx, {
   const mods = new Set(['/js/site.js', ...(ctx.cfg.gaId ? ['/js/consent.js'] : []), ...scripts]);
   if (String(body).includes('data-carousel')) mods.add('/js/carousel.js'); // the featured show's carousel
   const ask = !bodyClass.includes('staff') && !/^\/(ticket|pay)\//.test(path);
-  if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); mods.add('/js/club.js'); } // club.js: the footer sign-up and your card's points
+  if (ask) { mods.add('/js/concierge.js'); mods.add('/js/instrument.js'); mods.add('/js/club.js'); mods.add('/js/room-invite.js'); } // club.js: the footer sign-up and your card's points
   if (song) mods.add('/js/tamalume.js');
   return '<!doctype html>' + html`
 <html lang="en-GB" data-theme="${theme}"${ctx.cfg.gaId ? html` data-ga="${ctx.cfg.gaId}"` : ''}>

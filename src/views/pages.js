@@ -10,6 +10,7 @@ import { venueLd, placeLd, availability } from './ai.js';
 import { featuredNow, featuredHero } from './featured.js';
 import { christmasNow, christmasHero } from './christmas.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
+import { roomTile } from './room.js';
 import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM , ticketSite } from './layout.js';
 import {
   bookingData, bookingSection, datesSection, programmeSection, charitySection, teamTablesSection,
@@ -187,14 +188,15 @@ function home(ctx, d, req) {
       <ul class="plain">${onThisDay.map((e) => html`<li><a href="/archive/night/${e.slug}">${e.title}</a> <span class="muted">· ${e.year}</span></li>`)}</ul>
       <p class="small muted">From TAM's Eventbrite listings, which miss some nights.</p></div></section>` : '',
     visit: visitSection(ctx),
+    room: roomTile(ctx, p), // today's Analogue Room: 2 club points for opening the doors
   };
   const ORDER = {
-    'live-music': ['forYou', 'fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'],
-    musician: ['steps', 'forYou', 'tv', 'legends', 'upcoming', 'visit'],
-    'venue-hire': ['steps', 'tv', 'upcoming', 'visit'],
-    party: ['steps', 'forYou', 'fest', 'upcoming', 'visit'],
-    brand: ['steps', 'fest', 'tv', 'legends', 'visit'],
-  }[p && p.slug] || ['fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'];
+    'live-music': ['forYou', 'room', 'fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'],
+    musician: ['steps', 'room', 'forYou', 'tv', 'legends', 'upcoming', 'visit'],
+    'venue-hire': ['steps', 'tv', 'upcoming', 'room', 'visit'],
+    party: ['steps', 'forYou', 'fest', 'upcoming', 'room', 'visit'],
+    brand: ['steps', 'fest', 'tv', 'legends', 'room', 'visit'],
+  }[p && p.slug] || ['room', 'fest', 'upcoming', 'legends', 'tv', 'onThisDay', 'visit'];
   // Christmas on the home page (src/views/christmas.js): its own hero replaces the festival banner
   const xm = christmasNow(ctx);
   const sections = xm ? ORDER.filter((k) => k !== 'fest') : ORDER;
@@ -654,7 +656,7 @@ function privacy(ctx) {
   <li id="club"><b>The TAM Club and newsletter</b>: your email, first name if you give it, a photo if you add one (shown only to you and to TAM staff who scan your card, so the bar knows it’s you; remove it any time), what you’re into and how often you want emails, only with your consent (you confirm by email first). Your card keeps a record of the points you earn: visits to tam.tv while signed in to your card, shares and the friends who join with your link, showcase votes and wall notes, bookings, check-ins at the door and bar spend that staff add when you show your card. We count which newsletter links are clicked (no tracking pixels), to see what readers like and to give the point. For points from shared links we keep a one-day code made from the visitor’s connection, never the address itself. Unsubscribe in one click from any email; on your card you can change what you get, stop emails and keep your points, or delete your card and everything on it.</li>
   <li><b>Enquiries</b>: your name, email and what you’re planning, to reply to you (legitimate interests).</li>
   <li><b>Counts</b>: we count page and invitation visits per day (no cookies, no profiles), so artists can see how their pages are doing. On Sunday Showcase pages we also count, per act, how many people view the page, play a clip, send an invite, follow them or unwrap their present: totals only, nothing about who you are. We use these totals to plan the running order of the night.</li></ul>
-  <h2 id="analytics">Cookies and storage</h2><p>No advertising cookies. Google Analytics cookies are set only if you say yes on the cookie banner; they tell us, in total, which pages and artists people enjoy. You can change your mind any time with “Cookie choices” at the foot of every page, and saying no removes them. Staff who sign in get one sign-in cookie. If you open your TAM Club card, you get a sign-in cookie for it (<code>tam_club</code>) and a flag (<code>tam_club_on</code>) so the page knows to count your daily visit point. If you pick who you are (musician, party, venue hire…) we set a preference cookie, <code>tam_path</code>, so the site can tailor itself; it holds nothing else and you can reset it with “Not you? Choose again”. Your browser remembers a few choices (for example a story theme) in its own storage.</p>
+  <h2 id="analytics">Cookies and storage</h2><p>No advertising cookies. Google Analytics cookies are set only if you say yes on the cookie banner; they tell us, in total, which pages and artists people enjoy. You can change your mind any time with “Cookie choices” at the foot of every page, and saying no removes them. Staff who sign in get one sign-in cookie. If you open your TAM Club card, you get a sign-in cookie for it (<code>tam_club</code>) and a flag (<code>tam_club_on</code>) so the page knows to count your daily visit point. If you pick who you are (musician, party, venue hire…) we set a preference cookie, <code>tam_path</code>, so the site can tailor itself; it holds nothing else and you can reset it with “Not you? Choose again”. Your browser remembers a few choices (for example a story theme) in its own storage. To see which invitation to The Analogue Room works, we count in total what kind of place visitors arrive from (search, social, email, direct and so on) and whether the room was played; your browser keeps that for the visit in its own storage, and nothing in it says who you are.</p>
   <h2>Who processes it for us</h2><p>Railway (hosting), Stripe (card payments), Resend (email), Anthropic (Ask TAM), Eventbrite (some listings), Google Fonts and YouTube (fonts and films on the page), and Google Analytics (only if you say yes to its cookies).</p>
   <h2>How long</h2><p>Booking records for six years for accounting; follows until you unsubscribe; TAM Club cards until you delete them (unconfirmed sign-ups are removed after 30 days); cards and pins until the festival's season ends, unless you ask us to remove them sooner.</p>
   <h2>Your rights</h2><p>You can ask to see, correct or delete your data, or object to how we use it. Email the box office. You can also complain to the ICO (ico.org.uk).</p>
