@@ -134,6 +134,7 @@ ${n ? html`${bookingSection(ctx, { nights: [n], single: true, heading: `Free tic
   <form class="formbox sc-form" id="sc-form" novalidate>
     <div class="label">The call-out</div><h2 class="chrome gold">Register your interest</h2>
     <p>Tell us about your act. The best way to a showcase is to play an open night first, so tell us which one you’ve played or are coming to.</p>
+    <p class="small">You’ll also get your own page on <a href="/stage">the TAM Stage</a>: your path from an open night to a festival spot, with fans boosting you along the way.</p>
     <div class="fields">
       <label class="field"><span>Your name</span><input name="name" maxlength="80" required autocomplete="name"></label>
       <label class="field"><span>Email</span><input name="email" type="email" maxlength="200" required autocomplete="email"></label>
