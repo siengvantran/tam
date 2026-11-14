@@ -57,6 +57,19 @@ for (const f of $$('form[data-concern]')) f.addEventListener('submit', async (e)
   catch (err) { formMessage(f, err.message); }
 });
 
+// ---------- apply to play The Best Christmas Ever ----------
+const xmas = $('#jm-xmas');
+if (xmas) xmas.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const d = new FormData(xmas);
+  if (!d.get('consent')) return formMessage(xmas, 'Tick the box to confirm.');
+  try {
+    const r = await api('/api/jom/apply-christmas', { method: 'POST', body: { act: d.get('act'), group: d.get('group'), plays: d.get('plays'), members: d.get('members'), links: d.get('links'), played: d.get('played'), notes: d.get('notes'), name: d.get('name'), email: d.get('email'), relation: d.get('relation'), consent: true } });
+    xmas.innerHTML = `<p class="ok"><b>Thank you!</b> We’ve got ${esc(d.get('act'))}’s application and emailed <b>${esc(d.get('email'))}</b>. The date is still to be announced: we’ll be in touch.</p>${r.page ? `<p>Share their page so fans can pledge to see them: <a href="${location.hostname.startsWith('jom.') ? '' : '/jom'}/${esc(r.page)}">their JOM page</a>.</p>` : ''}`;
+    track('jom_christmas_apply');
+  } catch (err) { formMessage(xmas, err.message); }
+});
+
 // ---------- parents: sign in ----------
 const signin = $('#jm-signin');
 if (signin) signin.addEventListener('submit', async (e) => {

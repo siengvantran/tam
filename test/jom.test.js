@@ -111,3 +111,44 @@ test('JOM at TAM: permanent act pages, pledges, parents claim and update (TAM ap
   await call('/api/jom/manage/acts', { method: 'POST', headers: staff, body: { name: 'New Band', group: 'youth' } });
   assert.equal((await call('/jom/new-band')).status, 200);
 });
+
+test('JOM hub: a carousel of banners and acts, the next JOM dates, and applications to play The Best Christmas Ever', async (t) => {
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-jom2-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const post = (p, body, headers = {}) => fetch(`${B}${p}`, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) }).then(async (r) => ({ status: r.status, body: await r.json() }));
+  app.ctx.now = () => Date.parse('2026-11-20T12:00:00Z'); // after the TAM session, before the December dates
+
+  const hub = await (await fetch(`${B}/jom`)).text();
+  // the carousel: JOM's banners, then every act with a photo, linked to their page
+  assert.match(hub, /data-carousel/);
+  assert.match(hub, /\/img\/jom\/jom-junior-2026-12-13\.jpg/);
+  assert.match(hub, /class="fx-slide fit"/);
+  assert.match(hub, /href="\/jom\/yellowhammer"[^>]*><img src="\/img\/jom-2026\/yellowhammer\.jpg"/);
+  assert.match(hub, /<script type="module" src="\/js\/carousel\.js">/);
+  // the next JOM dates, at Hootananny Brixton
+  assert.match(hub, /id="next-dates"[\s\S]*JOM Junior Open Mic[\s\S]*12pm to 2pm[\s\S]*Hootananny Brixton, 95 Effra Rd/);
+  assert.match(hub, /JOM Youth Open Mic[\s\S]*2pm to 7:30pm[\s\S]*aged 12 to 18/);
+  assert.match(hub, /mailto:jomjunioropenmic@gmail\.com/);
+  assert.match(hub, /Next JOM dates<\/span><b>JOM Junior Open Mic and JOM Youth Open Mic<\/b>/); // the hero points there once TAM's session has passed
+  // the call to play The Best Christmas Ever
+  assert.match(hub, /id="christmas"[\s\S]*date to be announced[\s\S]*Play The Best Christmas Ever 2026[\s\S]*id="jm-xmas"/);
+
+  const ok = { act: 'Yellowhammer', group: 'youth', plays: 'Rock band', members: 5, links: 'https://www.youtube.com/@yh', name: 'Pat', email: 'pat@family.test', relation: 'parent', consent: true };
+  assert.match((await post('/api/jom/apply-christmas', { ...ok, consent: false })).body.error, /Tick the box/);
+  assert.match((await post('/api/jom/apply-christmas', { ...ok, group: '' })).body.error, /Junior/);
+  assert.match((await post('/api/jom/apply-christmas', { ...ok, links: 'https://example.com' })).body.error, /Links can go to/);
+  const r = await post('/api/jom/apply-christmas', ok);
+  assert.equal(r.status, 201);
+  assert.equal(r.body.page, 'yellowhammer');
+  assert.equal((await post('/api/jom/apply-christmas', { ...ok, act: 'Brand New Band', group: 'junior' })).body.page, null);
+  // staff see them (with the act's pledges) and set a status; it's never on a public page
+  assert.equal((await fetch(`${B}/api/jom/manage`)).status, 401);
+  const m = await (await fetch(`${B}/api/jom/manage`, { headers: { 'x-staff-token': ADMIN } })).json();
+  assert.equal(m.applications.length, 2);
+  const yh = m.applications.find((x) => x.act === 'Yellowhammer');
+  assert.equal((await post(`/api/jom/manage/applications/${yh.id}`, { status: 'shortlist' }, { 'x-staff-token': ADMIN })).status, 200);
+  assert.equal(app.ctx.db.jomApplications.find((x) => x.id === yh.id).status, 'shortlist');
+  assert.doesNotMatch(await (await fetch(`${B}/jom`)).text(), /pat@family\.test/);
+});
