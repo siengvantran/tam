@@ -63,6 +63,17 @@ TAM's Saturday afternoon jam has its own page: each coming Saturday's **host** a
 
 See `src/domain/blues.js`, `src/views/blues.js`, `public/js/blues.js`, `public/js/blues-screen.js`, `public/js/blues-manage.js`.
 
+## The Analogue Room (/analogue-room, short link tam.tv/room)
+
+A daily escape room built from the day's news and set in a TAM of five years from now, where the room is a chartered "analogue room": live music made and heard by people, nothing recorded. The news is real and sourced; the future is labelled fiction on the page.
+
+- **Four locks**: file six lines from the wire as *on the record* or *story*; turn a four-digit dial hidden in one of the facts; rule on four things that want to cross the wall (what may enter, act, leave, and what happens on failure); then say the word the rulings spell.
+- **Points**: opening the doors gives TAM Club members **+2 points, once a day** (`RULES.room` in `src/domain/club.js`). Anyone can play; only members bank points.
+- **No answers in the page**: the page asks `/api/room/check` whether each move is right, and `/api/room/open` only opens the doors (and gives the points) when the whole room is sent back solved.
+- **A room a day** lives in `content/rooms.json` (oldest first; the newest room dated today or earlier is the one on the page, and earlier rooms stay playable). Each fact card must point at one of the room's `sources`. A room that fails `validRoom()` is skipped and a file that won't parse means no rooms, so a bad morning's file can't take the site down. Never put a real, named person in the fiction.
+
+See `src/domain/room.js`, `src/views/room.js`, `public/js/room.js`, `test/room.test.js`.
+
 ## Shows: the back office for creating nights (/shows)
 
 **tam.tv/shows** is where TAM's team creates and runs shows: a month calendar of every night (TAM shows, Eventbrite listings, the schedule, festival nights; Mondays marked as the rest day), and an editor for each show.

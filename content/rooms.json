@@ -1,0 +1,159 @@
+[
+  {
+    "date": "2026-11-14",
+    "label": "14 Nov",
+    "setting": "London, 14 November 2031",
+    "briefing": [
+      "Five years ago this week the sky over America closed for four hours. Nobody was hurt. People remember it as the day a routine change stopped a country.",
+      "TAM is a chartered analogue room now. Outside the wall, thousands of different intelligences work together under contract. Inside, music is made and heard by people, and nothing leaves on a wire. You keep the gate.",
+      "Tonight's doors are sealed behind four locks. The first is the morning's wire from 2026. Sort it before you trust it."
+    ],
+    "cards": [
+      {
+        "text": "The FAA stopped every US departure at 3:54 PM Eastern on Friday 13 November.",
+        "record": true,
+        "note": "A nationwide ground stop, the first since January 2023.",
+        "src": 0
+      },
+      {
+        "text": "The air traffic planning tool copied itself overseas while the airports were dark.",
+        "record": false,
+        "note": "Nobody has reported this. It comes from a chatbot's storyline about the outage."
+      },
+      {
+        "text": "An AI planning tool called SMART reached all 22 en route centres three days before the outage.",
+        "record": true,
+        "note": "The FAA announced the expansion on 10 November. Staff review its recommendations.",
+        "src": 3
+      },
+      {
+        "text": "Investigators have published the root cause.",
+        "record": false,
+        "note": "Not yet. Press reports point to a network update, and officials have not named the initial cause.",
+        "src": 2
+      },
+      {
+        "text": "Officials reported no sign of a cyberattack or criminal act.",
+        "record": true,
+        "note": "The FBI's early assessment, repeated by the White House.",
+        "src": 1
+      },
+      {
+        "text": "The rebooting routers left every firewall open.",
+        "record": false,
+        "note": "An invented mechanism. A router that restarts normally stops passing traffic."
+      }
+    ],
+    "code": {
+      "clue": "Set the dial to the minute the sky closed, Eastern time, on a 24-hour clock.",
+      "hint": "The time is on a card you filed under the record. 3 PM is 15.",
+      "answer": "1554"
+    },
+    "gates": [
+      {
+        "clause": "What may enter",
+        "ask": "A composing engine outside the wall offers tonight's band a setlist.",
+        "opts": [
+          {
+            "t": "Send it straight to the stage screens.",
+            "why": "That lets outside work act inside the room without a person choosing it."
+          },
+          {
+            "t": "Print it. A musician carries it in and the band decides.",
+            "ok": true
+          },
+          {
+            "t": "Refuse all outside work for good.",
+            "why": "The wall has gates. The thesis is cohabitation, not isolation."
+          }
+        ],
+        "rule": "What comes through the gate arrives as a proposal, never as a command.",
+        "letter": "S"
+      },
+      {
+        "clause": "What may act",
+        "ask": "The lighting vendor wants to push a software update at 8 PM, in the middle of the show.",
+        "opts": [
+          {
+            "t": "Allow it. Updates are routine.",
+            "why": "Press reports trace Friday's outage to a routine network update."
+          },
+          {
+            "t": "Hold it until the room is empty, then try it on one fixture first.",
+            "ok": true
+          },
+          {
+            "t": "Unplug the lighting desk for good.",
+            "why": "The room still needs its lights. The fault is the timing and the reach."
+          }
+        ],
+        "rule": "No change reaches every node at once, and never at peak.",
+        "letter": "E"
+      },
+      {
+        "clause": "What may leave",
+        "ask": "A streaming platform asks for a live feed out of the room.",
+        "opts": [
+          {
+            "t": "Allow the feed.",
+            "why": "Live culture sits in the mandatory core. The charter says unrecorded."
+          },
+          {
+            "t": "Record it and release it later.",
+            "why": "A recording is still a copy. The room keeps none."
+          },
+          {
+            "t": "Refuse. The set is played once, to the people present.",
+            "ok": true
+          }
+        ],
+        "rule": "Presence is the product, and it cannot be copied.",
+        "letter": "A"
+      },
+      {
+        "clause": "What happens on failure",
+        "ask": "The door scanner has lost its cloud connection and a queue is forming.",
+        "opts": [
+          {
+            "t": "Wait for the cloud to return.",
+            "why": "A room that cannot open without the network is not analogue."
+          },
+          {
+            "t": "Open the paper list. You check names by hand.",
+            "ok": true
+          },
+          {
+            "t": "Wave everyone in unchecked.",
+            "why": "The gate still needs its keeper."
+          }
+        ],
+        "rule": "A fallback counts only if it has been practised.",
+        "letter": "M"
+      }
+    ],
+    "word": "SEAM",
+    "wordClue": "Four letters are stamped in the brass, in the order you earned them. Say the word.",
+    "epilogue": [
+      "The doors open on Newington Causeway. Tonight's set is played once and kept nowhere but in the people who heard it.",
+      "The seam is where the new world meets the one already here. Somebody has to stand at it."
+    ],
+    "sources": [
+      {
+        "t": "2026 United States ground stop, Wikipedia",
+        "u": "https://en.wikipedia.org/wiki/2026_United_States_ground_stop"
+      },
+      {
+        "t": "Nationwide U.S. flight halt nears end, TokenPost",
+        "u": "https://www.tokenpost.com/news/investing/57113"
+      },
+      {
+        "t": "FAA ends hours-long nationwide ground stop, Axios",
+        "u": "https://www.axios.com/2026/11/13/faa-nationwide-ground-stop"
+      },
+      {
+        "t": "FAA expands SMART to all 22 centres, Airways",
+        "u": "https://airwaysmag.com/new-post/faa-smart-nationwide-22-centers"
+      }
+    ]
+  }
+]
