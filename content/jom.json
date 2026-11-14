@@ -1,0 +1,273 @@
+{
+  "_about": "JOM Youth Music × TAM: the evergreen JOM hub (jom.tam.tv) and a permanent page for every act. Names as on the TAM x JOM Sessions line-up. Parents or guardians claim a page and update it; TAM approves every change (src/domain/jom.js).",
+  "title": "JOM Youth Music × TAM",
+  "lede": "Young bands and singers on a real stage. JOM, the Junior Open Mic, brings Youth Music’s young musicians to TAM, and every act gets a page of their own that stays: their story, their music, and the nights they’ve played.",
+  "about": "JOM Youth Music runs junior and youth open mics for young musicians, and were finalists in the BBC Make A Difference Awards. At TAM they play a full venue stage with pro sound and lights, in front of a real crowd.",
+  "groups": {
+    "junior": "JOM Junior Open Mic",
+    "youth": "JOM Youth Open Mic",
+    "special": "Special extended set"
+  },
+  "sessions": [
+    {
+      "slug": "jom-sessions-2026-2026-11-15",
+      "date": "2026-11-15",
+      "title": "TAM x JOM Sessions 2026",
+      "poster": "/img/jom-2026/poster.jpg"
+    }
+  ],
+  "festival": "best-christmas-ever",
+  "acts": [
+    {
+      "slug": "fusion",
+      "name": "Fusion",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "dis-band",
+      "name": "DIS Band",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "indoctrination",
+      "name": "Indoctrination",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "zion",
+      "name": "Zion",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "beatrix-binyon",
+      "name": "Beatrix Binyon",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "colette",
+      "name": "Colette",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/colette.jpg"
+    },
+    {
+      "slug": "jessica-quilter",
+      "name": "Jessica Quilter",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "crowjacks",
+      "name": "Crowjacks",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "zayne",
+      "name": "Zayne",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/zayne.jpg"
+    },
+    {
+      "slug": "lavender-drumming",
+      "name": "Lavender Drumming",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/lavender-drumming.jpg"
+    },
+    {
+      "slug": "vivienne",
+      "name": "Vivienne",
+      "group": "junior",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "lucy-lyon",
+      "name": "Lucy Lyon",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "immy-eloise",
+      "name": "Immy Eloise",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/immy-eloise.jpg"
+    },
+    {
+      "slug": "aristea",
+      "name": "Aristea",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "rosie",
+      "name": "Rosie",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "maksym-oleksa",
+      "name": "Maksym Oleksa",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/maksym-oleksa.jpg"
+    },
+    {
+      "slug": "yeva-m",
+      "name": "Yeva M",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "the-dreamcatchers",
+      "name": "The Dreamcatchers",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/the-dreamcatchers.jpg"
+    },
+    {
+      "slug": "outgoing",
+      "name": "Outgoing",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "twenty-twelve",
+      "name": "Twenty Twelve",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/twenty-twelve.jpg"
+    },
+    {
+      "slug": "maisie-bonell",
+      "name": "Maisie Bonell",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "iris-grace",
+      "name": "Iris Grace",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "monica-endacott-iseava",
+      "name": "Monica Endacott Iseava",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "miscellaneous",
+      "name": "Miscellaneous",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/miscellaneous.jpg"
+    },
+    {
+      "slug": "dont-send-flowers",
+      "name": "Don’t Send Flowers",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/dont-send-flowers.jpg"
+    },
+    {
+      "slug": "death-flame",
+      "name": "Death Flame",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "sandstorm",
+      "name": "Sandstorm",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "the-whippets",
+      "name": "The Whippets",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/the-whippets.jpg"
+    },
+    {
+      "slug": "eloise",
+      "name": "Eloise",
+      "group": "youth",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ]
+    },
+    {
+      "slug": "yellowhammer",
+      "name": "Yellowhammer",
+      "group": "special",
+      "sessions": [
+        "jom-sessions-2026-2026-11-15"
+      ],
+      "photo": "/img/jom-2026/yellowhammer.jpg"
+    }
+  ]
+}

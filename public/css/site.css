@@ -1506,3 +1506,36 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .anr-rate { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; align-items: end; }
 .anr-stars { display: grid; gap: 4px; font-size: 13px; } .anr-note { display: flex; gap: 8px; } .anr-note input { flex: 1; min-width: 0; }
 @media (max-width: 960px) { .anr-wrap { grid-template-columns: minmax(0, 1fr); } .anr-detail { position: static; max-height: none; } }
+/* ---------- JOM Youth Music × TAM: jom.tam.tv (src/views/jom.js) ---------- */
+.jm-hero-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); gap: 32px; align-items: center; }
+.jm-poster { border-radius: 18px; box-shadow: 0 30px 70px rgba(0, 0, 0, .5); transform: rotate(2deg); }
+.jm-next { display: grid; gap: 4px; justify-items: start; background: var(--panel); border: 1px solid var(--gold-deep); border-radius: 18px; padding: 16px 18px; margin-top: 18px; max-width: 520px; }
+.jm-next b { font-size: 20px; } .jm-next .btn { margin-top: 8px; }
+.jm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+.jm-card { display: block; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: transform .2s, border-color .2s; }
+.jm-card:hover { transform: translateY(-3px); border-color: var(--gold); color: var(--ink); }
+.jm-pic { aspect-ratio: 4 / 5; display: grid; place-items: center; background: linear-gradient(150deg, #2b1a3a, #0e2a2a); }
+.jm-pic img { width: 100%; height: 100%; object-fit: cover; }
+.jm-pic span { font: 400 56px/1 var(--f-display); color: var(--gold); }
+.jm-pic.big { border-radius: 22px; } .jm-pic.big span { font-size: 120px; }
+.jm-card-body { padding: 10px 12px; display: grid; gap: 2px; } .jm-card-body small { color: var(--muted); font-size: 12px; } .jm-card-body .jm-pl { color: var(--gold); }
+.jm-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.jm-act-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; align-items: start; }
+.jm-photos img { border-radius: 22px; width: 100%; height: auto; }
+.jm-photos.many { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .jm-photos.many img:first-child { grid-column: 1 / -1; }
+.jm-links { display: flex; flex-wrap: wrap; gap: 8px; text-transform: capitalize; }
+.jm-h { font-size: 24px; margin-top: 18px; } .jm-played { list-style: none; padding: 0; } .jm-played li { padding: 6px 0; border-bottom: 1px solid var(--line); } .jm-played small { color: var(--muted); margin-left: 6px; }
+.jm-pledge { margin: 22px 0 14px; padding: 18px 20px; border-radius: 20px; background: radial-gradient(120% 140% at 0 0, rgba(255, 59, 78, .22), transparent 60%), var(--panel); border: 1px solid #7a2a33; }
+.jm-pledge h2 { font-size: clamp(26px, 3.4vw, 36px); margin: 4px 0 6px; }
+.jm-pledge-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 10px 0 4px; }
+.jm-pledge-row select { padding: 10px 12px; border-radius: 12px; background: var(--night); color: var(--ink); border: 1px solid var(--line); font: inherit; }
+.jm-pledge-row b { font: 400 40px/1 var(--f-display); color: var(--gold); margin-left: 6px; }
+.jm-share { display: flex; flex-wrap: wrap; gap: 8px; }
+.jm-claim summary, .jm-concern summary { cursor: pointer; } .jm-claim form, .jm-concern form { display: grid; gap: 12px; margin-top: 12px; } .jm-concern { margin: 16px 0; }
+.jm-edit { display: grid; gap: 12px; margin-bottom: 18px; } .jm-edit h2 { font-size: 28px; }
+.jm-wait { background: rgba(255, 211, 107, .1); border: 1px solid #ffd36b; border-radius: 12px; padding: 10px 12px; }
+.jm-thumbs { display: flex; flex-wrap: wrap; gap: 10px; } .jm-thumbs figure { margin: 0; display: grid; gap: 2px; justify-items: start; } .jm-thumbs img { border-radius: 10px; object-fit: cover; }
+.jmm-item { margin-bottom: 14px; display: grid; gap: 8px; }
+.jmm-diff { display: grid; gap: 4px; padding: 8px 0; border-top: 1px solid var(--line); }
+.jmm-diff del { color: #ff8a8a; white-space: pre-wrap; } .jmm-diff ins { color: #7fe0a8; text-decoration: none; white-space: pre-wrap; }
+@media (max-width: 860px) { .jm-hero-grid, .jm-two, .jm-act-grid { grid-template-columns: minmax(0, 1fr); } .jm-poster { max-width: 320px; margin: 0 auto; } }
