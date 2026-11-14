@@ -27,6 +27,8 @@ import { serveMicrosite } from './views/showcase-site.js';
 import { clubDomain } from './domain/club.js';
 import { stageDomain } from './domain/stage.js';
 import * as stagePages from './views/stage.js';
+import { jomDomain } from './domain/jom.js';
+import * as jomPages from './views/jom.js';
 import * as clubPages from './views/club.js';
 import { roomDomain } from './domain/room.js';
 import * as roomPages from './views/room.js';
@@ -63,6 +65,7 @@ export function configFrom(env = process.env) {
     gaId: /^G-[A-Z0-9]{4,16}$/.test(env.GA_MEASUREMENT_ID || '') ? env.GA_MEASUREMENT_ID : '',
     // the Sunday Showcase microsite's own address
     showcaseHost: (env.SHOWCASE_HOST || 'showcase.tam.tv').toLowerCase(),
+    jomHost: (env.JOM_HOST || 'jom.tam.tv').toLowerCase(), // JOM Youth Music × TAM: the acts' pages
     holdMinutes: 30,
     mailGapMs: env.MAIL_GAP_MS !== undefined ? Number(env.MAIL_GAP_MS) : 600, // between newsletter emails (Resend's rate limit)
     anthropicKey: env.ANTHROPIC_API_KEY || '',
@@ -109,6 +112,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.club = clubDomain(ctx);
   // The TAM Stage: every request to play becomes an act with its own microverse (A&R, as a game)
   ctx.stage = stageDomain(ctx);
+  ctx.jom = jomDomain(ctx); // JOM Youth Music × TAM: evergreen pages for every act, claimed by parents
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
   const collections = collectionsDomain(ctx, tickets);
@@ -131,7 +135,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage, ctx.jom]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -158,6 +162,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
+  jomPages.routes(site, ctx, ctx.jom); // /jom (and jom.tam.tv): JOM acts' permanent pages
   ctx.club.pageRoutes(site); // /c/…: newsletter link clicks
   roomPages.routes(site, ctx, room); // /analogue-room: today's escape room
   ctx.links.classify(site); // which old pages only the old site has
@@ -171,7 +176,8 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
     res.req = req;
     // Only the real address is indexed: the Railway preview and any other host stay out of search.
     const onShowcase = requestHost(req) === cfg.showcaseHost; // showcase.tam.tv, the Sunday Showcase microsite
-    req.indexable = cfg.indexing && (requestHost(req) === siteHost || onShowcase);
+    const onJom = requestHost(req) === cfg.jomHost; // jom.tam.tv: JOM Youth Music × TAM
+    req.indexable = cfg.indexing && (requestHost(req) === siteHost || onShowcase || onJom);
     if (!req.indexable) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const url = new URL(req.url, 'http://x');
     const p = url.pathname;
@@ -195,6 +201,11 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
         if (p === '/favicon.ico') return serveStatic(res, path.join(ROOT, 'public/img'), 'favicon-48.png');
       }
       if (onShowcase && serveMicrosite(ctx, showcase, req, res, url)) return;
+      if (onJom) {
+        const j = jomPages.serveJom(ctx, ctx.jom, site, req, res, url);
+        if (j === true) return;
+        if (j) return await j.handler(req, res, { url, params: j.params });
+      }
       const m = site.match(req.method, p);
       if (m) return await m.handler(req, res, { url, params: m.params });
       // Every page of the old www.tam.tv still answers at its address.
