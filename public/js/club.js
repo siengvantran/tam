@@ -2,7 +2,7 @@
 // emailed-link pages, your card on /club, points for visiting and sharing,
 // referral links, and the staff buttons on a card at the bar.
 
-import { $, $$, api } from './lib.js';
+import { $, $$, api, shrinkImage } from './lib.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ss = { get: (k) => { try { return sessionStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch { /* private */ } } };
@@ -149,8 +149,12 @@ function renderCard(m) {
   ${m.status !== 'active' ? '<p class="cl-pending">Check your inbox and tap the link to confirm your email: that starts your card with 10 points.</p>' : ''}
   <div class="cl-card">
     ${glassSvg(fill)}
-    <div class="cl-card-main"><div class="label">TAM Club · ${esc(m.tier.name)}</div>
-      <h1 class="chrome gold">${m.firstName ? `${esc(m.firstName)}’s card` : 'Your card'}</h1>
+    <div class="cl-card-main"><div class="cl-who">
+      <label class="cl-face-btn" title="${m.photo ? 'Change your photo' : 'Add your photo'}">${m.photo ? `<img class="cl-face" src="${esc(m.photo)}" alt="Your photo" width="72" height="72">` : '<span class="cl-face empty" aria-hidden="true">📷</span>'}
+        <input type="file" accept="image/*" data-photo class="sr"><span class="sr">${m.photo ? 'Change your photo' : 'Add your photo'}</span></label>
+      <div><div class="label">TAM Club · ${esc(m.tier.name)}</div>
+      <h1 class="chrome gold">${m.firstName ? `${esc(m.firstName)}’s card` : 'Your card'}</h1></div></div>
+      ${m.photo ? '' : '<p class="small muted cl-photo-hint">Add a photo so the bar knows it’s you (+1). Only you and TAM staff see it. <button class="linkish" type="button" data-pick-photo>Add a photo</button></p>'}
       <p class="cl-points"><b data-count="${m.balance}">${m.balance}</b> points</p>
       <div class="cl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${m.half}" aria-valuenow="${Math.min(m.half, m.balance)}" aria-label="Points toward a drink on us"><i style="width:${Math.min(100, (m.balance / m.half) * 100)}%"></i></div>
       ${reward}
@@ -173,6 +177,7 @@ function renderCard(m) {
       <fieldset class="cl-chips"><legend>How often</legend>${Object.entries(FREQ).map(([k, v]) => `<label class="cl-chip"><input type="radio" name="frequency" value="${k}" ${m.frequency === k ? 'checked' : ''}><span>${esc(v)}</span></label>`).join('')}</fieldset>
       <label class="check"><input type="checkbox" name="emails" ${m.emails ? 'checked' : ''}> Send me TAM’s emails</label>
       <button class="btn hot" type="submit">Save</button><p class="err" role="status" aria-live="polite"></p></form>
+      ${m.photo ? '<p class="small"><button class="linkish" type="button" data-remove-photo>Remove my photo</button></p>' : ''}
       <p class="small"><button class="linkish" type="button" data-signout>Sign out on this device</button> · <button class="linkish" type="button" data-delete>Delete my card and data</button></p>
       <p class="small muted">Read every issue in <a href="/newsletter">the archive</a>.</p></section>
   </div>`;
@@ -189,6 +194,8 @@ if (cardRoot) {
     if (pick) {
       try { renderCard((await api('/api/club/claim', { method: 'POST', body: { drink: pick.dataset.claim } })).member); track('club_claim_drink', { drink: pick.dataset.claim }); } catch (err) { toast(err.message); }
     }
+    if (t.closest('[data-pick-photo]')) cardRoot.querySelector('[data-photo]').click();
+    if (t.closest('[data-remove-photo]')) { try { renderCard((await api('/api/club/photo', { method: 'POST', body: { remove: true } })).member); toast('Photo removed'); } catch (err) { toast(err.message); } }
     if (t.closest('[data-copy-ref]')) { try { await navigator.clipboard.writeText(me.refLink); toast('Link copied: send it to a friend'); } catch { /* old browser */ } }
     if (t.closest('[data-share-ref]')) { try { await navigator.share({ title: 'TAM', text: 'Come to a night at TAM with me, and join the TAM list:', url: me.refLink }); } catch { /* cancelled */ } }
     const soc = t.closest('[data-social]');
@@ -199,6 +206,18 @@ if (cardRoot) {
     if (t.closest('[data-delete]') && confirm('Delete your TAM Club card, points and email preferences? This can’t be undone.')) {
       await api('/api/club/delete', { method: 'POST', body: {} }); location.href = '/club';
     }
+  });
+  cardRoot.addEventListener('change', async (e) => {
+    if (!e.target.matches('[data-photo]')) return;
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const photo = await shrinkImage(file, 600, 0.82);
+      const before = me.balance;
+      const r = await api('/api/club/photo', { method: 'POST', body: { photo } });
+      renderCard(r.member);
+      toast(r.member.balance > before ? `Looking good · +${r.member.balance - before}` : 'Photo saved');
+    } catch (err) { toast(err.message); }
   });
   cardRoot.addEventListener('submit', async (e) => {
     if (e.target.id !== 'cl-prefs') return;
@@ -220,7 +239,7 @@ const staff = $('#club-staff');
 if (staff) {
   const code = staff.dataset.card;
   const draw = (c, note = '') => {
-    staff.innerHTML = `<div class="formbox cl-staff"><p class="label">Staff · ${esc(c.name)} · ${esc(c.tier)} · <b>${c.balance}</b> points</p>
+    staff.innerHTML = `<div class="formbox cl-staff">${c.photo ? '' : '<p class="small muted">No photo on this card.</p>'}<p class="label">Staff · ${esc(c.name)} · ${esc(c.tier)} · <b>${c.balance}</b> points</p>
       ${c.reward ? `<div class="cl-reward live"><p class="cl-code">${esc(c.reward.code)}</p><p><b>${esc(c.reward.drinkName)}</b> to pour. Check the code on their phone matches.</p><button class="btn hot" type="button" data-pour>Poured it ✓</button></div>` : '<p class="muted">No drink to pour right now.</p>'}
       <div class="row-btn"><button class="btn ghost" type="button" data-here>They’re here tonight (+5)</button></div>
       <form data-bar class="cl-barform"><label class="field"><span>Bar spend (£)</span><input name="pounds" type="number" min="0.5" step="0.01" inputmode="decimal" required></label><button class="btn hot" type="submit">Add points</button></form>

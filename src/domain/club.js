@@ -16,6 +16,8 @@
 // are stored. Members can stop emails, keep their card, or delete it all.
 
 import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { fail, send, readJson, text, email as cleanEmail, newId } from '../lib/http.js';
 import { markdown, plain } from '../lib/markdown.js';
 import { clubShell, clubButton } from '../services/mailer.js';
@@ -69,6 +71,7 @@ export const RULES = {
   vote: { pts: 1, label: 'Back a Sunday Showcase act for Christmas', perDay: 3 },
   wall: { pts: 1, label: 'Leave a note on an artist’s wall', perDay: 1 },
   click: { pts: 1, label: 'Open a link in our newsletter', hint: 'each issue' },
+  photo: { pts: 1, label: 'Add a photo to your card', max: 1 },
   half: { pts: -HALF, label: 'A drink on the house', hidden: true },
   refund: { pts: HALF, label: 'Unused drink: points back', hidden: true },
   gift: { pts: 0, label: 'From the TAM team', hidden: true, unit: true },
@@ -125,6 +128,13 @@ export function clubDomain(ctx) {
     // tam_club_on (no secret in it) tells the page script there's a card to count visits for
     res.setHeader('Set-Cookie', [`${COOKIE}=${t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_DAYS * 86400}${secure()}`,
       `${COOKIE}_on=1; Path=/; SameSite=Lax; Max-Age=${SESSION_DAYS * 86400}${secure()}`]);
+  }
+
+  async function dropPhoto(m) {
+    if (!m.photo) return;
+    const file = path.join(ctx.uploadsDir || '', path.basename(m.photo));
+    m.photo = '';
+    if (ctx.uploadsDir) await fs.unlink(file).catch(() => {});
   }
 
   // ---------- points ----------
@@ -194,7 +204,7 @@ export function clubDomain(ctx) {
     const next = nextClaim(m);
     const week = new Set(mine.filter((x) => x.rule === 'visit' && Date.parse(x.at) > ctx.now() - 7 * DAY).map((x) => x.day)).size;
     return {
-      id: m.id, name: m.name, firstName: firstName(m), email: m.email, status: m.status, emails: m.emails,
+      id: m.id, name: m.name, firstName: firstName(m), email: m.email, status: m.status, emails: m.emails, photo: m.photo || '',
       interests: m.interests, frequency: m.frequency, card: m.card,
       refLink: `${site()}/r/${m.refCode}`, cardUrl: `${site()}/club/card/${m.card}`,
       balance, earned, half: HALF, toHalf: Math.max(0, HALF - balance), tier: tierOf(earned),
@@ -507,8 +517,22 @@ export function clubDomain(ctx) {
       await save();
       send(res, 200, { member: view(m) });
     });
+    // a photo on your card: so the bar knows it's you (shown to you and to staff who scan your card)
+    r.post('/api/club/photo', async (req, res) => {
+      const m = me(req);
+      const b = await readJson(req, 700 * 1024);
+      if (b.remove) { await dropPhoto(m); await save(); return send(res, 200, { member: view(m) }); }
+      if (!b.photo) throw fail(400, 'Choose a photo.');
+      const url = await ctx.saveImage(b.photo, `club-${m.id}-${crypto.randomBytes(6).toString('hex')}`, { what: 'Photos', maxKB: 500 });
+      await dropPhoto(m);
+      m.photo = url;
+      if (m.status === 'active') award(m, 'photo');
+      await save();
+      send(res, 200, { member: view(m) });
+    });
     r.post('/api/club/delete', async (req, res) => {
       const m = me(req);
+      await dropPhoto(m);
       db.members = db.members.filter((x) => x.id !== m.id);
       db.clubLedger = db.clubLedger.filter((x) => x.m !== m.id);
       db.clubRewards = db.clubRewards.filter((x) => x.m !== m.id);
@@ -571,7 +595,7 @@ export function clubDomain(ctx) {
     };
     const staffView = (m) => {
       const v = view(m);
-      return { name: v.firstName || 'Member', tier: v.tier.name, balance: v.balance, reward: v.reward, status: m.status,
+      return { name: v.firstName || 'Member', photo: m.photo || '', tier: v.tier.name, balance: v.balance, reward: v.reward, status: m.status,
         today: ledgerOf(m).filter((x) => x.day === today()).map((x) => ({ label: RULES[x.rule].label, pts: x.pts })) };
     };
     r.get('/api/club/card/:card', (req, res, { params }) => send(res, 200, { card: staffView(staffCard(req, params.card)) }));
@@ -781,6 +805,6 @@ export function clubDomain(ctx) {
     routes, pageRoutes, memberOf, view, award, awardEmail, awardReq, join, render, archive, tick, audience,
     byCard: (card) => db.members.find((m) => m.card === String(card).toUpperCase()),
     byRef: (ref) => db.members.find((m) => m.refCode === String(ref).toUpperCase() && m.status === 'active'),
-    publicCard: (m) => { const v = view(m); return { firstName: v.firstName, tier: v.tier.name, badges: v.badges }; },
+    publicCard: (m) => { const v = view(m); return { firstName: v.firstName, photo: m.photo || '', tier: v.tier.name, badges: v.badges }; },
   };
 }

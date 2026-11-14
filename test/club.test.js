@@ -164,6 +164,24 @@ test('points: spending earns most; daily caps, a streak, shares, referrals, and 
   assert.ok(m.badges.some((x) => x.name === 'On the house'));
   assert.ok(m.badges.some((x) => x.name === 'First night'));
 
+  // a photo on the card: the bar sees it when they scan; replacing or removing it deletes the old file
+  const png = `data:image/png;base64,${Buffer.from('89504e470d0a1a0a0000000d4948445200000001000000010806000000', 'hex').toString('base64')}`;
+  const ph = await call('/api/club/photo', { method: 'POST', body: { photo: png }, cookie });
+  assert.equal(ph.status, 200, JSON.stringify(ph.body));
+  const photo = ph.body.member.photo;
+  assert.match(photo, /^\/uploads\/club-/);
+  assert.equal((await call(photo)).status, 200);
+  assert.doesNotMatch((await call(`/club/card/${card}`)).body, new RegExp(`src="${photo}"`)); // not for anyone with the link
+  assert.match((await call(`/club/card/${card}`, { headers: staff })).body, new RegExp(`src="${photo}"`)); // staff see it
+  assert.match((await call(`/club/card/${card}`, { cookie })).body, new RegExp(`src="${photo}"`)); // and so do you
+  assert.equal((await call(`/api/club/card/${card}`, { headers: staff })).body.card.photo, photo);
+  assert.equal((await call('/api/club/photo', { method: 'POST', body: { photo: 'data:text/html;base64,PGI+' }, cookie })).status, 400);
+  const ph2 = await call('/api/club/photo', { method: 'POST', body: { photo: png }, cookie });
+  assert.notEqual(ph2.body.member.photo, photo);
+  assert.equal((await call(photo)).status, 404); // the old one is gone
+  assert.equal((await call('/api/club/photo', { method: 'POST', body: { remove: true }, cookie })).body.member.photo, '');
+  assert.equal((await call(ph2.body.member.photo)).status, 404);
+
   // an unused half gives the points back after 30 days
   const x = app.ctx.db.members.find((y) => y.email === 'ali@example.com');
   app.ctx.club.award(x, 'gift', 'g1', { pts: 100 });
@@ -174,7 +192,7 @@ test('points: spending earns most; daily caps, a streak, shares, referrals, and 
   now += 31 * 86400000;
   const after = (await call('/api/club/me', { cookie })).body.member;
   assert.equal(after.reward, null);
-  assert.equal(after.balance, 109);
+  assert.equal(after.balance, 110); // 109 + 1 for adding a photo
 });
 
 test('the newsletter: segments, personal tokens, A/B subjects, click points, one-click unsubscribe, the archive', async (t) => {
