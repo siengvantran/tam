@@ -87,6 +87,8 @@ if (inBox) inBox.querySelector('button').addEventListener('click', async () => {
 const me = $('#jm-me');
 const base = location.hostname.startsWith('jom.') ? '' : '/jom';
 const photosOf = {}; // slug → the photos for the next change
+const postsOf = {}; // slug → their posts for the next change (links, photos, videos)
+const KINDS = { youtube: 'YouTube video', instagram: 'Instagram post', tiktok: 'TikTok', facebook: 'Facebook post', image: 'Photo', video: 'Video' };
 function draw(d) {
   if (!d.acts.length) { me.innerHTML = '<h1 class="chrome gold">Nothing here yet</h1><p>Your claim is still being checked.</p>'; return; }
   me.innerHTML = `<div class="label">Parents and guardians · ${esc(d.email)}</div><h1 class="chrome gold">Update their page</h1>
@@ -95,6 +97,7 @@ function draw(d) {
       const p = a.pending ? a.pending.changes : null;
       const v = p || a;
       photosOf[a.slug] = (p ? p.photos : a.photos).slice();
+      postsOf[a.slug] = ((p && p.posts) || a.posts || []).map((x) => ({ ...x }));
       return `<form class="formbox jm-edit" data-act="${esc(a.slug)}"><h2>${esc(a.name)} <a class="small" href="${base}/${esc(a.slug)}" target="_blank">See their page ↗</a></h2>
         ${a.pending ? `<p class="jm-wait">Waiting for TAM to approve your update from ${esc(new Date(a.pending.at).toLocaleDateString('en-GB'))}. Sending another replaces it.</p>` : ''}
         ${a.rejected && !a.pending ? `<p class="err">TAM couldn’t make your last update${a.rejected.reason ? `: ${esc(a.rejected.reason)}` : '.'}</p>` : ''}
@@ -103,10 +106,20 @@ function draw(d) {
         <label class="field"><span>Links to their music, one per line</span><textarea name="links" rows="3" placeholder="YouTube, Spotify, SoundCloud, Bandcamp, Instagram…">${esc((v.links || []).join('\n'))}</textarea></label>
         <div class="field"><span>Photos (up to 6; the first is the main one)</span><div class="jm-thumbs" data-thumbs></div>
           <label class="btn ghost small">Add a photo<input type="file" accept="image/*" data-photo class="sr"></label></div>
+        <div class="field jm-posts-edit"><span>Posts on their page: Instagram, TikTok, Facebook or YouTube, or your own photos and videos</span>
+          <ul class="plain jm-postlist" data-posts></ul>
+          <div class="ar-row"><input name="posturl" placeholder="Paste a link: instagram.com/p/…, tiktok.com/@…/video/…, facebook.com/…, youtu.be/…" aria-label="Link to a post"><button class="btn ghost small" type="button" data-addpost>Add</button></div>
+          <div class="ar-row"><label class="btn ghost small">Upload a photo<input type="file" accept="image/*" data-postphoto class="sr"></label><label class="btn ghost small">Upload a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-postvideo class="sr"></label><progress max="100" value="0" hidden></progress></div>
+          <small class="muted">Videos up to 60 MB (MP4 plays everywhere). Nothing goes on the page until TAM approves it.</small></div>
         <button class="btn hot" type="submit">Send to TAM for approval</button><p class="err" role="status" aria-live="polite"></p></form>`;
     }).join('')}
     <p class="small"><button class="linkish" type="button" data-out>Sign out</button></p>`;
-  for (const f of $$('form.jm-edit', me)) thumbs(f);
+  for (const f of $$('form.jm-edit', me)) { thumbs(f); postList(f); }
+}
+function postList(f) {
+  const list = postsOf[f.dataset.act];
+  f.querySelector('[data-posts]').innerHTML = list.map((x, i) => `<li><span>${x.src && x.kind === 'image' ? `<img src="${esc(x.src)}" alt="" width="48" height="48" class="ar-thumb">` : ''}${esc(KINDS[x.kind] || 'Post')}</span>
+    <input value="${esc(x.caption || '')}" maxlength="200" placeholder="A line about it (optional)" data-cap="${i}" aria-label="Caption"><button type="button" class="sh-x" data-rmpost="${i}" aria-label="Remove">×</button></li>`).join('') || '<li class="muted small">No posts yet.</li>';
 }
 function thumbs(f) {
   const list = photosOf[f.dataset.act];
@@ -115,7 +128,34 @@ function thumbs(f) {
 if (me) {
   const load = () => api('/api/jom/me').then(draw).catch((err) => { me.innerHTML = `<h1 class="chrome">Their JOM page</h1><p>${esc(err.message)}</p><p><a class="btn hot" href="${base}/sign-in">Get a new link</a></p>`; });
   load();
+  me.addEventListener('input', (e) => { const c = e.target.dataset.cap; if (c !== undefined) postsOf[e.target.closest('form').dataset.act][Number(c)].caption = e.target.value; });
   me.addEventListener('change', async (e) => {
+    if ((e.target.matches('[data-postphoto]') || e.target.matches('[data-postvideo]')) && e.target.files[0]) {
+      const f = e.target.closest('form'), slug = f.dataset.act, file = e.target.files[0];
+      try {
+        if (postsOf[slug].length >= 12) throw new Error('Twelve posts at most: remove one first.');
+        if (e.target.matches('[data-postphoto]')) {
+          const r = await api(`/api/jom/me/${slug}/photo`, { method: 'POST', body: { photo: await shrinkImage(file, 1600, 0.85) } });
+          postsOf[slug].push({ kind: 'image', src: r.photo, caption: '' });
+        } else {
+          if (file.size > 60 * 1024 * 1024) throw new Error('Videos can be up to 60 MB. Trim it, or post it and paste the link.');
+          const bar = f.querySelector('.jm-posts-edit progress'); bar.hidden = false;
+          const r = await new Promise((ok, no) => {
+            const x = new XMLHttpRequest();
+            x.open('POST', `/api/jom/me/${slug}/video`);
+            x.setRequestHeader('Content-Type', file.type || 'video/mp4');
+            x.upload.onprogress = (p) => { if (p.lengthComputable) bar.value = Math.round((p.loaded / p.total) * 100); };
+            x.onload = () => { bar.hidden = true; try { const j = JSON.parse(x.responseText); if (x.status < 300) ok(j); else no(new Error(j.error)); } catch { no(new Error(`Upload failed (${x.status}).`)); } };
+            x.onerror = () => { bar.hidden = true; no(new Error('Upload failed. Check your connection and try again.')); };
+            x.send(file);
+          });
+          postsOf[slug].push({ kind: 'video', src: r.video, caption: '' });
+        }
+        postList(f); formMessage(f, 'Added. Send to TAM when you’re ready.', true);
+      } catch (err) { formMessage(f, err.message); }
+      e.target.value = '';
+      return;
+    }
     if (!e.target.matches('[data-photo]') || !e.target.files[0]) return;
     const f = e.target.closest('form');
     try {
@@ -129,6 +169,17 @@ if (me) {
   me.addEventListener('click', async (e) => {
     const f = e.target.closest('form');
     if (e.target.dataset.rm) { photosOf[f.dataset.act].splice(Number(e.target.dataset.rm), 1); thumbs(f); }
+    if (e.target.dataset.rmpost) { postsOf[f.dataset.act].splice(Number(e.target.dataset.rmpost), 1); postList(f); }
+    if (e.target.closest('[data-addpost]')) {
+      const u = f.posturl.value.trim();
+      if (!u) return;
+      try {
+        if (postsOf[f.dataset.act].length >= 12) throw new Error('Twelve posts at most: remove one first.');
+        const r = await api(`/api/jom/me/${f.dataset.act}/check-post`, { method: 'POST', body: { url: u } });
+        postsOf[f.dataset.act].push({ ...r.post, url: u, caption: '' });
+        f.posturl.value = ''; postList(f);
+      } catch (err) { formMessage(f, err.message); }
+    }
     if (e.target.dataset.first) { const l = photosOf[f.dataset.act]; l.unshift(l.splice(Number(e.target.dataset.first), 1)[0]); thumbs(f); }
     if (e.target.closest('[data-out]')) { await api('/api/jom/signout', { method: 'POST', body: {} }); location.href = `${base}/` || '/'; }
   });
@@ -136,7 +187,7 @@ if (me) {
     e.preventDefault();
     const f = e.target, d = new FormData(f);
     try {
-      await api(`/api/jom/me/${f.dataset.act}`, { method: 'POST', body: { name: d.get('name'), bio: d.get('bio'), links: d.get('links'), photos: photosOf[f.dataset.act] } });
+      await api(`/api/jom/me/${f.dataset.act}`, { method: 'POST', body: { name: d.get('name'), bio: d.get('bio'), links: d.get('links'), photos: photosOf[f.dataset.act], posts: postsOf[f.dataset.act] } });
       await load();
       formMessage($(`form[data-act="${f.dataset.act}"]`, me), 'Sent. We’ll email you when it’s on the page.', true);
     } catch (err) { formMessage(f, err.message); }
