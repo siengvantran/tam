@@ -102,10 +102,10 @@ export function routes(r, ctx, stage) {
     const pre = String(url.searchParams.get('for') || '');
     respond(res, page(ctx, {
       title: 'Apply to play at TAM', path: '/stage/apply',
-      description: 'Apply to play at TAM: the open mic, the Sunday Showcase, Friday Night Live, a festival, or propose your own show. You get your own TAM Stage page straight away.',
+      description: 'Apply to play at TAM: the open mic, the Junior & Youth Open Mic, the Sunday Showcase, Friday Night Live, a festival, or propose your own show. You get your own TAM Stage page straight away.',
       body: html`<section class="section"><div class="wrap st-apply"><div>
         <div class="label">The TAM Stage</div><h1 class="chrome gold">Apply to play at TAM</h1>
-        <p class="lede">Open mic, Sunday Showcase, Friday Night Live, a festival, or your own show: it all starts here, and every act gets its own page and a path to a festival stage.</p>
+        <p class="lede">Open mic, Junior &amp; Youth Open Mic, Sunday Showcase, Friday Night Live, a festival, or your own show: it all starts here, and every act gets its own page and a path to a festival stage.</p>
         <h2 class="st-h">How it works</h2>${steps()}
         <h2 class="st-h">The path</h2>${pathList()}</div>
       <form class="formbox st-form" id="st-apply" novalidate>
@@ -118,6 +118,7 @@ export function routes(r, ctx, stage) {
           <label class="field"><span>What you play</span><input name="plays" maxlength="120" placeholder="e.g. soul trio, acoustic singer-songwriter"></label>
           <label class="field"><span>Where you’re based</span><input name="from" maxlength="80" placeholder="e.g. Brixton, London"></label>
           <label class="field"><span>Age</span><select name="age" required><option value="">Choose…</option><option value="18+">18 or over (everyone in the act)</option><option value="under18">Someone in the act is under 18</option></select></label>
+          <p class="small muted full" data-u18-note hidden>Under 18? A parent or guardian fills in this form, with their own name and email, and is TAM’s contact. Your page stays private until TAM has checked it.</p>
           <label class="field full"><span>Links to your music</span><textarea name="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube, SoundCloud: one per line"></textarea></label></div></fieldset>
         <fieldset><legend>Your crowd</legend><p class="small muted">Honest numbers help us find the right stage for you. Leave out what you don’t know.</p><div class="fields">
           ${num('instagram', 'Instagram followers')}${num('tiktok', 'TikTok followers')}${num('spotify', 'Spotify monthly listeners')}${num('youtube', 'YouTube subscribers')}

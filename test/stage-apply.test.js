@@ -30,7 +30,7 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
 
   // the form, with every option
   const form = await call('/stage/apply?for=show');
-  for (const k of ['Open Mic', 'Sunday Showcase', 'Friday Night Live', 'Festivals', 'Propose a show']) assert.match(form.body, new RegExp(k));
+  for (const k of ['Open Mic', 'Junior &amp; Youth Open Mic', 'Sunday Showcase', 'Friday Night Live', 'Festivals', 'Propose a show']) assert.match(form.body, new RegExp(k));
   assert.match(form.body, /value="show" checked/);
   assert.equal((await call('/play')).headers.get('location'), '/stage/apply');
 
@@ -68,7 +68,7 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
   assert.equal(app.ctx.db.arArtists.filter((a) => a.email === 'mo@band.test').length, 1);
 
   // an under-18 act's page waits for TAM
-  const kid = await call('/api/stage/apply', { method: 'POST', body: { ...base, email: 'parent@x.test', act: 'Young Band', age: 'under18', paths: ['openmic'] } });
+  const kid = await call('/api/stage/apply', { method: 'POST', body: { ...base, email: 'parent@x.test', act: 'Young Band', age: 'under18', paths: ['jom'] } });
   const kidSlug = app.ctx.db.arArtists.find((a) => a.email === 'parent@x.test').slug;
   assert.equal(kid.status, 201);
   assert.equal((await call(`/stage/${kidSlug}`)).status, 404);
