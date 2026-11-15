@@ -2,10 +2,10 @@
 // /stage/apply, each act's microverse at /stage/:slug, the artist's own
 // dashboard at /stage/me, and the A&R board at /stage/manage.
 
-import { html, raw } from './html.js';
+import { html, raw, jsonData } from './html.js';
 import { html as respond } from '../lib/http.js';
 import { layout } from './layout.js';
-import { STAGES } from '../domain/stage.js';
+import { STAGES, PATHWAYS, PLEDGE_WEIGHT } from '../domain/stage.js';
 import { VIBE_MARKS } from '../domain/showcases.js';
 import { embedHtml } from '../lib/media-posts.js';
 import { raw as rawHtml } from './html.js';
@@ -38,7 +38,7 @@ export function microverse(v, { size = 560, label = true } = {}) {
   </svg></figure>`;
 }
 
-const page = (ctx, o) => layout(ctx, { ambient: 'stars', scripts: ['/js/stage.js'], ...o });
+const page = (ctx, o) => layout(ctx, { ambient: 'stars', scripts: ['/js/stage.js', '/js/stage-card.js'], ...o });
 
 function card(v) {
   return html`<a class="st-card vibe-${v.vibe}" href="${v.href}">
@@ -49,6 +49,20 @@ function card(v) {
 }
 
 const pathList = () => html`<ol class="st-path">${STAGES.map((s, i) => html`<li><b>${i + 1}</b><div><strong>${s.name}</strong><span>${s.blurb}</span></div></li>`)}</ol>`;
+
+// The pledge form: a fan says they'll come to see the act live (and how many of them).
+function pledgeBox(v) {
+  return html`<div class="st-pledge" id="pledge"><h2>Pledge to see ${v.act} live</h2>
+    <p class="small">A pledge tells TAM you’ll buy a ticket when ${v.act} plays. We’ll email you when they’re booked. Every pledge moves them along the path ${PLEDGE_WEIGHT} times as fast as a boost.</p>
+    <form data-pledge="${v.slug}" novalidate><label class="field"><span>Your first name</span><input name="name" maxlength="40" autocomplete="given-name"></label>
+      <label class="field"><span>Email</span><input name="email" type="email" maxlength="200" required autocomplete="email"></label>
+      <label class="field"><span>How many of you?</span><select name="n">${[1, 2, 3, 4, 5, 6, 8, 10].map((n) => html`<option>${n}</option>`)}</select></label>
+      <label class="check small"><input type="checkbox" name="consent" required> Email me when ${v.act} plays at TAM. <a href="/privacy#stage">Privacy</a></label>
+      <button class="btn hot" type="submit">Pledge</button><p class="err" role="status" aria-live="polite"></p></form>
+    <p class="st-pledged"><b data-pledged>${v.pledged}</b> pledged so far</p></div>`;
+}
+// what the poster maker draws (public/js/stage-card.js)
+const cardData = (v, url) => jsonData('st-card-data', { act: v.act, plays: v.plays || '', photo: v.photo || '', slug: v.slug, url, planet: STAGES[v.stage].name, next: STAGES[v.stage + 1] ? STAGES[v.stage + 1].name : '', pledged: v.pledged, paths: v.paths || [] });
 
 export function routes(r, ctx, stage) {
   const withProgress = (v) => ({ ...v, progress: stage.progress(v) });
@@ -75,23 +89,58 @@ export function routes(r, ctx, stage) {
     }));
   });
 
-  r.get('/stage/apply', (req, res) => respond(res, page(ctx, {
-    title: 'Ask to play at TAM', path: '/stage/apply',
-    description: 'Ask to play at TAM and get your own TAM Stage page: your path from an open night to a festival stage.',
-    body: html`<section class="section"><div class="wrap st-apply"><div>
-      <div class="label">The TAM Stage</div><h1 class="chrome gold">Ask to play at TAM</h1>
-      <p class="lede">Every act gets its own page on the TAM Stage, your microverse, and a path to a festival spot. We email you a link to build it.</p>${pathList()}</div>
-      <form class="formbox" id="st-apply" novalidate>
-        <div class="fields"><label class="field"><span>Your name</span><input name="name" maxlength="80" required autocomplete="name"></label>
-        <label class="field"><span>Email</span><input name="email" type="email" maxlength="200" required autocomplete="email"></label>
-        <label class="field"><span>Act or band name</span><input name="act" maxlength="80" required></label>
-        <label class="field"><span>What you play</span><input name="plays" maxlength="120" placeholder="e.g. soul trio, acoustic singer-songwriter"></label>
-        <label class="field full"><span>Links to your music</span><textarea name="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube, SoundCloud: one per line"></textarea></label>
-        <label class="field full"><span>Your open night</span><select name="circuit"><option value="">Choose…</option>${OPEN_NIGHTS.map((n) => html`<option>I’ve played ${n}</option>`)}${OPEN_NIGHTS.map((n) => html`<option>I’m coming to ${n}</option>`)}<option>Not yet: tell me which to come to</option></select></label></div>
+  // how to play at TAM: the steps, then the application
+  const steps = () => html`<ol class="st-steps">
+    <li><b>1</b><div><strong>Apply</strong><span>Choose what you’d like to play and tell us about your crowd and your story. Five minutes.</span></div></li>
+    <li><b>2</b><div><strong>Get your page, straight away</strong><span>Your own page on the TAM Stage: your microverse. Share it from day one.</span></div></li>
+    <li><b>3</b><div><strong>Build it and gather pledges</strong><span>Add photos, videos and your socials. Make a poster or a card for friends, fans and family to <b>pledge to see you live</b>. The more you add and the more pledges you get, the faster you move.</span></div></li>
+    <li><b>4</b><div><strong>TAM reviews and books you</strong><span>We put your page live on the TAM Stage, rate you, and book you as you move up: open nights, the Sunday Showcase, your own night, a festival.</span></div></li></ol>`;
+  const num = (name, label, ph = '') => html`<label class="field"><span>${label}</span><input name="${name}" inputmode="numeric" maxlength="12" placeholder="${ph}"></label>`;
+
+  r.get('/play', (req, res) => { res.writeHead(302, { Location: '/stage/apply' }); res.end(); });
+  r.get('/stage/apply', (req, res, { url }) => {
+    const pre = String(url.searchParams.get('for') || '');
+    respond(res, page(ctx, {
+      title: 'Apply to play at TAM', path: '/stage/apply',
+      description: 'Apply to play at TAM: the open mic, the Sunday Showcase, Friday Night Live, a festival, or propose your own show. You get your own TAM Stage page straight away.',
+      body: html`<section class="section"><div class="wrap st-apply"><div>
+        <div class="label">The TAM Stage</div><h1 class="chrome gold">Apply to play at TAM</h1>
+        <p class="lede">Open mic, Sunday Showcase, Friday Night Live, a festival, or your own show: it all starts here, and every act gets its own page and a path to a festival stage.</p>
+        <h2 class="st-h">How it works</h2>${steps()}
+        <h2 class="st-h">The path</h2>${pathList()}</div>
+      <form class="formbox st-form" id="st-apply" novalidate>
+        <fieldset><legend>What would you like to play?</legend><p class="small muted">Choose one or more.</p>
+          <div class="st-paths">${Object.entries(PATHWAYS).map(([k, p]) => html`<label class="st-pathopt"><input type="checkbox" name="paths" value="${k}" ${pre === k ? 'checked' : ''}><span><b>${p.name}</b><small>${p.blurb}</small></span></label>`)}</div></fieldset>
+        <fieldset><legend>You</legend><div class="fields">
+          <label class="field"><span>Your name</span><input name="name" maxlength="80" required autocomplete="name"></label>
+          <label class="field"><span>Email</span><input name="email" type="email" maxlength="200" required autocomplete="email"></label>
+          <label class="field"><span>Act or band name</span><input name="act" maxlength="80" required></label>
+          <label class="field"><span>What you play</span><input name="plays" maxlength="120" placeholder="e.g. soul trio, acoustic singer-songwriter"></label>
+          <label class="field"><span>Where you’re based</span><input name="from" maxlength="80" placeholder="e.g. Brixton, London"></label>
+          <label class="field"><span>Age</span><select name="age" required><option value="">Choose…</option><option value="18+">18 or over (everyone in the act)</option><option value="under18">Someone in the act is under 18</option></select></label>
+          <label class="field full"><span>Links to your music</span><textarea name="links" rows="2" maxlength="1200" placeholder="Instagram, Spotify, YouTube, SoundCloud: one per line"></textarea></label></div></fieldset>
+        <fieldset><legend>Your crowd</legend><p class="small muted">Honest numbers help us find the right stage for you. Leave out what you don’t know.</p><div class="fields">
+          ${num('instagram', 'Instagram followers')}${num('tiktok', 'TikTok followers')}${num('spotify', 'Spotify monthly listeners')}${num('youtube', 'YouTube subscribers')}
+          ${num('mailing', 'Fans on your mailing list or WhatsApp')}${num('bring', 'People you could bring to a TAM show', 'e.g. 15')}
+          <label class="field full"><span>Your last gig: where, and how many came?</span><input name="lastGig" maxlength="200" placeholder="e.g. The Windmill, 3 October: about 40"></label>
+          <label class="field full"><span>Your biggest show so far</span><input name="biggest" maxlength="200"></label>
+          <label class="field full"><span>Have you sold tickets to your own show?</span><select name="sold"><option value="">Choose…</option><option value="yes">Yes, regularly</option><option value="some">Once or twice</option><option value="no">Not yet</option></select></label></div></fieldset>
+        <fieldset><legend>Your story</legend><p class="small muted">What makes people stop scrolling? The best stories travel furthest on social media.</p><div class="fields">
+          <label class="field full"><span>Your story in one line</span><input name="hook" maxlength="200" placeholder="e.g. A nurse who writes soul songs on night shifts"></label>
+          <label class="field full"><span>What’s happening for you right now?</span><textarea name="now" rows="2" maxlength="400" placeholder="A first single, a tour, a milestone, a comeback…"></textarea></label>
+          <label class="field full"><span>About you (this starts the story on your page)</span><textarea name="about" rows="4" maxlength="1500"></textarea></label></div>
+          <label class="check"><input type="checkbox" name="filmed"> We’re happy for TAM to film and share clips of us playing</label></fieldset>
+        <fieldset data-show-only ${pre === 'show' ? '' : 'hidden'}><legend>Your show</legend><div class="fields">
+          <label class="field full"><span>Show title</span><input name="showTitle" maxlength="100"></label>
+          <label class="field full"><span>The idea</span><textarea name="showIdea" rows="4" maxlength="1200" placeholder="What happens, who’s on, why people will come"></textarea></label>
+          <label class="field"><span>When</span><input name="showWhen" maxlength="120" placeholder="e.g. a Saturday in March"></label>
+          ${num('showCrowd', 'How many do you expect?')}
+          <label class="field"><span>Ticket price you have in mind</span><input name="showPrice" maxlength="40" placeholder="e.g. £12"></label></div></fieldset>
         <label class="check"><input type="checkbox" name="consent" required> Yes, email me about playing at TAM and my TAM Stage page. <a href="/privacy#stage">Privacy</a></label>
-        <button class="btn hot" type="submit">Start my page</button><p class="err" role="status" aria-live="polite"></p>
-        <p class="small muted">Already asked? Use the same email and we’ll send your link again.</p></form></div></section>`,
-  })));
+        <button class="btn hot" type="submit">Apply and get my page</button><p class="err" role="status" aria-live="polite"></p>
+        <p class="small muted">Applied before? Use the same email: we’ll add this to your application and send your link again.</p></form></div></section>`,
+    }));
+  });
 
   r.get('/stage/in', (req, res) => respond(res, page(ctx, {
     title: 'Your TAM Stage page', path: '/stage/in', noindex: true,
@@ -118,8 +167,9 @@ export function routes(r, ctx, stage) {
   r.get('/stage/:slug', (req, res, { params }) => {
     const a = stage.bySlug(params.slug);
     const owner = a && stage.artistOf(req);
-    const preview = a && a.status !== 'live' && ((owner && owner.id === a.id) || ctx.isDoor(req));
-    if (!a || (a.status !== 'live' && !preview)) {
+    const shared = a && a.status !== 'live' && stage.isPublic(a);
+    const preview = a && a.status !== 'live' && !shared && ((owner && owner.id === a.id) || ctx.isDoor(req));
+    if (!a || (a.status !== 'live' && !preview && !shared)) {
       return respond(res, page(ctx, { title: 'Not here', noindex: true, body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome">That act isn’t on the Stage</h1><p><a href="/stage">Discover the acts on the TAM Stage</a>.</p></div></section>` }), 404);
     }
     if (!preview) stage.viewed(a, req);
@@ -127,16 +177,20 @@ export function routes(r, ctx, stage) {
     const next = STAGES[v.stage + 1];
     const url = `${ctx.cfg.siteUrl}/stage/${v.slug}`;
     respond(res, page(ctx, {
-      title: `${v.act} · TAM Stage`, path: `/stage/${v.slug}`, og: v.photo || undefined, noindex: preview, bodyClass: `st-page vibe-${v.vibe}`, ambient: null,
-      description: `${v.act}${v.plays ? `: ${v.plays}` : ''}. On the TAM Stage at ${STAGES[v.stage].name}${next ? `, on the way to ${next.name}` : ''}. Boost them.`,
+      title: `${v.act} · TAM Stage`, path: `/stage/${v.slug}`, og: v.photo || undefined, noindex: preview || shared, bodyClass: `st-page vibe-${v.vibe}`, ambient: null,
+      description: `${v.act}${v.plays ? `: ${v.plays}` : ''}. On the TAM Stage at ${STAGES[v.stage].name}${next ? `, on the way to ${next.name}` : ''}. Pledge to see them live.`,
       body: html`${preview ? html`<p class="st-preview">Preview: only you${owner ? '' : ' (TAM staff)'} can see this until TAM puts it live.</p>` : ''}
+      ${shared ? html`<p class="st-preview">New on the TAM Stage: ${v.act} has just applied to play at TAM. Pledge to see them live and help them get booked.</p>` : ''}
       <section class="st-top"><div class="wrap st-top-grid">
         <div class="st-id"><div class="label">TAM Stage · ${STAGES[v.stage].planet}</div>${v.jom ? html`<p class="st-jom"><img src="/img/jom/jom-logo.png" alt="" width="28" height="28"> A young artist with JOM Youth Music · <a href="/jom/${v.jom.slug}">their JOM page</a></p>` : ''}<h1>${v.act}</h1>
           ${v.plays ? html`<p class="st-plays">${v.plays}</p>` : ''}${v.from ? html`<p class="small">From ${v.from}</p>` : ''}
-          <div class="st-boost"><button class="btn hot" type="button" data-boost="${v.slug}">✦ Boost ${v.act}</button><b data-boosts>${v.boosts}</b><span>boosts</span></div>
+          <div class="st-boost"><a class="btn hot" href="#pledge">🎟 Pledge to see them live</a><b data-pledged>${v.pledged}</b><span>pledged</span></div>
+          <div class="st-boost"><button class="btn ghost" type="button" data-boost="${v.slug}">✦ Boost ${v.act}</button><b data-boosts>${v.boosts}</b><span>boosts</span></div>
           <p class="small muted" data-boost-msg role="status" aria-live="polite">One boost a day. TAM Club members earn a point, and a scout bonus when ${v.act} moves up.</p>
           <div class="st-share" data-share data-url="${url}" data-text="Boost ${v.act} on the TAM Stage: help them get to a festival stage" data-title="${v.act} · TAM Stage">
-            <button class="btn ghost small" type="button" data-native hidden>Share</button><a class="btn ghost small" href="https://wa.me/?text=${encodeURIComponent(`Boost ${v.act} on the TAM Stage: ${url}`)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost small" type="button" data-copy>Copy link</button></div>
+            <button class="btn ghost small" type="button" data-native hidden>Share</button><a class="btn ghost small" href="https://wa.me/?text=${encodeURIComponent(`Pledge to see ${v.act} live at TAM: ${url}`)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost small" type="button" data-copy>Copy link</button>
+            <button class="btn ghost small" type="button" data-poster>🖼 Make a poster</button></div>
+          ${cardData(v, url)}
         </div>
         <div>${microverse(v)}
           <div class="st-next">${next ? html`<p><b>${Math.round(v.progress * 100)}%</b> of the way to <b>${next.name}</b>: ${next.blurb}</p>
@@ -147,6 +201,7 @@ export function routes(r, ctx, stage) {
           ${v.bio ? html`<div class="prose">${v.bio.split(/\n\s*\n/).map((p) => html`<p>${p}</p>`)}</div>` : ''}
           ${v.posts.length ? html`<h2 class="st-h">From ${v.act}</h2><div class="aw-grid st-posts">${v.posts.map((p) => html`<figure class="aw-post">${rawHtml(embedHtml(p))}${p.caption ? html`<figcaption>${p.caption}</figcaption>` : ''}</figure>`)}</div>` : ''}</div>
         <aside>${v.links.length ? html`<h2>Listen and follow</h2><ul class="st-links">${v.links.map((l) => html`<li><a href="${l}" target="_blank" rel="noopener">${(() => { try { return new URL(l).hostname.replace(/^www\./, ''); } catch { return l; } })()} ↗</a></li>`)}</ul>` : ''}
+          ${pledgeBox(v)}
           ${v.backers.length ? html`<h2>Early backers</h2><p class="st-backers">${v.backers.join(' · ')}</p>` : ''}
           <p><a href="/stage">More acts on the TAM Stage</a> · <a href="/stage/apply">Ask to play</a></p></aside>
       </div></section>`,

@@ -10,14 +10,26 @@ const STAGES = ['Signal', 'Orbit', 'Open Night', 'Showcase', 'Headline', 'Festiv
 // ---------- ask to play ----------
 const apply = $('#st-apply');
 if (apply) {
+  const showBox = apply.querySelector('[data-show-only]');
+  apply.addEventListener('change', () => { showBox.hidden = !apply.querySelector('input[name="paths"][value="show"]').checked; });
   apply.addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = new FormData(apply);
+    const paths = f.getAll('paths');
+    if (!paths.length) return formMessage(apply, 'Choose what you’d like to play.');
+    if (!f.get('age')) return formMessage(apply, 'Tell us if you’re 18 or over.');
     if (!f.get('consent')) return formMessage(apply, 'Tick the box so we can email you about playing at TAM.');
+    const g = (k) => f.get(k) || '';
     try {
-      await api('/api/stage/apply', { method: 'POST', body: { name: f.get('name'), email: f.get('email'), act: f.get('act'), plays: f.get('plays'), links: f.get('links'), circuit: f.get('circuit'), consent: true } });
-      apply.innerHTML = `<h2 class="chrome gold">Check your inbox</h2><p>We’ve emailed <b>${esc(f.get('email'))}</b> a link to build your page on the TAM Stage. It works once, for 3 days.</p><p>Your first planet is <b>Signal</b>. Next: <b>Orbit</b>, when your page goes live.</p>`;
-      track('stage_apply');
+      const r = await api('/api/stage/apply', { method: 'POST', body: {
+        name: g('name'), email: g('email'), act: g('act'), plays: g('plays'), from: g('from'), age: g('age'), links: g('links'), about: g('about'), paths, consent: true,
+        draw: Object.fromEntries(['instagram', 'tiktok', 'spotify', 'youtube', 'mailing', 'bring', 'lastGig', 'biggest', 'sold'].map((k) => [k, g(k)])),
+        story: { hook: g('hook'), now: g('now'), filmed: f.get('filmed') === 'on' },
+        show: { title: g('showTitle'), idea: g('showIdea'), when: g('showWhen'), crowd: g('showCrowd'), price: g('showPrice') },
+      } });
+      track('stage_apply', { paths: paths.join(',') });
+      if (r.next) { location.href = r.next; return; }
+      apply.innerHTML = `<h2 class="chrome gold">Check your inbox</h2><p>You’ve applied before with <b>${esc(f.get('email'))}</b>, so we’ve added this to your application and emailed you a link to your page. It works once, for 3 days.</p>`;
     } catch (err) { formMessage(apply, err.message); }
   });
 }
@@ -54,6 +66,20 @@ if (boost) {
   share.querySelector('a').addEventListener('click', shared);
 }
 
+// ---------- pledge to see them live ----------
+const pledge = $('[data-pledge]');
+if (pledge) pledge.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = new FormData(pledge);
+  if (!f.get('consent')) return formMessage(pledge, 'Tick the box so we can email you when they play at TAM.');
+  try {
+    const r = await api(`/api/stage/${pledge.dataset.pledge}/pledge`, { method: 'POST', body: { name: f.get('name'), email: f.get('email'), n: f.get('n'), consent: true } });
+    $$('[data-pledged]').forEach((x) => { x.textContent = r.pledged; });
+    pledge.innerHTML = `<p class="ok"><b>${r.updated ? 'Pledge updated.' : 'Thank you!'}</b> We’ll email you when they’re booked at TAM. Now share their page, or make them a poster, so your friends pledge too.</p><p><button class="btn ghost small" type="button" data-poster>🖼 Make a poster</button></p>`;
+    track('stage_pledge', { act: pledge.dataset.pledge });
+  } catch (err) { formMessage(pledge, err.message); }
+});
+
 // ---------- /stage: filter by planet ----------
 for (const b of $$('[data-st-filter]')) b.addEventListener('click', () => {
   $$('[data-st-filter]').forEach((x) => x.classList.toggle('on', x === b));
@@ -63,21 +89,27 @@ for (const b of $$('[data-st-filter]')) b.addEventListener('click', () => {
 // ---------- /stage/me: build and vet your page ----------
 const me = $('#st-me');
 let A = null;
+const welcome = new URLSearchParams(location.search).has('welcome');
 function draw(a) {
   A = a;
+  window.tamCardData = { act: a.act, plays: a.plays || '', photo: a.photo || '', slug: a.slug, url: a.shareUrl, planet: a.stageName, next: STAGES[a.stage + 1] || '', pledged: a.pledged, paths: a.paths || [] };
   const status = { draft: 'Building: not public yet', review: 'With TAM for review', live: 'Live on the TAM Stage', paused: 'Paused', declined: 'Not on the path right now' }[a.status];
   const done = a.checks.filter((c) => c.done).length;
   me.innerHTML = `<div class="st-dash">
     <div class="st-dash-top"><div><div class="label">Your microverse · ${esc(status)}</div><h1 class="chrome gold">${esc(a.act)}</h1>
-      <p>Planet <b>${a.stage + 1} of 6: ${esc(STAGES[a.stage])}</b> · <b>${a.xp}</b> XP · ✦ ${a.boosts} boosts · ${a.views} views</p>
-      <p><a class="btn ghost small" href="/stage/${esc(a.slug)}" target="_blank">${a.status === 'live' ? 'See my page ↗' : 'Preview my page ↗'}</a>
-      ${a.status === 'live' ? '<button class="btn hot small" type="button" data-copy-me>Copy my link</button>' : ''} <button class="linkish small" type="button" data-out>Sign out</button></p></div></div>
+      <p>Planet <b>${a.stage + 1} of 6: ${esc(STAGES[a.stage])}</b> · <b>${a.xp}</b> XP · 🎟 <b>${a.pledged}</b> pledged · ✦ ${a.boosts} boosts · ${a.views} views</p>
+      ${a.paths.length ? `<p class="small">You applied for: <b>${a.paths.map(esc).join(' · ')}</b> · <a href="/stage/apply">apply for more</a></p>` : ''}
+      <p><a class="btn ghost small" href="/stage/${esc(a.slug)}" target="_blank">${a.shareable ? 'See my page ↗' : 'Preview my page ↗'}</a>
+      ${a.shareable ? '<button class="btn hot small" type="button" data-copy-me>Copy my link</button> <button class="btn hot small" type="button" data-poster>🖼 Make my poster</button>' : ''} <button class="linkish small" type="button" data-out>Sign out</button></p></div></div>
+    ${welcome ? `<div class="st-msg"><b>Welcome to the TAM Stage!</b> This is your page. ${a.shareable ? 'It’s up already, so share it and make a poster: friends, fans and family can pledge to see you live. ' : 'TAM checks pages for under-18s before anyone else can see them. '}Add a photo, your story and a live video, then send it to TAM. We’ve emailed you a link to get back here.</div>` : ''}
     ${a.messages.length ? `<div class="st-msg"><b>From TAM:</b> ${esc(a.messages[0].message)}</div>` : ''}
     <div class="st-dash-grid">
       <section class="cl-panel"><h2>Vet your page</h2><p class="small">${done} of ${a.checks.length} done. Tick them all to send your page to TAM.</p>
         <ul class="st-checks">${a.checks.map((c) => `<li class="${c.done ? 'done' : ''}"><i>${c.done ? '✓' : ''}</i>${esc(c.label)} <small>+${c.xp} XP</small></li>`).join('')}</ul>
         ${a.status === 'draft' ? `<button class="btn hot" type="button" data-submit ${a.canSubmit ? '' : 'disabled'}>Send my page to TAM</button>` : ''}
         ${a.status === 'review' ? '<p class="ok">It’s with us. We’ll email you when it’s live.</p>' : ''}
+        <h3>Speed up your path</h3><p class="small">A pledged fan counts as five boosts. The more you add and share, the faster you move.</p>
+        <ul class="st-goals">${a.boosters.map((b) => `<li class="${b.done ? 'done' : ''}"><i style="--p:${b.part}"></i>${esc(b.label)} <small>+${b.xp} XP</small></li>`).join('')}</ul>
         ${a.status === 'live' && a.goals.length ? `<h3>Your next planet: ${esc(STAGES[a.stage + 1])}</h3><ul class="st-goals">${a.goals.map((g) => `<li class="${g.done ? 'done' : ''}"><i style="--p:${g.part}"></i>${esc(g.label)}</li>`).join('')}</ul>` : ''}</section>
       <section class="cl-panel"><h2>Your page</h2><form id="st-edit">
         <div class="st-photo">${a.photo ? `<img src="${esc(a.photo)}" alt="" width="96" height="96">` : '<span>📷</span>'}<label class="btn ghost small">${a.photo ? 'Change photo' : 'Add a photo'}<input type="file" accept="image/*" data-photo class="sr"></label></div>

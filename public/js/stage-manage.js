@@ -32,15 +32,18 @@ async function start() {
   draw();
 }
 
+const lastApp = (a) => a.applications[a.applications.length - 1] || null;
+const n = (v) => (v === null || v === undefined ? '' : Number(v).toLocaleString('en-GB'));
 const card = (a) => `<button type="button" class="anr-card" data-open="${a.id}">
   ${a.photo ? `<img src="${esc(a.photo)}" alt="" width="48" height="48">` : '<span class="anr-noimg">✦</span>'}
-  <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
+  <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>🎟 ${a.stats.pledged} pledged · ✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
+  ${lastApp(a) ? `<small class="anr-paths">${lastApp(a).paths.map((k) => esc((D.pathways[k] || {}).name || k)).join(' · ')}${lastApp(a).draw.bring ? ` · brings ~${n(lastApp(a).draw.bring)}` : ''}${lastApp(a).show ? ' · 💡 show idea' : ''}</small>` : ''}
   ${a.suggest.action !== 'wait' && ACTIONS[a.suggest.action] ? `<em class="anr-sug ${a.suggest.action}">${ACTIONS[a.suggest.action]}</em>` : ''}</span>
   <i class="anr-score" title="Score">${a.score}</i></button>`;
 
 function draw() {
   const by = (st) => D.artists.filter((a) => a.status === st);
-  root.innerHTML = `<nav class="cm-tabs">${[['review', `To review (${D.counts.review})`], ['path', `On the path (${D.counts.live})`], ['draft', `Building their page (${D.counts.draft})`], ['off', `Paused or declined (${D.counts.paused + D.counts.declined})`], ['how', 'How we decide']].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav>
+  root.innerHTML = `<nav class="cm-tabs">${[['review', `To review (${D.counts.review})`], ['path', `On the path (${D.counts.live})`], ['draft', `Applied, building their page (${D.counts.draft})`], ['off', `Paused or declined (${D.counts.paused + D.counts.declined})`], ['how', 'How we decide']].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav>
   <div class="anr-wrap"><div id="anr-list"></div><aside id="anr-detail" class="anr-detail"></aside></div>`;
   const list = $('#anr-list');
   if (tab === 'path') {
@@ -48,7 +51,7 @@ function draw() {
       ${D.artists.filter((a) => a.status === 'live' && a.stage === i + 1).map(card).join('') || '<p class="muted small">Nobody yet.</p>'}</section>`).join('')}</div>
       <p class="small"><button class="btn ghost small" type="button" data-import>Bring in the Sunday Showcase acts</button> <span class="muted">Adds this season’s showcase acts at the Showcase planet, with their pages.</span></p>`;
   } else if (tab === 'how') {
-    list.innerHTML = `<div class="prose small"><h3>The score (0–100)</h3><ul><li><b>50</b>: TAM’s ratings (the average of everyone who rated them, out of 5)</li><li><b>25</b>: fan boosts, against the most-boosted act</li><li><b>15</b>: momentum: boosts in the last two weeks, and whether that’s rising</li><li><b>10</b>: how complete their page is</li></ul>
+    list.innerHTML = `<div class="prose small"><h3>The score (0–100)</h3><ul><li><b>50</b>: TAM’s ratings (the average of everyone who rated them, out of 5)</li><li><b>25</b>: fan support (a pledged fan counts as 5, a boost as 1), against the best-supported act</li><li><b>15</b>: momentum: boosts in the last two weeks, and whether that’s rising</li><li><b>10</b>: how complete their page is</li></ul>
       <h3>The planets and their goals</h3><ol>${D.stages.map((s) => `<li><b>${esc(s.name)}</b>: ${esc(s.blurb)}</li>`).join('')}</ol>
       <p>Goals to reach each planet show on the act’s page and in their dashboard. When every goal is met, the board suggests moving them up, but it’s always our call. Moving an act up emails them, and gives every TAM Club member who boosted them a scout bonus.</p>
       <h3>Ratings</h3><ul>${Object.values(D.ratings).map((r) => `<li>${esc(r)}</li>`).join('')}</ul><p>Rate after you’ve watched their video or seen them live. Each person’s ratings are kept separately and averaged.</p></div>`;
@@ -57,6 +60,20 @@ function draw() {
     list.innerHTML = rows.length ? `<div class="anr-col">${rows.map(card).join('')}</div>` : `<p class="muted">${tab === 'review' ? 'Nothing waiting for review.' : 'Nobody here.'}</p>`;
   }
   if (open) detail(open);
+}
+
+// the application: what they want to play, whether they can sell tickets, their story
+function application(a) {
+  const x = lastApp(a);
+  if (!x) return '';
+  const d = x.draw, rows = [['Instagram', n(d.instagram)], ['TikTok', n(d.tiktok)], ['Spotify monthly', n(d.spotify)], ['YouTube', n(d.youtube)], ['Mailing list / WhatsApp', n(d.mailing)], ['Could bring', n(d.bring)],
+    ['Last gig', d.lastGig], ['Biggest show', d.biggest], ['Sold tickets before', { yes: 'Yes, regularly', some: 'Once or twice', no: 'Not yet' }[d.sold] || '']].filter((r) => r[1]);
+  return `<div class="anr-app"><h3>Their application <small class="muted">${esc(when(x.at))}${a.applications.length > 1 ? ` · applied ${a.applications.length} times` : ''}</small></h3>
+    <p><b>Wants to play:</b> ${x.paths.map((k) => esc((D.pathways[k] || {}).name || k)).join(' · ')}${a.age ? ` · <b>Age:</b> ${a.age === 'under18' ? 'someone is under 18' : '18+'}` : ''}</p>
+    ${rows.length ? `<dl class="anr-dl">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : '<p class="small muted">No crowd numbers given.</p>'}
+    ${x.story.hook ? `<p><b>Story in a line:</b> “${esc(x.story.hook)}”</p>` : ''}${x.story.now ? `<p><b>Happening now:</b> ${esc(x.story.now)}</p>` : ''}
+    <p class="small">${x.story.filmed ? '🎥 Happy to be filmed and shared' : '🎥 Not said yes to filming'}</p>
+    ${x.show ? `<div class="anr-show"><b>💡 Show idea${x.show.title ? `: ${esc(x.show.title)}` : ''}</b><p class="small">${esc(x.show.idea)}</p><p class="small">${[x.show.when && `When: ${esc(x.show.when)}`, x.show.crowd && `Expects ${n(x.show.crowd)}`, x.show.price && `Tickets ${esc(x.show.price)}`].filter(Boolean).join(' · ')}</p></div>` : ''}</div>`;
 }
 
 function detail(id) {
@@ -71,7 +88,9 @@ function detail(id) {
     <p class="small">${esc(D.stages[a.stage].name)} · ${esc(a.status)} · came from ${esc(a.source)} · ${esc(when(a.createdAt))}</p>
     <p class="small"><a href="/stage/${esc(a.slug)}" target="_blank">Their microverse ↗</a>${a.youtube ? ` · <a href="https://www.youtube.com/watch?v=${esc(a.youtube)}" target="_blank" rel="noopener">Video ↗</a>` : ''}${a.email ? ` · <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>` : ''}</p></div><i class="anr-score big">${a.score}</i></div>
     <p class="anr-suggest ${a.suggest.action}"><b>Suggested:</b> ${esc(a.suggest.text)}</p>
-    <div class="cm-tiles small">${[['Boosts', st.boosts], ['Last 2 weeks', st.recent], ['Views', st.views], ['Shares', st.shares], ['Rating', st.rating.avg || '–'], ['Raters', st.rating.raters]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
+    ${application(a)}
+    <div class="cm-tiles small">${[['Pledged', st.pledged], ['Boosts', st.boosts], ['Last 2 weeks', st.recent], ['Views', st.views], ['Shares', st.shares], ['Rating', st.rating.avg || '–'], ['Raters', st.rating.raters]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
+    ${st.pledgers ? `<p class="small">🎟 ${st.pledged} people from ${st.pledgers} pledge${st.pledgers === 1 ? '' : 's'} · <a href="/api/stage/manage/${a.id}/pledges.csv">Download who pledged (CSV)</a>: email them when ${esc(a.act)} is on sale.</p>` : ''}
     ${a.goals.length ? `<h3>Goals for ${esc(D.stages[a.stage + 1].name)}</h3><ul class="st-goals">${a.goals.map((g) => `<li class="${g.done ? 'done' : ''}"><i style="--p:${g.part}"></i>${esc(g.label)}</li>`).join('')}</ul>` : ''}
     ${a.bio ? `<details><summary>Their story</summary><p class="small">${esc(a.bio)}</p></details>` : ''}
     ${a.circuit || a.message ? `<p class="small muted">${esc(a.circuit)} ${esc(a.message || '')}</p>` : ''}
