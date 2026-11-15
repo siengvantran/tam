@@ -29,6 +29,8 @@ import { stageDomain } from './domain/stage.js';
 import * as stagePages from './views/stage.js';
 import { jomDomain } from './domain/jom.js';
 import * as jomPages from './views/jom.js';
+import { liveDomain } from './domain/live.js';
+import * as livePages from './views/live.js';
 import * as clubPages from './views/club.js';
 import { roomDomain } from './domain/room.js';
 import * as roomPages from './views/room.js';
@@ -115,6 +117,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.jom = jomDomain(ctx); // JOM Youth Music × TAM: evergreen pages for every act, claimed by parents
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
+  const onNow = liveDomain(ctx, tickets); // the big screen and self check-in (/screen, /checkin)
   const collections = collectionsDomain(ctx, tickets);
   ctx.markOrderPaid = collections.markPaid;
   const raffle = raffleDomain(ctx, tickets);
@@ -135,7 +138,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage, ctx.jom]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage, ctx.jom, onNow]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -163,6 +166,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
   jomPages.routes(site, ctx, ctx.jom); // /jom (and jom.tam.tv): JOM acts' permanent pages
+  livePages.routes(site, ctx, onNow, qr); // /screen for the projector, /checkin for phones
   ctx.club.pageRoutes(site); // /c/…: newsletter link clicks
   roomPages.routes(site, ctx, room); // /analogue-room: today's escape room
   ctx.links.classify(site); // which old pages only the old site has

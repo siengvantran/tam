@@ -320,5 +320,15 @@
     "lede": "TAM’s Christmas festival runs through December, and there’ll be a stage for JOM’s young musicians. The date is to be announced: apply now and we’ll be in touch.",
     "note": "A parent or guardian applies for under-18s. We pick acts with JOM, and pledges on each act’s page help us decide."
   },
-  "venues": "JOM runs its open mics at four venues around London, TAM among them. This one is at Hootananny Brixton."
+  "venues": "JOM runs its open mics at four venues around London, TAM among them. This one is at Hootananny Brixton.",
+  "partners": [
+    {
+      "name": "JOM Youth Music",
+      "logo": "/img/jom/jom-logo.png"
+    },
+    {
+      "name": "BBC Make A Difference Awards",
+      "note": "Finalist 2023"
+    }
+  ]
 }
