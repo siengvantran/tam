@@ -1,9 +1,11 @@
-// The Analogue Room's page: /analogue-room (short link /room). The briefing is
+// The Analogue Room's page: /analogue-room (short link /room), and the same
+// room with no site around it at /analogue-room/play, for immersive.tam.tv to
+// show in a frame (only TAM's own sites may). The briefing is
 // in the page itself; the locks are drawn by /js/room.js, which asks
 // /api/room whether each move is right (src/domain/room.js).
 
 import { html } from './html.js';
-import { html as respond, redirect } from '../lib/http.js';
+import { html as respond, redirect, cspFramedBy } from '../lib/http.js';
 import { layout } from './layout.js';
 import { RULES, HALF } from '../domain/club.js';
 
@@ -61,7 +63,34 @@ function statsPage(ctx, room) {
   });
 }
 
+// The sites that may show the room in a frame.
+export const ROOM_FRAMED_BY = ['https://immersive.tam.tv'];
+const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap';
+
+// The room alone: no header, footer or invitation. Links open in a new tab.
+function playPage(ctx, room) {
+  const r = room.today();
+  const pts = RULES.room.pts;
+  const site = ctx.cfg.siteUrl;
+  return `<!doctype html>${html`<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Analogue Room · TAM</title><meta name="robots" content="noindex"><base target="_blank">
+<link rel="stylesheet" href="${FONTS}"><link rel="stylesheet" href="/css/site.css"></head>
+<body class="ar-embed"><main class="ar"><div class="ar-embed-in">
+  <div class="label">TAM · a new escape room every morning</div>
+  <h1 class="chrome gold">The Analogue Room</h1>
+  <p class="ar-note">The news in this room is real and sourced. The future it is set in is fiction.</p>
+  ${r ? html`<p class="ar-setting">${r.setting}</p>
+  <div class="ar-briefing">${r.briefing.map((p) => html`<p>${p}</p>`)}</div>
+  <p class="ar-points">Open the doors and <a href="${site}/club">TAM Club</a> members bank <b>+${pts} points</b>, once a day. ${HALF} points is a drink on the house at TAM.</p>
+  <div id="room" data-room><p class="muted">Unlocking the gatehouse…</p></div>
+  <noscript><p class="muted">The locks need JavaScript switched on.</p></noscript>`
+    : html`<p class="lede">The gatehouse is quiet today. A new room opens tomorrow morning.</p>`}
+  <p class="small muted ar-embed-foot">Made by <a href="${site}/analogue-room">TAM, the Temple of Art and Music</a>.</p>
+</div></main><script type="module" src="/js/room.js"></script><script type="module" src="/js/room-embed.js"></script></body></html>`}`;
+}
+
 export function routes(r, ctx, room) {
+  r.get('/analogue-room/play', (req, res) => respond(res, playPage(ctx, room), 200, { 'X-Frame-Options': null, 'Content-Security-Policy': cspFramedBy(...ROOM_FRAMED_BY) }));
   r.get('/analogue-room/stats', (req, res) => (ctx.isAdmin(req) ? respond(res, statsPage(ctx, room)) : redirect(res, '/shows')));
   r.get('/analogue-room', (req, res) => respond(res, page(ctx, room)));
   r.get('/room', (req, res) => redirect(res, '/analogue-room'));

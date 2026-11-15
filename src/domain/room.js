@@ -21,7 +21,7 @@ import { fail, send, readJson, text } from '../lib/http.js';
 import { RULES } from './club.js';
 
 // Where a visit came from, as the page works it out (public/js/room-invite.js).
-export const SOURCES = ['direct', 'search', 'social', 'ai', 'email', 'tickets', 'tam', 'other'];
+export const SOURCES = ['direct', 'search', 'social', 'ai', 'email', 'tickets', 'immersive', 'tam', 'other'];
 // The invitations. The first of each list is shown until the counts say otherwise.
 export const INVITES = {
   public: [

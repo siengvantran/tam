@@ -1658,3 +1658,9 @@ body.lv-screen.idle { cursor: none; }
 .anr-app h3 { margin-top: 0; } .anr-app p { margin: 6px 0; }
 .anr-dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; margin: 8px 0; } .anr-dl dt { color: var(--ink-dim); } .anr-dl dd { margin: 0; }
 .anr-show { background: rgba(255, 229, 0, .07); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+
+/* The Analogue Room in a frame on immersive.tam.tv (/analogue-room/play) */
+body.ar-embed { min-height: 0; background: transparent; }
+.ar-embed-in { max-width: 760px; margin: 0 auto; padding: 8px 16px 20px; }
+.ar-embed-in h1 { margin-top: 6px; }
+.ar-embed-foot { margin-top: 18px; }
