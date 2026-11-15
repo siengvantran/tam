@@ -270,26 +270,7 @@
       "photo": "/img/jom-2026/yellowhammer.jpg"
     }
   ],
-  "upcoming": [
-    {
-      "date": "2026-12-13",
-      "title": "JOM Junior Open Mic",
-      "time": "12pm to 2pm",
-      "who": "For performers aged 4 to 15",
-      "venue": "Hootananny Brixton, 95 Effra Rd, London SW2 1DF",
-      "contact": "jomjunioropenmic@gmail.com",
-      "poster": "/img/jom/jom-junior-2026-12-13.jpg"
-    },
-    {
-      "date": "2026-12-13",
-      "title": "JOM Youth Open Mic",
-      "time": "2pm to 7:30pm",
-      "who": "For performers aged 12 to 18",
-      "venue": "Hootananny Brixton, 95 Effra Rd, London SW2 1DF",
-      "contact": "jomjunioropenmic@gmail.com",
-      "poster": "/img/jom/jom-youth-2026-12-13.jpg"
-    }
-  ],
+  "upcoming": [],
   "banners": [
     {
       "src": "/img/jom-2026/poster.jpg",
@@ -301,18 +282,6 @@
       "src": "/img/jom-2026/jom-sessions-poster.jpg",
       "alt": "A drone flight into TAM x JOM Sessions 2026, by FPV pilot Luca",
       "href": "/events/jom-sessions-2026-2026-11-15"
-    },
-    {
-      "src": "/img/jom/jom-junior-2026-12-13.jpg",
-      "alt": "JOM Junior Open Mic: Sunday 13 December 2026, 12pm to 2pm, Hootananny Brixton",
-      "href": "#next-dates",
-      "fit": true
-    },
-    {
-      "src": "/img/jom/jom-youth-2026-12-13.jpg",
-      "alt": "JOM Youth Open Mic: Sunday 13 December 2026, 2pm to 7:30pm, Hootananny Brixton",
-      "href": "#next-dates",
-      "fit": true
     }
   ],
   "christmas": {

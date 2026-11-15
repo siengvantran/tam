@@ -118,20 +118,16 @@ test('JOM hub: a carousel of banners and acts, the next JOM dates, and applicati
   t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
   const B = `http://127.0.0.1:${app.server.address().port}`;
   const post = (p, body, headers = {}) => fetch(`${B}${p}`, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) }).then(async (r) => ({ status: r.status, body: await r.json() }));
-  app.ctx.now = () => Date.parse('2026-11-20T12:00:00Z'); // after the TAM session, before the December dates
+  app.ctx.now = () => Date.parse('2026-11-20T12:00:00Z'); // after the TAM session
 
   const hub = await (await fetch(`${B}/jom`)).text();
   // the carousel: JOM's banners, then every act with a photo, linked to their page
   assert.match(hub, /data-carousel/);
-  assert.match(hub, /\/img\/jom\/jom-junior-2026-12-13\.jpg/);
-  assert.match(hub, /class="fx-slide fit"/);
   assert.match(hub, /href="\/jom\/yellowhammer"[^>]*><img src="\/img\/jom-2026\/yellowhammer\.jpg"/);
   assert.match(hub, /<script type="module" src="\/js\/carousel\.js">/);
-  // the next JOM dates, at Hootananny Brixton
-  assert.match(hub, /id="next-dates"[\s\S]*JOM Junior Open Mic[\s\S]*12pm to 2pm[\s\S]*Hootananny Brixton, 95 Effra Rd/);
-  assert.match(hub, /JOM Youth Open Mic[\s\S]*2pm to 7:30pm[\s\S]*aged 12 to 18/);
-  assert.match(hub, /mailto:jomjunioropenmic@gmail\.com/);
-  assert.match(hub, /Next JOM dates<\/span><b>JOM Junior Open Mic and JOM Youth Open Mic<\/b>/); // the hero points there once TAM's session has passed
+  // JOM's December open mics are full (Vivian, 15 Nov), so the hub doesn't send more players their way
+  assert.doesNotMatch(hub, /id="next-dates"|jomjunioropenmic|2026-12-13/);
+  assert.match(hub, /The next JOM session is coming soon/);
   // the call to play The Best Christmas Ever
   assert.match(hub, /id="christmas"[\s\S]*date to be announced[\s\S]*Play The Best Christmas Ever 2026[\s\S]*id="jm-xmas"/);
 
