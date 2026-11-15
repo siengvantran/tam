@@ -209,3 +209,52 @@ if (me) {
     } catch (err) { formMessage(f, err.message); }
   });
 }
+
+// ---------- share a moment (/moments): a message, a photo or a video, and a pledge ----------
+const mform = document.getElementById('jm-moment');
+if (mform) {
+  let photo = null, video = null;
+  const label = mform.querySelector('[data-mfile]');
+  mform.addEventListener('change', async (e) => {
+    if (e.target.matches('[data-mphoto]') && e.target.files[0]) { try { photo = await shrinkImage(e.target.files[0], 1600, 0.85); video = null; label.textContent = 'Photo added'; } catch (err) { formMessage(mform, err.message); } }
+    if (e.target.matches('[data-mvideo]') && e.target.files[0]) {
+      const v = e.target.files[0];
+      if (v.size > 60 * 1024 * 1024) { formMessage(mform, 'Videos can be up to 60 MB. Trim it and try again.'); e.target.value = ''; return; }
+      video = v; photo = null; label.textContent = `Video added (${Math.round(v.size / 1048576)} MB)`;
+    }
+  });
+  mform.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = new FormData(mform);
+    if (!d.get('consent')) return formMessage(mform, 'Tick the box to confirm.');
+    const act = d.get('act'), btn = mform.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    try {
+      if (video) {
+        const q = new URLSearchParams({ act, message: d.get('message') || '', name: d.get('name') || '', consent: 'yes' });
+        const bar = mform.querySelector('progress'); bar.hidden = false;
+        await new Promise((ok, no) => {
+          const x = new XMLHttpRequest();
+          x.open('POST', `/api/jom/moments/video?${q}`);
+          x.setRequestHeader('Content-Type', video.type || 'video/mp4');
+          x.upload.onprogress = (p) => { if (p.lengthComputable) bar.value = Math.round((p.loaded / p.total) * 100); };
+          x.onload = () => { bar.hidden = true; try { const j = JSON.parse(x.responseText); if (x.status < 300) ok(j); else no(new Error(j.error)); } catch { no(new Error(`Upload failed (${x.status}).`)); } };
+          x.onerror = () => { bar.hidden = true; no(new Error('Upload failed. Check your connection and try again.')); };
+          x.send(video);
+        });
+      } else {
+        await api('/api/jom/moments', { method: 'POST', body: { act, message: d.get('message') || '', name: d.get('name') || '', photo, consent: true } });
+      }
+      let pledged = '';
+      if (act && d.get('pledge')) {
+        try {
+          const r = await api(`/api/jom/${act}/pledge`, { method: 'POST', body: { id: browser(), n: Number(d.get('n')) } });
+          store.set(`tam:jom:${act}`, d.get('n'));
+          pledged = ` You’ve pledged too: ${r.pledges} so far.`;
+        } catch { /* the moment still went in */ }
+      }
+      mform.innerHTML = `<h2>Thank you! 💛</h2><p>Your moment is with TAM: it goes up once we’ve checked it.${pledged}</p><p><a class="btn ghost" href="">Share another</a></p>`;
+      track('jom_moment', { act });
+    } catch (err) { formMessage(mform, err.message); btn.disabled = false; }
+  });
+}

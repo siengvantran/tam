@@ -66,6 +66,7 @@ function hub(ctx, req, jom) {
       <div class="label">${J.title}</div><h1 class="chrome gold">JOM at TAM</h1><p class="lede">${J.lede}</p>${nextCard}
       ${X ? html`<p class="small"><a href="#christmas">🎄 ${X.title}: apply now</a></p>` : ''}
       </div>${carousel(ctx, req, jom)}</div></section>
+    ${momentsSection(req, jom, null)}
     ${top.length ? html`<section class="section"><div class="wrap"><h2 class="chrome">Most pledged for Christmas</h2>
       <p>Fans are pledging to see these acts at ${f ? f.name : 'The Best Christmas Ever'}. Pledge for your favourite on their page.</p><div class="jm-grid">${top.map((a) => card(req, a))}</div></div></section>` : ''}
     ${groups.map(([name, list]) => html`<section class="section jm-group"><div class="wrap"><h2 class="chrome">${name}</h2><div class="jm-grid">${list.map((a) => card(req, a))}</div></div></section>`)}
@@ -96,6 +97,46 @@ function hub(ctx, req, jom) {
   });
 }
 
+// The audience's moments (approved by TAM): on the hub, each act's page and /moments.
+function momentWall(list) {
+  return html`<div class="jm-moments">${list.map((m) => html`<figure class="jm-moment">${m.kind === 'image' ? html`<img src="${m.src}" alt="${m.message || 'A moment from JOM at TAM'}" loading="lazy">` : m.kind === 'video' ? html`<video src="${m.src}" controls playsinline preload="metadata"></video>` : ''}
+    ${m.message ? html`<blockquote>${m.message}</blockquote>` : ''}<figcaption>${m.name ? html`<b>${m.name}</b>` : 'From the audience'}${m.actName ? html` · for ${m.actName}` : ''}</figcaption></figure>`)}</div>`;
+}
+function momentsSection(req, jom, a) {
+  const list = jom.momentsShown(a ? a.slug : null).slice(0, a ? 12 : 8);
+  return html`<section class="section jm-moments-sec"><div class="wrap"><div class="jm-mom-head"><div><div class="label">From the audience</div>
+    <h2 class="chrome">${a ? `Moments for ${a.name}` : 'Share your JOM day'}</h2>
+    <p>Were you there? Share a message, a photo or a video${a ? `, and back ${a.name} for The Best Christmas Ever` : ', and pledge for the acts you want at The Best Christmas Ever'}.</p></div>
+    <a class="btn hot" href="${L(req, '/moments')}${a ? `?act=${a.slug}` : ''}">Share a moment</a></div>
+    ${list.length ? momentWall(list) : html`<p class="muted">Be the first to share a moment.</p>`}</div></section>`;
+}
+
+function moments(ctx, req, jom, pick) {
+  const acts = jom.shown();
+  const f = jom.festival();
+  const list = jom.momentsShown(null);
+  return page(ctx, req, {
+    title: 'Share your JOM day', sub: '/moments', description: 'Share your messages, photos and videos from JOM at TAM, and pledge for the acts you want at The Best Christmas Ever.',
+    body: html`<section class="section"><div class="wrap jm-two"><div>
+      <div class="label">JOM Youth Music × TAM</div><h1 class="chrome gold">Share your JOM day</h1>
+      <p class="lede">Send the acts some love: a message, your best photo, a clip of their set. And pledge to see them at ${f ? f.name : 'The Best Christmas Ever'}: pledges help them get a festival spot.</p>
+      <p class="small muted">Everything is checked by TAM before it goes on the site. Please only share photos and videos where everyone in them is happy to be shared (for children, their parent or guardian), and no surnames, schools or contact details.</p></div>
+      <form class="formbox jm-mom-form" id="jm-moment" novalidate>
+        <label class="field"><span>Who did you come to see?</span><select name="act"><option value="">Everyone!</option>${acts.map((a) => html`<option value="${a.slug}" ${a.slug === pick ? 'selected' : ''}>${a.name} · ${a.groupName}</option>`)}</select></label>
+        <label class="field"><span>Your message</span><textarea name="message" rows="3" maxlength="280" placeholder="What did you love? A song, a moment, a shout-out…"></textarea></label>
+        <div class="ar-row"><label class="btn ghost small">Add a photo<input type="file" accept="image/*" data-mphoto class="sr"></label><label class="btn ghost small">Add a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-mvideo class="sr"></label><span class="small muted" data-mfile></span></div>
+        <progress max="100" value="0" hidden></progress>
+        <label class="field"><span>Your first name (optional)</span><input name="name" maxlength="40" autocomplete="given-name"></label>
+        <fieldset class="jm-mom-pledge"><legend>🎄 Pledge to see them at ${f ? f.name : 'The Best Christmas Ever'}</legend>
+          <label class="check"><input type="checkbox" name="pledge" checked> Yes, I’d come and see them</label>
+          <select name="n" aria-label="How many of you">${[1, 2, 3, 4, 5, 6, 7, 8].map((n) => html`<option value="${n}">${n === 1 ? 'Just me' : `${n} of us`}</option>`)}</select>
+          <small class="muted">Pick who you came to see above. A pledge isn’t a ticket.</small></fieldset>
+        <label class="check"><input type="checkbox" name="consent"> Everyone in my photo or video is happy for it to be shared (for children, their parent or guardian agrees). I understand TAM checks it before it goes up.</label>
+        <button class="btn hot" type="submit">Share</button><p class="err" role="status" aria-live="polite"></p></form></div></section>
+    <section class="section"><div class="wrap"><h2 class="chrome">Moments so far</h2>${list.length ? momentWall(list) : html`<p class="muted">The first moments are on their way.</p>`}<p><a href="${L(req, '/')}">← Every JOM act</a></p></div></section>`,
+  });
+}
+
 function profile(ctx, req, jom, a) {
   const f = jom.festival();
   const url = req.onJom ? `https://${ctx.cfg.jomHost}/${a.slug}` : `${ctx.cfg.siteUrl}/jom/${a.slug}`;
@@ -118,6 +159,7 @@ function profile(ctx, req, jom, a) {
         <div class="jm-share" data-share data-url="${url}" data-title="${a.name} · JOM at TAM" data-text="${a.name} at TAM with JOM Youth Music: pledge to see them at The Best Christmas Ever">
           <button class="btn ghost small" type="button" data-native hidden>Share</button><a class="btn ghost small" href="https://wa.me/?text=${encodeURIComponent(`${a.name} at TAM with JOM: pledge to see them at The Best Christmas Ever ${url}`)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost small" type="button" data-copy>Copy link</button></div>
       </div></div></section>
+    ${momentsSection(req, jom, a)}
     <section class="section"><div class="wrap narrow">
       ${a.claimed ? html`<p class="small muted">This page is looked after by ${a.name}’s parent or guardian, with TAM. <a href="${L(req, '/sign-in')}">Sign in to update it</a>.</p>` : html`
       <details class="formbox jm-claim"><summary><b>Parent or guardian? Claim this page</b></summary>
@@ -137,6 +179,7 @@ function profile(ctx, req, jom, a) {
 
 export function routes(r, ctx, jom) {
   r.get('/jom', (req, res) => respond(res, hub(ctx, req, jom)));
+  r.get('/jom/moments', (req, res, { url }) => respond(res, moments(ctx, req, jom, url.searchParams.get('act') || '')));
   r.get('/jom/sign-in', (req, res) => respond(res, page(ctx, req, { title: 'Sign in: JOM at TAM', sub: '/sign-in', noindex: true,
     body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome gold">Parents and guardians</h1><form class="formbox" id="jm-signin"><p>Type the email you claimed the page with, and we’ll send you a sign-in link.</p>
     <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email"></label><button class="btn hot" type="submit">Email me a link</button><p class="err" role="status" aria-live="polite"></p></form></div></section>` })));
@@ -173,7 +216,7 @@ export function serveJom(ctx, jom, site, req, res, url) {
     send(res, 200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>\n`, { 'Content-Type': 'application/xml; charset=utf-8' }); return true;
   }
   const inner = p === '/' ? '/jom' : `/jom${p.replace(/\/$/, '')}`;
-  const ours = p === '/' || ['/sign-in', '/in', '/me', '/manage'].includes(p) || (/^\/[\w-]+$/.test(p) && jom.act(p.slice(1)));
+  const ours = p === '/' || ['/sign-in', '/in', '/me', '/manage', '/moments'].includes(p) || (/^\/[\w-]+$/.test(p) && jom.act(p.slice(1)));
   const m = ours ? site.match('GET', inner) : null;
   if (m) return { handler: m.handler, params: m.params };
   redirect(res, `${ctx.cfg.siteUrl}${p}${url.search}`, 302);
