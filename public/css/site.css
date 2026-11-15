@@ -1613,3 +1613,7 @@ body.lv-screen.idle { cursor: none; }
 .ar-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .ar-add progress { width: 100%; height: 8px; }
 .ar-thumb { border-radius: 8px; object-fit: cover; vertical-align: middle; margin-right: 6px; }
 .st-h { font-size: clamp(26px, 3.4vw, 40px); margin-top: 26px; } .st-posts { margin-top: 10px; } .st-posts-edit { grid-column: 1 / -1; } .st-posts-edit form { display: grid; gap: 10px; } .st-postlist li { display: flex; justify-content: space-between; align-items: center; }
+.jm-posts-edit { display: grid; gap: 8px; } .jm-postlist li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; } .jm-postlist input { min-width: 0; }
+.jm-posts-edit .ar-row input { flex: 1; min-width: 0; } .jm-posts-edit progress { flex: 1; }
+.jmm-posts { display: flex; flex-wrap: wrap; gap: 10px; } .jmm-posts figure { margin: 0; display: grid; gap: 4px; max-width: 200px; } .jmm-posts img, .jmm-posts video { border-radius: 8px; }
+.jm-posts { margin-bottom: 18px; }

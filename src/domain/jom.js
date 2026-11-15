@@ -19,6 +19,7 @@ import path from 'node:path';
 import { fail, send, readJson, text, email as cleanEmail, newId, rateLimiter } from '../lib/http.js';
 import { clubShell, clubButton } from '../services/mailer.js';
 import { escape as e } from '../views/html.js';
+import { postOf, POST_HELP, saveVideo } from '../lib/media-posts.js';
 
 const COOKIE = 'tam_jom';
 const DAY = 86400000;
@@ -46,7 +47,7 @@ export function jomDomain(ctx) {
       const o = db.jomActs[a.slug] || {};
       const photos = (o.photos || []).length ? o.photos : a.photo ? [a.photo] : [];
       return { slug: a.slug, name: o.name || a.name, group: a.group, groupName: J.groups[a.group] || '', sessions: [...new Set((a.sessions || []).concat(o.sessions || []))],
-        photos, photo: photos[0] || '', bio: o.bio || '', links: o.links || [], claimed: Boolean((o.claimedBy || []).length), hidden: Boolean(o.hidden),
+        photos, photo: photos[0] || '', bio: o.bio || '', links: o.links || [], posts: o.posts || [], claimed: Boolean((o.claimedBy || []).length), hidden: Boolean(o.hidden),
         pledges: db.jomPledges.filter((p) => p.act === a.slug).reduce((t, p) => t + p.n, 0) };
     });
   }
@@ -205,11 +206,25 @@ export function jomDomain(ctx) {
       const url = await ctx.saveImage(b.photo, `jom-${params.slug}-${crypto.randomBytes(6).toString('hex')}`, { what: 'Photos', maxKB: 600 });
       send(res, 200, { photo: url }); // not on the page until a change with it is approved
     });
+    // their posts: check a link before it goes into the update, and upload a video (not live until TAM approves)
+    r.post('/api/jom/me/:slug/check-post', async (req, res, { params }) => {
+      const email = needParent(req);
+      if (!mine(email).some((a) => a.slug === params.slug)) throw fail(403, 'That isn’t one of your acts.');
+      const b = await readJson(req, 2048);
+      const p = postOf(b.url);
+      if (!p) throw fail(400, POST_HELP);
+      send(res, 200, { post: p });
+    });
+    r.post('/api/jom/me/:slug/video', async (req, res, { params }) => {
+      const email = needParent(req);
+      if (!mine(email).some((a) => a.slug === params.slug)) throw fail(403, 'That isn’t one of your acts.');
+      send(res, 200, { video: await saveVideo(ctx, req, `jom-${params.slug}`) });
+    });
     r.post('/api/jom/me/:slug', async (req, res, { params }) => {
       const email = needParent(req);
       const a = mine(email).find((x) => x.slug === params.slug);
       if (!a) throw fail(403, 'That isn’t one of your acts.');
-      const b = await readJson(req, 16 * 1024);
+      const b = await readJson(req, 32 * 1024);
       const bio = text(b.bio, 1200);
       if (CONTACT.test(bio)) throw fail(400, 'Please leave email addresses and phone numbers out of the bio: it’s a public page.');
       const links = (Array.isArray(b.links) ? b.links : String(b.links || '').split(/[\n,]+/)).map((x) => String(x).trim()).filter(Boolean);
@@ -217,9 +232,20 @@ export function jomDomain(ctx) {
       if (bad) throw fail(400, `Links can go to YouTube, Spotify, SoundCloud, Bandcamp, Apple Music, Instagram, TikTok or Facebook. This one can’t: ${bad.slice(0, 80)}`);
       const photos = (Array.isArray(b.photos) ? b.photos : []).filter((p) => typeof p === 'string' && (/^\/uploads\/jom-[\w-]+\.(jpg|png|webp)$/.test(p) || a.photos.includes(p))).slice(0, 6);
       const name = text(b.name, 60) || a.name;
+      // posts: a link to Instagram, TikTok, Facebook or YouTube, or their own photo or video (uploaded above)
+      const own = new RegExp(`^/uploads/jom-${a.slug}-[0-9a-f]+\\.(jpg|png|webp|mp4|webm|mov)$`);
+      const posts = [];
+      for (const x of (Array.isArray(b.posts) ? b.posts : []).slice(0, 12)) {
+        const caption = text(x && x.caption, 200);
+        if (CONTACT.test(caption)) throw fail(400, 'Please leave email addresses and phone numbers out of captions: it’s a public page.');
+        const was = a.posts.find((y) => y.id && y.id === (x && x.id));
+        if (was) { posts.push({ ...was, caption }); continue; }
+        if (x && x.url) { const p0 = postOf(x.url); if (!p0) throw fail(400, POST_HELP); posts.push({ id: newId('JM', 6), ...p0, caption }); continue; }
+        if (x && ['image', 'video'].includes(x.kind) && own.test(String(x.src || ''))) posts.push({ id: newId('JM', 6), kind: x.kind, src: x.src, caption });
+      }
       const old = pendingFor(a.slug);
       if (old) old.status = 'replaced';
-      const p = { id: newId('JP', 6), act: a.slug, by: email, at: iso(), status: 'pending', changes: { name, bio, links: links.slice(0, 6), photos } };
+      const p = { id: newId('JP', 6), act: a.slug, by: email, at: iso(), status: 'pending', changes: { name, bio, links: links.slice(0, 6), photos, posts } };
       db.jomPending.push(p);
       await save();
       send(res, 201, { pending: p });
@@ -264,8 +290,10 @@ export function jomDomain(ctx) {
       const b = await readJson(req, 2048);
       if (b.action === 'approve') {
         const o = (db.jomActs[p.act] = db.jomActs[p.act] || {});
-        const gone = (o.photos || []).filter((u) => !p.changes.photos.includes(u));
-        Object.assign(o, { name: p.changes.name, bio: p.changes.bio, links: p.changes.links, photos: p.changes.photos });
+        const next = p.changes.posts || o.posts || [];
+        const gone = (o.photos || []).filter((u) => !p.changes.photos.includes(u))
+          .concat((o.posts || []).filter((x) => x.src && !next.some((y) => y.src === x.src)).map((x) => x.src));
+        Object.assign(o, { name: p.changes.name, bio: p.changes.bio, links: p.changes.links, photos: p.changes.photos, posts: next });
         Object.assign(p, { status: 'approved', by: who.name, decidedAt: iso() });
         for (const u of gone) await dropFile(u);
         tell(p.by, 'JOM × TAM: your update is live', 'Your update is live', `<p>Your changes to ${e(o.name || p.act)}’s page are now on <a href="${e(site())}/jom/${e(p.act)}">their page</a>.</p>`);

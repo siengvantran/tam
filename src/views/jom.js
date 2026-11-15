@@ -2,7 +2,8 @@
 // permanent page. Served at jom.tam.tv (/, /:slug…) and at www.tam.tv/jom.
 // The back office is /jom/manage on www.
 
-import { html } from './html.js';
+import { html, raw } from './html.js';
+import { embedHtml } from '../lib/media-posts.js';
 import { html as respond, redirect, send } from '../lib/http.js';
 import { layout, when } from './layout.js';
 import { RELATIONS } from '../domain/jom.js';
@@ -107,6 +108,7 @@ function profile(ctx, req, jom, a) {
       <div><p class="label"><a href="${L(req, '/')}">JOM at TAM</a> · ${a.groupName}</p><h1 class="chrome gold">${a.name}</h1>
         ${a.bio ? html`<div class="prose">${a.bio.split(/\n\s*\n/).map((p) => html`<p>${p}</p>`)}</div>` : ''}
         ${a.links.length ? html`<p class="jm-links">${a.links.map((l) => html`<a class="btn ghost small" href="${l}" target="_blank" rel="noopener">${(() => { try { return new URL(l).hostname.replace(/^www\.|^open\.|^music\./, '').split('.')[0]; } catch { return 'Link'; } })()} ↗</a>`)}</p>` : ''}
+        ${a.posts.length ? html`<h2 class="jm-h">From ${a.name}</h2><div class="aw-grid jm-posts">${a.posts.map((p) => html`<figure class="aw-post">${raw(embedHtml(p))}${p.caption ? html`<figcaption>${p.caption}</figcaption>` : ''}</figure>`)}</div>` : ''}
         ${played.length ? html`<h2 class="jm-h">Played at TAM</h2><ul class="jm-played">${played.map((s) => html`<li><a href="${ctx.cfg.siteUrl}/events/${s.slug}">${s.title}</a> <small>${longDate(s.date)}</small></li>`)}</ul>` : ''}
         <div class="jm-pledge" data-pledge="${a.slug}"><div class="label">🎄 ${f ? f.name : 'The Best Christmas Ever'}${f ? ` · ${new Date(`${f.dates.from}T12:00:00Z`).getUTCDate()}–${new Date(`${f.dates.to}T12:00:00Z`).getUTCDate()} December at TAM` : ''}</div>
           <h2>See ${a.name} at the festival</h2><p>Pledge to come, and help put ${a.name} on TAM’s Christmas stage. TAM’s programmers see every pledge.</p>
