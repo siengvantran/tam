@@ -19,7 +19,7 @@ import path from 'node:path';
 import { fail, send, readJson, text, email as cleanEmail, newId, rateLimiter } from '../lib/http.js';
 import { clubShell, clubButton } from '../services/mailer.js';
 import { escape as e } from '../views/html.js';
-import { postOf, POST_HELP, saveVideo } from '../lib/media-posts.js';
+import { postOf, POST_HELP, saveVideo, saveImage as savePhoto } from '../lib/media-posts.js';
 
 const COOKIE = 'tam_jom';
 const DAY = 86400000;
@@ -33,12 +33,13 @@ export const RELATIONS = { parent: 'Parent', guardian: 'Guardian', adult: 'I’m
 export function jomDomain(ctx) {
   const { db, save, cfg, content: c } = ctx;
   const J = c.jom || { acts: [], groups: {}, sessions: [] };
-  for (const k of ['jomClaims', 'jomPending', 'jomLinks', 'jomSessions', 'jomPledges', 'jomExtra', 'jomApplications']) if (!Array.isArray(db[k])) db[k] = [];
+  for (const k of ['jomClaims', 'jomPending', 'jomLinks', 'jomSessions', 'jomPledges', 'jomExtra', 'jomApplications', 'jomMoments']) if (!Array.isArray(db[k])) db[k] = [];
   if (!db.jomActs || typeof db.jomActs !== 'object') db.jomActs = {}; // per-act overrides: { name, photos[], bio, links[], claimedBy[], hidden }
   const iso = (t = ctx.now()) => new Date(t).toISOString();
   const site = () => cfg.siteUrl;
   const pledgeLimited = rateLimiter({ max: 30 });
   const claimLimited = rateLimiter({ max: 6 });
+  const momentLimited = rateLimiter({ max: 20 });
 
   // every act: the line-up in content/jom.json, plus acts staff add later, with any approved changes on top
   function all() {
@@ -101,6 +102,38 @@ export function jomDomain(ctx) {
 
   function routes(r) {
     // ----- fans: pledge to see them at The Best Christmas Ever -----
+    // ----- the audience's moments from a JOM session: messages, photos, videos (TAM checks every one) -----
+    const momentOf = async (req, b, src, kind) => {
+      if (momentLimited(req)) throw fail(429, 'That’s a lot of posts. Try again in a few minutes.');
+      const message = text(b.message, 280);
+      const name = text(b.name, 40);
+      if (CONTACT.test(`${message} ${name}`)) throw fail(400, 'Please leave email addresses and phone numbers out: it’s a public page.');
+      if (b.consent !== true) throw fail(400, 'Tick the box to confirm.');
+      if (kind === 'note' && !message) throw fail(400, 'Write a message, or add a photo or video.');
+      const a = b.act ? act(text(b.act, 60)) : null;
+      const session = J.sessions.some((s) => s.slug === b.session) ? b.session : (J.sessions[0] || {}).slug || '';
+      const m = { id: newId('JMO', 6), session, act: a && !a.hidden ? a.slug : '', kind, message, src: src || '', name, at: iso(), status: 'pending' };
+      db.jomMoments.push(m);
+      await save();
+      return m;
+    };
+    r.post('/api/jom/moments', async (req, res) => {
+      const b = await readJson(req, 1300 * 1024);
+      if (b.consent !== true) throw fail(400, 'Tick the box to confirm.');
+      const src = b.photo ? await savePhoto(ctx, b.photo, 'jom-moment') : '';
+      const m = await momentOf(req, b, src, src ? 'image' : 'note');
+      send(res, 201, { ok: true, status: m.status });
+    });
+    r.post('/api/jom/moments/video', async (req, res, { url }) => {
+      const q = Object.fromEntries(url.searchParams);
+      if (q.consent !== 'yes') throw fail(400, 'Tick the box to confirm.');
+      if (momentLimited(req)) throw fail(429, 'That’s a lot of posts. Try again in a few minutes.');
+      const src = await saveVideo(ctx, req, 'jom-moment');
+      const m = await momentOf(req, { ...q, consent: true }, src, 'video');
+      send(res, 201, { ok: true, status: m.status });
+    });
+    r.get('/api/jom/moments', (req, res, { url }) => send(res, 200, { moments: momentsShown(url.searchParams.get('act')) }));
+
     r.post('/api/jom/:slug/pledge', async (req, res, { params }) => {
       const a = act(params.slug);
       if (!a || a.hidden) throw fail(404, 'No such act.');
@@ -284,6 +317,8 @@ export function jomDomain(ctx) {
         acts: acts.map((a) => ({ ...a, parents: (db.jomActs[a.slug] || {}).claimedBy || [], stage: ctx.stage ? ctx.stage.jomStatus(a.slug) : null })).sort((x, y) => y.pledges - x.pledges),
         pledges: db.jomPledges.reduce((t, p) => t + p.n, 0),
         applications: db.jomApplications.slice().reverse().map((x) => ({ ...x, pledges: x.slug ? (acts.find((a) => a.slug === x.slug) || {}).pledges || 0 : 0 })),
+        moments: db.jomMoments.filter((m) => m.status === 'pending').map((m) => ({ ...m, actName: (acts.find((a) => a.slug === m.act) || {}).name || '' })),
+        momentsShown: db.jomMoments.filter((m) => m.status === 'shown').length,
       });
     });
     r.post('/api/jom/manage/claims/:id', async (req, res, { params }) => {
@@ -370,6 +405,17 @@ export function jomDomain(ctx) {
       await save();
       send(res, 200, { removed: before - db.jomPledges.length });
     });
+    r.post('/api/jom/manage/moments/:id', async (req, res, { params }) => {
+      guard(req);
+      const m = db.jomMoments.find((x) => x.id === params.id);
+      if (!m) throw fail(404, 'No such moment.');
+      const b = await readJson(req, 1024);
+      if (!['shown', 'hidden', 'removed'].includes(b.status)) throw fail(400, 'Show, hide or remove.');
+      m.status = b.status;
+      if (b.status === 'removed' && m.src) { await dropFile(m.src); m.src = ''; }
+      await save();
+      send(res, 200, { ok: true });
+    });
     r.get('/api/jom/manage/pledges.csv', (req, res) => {
       guard(req);
       const rows = [['Act', 'Group', 'Pledged people', 'Claimed'], ...all().sort((x, y) => y.pledges - x.pledges).map((a) => [a.name, a.groupName, a.pledges, a.claimed ? 'yes' : 'no'])];
@@ -381,5 +427,9 @@ export function jomDomain(ctx) {
   const norm = (s) => String(s || '').toLowerCase().replace(/[’']/g, '').trim();
   const byName = (name) => shown().find((a) => norm(a.name) === norm(name)) || null;
   const forNight = (slug) => shown().some((a) => a.sessions.includes(slug));
-  return { routes, all, shown, act, sessionOf, nextSession, festival, parentOf, byName, forNight, J };
+  function momentsShown(slug) {
+    return db.jomMoments.filter((m) => m.status === 'shown' && (!slug || m.act === slug)).slice().reverse().slice(0, 60)
+      .map(({ id, kind, message, src, name, act: a, at }) => ({ id, kind, message, src, name, act: a, actName: a ? (act(a) || {}).name || '' : '', at }));
+  }
+  return { routes, all, shown, act, sessionOf, nextSession, festival, parentOf, byName, forNight, momentsShown, J };
 }

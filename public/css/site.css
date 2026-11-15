@@ -1620,3 +1620,12 @@ body.lv-screen.idle { cursor: none; }
 .jm-stage { margin: -6px 0 22px; display: grid; gap: 8px; border-color: var(--gold-deep); } .jm-stage h3 { margin: 0; }
 .st-jom { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--v-3, var(--ink-dim)); margin: 0 0 6px; } .st-jom img { border-radius: 50%; }
 .anr-jom { color: #9fd8ff !important; }
+/* JOM: the audience's moments (src/views/jom.js) */
+.jm-mom-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; } .jm-mom-head p { margin: 0; }
+.jm-moments { columns: 4 220px; column-gap: 14px; }
+.jm-moment { break-inside: avoid; margin: 0 0 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.jm-moment img, .jm-moment video { width: 100%; height: auto; display: block; background: #000; }
+.jm-moment blockquote { margin: 0; padding: 12px 14px 4px; font-size: 16px; } .jm-moment figcaption { padding: 6px 14px 12px; font-size: 13px; color: var(--muted); } .jm-moment figcaption b { color: var(--gold); }
+.jm-mom-form { display: grid; gap: 12px; } .jm-mom-pledge { border: 1px solid #7a2a33; border-radius: 14px; padding: 10px 14px; display: grid; gap: 8px; } .jm-mom-pledge legend { padding: 0 6px; }
+.jm-mom-pledge select { padding: 8px 10px; border-radius: 10px; background: var(--night); color: var(--ink); border: 1px solid var(--line); font: inherit; max-width: 180px; }
+.jmm-moms { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; } .jmm-mom { display: grid; gap: 6px; } .jmm-mom img, .jmm-mom video { border-radius: 10px; max-width: 100%; height: auto; }

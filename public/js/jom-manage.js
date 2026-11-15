@@ -33,7 +33,7 @@ async function start() {
 const diff = (label, was, now) => (String(was || '') === String(now || '') ? '' : `<div class="jmm-diff"><b>${label}</b><del>${esc(was || '(empty)')}</del><ins>${esc(now || '(empty)')}</ins></div>`);
 
 function draw() {
-  root.innerHTML = `<nav class="cm-tabs">${[['claims', `Claims to check (${D.claims.length})`], ['changes', `Changes to approve (${D.changes.length})`], ['xmas', `Christmas applications (${D.applications.length})`], ['acts', `Acts and pledges (${D.acts.length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="jmm-body"></div>`;
+  root.innerHTML = `<nav class="cm-tabs">${[['claims', `Claims to check (${D.claims.length})`], ['changes', `Changes to approve (${D.changes.length})`], ['moments', `Moments to check (${D.moments.length})`], ['xmas', `Christmas applications (${D.applications.length})`], ['acts', `Acts and pledges (${D.acts.length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="jmm-body"></div>`;
   const b = $('#jmm-body');
   if (tab === 'claims') {
     b.innerHTML = D.claims.length ? D.claims.map((c) => `<div class="formbox jmm-item" data-claim="${c.id}"><h3>${esc(c.actName)}</h3>
@@ -52,6 +52,12 @@ function draw() {
       <label class="field"><span>Note if you reject (emailed to them)</span><input name="message" maxlength="600"></label>
       <div class="row-btn"><button class="btn hot small" data-do="approve">Approve: put it on the page</button><button class="btn ghost small" data-do="reject">Reject</button></div></div>`; }).join('')
       : '<p class="muted">No changes waiting.</p>';
+  } else if (tab === 'moments') {
+    b.innerHTML = `<p class="small muted">From the audience at JOM sessions. ${D.momentsShown} on the site so far. Check each one is right for young people’s pages: no surnames, schools, uniforms with school names, addresses or contact details.</p>
+    ${D.moments.length ? `<div class="jmm-moms">${D.moments.map((m) => `<div class="formbox jmm-mom" data-moment="${m.id}">
+      ${m.kind === 'image' ? `<img src="${esc(m.src)}" alt="" width="240">` : m.kind === 'video' ? `<video src="${esc(m.src)}" controls playsinline preload="metadata" width="260"></video>` : ''}
+      ${m.message ? `<p>“${esc(m.message)}”</p>` : ''}<p class="small muted">${esc(m.name || 'No name')}${m.actName ? ` · for ${esc(m.actName)}` : ''} · ${esc(when(m.at))}</p>
+      <div class="row-btn"><button class="btn hot small" data-mst="shown">Put it up</button><button class="btn ghost small" data-mst="removed">Remove</button></div></div>`).join('')}</div>` : '<p class="muted">Nothing waiting.</p>'}`;
   } else if (tab === 'xmas') {
     const ST = { new: 'New', shortlist: 'Shortlisted', booked: 'Booked', 'not-this-time': 'Not this time' };
     b.innerHTML = D.applications.length ? `<p class="small muted">Applications to play The Best Christmas Ever (JOM date to be announced). Pledges are the fans signed up on the act’s page.</p>
@@ -73,6 +79,11 @@ root.addEventListener('click', async (e) => {
   const t = e.target;
   try {
     if (t.dataset.tab) { tab = t.dataset.tab; draw(); return; }
+    if (t.dataset.mst) {
+      if (t.dataset.mst === 'removed' && !confirm('Remove this moment? Its photo or video is deleted.')) return;
+      await api(`/api/jom/manage/moments/${t.closest('[data-moment]').dataset.moment}`, { method: 'POST', body: { status: t.dataset.mst } });
+      await load(); draw(); return;
+    }
     if (t.dataset.do) {
       const box = t.closest('.jmm-item');
       const msg = box.querySelector('[name="message"]').value, mail = box.querySelector('[name="email"]');
