@@ -59,8 +59,8 @@ function draw() {
       <td>${x.pledges}</td><td><small>${esc(x.name)} (${esc(D.relations[x.relation] || x.relation)})<br><a href="mailto:${esc(x.email)}">${esc(x.email)}</a><br>${esc(when(x.at))}</small></td>
       <td><select data-app="${x.id}">${Object.entries(ST).map(([k, v]) => `<option value="${k}" ${x.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table>` : '<p class="muted">No applications yet. The form is on the JOM hub, under the acts.</p>';
   } else {
-    b.innerHTML = `<p>${D.pledges} people pledged in all. <a class="btn ghost small" href="/api/jom/manage/pledges.csv">Download pledges (CSV)</a> <a class="btn ghost small" href="/jom" target="_blank">The JOM hub ↗</a></p>
-    <table class="cm-table"><thead><tr><th>Act</th><th>Pledged</th><th>Parents</th><th></th></tr></thead><tbody>${D.acts.map((a) => `<tr><td><b>${esc(a.name)}</b>${a.hidden ? ' <small class="err">hidden</small>' : ''}<br><small class="muted">${esc(a.groupName)} · ${a.sessions.length} session(s)</small></td><td>${a.pledges}</td>
+    b.innerHTML = `<p>${D.pledges} people pledged in all. <a class="btn ghost small" href="/api/jom/manage/pledges.csv">Download pledges (CSV)</a> <button class="btn ghost small" type="button" data-reset-all>Reset all pledges</button> <a class="btn ghost small" href="/jom" target="_blank">The JOM hub ↗</a></p>
+    <table class="cm-table"><thead><tr><th>Act</th><th>Pledged</th><th>Parents</th><th></th></tr></thead><tbody>${D.acts.map((a) => `<tr><td><b>${esc(a.name)}</b>${a.hidden ? ' <small class="err">hidden</small>' : ''}<br><small class="muted">${esc(a.groupName)} · ${a.sessions.length} session(s)</small></td><td>${a.pledges}${a.pledges ? ` <button class="linkish small" data-reset="${esc(a.slug)}">Reset</button>` : ''}</td>
       <td><small>${a.parents.map(esc).join('<br>') || '–'}</small></td><td class="small"><a href="/jom/${esc(a.slug)}" target="_blank">Page</a> · <button class="linkish" data-act="${esc(a.slug)}" data-a="${a.hidden ? 'show' : 'hide'}">${a.hidden ? 'Show' : 'Hide'}</button>${a.parents.length ? ` · <button class="linkish" data-act="${esc(a.slug)}" data-a="unclaim">Remove parents</button>` : ''}</td></tr>`).join('')}</tbody></table>
     <form class="formbox" id="jmm-add"><h3>Add an act</h3><div class="fields"><label class="field"><span>Name</span><input name="name" maxlength="60" required></label>
       <label class="field"><span>Group</span><select name="group">${Object.entries(D.groups).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('')}</select></label>
@@ -78,6 +78,13 @@ root.addEventListener('click', async (e) => {
       if (box.dataset.claim) await api(`/api/jom/manage/claims/${box.dataset.claim}`, { method: 'POST', body: { action: t.dataset.do, message: msg, email: mail ? mail.checked : false } });
       else await api(`/api/jom/manage/changes/${box.dataset.change}`, { method: 'POST', body: { action: t.dataset.do, message: msg } });
       await load(); draw();
+    }
+    if (t.dataset.reset || t.closest('[data-reset-all]')) {
+      const one = t.dataset.reset;
+      if (!confirm(one ? 'Clear this act’s pledges? This can’t be undone.' : 'Clear every act’s pledges? This can’t be undone.')) return;
+      const r = await api('/api/jom/manage/pledges/reset', { method: 'POST', body: one ? { slug: one } : { all: true } });
+      await load(); draw(); alert(`${r.removed} pledge(s) cleared.`);
+      return;
     }
     if (t.dataset.a) {
       if (t.dataset.a === 'unclaim' && !confirm('Remove the parents from this act? They won’t be able to update it.')) return;

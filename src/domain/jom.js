@@ -308,6 +308,18 @@ export function jomDomain(ctx) {
       await save();
       send(res, 200, { ok: true });
     });
+    // clear pledges (after testing): one act's, or everyone's
+    r.post('/api/jom/manage/pledges/reset', async (req, res) => {
+      const who = guard(req);
+      const b = await readJson(req, 1024);
+      if (b.slug && !act(b.slug)) throw fail(404, 'No such act.');
+      if (!b.slug && b.all !== true) throw fail(400, 'Say which act, or all.');
+      const before = db.jomPledges.length;
+      db.jomPledges = b.slug ? db.jomPledges.filter((p) => p.act !== b.slug) : [];
+      console.log(`JOM pledges reset by ${who.name}: ${b.slug || 'all'} (${before - db.jomPledges.length} removed)`);
+      await save();
+      send(res, 200, { removed: before - db.jomPledges.length });
+    });
     r.get('/api/jom/manage/pledges.csv', (req, res) => {
       guard(req);
       const rows = [['Act', 'Group', 'Pledged people', 'Claimed'], ...all().sort((x, y) => y.pledges - x.pledges).map((a) => [a.name, a.groupName, a.pledges, a.claimed ? 'yes' : 'no'])];
