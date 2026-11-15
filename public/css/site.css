@@ -1550,3 +1550,58 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .jm-xmas { background: radial-gradient(120% 140% at 100% 0, rgba(255, 59, 78, .25), transparent 55%), var(--panel); border: 1px solid #7a2a33; border-radius: 24px; padding: clamp(20px, 4vw, 40px); }
 .jm-xmas form { display: grid; gap: 12px; margin-top: 14px; }
 .jm-date .jm-full { color: var(--gold); }
+/* ---------- Live at TAM: the big screen (/screen) and self check-in (/checkin) ----------
+   The screen hangs behind the stage: the band, drums and amps hide its lower part and its
+   edges curve, so everything that matters sits in the top band (--band), well in from the
+   sides. B shows the whole screen when the stage is clear. */
+body.lv-screen { --band: 60vh; --side: 6vw; margin: 0; height: 100vh; overflow: hidden; color: #fff; font-family: 'Inter', sans-serif; background: #06040a; }
+body.lv-screen.full { --band: 94vh; }
+body.lv-screen.idle { cursor: none; }
+.lv-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(55% 45% at 18% 22%, rgba(80, 60, 220, .45), transparent 70%), radial-gradient(45% 40% at 82% 30%, rgba(255, 46, 136, .35), transparent 70%), linear-gradient(180deg, #0a0614 0%, #06040a 62%, #000 100%); animation: lv-drift 18s ease-in-out infinite alternate; }
+@keyframes lv-drift { to { transform: scale(1.1) translate(-2%, 1%); } }
+.lv-band { position: absolute; top: 2.5vh; left: var(--side); right: var(--side); height: var(--band); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 1.6vh; }
+.lv-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 2vw; align-items: center; }
+.lv-lockup { display: flex; align-items: center; gap: 1vw; }
+.lv-screen .lv-tam { height: 10vh; width: auto; filter: drop-shadow(0 0 2vh rgba(243, 195, 91, .5)); }
+.lv-screen .lv-jomlogo { height: 10vh; width: auto; border-radius: 50%; box-shadow: 0 0 3vh rgba(140, 120, 255, .7); }
+.lv-x { font: 400 6vh/1 'Bebas Neue', sans-serif; color: #f3c35b; }
+.lv-title h1 { font: 400 clamp(28px, 6vh, 84px)/1 'DM Serif Display', serif; margin: .2vh 0 .6vh; color: #ffd36b; text-shadow: 0 .3vh 2vh rgba(0, 0, 0, .6); }
+.lv-kicker, .lv-k { font: 400 clamp(13px, 2vh, 26px)/1.2 'Bebas Neue', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #bfe6ff; }
+.lv-partners { display: flex; align-items: center; gap: 1vw; flex-wrap: wrap; }
+.lv-partner { display: flex; align-items: center; gap: .5vw; background: rgba(255, 255, 255, .12); border-radius: 99px; padding: .4vh 1vw .4vh .4vh; }
+.lv-partner img { height: 3.6vh; width: 3.6vh; border-radius: 50%; } .lv-partner b { font-size: clamp(12px, 1.9vh, 24px); } .lv-partner small { color: #ffd36b; font-size: clamp(11px, 1.6vh, 20px); margin-left: .3vw; }
+.lv-count { text-align: center; } .lv-count b { display: block; font: 400 clamp(40px, 10vh, 140px)/1 'Bebas Neue', sans-serif; color: #fff; text-shadow: 0 0 3vh rgba(243, 195, 91, .5); }
+.lv-count span { font: 400 clamp(13px, 2.2vh, 28px) 'Bebas Neue', sans-serif; letter-spacing: .2em; color: #ffd36b; }
+.lv-count.bump b { animation: lv-bump .9s ease-out; } @keyframes lv-bump { 30% { transform: scale(1.18); color: #ffd36b; } }
+.lv-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 2vw; min-height: 0; }
+.lv-checkin { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6vw; align-items: center; background: rgba(0, 0, 0, .45); border: .3vh solid rgba(255, 211, 107, .7); border-radius: 2.6vh; padding: 2vh 1.6vw; min-height: 0; }
+.lv-qr { background: #fff; border-radius: 1.6vh; padding: 1.2vh; height: min(30vh, calc(var(--band) - 26vh)); aspect-ratio: 1; box-shadow: 0 0 5vh rgba(255, 211, 107, .45); }
+.lv-qr img { width: 100%; height: 100%; display: block; }
+.lv-checkin h2 { font: 400 clamp(26px, 6vh, 84px)/.95 'Bebas Neue', sans-serif; letter-spacing: .03em; margin: 0; color: #fff; }
+.lv-url { font: 700 clamp(16px, 3vh, 40px) 'Inter', sans-serif; color: #ffd36b; margin: .8vh 0 1vh; }
+.lv-why { font-size: clamp(13px, 2.1vh, 28px); color: #eee4ff; margin: 0; line-height: 1.35; }
+.lv-spot { opacity: 0; transform: translateY(1.5vh); transition: opacity .45s, transform .45s; min-height: 0; }
+.lv-spot.in { opacity: 1; transform: none; }
+.lv-wait { font-size: 3vh; color: #bfe6ff; }
+.lv-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6vw; align-items: center; height: 100%; background: rgba(0, 0, 0, .45); border-radius: 2.6vh; padding: 2vh 1.6vw; box-sizing: border-box; }
+.lv-pic { height: min(30vh, calc(var(--band) - 26vh)); aspect-ratio: 4 / 5; border-radius: 2vh; overflow: hidden; background: linear-gradient(150deg, #3a2350, #0e2a2a); display: grid; place-items: center; }
+.lv-pic img { width: 100%; height: 100%; object-fit: cover; } .lv-pic span { font: 400 12vh/1 'DM Serif Display', serif; color: #ffd36b; }
+.lv-info { min-width: 0; } .lv-info h2 { font: 400 clamp(28px, 6.4vh, 92px)/.95 'DM Serif Display', serif; margin: .4vh 0 1vh; color: #fff; overflow-wrap: anywhere; }
+.lv-stats { display: flex; flex-wrap: wrap; gap: .4vh 1.6vw; font-size: clamp(14px, 2.4vh, 32px); margin: 0 0 1.4vh; } .lv-stats b { color: #ffd36b; }
+.lv-follow { display: flex; gap: 1vw; align-items: center; }
+.lv-follow img { width: 12vh; height: 12vh; background: #fff; border-radius: 1vh; padding: .6vh; flex: none; }
+.lv-follow b { display: block; font-size: clamp(14px, 2.4vh, 32px); } .lv-follow span { display: block; color: #eee4ff; font-size: clamp(12px, 1.9vh, 24px); } .lv-follow small { color: #bfe6ff; font-size: clamp(11px, 1.7vh, 22px); }
+.lv-crowd { display: flex; align-items: center; gap: 1.2vw; flex-wrap: nowrap; overflow: hidden; white-space: nowrap; font-size: clamp(13px, 2.4vh, 32px); background: rgba(0, 0, 0, .45); border-radius: 99px; padding: .8vh 1.4vw; }
+.lv-crowd-list { display: flex; gap: 1.6vw; } .lv-rank i { font-style: normal; display: inline-grid; place-items: center; width: 3.2vh; height: 3.2vh; border-radius: 50%; background: #ffd36b; color: #120a0a; font-weight: 700; margin-right: .5vw; font-size: 1.9vh; } .lv-rank b { color: #ffd36b; margin-left: .3vw; }
+.lv-hint { position: absolute; bottom: 2vh; left: var(--side); font-size: 1.4vh; color: rgba(255, 255, 255, .25); }
+@media (max-aspect-ratio: 1/1) { body.lv-screen { overflow: auto; height: auto; } .lv-band { position: static; height: auto; padding: 2vh 4vw; } .lv-main, .lv-card { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .lv-bg { animation: none; } }
+/* the phone */
+.lv-lockup.small { justify-content: center; margin-bottom: 14px; } .lv-lockup.small .lv-tam, .lv-lockup.small .lv-jomlogo { height: 72px; } .lv-lockup.small .lv-x { font-size: 40px; }
+.lv-phone h1 { font-size: clamp(34px, 9vw, 60px); }
+.lv-form { display: grid; gap: 16px; } .lv-n { border: 0; padding: 0; margin: 0; } .lv-n legend { font-size: 18px; margin-bottom: 8px; }
+.lv-stepper { display: flex; align-items: center; gap: 18px; }
+.lv-stepper button { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--gold); background: var(--panel-2); color: var(--ink); font-size: 30px; cursor: pointer; }
+.lv-stepper output { font: 400 56px/1 var(--f-display); color: var(--gold); min-width: 2ch; text-align: center; }
+.lv-go { font-size: 20px; padding: 16px; } .lv-yes { text-align: center; } .lv-yes h2 { font-size: 40px; }
+.lv-phone .lv-wrap { white-space: normal; max-width: 100%; }
