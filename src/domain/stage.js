@@ -1,11 +1,19 @@
 // The TAM Stage: TAM's A&R, as a game everyone can play.
 //
 // Every request to play at TAM (the Sunday Showcase call-out, the musician
-// enquiry form, Ask TAM, or /stage/apply) becomes an artist with their own
+// enquiry form, Ask TAM, or the application at /stage/apply, where they
+// choose Open Mic, Sunday Showcase, Friday Night Live, Festivals or propose a
+// show, and tell us about their crowd and their story) becomes an artist with their own
 // microverse: a page they build and vet themselves against a checklist,
 // that staff approve before it goes public. The microverse shows the path to
 // a festival spot as six planets: Signal → Orbit → Open Night → Showcase →
 // Headline → Festival, with the goals for the next one.
+//
+// Applying through the form gives them a basic page straight away. Adults'
+// pages can be shared at once (not listed on /stage until TAM reviews them),
+// so fans can pledge to see them live: a pledge is someone saying they'll buy
+// a ticket. Pledges count five times a boost on the path, and the artist and
+// their fans can make a poster or a card to share it.
 //
 // Fans discover acts on /stage and boost them (TAM Club members earn a
 // point, and a scout bonus when an act they backed moves up). Staff rate
@@ -31,6 +39,15 @@ export const STAGES = [
   { id: 'headline', name: 'Headline', planet: 'Your own TAM night', blurb: 'Your own night, or a main support, at TAM.' },
   { id: 'festival', name: 'Festival', planet: 'A festival stage', blurb: 'A spot at a TAM festival, like The Best Christmas Ever.' },
 ];
+// What an act can apply for (one or more).
+export const PATHWAYS = {
+  openmic: { name: 'Open Mic', blurb: 'A few songs at TAM Open Mic, The Original Singers Club or the Blues Jam: the quickest way onto a TAM stage.' },
+  showcase: { name: 'Sunday Showcase', blurb: 'A full set at the Sunday Showcase × TAM, to a listening crowd.' },
+  friday: { name: 'Friday Night Live', blurb: 'A Friday night slot with Friday Night Live.' },
+  festival: { name: 'Festivals', blurb: 'A spot at a TAM festival, like The Best Christmas Ever.' },
+  show: { name: 'Propose a show', blurb: 'Your own night at TAM: your idea and your crowd, our stage.' },
+};
+export const PLEDGE_WEIGHT = 5; // a pledged fan counts as five boosts on the path
 export const RATINGS = { music: 'Musicianship', presence: 'Stage presence', original: 'Originality', draw: 'Brings a crowd', ready: 'Ready and reliable' };
 const DAY = 86400000;
 const COOKIE = 'tam_stage';
@@ -40,14 +57,16 @@ function goals(a, s) {
   const r = s.rating;
   const g = {
     orbit: [['Your page is complete', s.page >= 1], ['TAM has reviewed it', a.status === 'live']],
-    open: [['Booked or played a TAM open night', Boolean(a.played && a.played.open)], ['10 boosts from fans', s.boosts >= 10, s.boosts / 10]],
-    showcase: [['Played a TAM open night', Boolean(a.played && a.played.open)], ['25 boosts', s.boosts >= 25, s.boosts / 25], ['A&R rating 3.5 or more', r.avg >= 3.5, r.avg / 3.5]],
-    headline: [['Played a Sunday Showcase', Boolean(a.played && a.played.showcase)], ['75 boosts', s.boosts >= 75, s.boosts / 75], ['A&R rating 4 or more', r.avg >= 4, r.avg / 4], ['Brings a crowd: 3.5 or more', (r.by.draw || 0) >= 3.5, (r.by.draw || 0) / 3.5]],
-    festival: [['Headlined or supported at TAM', Boolean(a.played && a.played.headline)], ['150 boosts', s.boosts >= 150, s.boosts / 150], ['A&R rating 4.2 or more', r.avg >= 4.2, r.avg / 4.2], ['Ready and reliable: 4 or more', (r.by.ready || 0) >= 4, (r.by.ready || 0) / 4]],
+    open: [['Booked or played a TAM open night', Boolean(a.played && a.played.open)], [sup(25), s.support >= 25, s.support / 25]],
+    showcase: [['Played a TAM open night', Boolean(a.played && a.played.open)], [sup(100), s.support >= 100, s.support / 100], ['A&R rating 3.5 or more', r.avg >= 3.5, r.avg / 3.5]],
+    headline: [['Played a Sunday Showcase', Boolean(a.played && a.played.showcase)], [sup(300), s.support >= 300, s.support / 300], ['A&R rating 4 or more', r.avg >= 4, r.avg / 4], ['Brings a crowd: 3.5 or more', (r.by.draw || 0) >= 3.5, (r.by.draw || 0) / 3.5]],
+    festival: [['Headlined or supported at TAM', Boolean(a.played && a.played.headline)], [sup(600), s.support >= 600, s.support / 600], ['A&R rating 4.2 or more', r.avg >= 4.2, r.avg / 4.2], ['Ready and reliable: 4 or more', (r.by.ready || 0) >= 4, (r.by.ready || 0) / 4]],
   };
   return g[STAGES[a.stage + 1] ? STAGES[a.stage + 1].id : ''] || [];
 }
 
+const sup = (n) => `${n} support: a pledged fan is ${PLEDGE_WEIGHT}, a boost is 1`;
+const num = (v) => { const n = parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10); return Number.isFinite(n) ? Math.min(n, 100000000) : null; };
 const slugOf = (s) => String(s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'artist';
 const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex');
 const token = () => crypto.randomBytes(24).toString('base64url');
@@ -56,12 +75,15 @@ const cleanLinks = (v) => (Array.isArray(v) ? v : String(v || '').split(/[\n,]+/
 
 export function stageDomain(ctx) {
   const { db, save, cfg } = ctx;
-  for (const k of ['arArtists', 'arBoosts', 'arLinks', 'arSessions']) if (!Array.isArray(db[k])) db[k] = [];
+  for (const k of ['arArtists', 'arBoosts', 'arLinks', 'arSessions', 'arPledges']) if (!Array.isArray(db[k])) db[k] = [];
   const iso = (t = ctx.now()) => new Date(t).toISOString();
   const today = () => londonToday(new Date(ctx.now()));
   const site = () => cfg.siteUrl;
   const linkLimited = rateLimiter({ max: 8 });
   const boostLimited = rateLimiter({ max: 40 });
+  const pledgeLimited = rateLimiter({ max: 20 });
+  // public: live, or an adult's new page they can share while TAM reviews it (not listed on /stage)
+  const isPublic = (a) => Boolean(a) && (a.status === 'live' || (a.shareable && ['draft', 'review'].includes(a.status)));
 
   const bySlug = (slug) => db.arArtists.find((a) => a.slug === slug);
   const byEmail = (mail) => db.arArtists.find((a) => a.email === mail && !a.jom); // a JOM act's profile belongs to its JOM page, not to an email
@@ -71,6 +93,8 @@ export function stageDomain(ctx) {
   // ---------- signals and the score ----------
   function stats(a) {
     const boosts = db.arBoosts.filter((b) => b.a === a.id);
+    const pl = db.arPledges.filter((p) => p.a === a.id);
+    const pledged = pl.reduce((t, p) => t + p.n, 0);
     const recent = boosts.filter((b) => Date.parse(b.at) > ctx.now() - 14 * DAY).length;
     const before = boosts.filter((b) => Date.parse(b.at) <= ctx.now() - 14 * DAY && Date.parse(b.at) > ctx.now() - 28 * DAY).length;
     const raters = Object.values(a.ratings || {});
@@ -80,14 +104,14 @@ export function stageDomain(ctx) {
     const avg = filled.length ? filled.reduce((t, x) => t + x, 0) / filled.length : 0;
     const checks = pageChecks(a);
     const page = checks.filter((c) => c.done).length / checks.length;
-    return { boosts: boosts.length, recent, momentum: recent - before, views: Object.values(a.views || {}).reduce((t, x) => t + x, 0), shares: a.shares || 0,
+    return { boosts: boosts.length, pledged, pledgers: pl.length, support: boosts.length + pledged * PLEDGE_WEIGHT, recent, momentum: recent - before, views: Object.values(a.views || {}).reduce((t, x) => t + x, 0), shares: a.shares || 0,
       rating: { avg: Math.round(avg * 10) / 10, by, raters: raters.length }, page };
   }
   // 0–100: what the A&R board sorts by. Ratings count most; fans next; then momentum and the page.
   function score(a, s = stats(a)) {
     const live = db.arArtists.filter((x) => x.status === 'live');
-    const most = Math.max(10, ...live.map((x) => db.arBoosts.filter((b) => b.a === x.id).length));
-    const fan = Math.min(1, s.boosts / most);
+    const most = Math.max(25, ...live.map((x) => db.arBoosts.filter((b) => b.a === x.id).length + db.arPledges.filter((p) => p.a === x.id).reduce((t, p) => t + p.n, 0) * PLEDGE_WEIGHT));
+    const fan = Math.min(1, s.support / most);
     const mom = Math.max(0, Math.min(1, (s.recent + Math.max(0, s.momentum)) / 20));
     return Math.round(s.rating.avg / 5 * 50 + fan * 25 + mom * 15 + s.page * 10);
   }
@@ -106,9 +130,20 @@ export function stageDomain(ctx) {
     ];
   }
   // XP: the page, fans, and what TAM has seen. A number to watch go up.
+  // Speed-ups on the path: things they can do now, beyond the checklist.
+  function boosters(a, s) {
+    return [
+      { id: 'posts', label: 'Add 3 posts: clips, photos, your socials', done: (a.posts || []).length >= 3, xp: 30 },
+      { id: 'poster', label: 'Make your poster or card and share it', done: (a.posters || 0) + (a.shares || 0) > 0, xp: 20 },
+      { id: 'pledge5', label: 'Your first 5 pledged fans', done: s.pledged >= 5, xp: 50, part: s.pledged / 5 },
+      { id: 'pledge25', label: '25 pledged fans: that’s a crowd', done: s.pledged >= 25, xp: 100, part: s.pledged / 25 },
+      { id: 'pledge60', label: '60 pledged fans: a headline crowd', done: s.pledged >= 60, xp: 200, part: s.pledged / 60 },
+    ].map((b) => ({ ...b, part: b.done ? 1 : Math.max(0, Math.min(0.99, b.part || 0)) }));
+  }
   function xpOf(a, s) {
     const page = pageChecks(a).filter((c) => c.done).reduce((t, c) => t + c.xp, 0);
-    return page + s.boosts * 2 + Math.min(100, Math.floor(s.views / 5)) + a.stage * 100 + Math.round(s.rating.avg * 20);
+    const more = boosters(a, s).filter((b) => b.done).reduce((t, b) => t + b.xp, 0);
+    return page + more + s.boosts * 2 + s.pledged * 10 + Math.min(100, Math.floor(s.views / 5)) + a.stage * 100 + Math.round(s.rating.avg * 20);
   }
 
   function suggest(a, s = stats(a)) {
@@ -130,7 +165,8 @@ export function stageDomain(ctx) {
     const s = stats(a);
     return {
       slug: a.slug, act: a.act || a.name, plays: a.plays, from: a.from, bio: a.bio, links: a.links || [], youtube: a.youtube, photo: a.photo, vibe: a.vibe || 'stage',
-      stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, xp: xpOf(a, s),
+      stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, pledged: s.pledged, support: s.support, xp: xpOf(a, s), live: a.status === 'live',
+      paths: (a.paths || []).filter((k) => PATHWAYS[k]).map((k) => PATHWAYS[k].name),
       goals: goals(a, s).map(([label, done, part]) => ({ label, done, part: done ? 1 : Math.max(0, Math.min(0.99, part || 0)) })),
       backers: backers(a), href: `/stage/${a.slug}`, posts: (a.posts || []).slice().reverse(),
       jom: a.jom ? { slug: a.jomSlug, group: a.plays } : null,
@@ -151,21 +187,49 @@ export function stageDomain(ctx) {
   }
   function ownerView(a) {
     const s = stats(a);
-    return { ...publicView(a), name: a.name, email: a.email, status: a.status, ownWork: Boolean(a.ownWork), checks: pageChecks(a),
+    return { ...publicView(a), name: a.name, email: a.email, status: a.status, ownWork: Boolean(a.ownWork), checks: pageChecks(a), boosters: boosters(a, s), shareable: isPublic(a),
       canSubmit: a.status === 'draft' && pageChecks(a).every((c) => c.done), views: s.views, shares: s.shares, vibes: VIBES,
       messages: (a.decisions || []).filter((d) => d.message).map((d) => ({ at: d.at, message: d.message })).reverse(), shareUrl: `${site()}/stage/${a.slug}` };
   }
   function staffView(a) {
     const s = stats(a);
     return { ...ownerView(a), id: a.id, source: a.source, createdAt: a.createdAt, submittedAt: a.submittedAt, score: score(a, s), stats: s,
-      suggest: suggest(a, s), ratings: a.ratings || {}, notes: a.notes || [], decisions: a.decisions || [], played: a.played || {}, circuit: a.circuit || '' };
+      suggest: suggest(a, s), ratings: a.ratings || {}, notes: a.notes || [], decisions: a.decisions || [], played: a.played || {}, circuit: a.circuit || '',
+      applications: a.applications || [], age: a.age || '' };
   }
 
   // ---------- applying (from any play request) ----------
+  // The application form's answers: what they want to play, whether they can
+  // sell tickets, and the story that will travel on social media.
+  function applicationOf(input) {
+    const paths = (Array.isArray(input.paths) ? input.paths : []).filter((k) => PATHWAYS[k]);
+    const d = input.draw || {}, st = input.story || {}, sh = input.show || {};
+    const app = {
+      at: iso(), paths,
+      draw: { instagram: num(d.instagram), tiktok: num(d.tiktok), spotify: num(d.spotify), youtube: num(d.youtube), mailing: num(d.mailing), bring: num(d.bring),
+        lastGig: text(d.lastGig, 200), biggest: text(d.biggest, 200), sold: ['yes', 'some', 'no'].includes(d.sold) ? d.sold : '' },
+      story: { hook: text(st.hook, 200), now: text(st.now, 400), filmed: st.filmed === true },
+      show: paths.includes('show') ? { title: text(sh.title, 100), idea: text(sh.idea, 1200), when: text(sh.when, 120), crowd: num(sh.crowd), price: text(sh.price, 40) } : null,
+    };
+    if (paths.includes('show') && !app.show.idea) throw fail(400, 'Tell us your idea for the show.');
+    return app;
+  }
+
   async function apply(input, source) {
     const mail = cleanEmail(input.email);
     if (!mail) throw fail(400, 'Add a valid email address.');
+    const form = source === 'stage' && Array.isArray(input.paths);
+    if (form && !input.paths.some((k) => PATHWAYS[k])) throw fail(400, 'Choose what you’d like to play.');
+    if (form && !['18+', 'under18'].includes(input.age)) throw fail(400, 'Tell us if you’re 18 or over.');
+    const application = form ? applicationOf(input) : null;
     let a = byEmail(mail);
+    const created = !a;
+    if (a && application) {
+      // applying again (for another stage, say) adds to their application; it never changes their page
+      a.applications = (a.applications || []).concat(application).slice(-10);
+      a.paths = [...new Set([...(a.paths || []), ...application.paths])];
+      a.updatedAt = iso();
+    }
     if (!a) {
       const act = text(input.act || input.company, 80) || text(input.name, 80);
       if (!act) throw fail(400, 'Add your name or your act’s name.');
@@ -175,14 +239,18 @@ export function stageDomain(ctx) {
         circuit: text(input.circuit, 120), message: text(input.message, 1200), status: 'draft', stage: 0, source: text(source, 40) || 'tam.tv',
         createdAt: iso(), updatedAt: iso(), views: {}, shares: 0, ratings: {}, notes: [], decisions: [], played: {},
       };
+      if (application) {
+        // the basic page, from the form: theirs to build on. An adult's can be shared at once.
+        Object.assign(a, { from: text(input.from, 80), bio: text(input.about, 1500), applications: [application], paths: application.paths, age: input.age, shareable: input.age === '18+' });
+      }
       db.arArtists.push(a);
     }
     await save();
-    await mailLink(a).catch((err) => console.warn(`Stage link ${a.id}: ${err.message}`));
-    return a;
+    await mailLink(a, created && application).catch((err) => console.warn(`Stage link ${a.id}: ${err.message}`));
+    return { a, created };
   }
 
-  async function mailLink(a) {
+  async function mailLink(a, fresh) {
     const t = token();
     db.arLinks = db.arLinks.filter((l) => Date.parse(l.expires) > ctx.now() && !l.usedAt);
     db.arLinks.push({ hash: hash(t), a: a.id, expires: iso(ctx.now() + 3 * DAY) });
@@ -191,7 +259,8 @@ export function stageDomain(ctx) {
     const url = `${site()}/stage/in?t=${t}`;
     const inner = `<h1 style="font-size:28px;margin:0 0 10px">Your TAM Stage page${a.act ? `: ${e(a.act)}` : ''}</h1>
       <p>Thanks for asking to play at TAM. Every act gets its own page on the TAM Stage: your <b>microverse</b>. It shows your music to TAM’s crowd and your path to a festival spot, planet by planet: Signal, Orbit, Open Night, Showcase, Headline, Festival.</p>
-      <p>Tap below to build it: add a photo, your story, your links and a live video, tick the checklist, and send it to us to review. Fans can boost you once it’s live.</p>
+      ${fresh && a.shareable ? `<p>Your basic page is up already: <a href="${e(site())}/stage/${e(a.slug)}">${e(site())}/stage/${e(a.slug)}</a>. Share it, and make a poster for it, so friends, fans and family can <b>pledge to see you live</b>. Every pledge moves you along the path five times as fast as a boost.</p>` : ''}
+      <p>Tap below to build it: add a photo, your story, your links and a live video, tick the checklist, and send it to us to review. The more you add, and the more pledges you get, the faster you move.</p>
       ${clubButton('Build my page', url)}<p style="font-size:13px;color:#8a7f86">The link works once, for 3 days. Ask for a new one any time at ${e(site())}/stage/apply.</p>`;
     await ctx.mail.send({ to: a.email, subject: 'Your TAM Stage page: build your microverse', html: clubShell(inner, { preheader: 'Your path to a festival spot at TAM starts here.' }), text: `Build your TAM Stage page: ${url}` });
   }
@@ -209,6 +278,12 @@ export function stageDomain(ctx) {
     const c = cookieOf(req);
     const s = c && db.arSessions.find((x) => x.hash === hash(c) && Date.parse(x.expires) > ctx.now());
     return (s && db.arArtists.find((a) => a.id === s.a)) || null;
+  }
+  async function startSession(res, a) {
+    const t = token();
+    db.arSessions = db.arSessions.filter((s) => Date.parse(s.expires) > ctx.now()).concat({ hash: hash(t), a: a.id, expires: iso(ctx.now() + 60 * DAY) });
+    res.setHeader('Set-Cookie', `${COOKIE}=${t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 86400}${secure()}`);
+    await save();
   }
   const mine = (req) => { const a = artistOf(req); if (!a) throw fail(401, 'Open your page from the link we emailed you.'); return a; };
 
@@ -239,7 +314,9 @@ export function stageDomain(ctx) {
       if (linkLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
       const b = await readJson(req, 8 * 1024);
       if (b.consent !== true) throw fail(400, 'Tick the box so we can email you about playing at TAM.');
-      await apply(b, 'stage');
+      const { a, created } = await apply(b, 'stage');
+      // a brand-new applicant goes straight to their basic page on this device; anyone else gets the emailed link
+      if (created) { await startSession(res, a); return send(res, 201, { ok: true, next: '/stage/me?welcome=1' }); }
       send(res, 201, { ok: true });
     });
     r.post('/api/stage/in', async (req, res) => {
@@ -248,10 +325,7 @@ export function stageDomain(ctx) {
       const a = l && db.arArtists.find((x) => x.id === l.a);
       if (!a) throw fail(400, 'That link has expired or was already used. Ask for a new one on the apply page.');
       l.usedAt = iso();
-      const t = token();
-      db.arSessions = db.arSessions.filter((s) => Date.parse(s.expires) > ctx.now()).concat({ hash: hash(t), a: a.id, expires: iso(ctx.now() + 60 * DAY) });
-      res.setHeader('Set-Cookie', `${COOKIE}=${t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 86400}${secure()}`);
-      await save();
+      await startSession(res, a);
       send(res, 200, { ok: true, next: '/stage/me' });
     });
     r.post('/api/stage/signout', async (req, res) => {
@@ -339,7 +413,7 @@ export function stageDomain(ctx) {
     // ----- fans -----
     r.post('/api/stage/:slug/boost', async (req, res, { params }) => {
       const a = bySlug(params.slug);
-      if (!a || a.status !== 'live') throw fail(404, 'No such act.');
+      if (!isPublic(a)) throw fail(404, 'No such act.');
       if (boostLimited(req)) throw fail(429, 'That’s a lot of boosts. Try again later.');
       const b = await readJson(req, 1024);
       const id = text(b.id, 80);
@@ -357,8 +431,27 @@ export function stageDomain(ctx) {
     });
     r.post('/api/stage/:slug/share', async (req, res, { params }) => {
       const a = bySlug(params.slug);
-      if (a && a.status === 'live') { a.shares = (a.shares || 0) + 1; save(); }
+      const b = await readJson(req, 256).catch(() => ({}));
+      if (isPublic(a)) { if (b.poster) a.posters = (a.posters || 0) + 1; else a.shares = (a.shares || 0) + 1; save(); }
       send(res, 200, { ok: true });
+    });
+    // a pledge: "I'll come and see them live". The email stays with TAM, to tell them when the act plays.
+    r.post('/api/stage/:slug/pledge', async (req, res, { params }) => {
+      const a = bySlug(params.slug);
+      if (!isPublic(a)) throw fail(404, 'No such act.');
+      if (pledgeLimited(req)) throw fail(429, 'That’s a lot of pledges. Try again later.');
+      const b = await readJson(req, 2048);
+      const mail = cleanEmail(b.email);
+      if (!mail) throw fail(400, 'Add your email, so we can tell you when they play.');
+      if (b.consent !== true) throw fail(400, 'Tick the box so we can email you when they play at TAM.');
+      if (mail === a.email) throw fail(400, 'That’s the act’s own email: share your page so fans can pledge.');
+      const n = Math.max(1, Math.min(10, parseInt(b.n, 10) || 1));
+      const was = db.arPledges.find((p) => p.a === a.id && p.email === mail);
+      if (was) Object.assign(was, { n, name: text(b.name, 40) || was.name, at: iso() });
+      else db.arPledges.push({ id: newId('PL', 6), a: a.id, email: mail, name: text(b.name, 40), n, at: iso() });
+      a.updatedAt = iso();
+      await save();
+      send(res, 200, { pledged: stats(a).pledged, updated: Boolean(was) });
     });
 
     // ----- A&R: staff -----
@@ -366,7 +459,7 @@ export function stageDomain(ctx) {
     r.get('/api/stage/manage', (req, res) => {
       const who = guard(req);
       const list = db.arArtists.map(staffView).sort((x, y) => (y.status === 'review') - (x.status === 'review') || y.score - x.score);
-      send(res, 200, { me: { name: who.name }, artists: list, stages: STAGES, ratings: RATINGS, vibes: VIBES,
+      send(res, 200, { me: { name: who.name }, artists: list, stages: STAGES, ratings: RATINGS, vibes: VIBES, pathways: PATHWAYS,
         counts: Object.fromEntries(['draft', 'review', 'live', 'paused', 'declined'].map((k) => [k, db.arArtists.filter((a) => a.status === k).length])) });
     });
     r.post('/api/stage/manage/:id', async (req, res, { params }) => {
@@ -415,6 +508,14 @@ export function stageDomain(ctx) {
       a.updatedAt = iso();
       await save();
       send(res, 200, { artist: staffView(a) });
+    });
+    // who pledged for an act: to tell them when it's on sale
+    r.get('/api/stage/manage/:id/pledges.csv', (req, res, { params }) => {
+      guard(req);
+      const a = db.arArtists.find((x) => x.id === params.id);
+      if (!a) throw fail(404, 'No such artist.');
+      const rows = [['Name', 'Email', 'People', 'Pledged'], ...db.arPledges.filter((p) => p.a === a.id).map((p) => [p.name, p.email, p.n, p.at.slice(0, 10)])];
+      send(res, 200, rows.map((r0) => r0.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="pledges-${a.slug}.csv"` });
     });
     r.post('/api/stage/import-showcase', async (req, res) => {
       const who = guard(req);
@@ -491,5 +592,5 @@ export function stageDomain(ctx) {
   const jomStatus = (slug) => { const a = byJom(slug); return a && !a.optedOut ? { slug: a.slug, status: a.status, planet: STAGES[a.stage].name, href: `/stage/${a.slug}` } : null; };
 
   const live = () => db.arArtists.filter((a) => a.status === 'live').map(publicView);
-  return { routes, apply, publicView, ownerView, artistOf, bySlug, live, viewed, progress, stats, score, suggest, linkJom, syncJom, unlinkJom, jomStatus };
+  return { routes, apply, publicView, ownerView, artistOf, bySlug, isPublic, live, viewed, progress, stats, score, suggest, linkJom, syncJom, unlinkJom, jomStatus };
 }

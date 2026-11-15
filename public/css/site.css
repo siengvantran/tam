@@ -1629,3 +1629,32 @@ body.lv-screen.idle { cursor: none; }
 .jm-mom-form { display: grid; gap: 12px; } .jm-mom-pledge { border: 1px solid #7a2a33; border-radius: 14px; padding: 10px 14px; display: grid; gap: 8px; } .jm-mom-pledge legend { padding: 0 6px; }
 .jm-mom-pledge select { padding: 8px 10px; border-radius: 10px; background: var(--night); color: var(--ink); border: 1px solid var(--line); font: inherit; max-width: 180px; }
 .jmm-moms { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; } .jmm-mom { display: grid; gap: 6px; } .jmm-mom img, .jmm-mom video { border-radius: 10px; max-width: 100%; height: auto; }
+
+/* TAM Stage: apply to play, pledges, the poster maker */
+.st-steps { list-style: none; padding: 0; display: grid; gap: 10px; margin: 0 0 24px; }
+.st-steps li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+.st-steps b { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: #120a0a; }
+.st-steps strong { display: block; } .st-steps span { color: var(--ink-dim); font-size: 15px; }
+.st-h { font-size: 22px; margin: 22px 0 10px; }
+.st-form fieldset { border: 0; padding: 0; margin: 0 0 22px; min-width: 0; }
+.st-form legend { font: 400 26px/1.1 var(--f-display); letter-spacing: .03em; color: var(--gold); margin-bottom: 6px; }
+.st-paths { display: grid; gap: 8px; }
+.st-pathopt { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 1px solid rgba(232, 199, 122, .3); border-radius: 14px; cursor: pointer; background: rgba(255, 255, 255, .03); }
+.st-pathopt:has(input:checked) { border-color: var(--pink); background: color-mix(in srgb, var(--pink) 12%, transparent); }
+.st-pathopt input { margin-top: 4px; accent-color: var(--pink); }
+.st-pathopt b { display: block; } .st-pathopt small { color: var(--ink-dim); font-size: 14px; }
+.st-pledge { border: 1px solid var(--pink); border-radius: 18px; padding: 18px; margin: 0 0 24px; background: color-mix(in srgb, var(--pink) 8%, transparent); scroll-margin-top: 90px; }
+.st-pledge h2 { margin-top: 0; } .st-pledge form { display: grid; gap: 10px; }
+.st-pledged { margin: 10px 0 0; } .st-pledged b { font: 400 34px/1 var(--f-display); color: var(--pink); }
+.st-card-dlg { width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); border: 1px solid var(--gold); border-radius: 18px; background: #0d0710; color: var(--ink); padding: 16px; }
+.st-card-dlg::backdrop { background: rgba(0, 0, 0, .75); }
+.st-card-top { display: flex; justify-content: space-between; align-items: center; } .st-card-top h2 { margin: 0; }
+.st-card-tabs { display: flex; gap: 6px; margin: 10px 0 4px; flex-wrap: wrap; }
+.st-card-tabs button { border: 1px solid rgba(232, 199, 122, .4); background: none; color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.st-card-tabs button.on { background: var(--gold); color: #120a0a; }
+.st-card-dlg canvas { display: block; width: auto; max-width: 100%; max-height: 58dvh; margin: 8px auto 12px; border-radius: 10px; }
+.anr-paths { color: var(--gold); }
+.anr-app { border: 1px solid rgba(232, 199, 122, .3); border-radius: 14px; padding: 12px 14px; margin: 12px 0; }
+.anr-app h3 { margin-top: 0; } .anr-app p { margin: 6px 0; }
+.anr-dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; margin: 8px 0; } .anr-dl dt { color: var(--ink-dim); } .anr-dl dd { margin: 0; }
+.anr-show { background: rgba(255, 229, 0, .07); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
