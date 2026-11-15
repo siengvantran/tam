@@ -14,6 +14,7 @@ const KINDS = [
   ['search', /google|bing|duckduckgo|yahoo|ecosia|brave|startpage/],
   ['social', /instagram|facebook|fb\.|tiktok|twitter|t\.co|x\.com|youtube|youtu\.be|linkedin|threads|whatsapp|reddit|bsky/],
   ['tickets', /eventbrite|dice\.fm|skiddle|songkick|ticket/],
+  ['immersive', /immersive/], // immersive.tam.tv, where the room is shown in a frame
   ['tam', /tam\.tv|mercatometropolitano/],
 ];
 export function classify({ utm = '', medium = '', referrer = '', host = '' }) {

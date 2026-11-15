@@ -80,6 +80,7 @@ export function send(res, status, body, headers = {}) {
   if (res.headersSent) return;
   let payload = body;
   const h = { ...SECURITY_HEADERS, ...headers };
+  for (const k of Object.keys(h)) if (h[k] === null) delete h[k];
   if (body !== null && typeof body === 'object' && !Buffer.isBuffer(body)) {
     payload = JSON.stringify(body);
     h['Content-Type'] = h['Content-Type'] || 'application/json; charset=utf-8';
@@ -88,6 +89,9 @@ export function send(res, status, body, headers = {}) {
   res.writeHead(status, h);
   res.end(res.req && res.req.method === 'HEAD' ? undefined : payload);
 }
+
+// The policy, with the pages that may show this one in a frame.
+export const cspFramedBy = (...origins) => `${SECURITY_HEADERS['Content-Security-Policy']}; frame-ancestors 'self' ${origins.join(' ')}`;
 
 export const html = (res, body, status = 200, headers = {}) =>
   send(res, status, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', ...headers });
