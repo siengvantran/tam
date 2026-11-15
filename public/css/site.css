@@ -1549,3 +1549,4 @@ body.xm-playing .xm-hero { box-shadow: inset 0 -2px 0 rgba(255,215,120,calc(var(
 .jm-date div { padding: 14px 16px; display: grid; gap: 4px; } .jm-date b { font-size: 20px; } .jm-date span { color: var(--ink-dim); font-size: 15px; }
 .jm-xmas { background: radial-gradient(120% 140% at 100% 0, rgba(255, 59, 78, .25), transparent 55%), var(--panel); border: 1px solid #7a2a33; border-radius: 24px; padding: clamp(20px, 4vw, 40px); }
 .jm-xmas form { display: grid; gap: 12px; margin-top: 14px; }
+.jm-date .jm-full { color: var(--gold); }

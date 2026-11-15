@@ -275,19 +275,19 @@
       "date": "2026-12-13",
       "title": "JOM Junior Open Mic",
       "time": "12pm to 2pm",
-      "who": "For performers aged 4 to 15",
+      "who": "Ages 4 to 15",
       "venue": "Hootananny Brixton, 95 Effra Rd, London SW2 1DF",
-      "contact": "jomjunioropenmic@gmail.com",
-      "poster": "/img/jom/jom-junior-2026-12-13.jpg"
+      "poster": "/img/jom/jom-junior-2026-12-13.jpg",
+      "note": "Every performing slot is taken: come and watch, and cheer them on."
     },
     {
       "date": "2026-12-13",
       "title": "JOM Youth Open Mic",
       "time": "2pm to 7:30pm",
-      "who": "For performers aged 12 to 18",
+      "who": "Ages 12 to 18",
       "venue": "Hootananny Brixton, 95 Effra Rd, London SW2 1DF",
-      "contact": "jomjunioropenmic@gmail.com",
-      "poster": "/img/jom/jom-youth-2026-12-13.jpg"
+      "poster": "/img/jom/jom-youth-2026-12-13.jpg",
+      "note": "Every performing slot is taken: come and watch, and cheer them on."
     }
   ],
   "banners": [
@@ -319,5 +319,6 @@
     "title": "Play The Best Christmas Ever 2026",
     "lede": "TAM’s Christmas festival runs through December, and there’ll be a stage for JOM’s young musicians. The date is to be announced: apply now and we’ll be in touch.",
     "note": "A parent or guardian applies for under-18s. We pick acts with JOM, and pledges on each act’s page help us decide."
-  }
+  },
+  "venues": "JOM runs its open mics at four venues around London, TAM among them. This one is at Hootananny Brixton."
 }

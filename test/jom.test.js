@@ -129,8 +129,10 @@ test('JOM hub: a carousel of banners and acts, the next JOM dates, and applicati
   assert.match(hub, /<script type="module" src="\/js\/carousel\.js">/);
   // the next JOM dates, at Hootananny Brixton
   assert.match(hub, /id="next-dates"[\s\S]*JOM Junior Open Mic[\s\S]*12pm to 2pm[\s\S]*Hootananny Brixton, 95 Effra Rd/);
-  assert.match(hub, /JOM Youth Open Mic[\s\S]*2pm to 7:30pm[\s\S]*aged 12 to 18/);
-  assert.match(hub, /mailto:jomjunioropenmic@gmail\.com/);
+  assert.match(hub, /JOM Youth Open Mic[\s\S]*2pm to 7:30pm[\s\S]*Ages 12 to 18[\s\S]*come and watch/);
+  // the slots are full: no address for players to email (Vivian, 15 Nov), and JOM plays four venues
+  assert.doesNotMatch(hub, /jomjunioropenmic|To play, email/);
+  assert.match(hub, /four venues around London, TAM among them/);
   assert.match(hub, /Next JOM dates<\/span><b>JOM Junior Open Mic and JOM Youth Open Mic<\/b>/); // the hero points there once TAM's session has passed
   // the call to play The Best Christmas Ever
   assert.match(hub, /id="christmas"[\s\S]*date to be announced[\s\S]*Play The Best Christmas Ever 2026[\s\S]*id="jm-xmas"/);

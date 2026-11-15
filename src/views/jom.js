@@ -53,7 +53,7 @@ function hub(ctx, req, jom) {
   const top = acts.filter((a) => a.pledges).sort((x, y) => y.pledges - x.pledges).slice(0, 6);
   const groups = Object.entries(J.groups).map(([k, v]) => [v, acts.filter((a) => a.group === k)]).filter(([, l]) => l.length);
   const nextCard = next
-    ? html`<div class="jm-next"><span class="label">Next JOM session at TAM</span><b>${next.title}</b><span>${when(next)} · Doors ${next.doors}</span>
+    ? html`<div class="jm-next"><span class="label">Next JOM session at TAM</span><b>${next.title}</b><span>${when(next)} · ${next.doors} to ${next.ends}</span>
         <a class="btn hot" href="${ctx.cfg.siteUrl}/events/${next.slug}#book">Get free tickets</a></div>`
     : later.length ? html`<div class="jm-next"><span class="label">Next JOM dates</span><b>${later.map((u) => u.title).join(' and ')}</b><span>${dayOf(later[0].date)} · ${later[0].venue.split(',')[0]}</span>
         <a class="btn hot" href="#next-dates">See the dates</a></div>`
@@ -88,10 +88,10 @@ function hub(ctx, req, jom) {
       ${J.sessions.map((s) => html`<p class="small">Played at TAM: <a href="${ctx.cfg.siteUrl}/events/${s.slug}">${s.title}, ${longDate(s.date)}</a></p>`)}</div>
       <div class="formbox"><h2>Parents and guardians</h2><p>Every act has a page that stays, so they can share it for years. If you’re a parent or guardian of someone in the act, open their page and tap <b>Claim this page</b>. We check every claim, then you can add photos, a short bio and links to their music.</p>
       <p class="small muted">We check every change before it goes on the page. We never show ages, schools or where anyone lives, and you can ask us to take a page down at any time. <a href="${L(req, '/sign-in')}">Already claimed? Sign in</a></p></div></div></section>
-    ${later.length ? html`<section class="section" id="next-dates"><div class="wrap"><h2 class="chrome">Next JOM dates</h2>
+    ${later.length ? html`<section class="section" id="next-dates"><div class="wrap"><h2 class="chrome">Come and see JOM next</h2>
       <div class="jm-dates">${later.map((u) => html`<article class="jm-date">${u.poster ? html`<img src="${u.poster}" alt="${u.title}: ${dayOf(u.date)}, ${u.time}, ${u.venue}" loading="lazy" width="640" height="640">` : ''}
-        <div><b>${u.title}</b><span>${longDate(u.date)} · ${u.time}</span><span>${u.venue}</span><span>${u.who}. To play, email <a href="mailto:${u.contact}">${u.contact}</a></span></div></article>`)}</div>
-      <p class="small muted">JOM’s open mics happen at Hootananny Brixton as well as TAM. Every JOM night at TAM is on <a href="${ctx.cfg.siteUrl}/whats-on">TAM’s listings</a>.</p></div></section>` : ''}`,
+        <div><b>${u.title}</b><span>${longDate(u.date)} · ${u.time}</span><span>${u.venue}</span><span>${u.who}</span>${u.note ? html`<span class="jm-full">${u.note}</span>` : ''}</div></article>`)}</div>
+      ${J.venues ? html`<p class="small muted">${J.venues} Every JOM night at TAM is on <a href="${ctx.cfg.siteUrl}/whats-on">TAM’s listings</a>.</p>` : ''}</div></section>` : ''}`,
   });
 }
 
