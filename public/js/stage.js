@@ -11,7 +11,12 @@ const STAGES = ['Signal', 'Orbit', 'Open Night', 'Showcase', 'Headline', 'Festiv
 const apply = $('#st-apply');
 if (apply) {
   const showBox = apply.querySelector('[data-show-only]');
-  apply.addEventListener('change', () => { showBox.hidden = !apply.querySelector('input[name="paths"][value="show"]').checked; });
+  apply.addEventListener('change', (e) => {
+    showBox.hidden = !apply.querySelector('input[name="paths"][value="show"]').checked;
+    // the Junior & Youth Open Mic is for under-18s: choosing it sets the age, and a parent applies
+    if (e.target.value === 'jom' && e.target.checked) apply.age.value = 'under18';
+    apply.querySelector('[data-u18-note]').hidden = apply.age.value !== 'under18';
+  });
   apply.addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = new FormData(apply);

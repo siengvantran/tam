@@ -2,7 +2,7 @@
 //
 // Every request to play at TAM (the Sunday Showcase call-out, the musician
 // enquiry form, Ask TAM, or the application at /stage/apply, where they
-// choose Open Mic, Sunday Showcase, Friday Night Live, Festivals or propose a
+// choose Open Mic, Junior & Youth Open Mic, Sunday Showcase, Friday Night Live, Festivals or propose a
 // show, and tell us about their crowd and their story) becomes an artist with their own
 // microverse: a page they build and vet themselves against a checklist,
 // that staff approve before it goes public. The microverse shows the path to
@@ -42,6 +42,7 @@ export const STAGES = [
 // What an act can apply for (one or more).
 export const PATHWAYS = {
   openmic: { name: 'Open Mic', blurb: 'A few songs at TAM Open Mic, The Original Singers Club or the Blues Jam: the quickest way onto a TAM stage.' },
+  jom: { name: 'Junior & Youth Open Mic', blurb: 'JOM with JOM Youth Music: a stage for young musicians under 18. A parent or guardian applies with them.' },
   showcase: { name: 'Sunday Showcase', blurb: 'A full set at the Sunday Showcase × TAM, to a listening crowd.' },
   friday: { name: 'Friday Night Live', blurb: 'A Friday night slot with Friday Night Live.' },
   festival: { name: 'Festivals', blurb: 'A spot at a TAM festival, like The Best Christmas Ever.' },
