@@ -197,7 +197,28 @@ export function jomDomain(ctx) {
     // ----- parents: their acts, and changes for TAM to approve -----
     r.get('/api/jom/me', (req, res) => {
       const email = needParent(req);
-      send(res, 200, { email, acts: mine(email).map((a) => ({ ...a, pending: pendingFor(a.slug) || null, rejected: db.jomPending.filter((p) => p.act === a.slug && p.status === 'rejected').slice(-1)[0] || null })) });
+      send(res, 200, { email, acts: mine(email).map((a) => ({ ...a, pending: pendingFor(a.slug) || null, rejected: db.jomPending.filter((p) => p.act === a.slug && p.status === 'rejected').slice(-1)[0] || null,
+        stage: ctx.stage ? ctx.stage.jomStatus(a.slug) : null })) });
+    });
+    // a TAM artist profile on the TAM Stage: opportunities across TAM, up to a festival spot
+    r.post('/api/jom/me/:slug/stage', async (req, res, { params }) => {
+      const email = needParent(req);
+      const a = mine(email).find((x) => x.slug === params.slug);
+      if (!a) throw fail(403, 'That isn’t one of your acts.');
+      if (!ctx.stage) throw fail(503, 'The TAM Stage isn’t running.');
+      const b = await readJson(req, 1024);
+      const o = (db.jomActs[a.slug] = db.jomActs[a.slug] || {});
+      if (b.optIn === true) {
+        if (b.consent !== true) throw fail(400, 'Tick the box to confirm.');
+        const claim = db.jomClaims.filter((x) => x.act === a.slug && x.email === email && x.status === 'approved').pop();
+        ctx.stage.linkJom(a, email, claim ? claim.name : '');
+        o.stage = { at: iso(), by: email, consent: 'I’m their parent or guardian (or I’m in the act and 18+). I agree to TAM showing this act on the TAM Stage, using what TAM has approved on its JOM page, and contacting me about opportunities to play at TAM, including The Best Christmas Ever.' };
+      } else if (b.optIn === false) {
+        ctx.stage.unlinkJom(a.slug);
+        o.stage = null;
+      } else throw fail(400, 'Opt in or out.');
+      await save();
+      send(res, 200, { stage: ctx.stage.jomStatus(a.slug) });
     });
     r.post('/api/jom/me/:slug/photo', async (req, res, { params }) => {
       const email = needParent(req);
@@ -260,7 +281,7 @@ export function jomDomain(ctx) {
         me: { name: who.name }, groups: J.groups, relations: RELATIONS,
         claims: db.jomClaims.filter((x) => x.status === 'pending').map((x) => ({ ...x, actName: (acts.find((a) => a.slug === x.act) || {}).name })),
         changes: db.jomPending.filter((x) => x.status === 'pending').map((x) => ({ ...x, current: acts.find((a) => a.slug === x.act) })),
-        acts: acts.map((a) => ({ ...a, parents: (db.jomActs[a.slug] || {}).claimedBy || [] })).sort((x, y) => y.pledges - x.pledges),
+        acts: acts.map((a) => ({ ...a, parents: (db.jomActs[a.slug] || {}).claimedBy || [], stage: ctx.stage ? ctx.stage.jomStatus(a.slug) : null })).sort((x, y) => y.pledges - x.pledges),
         pledges: db.jomPledges.reduce((t, p) => t + p.n, 0),
         applications: db.jomApplications.slice().reverse().map((x) => ({ ...x, pledges: x.slug ? (acts.find((a) => a.slug === x.slug) || {}).pledges || 0 : 0 })),
       });
@@ -294,6 +315,7 @@ export function jomDomain(ctx) {
         const gone = (o.photos || []).filter((u) => !p.changes.photos.includes(u))
           .concat((o.posts || []).filter((x) => x.src && !next.some((y) => y.src === x.src)).map((x) => x.src));
         Object.assign(o, { name: p.changes.name, bio: p.changes.bio, links: p.changes.links, photos: p.changes.photos, posts: next });
+        if (ctx.stage && o.stage) ctx.stage.syncJom(act(p.act)); // their TAM artist profile follows the approved page
         Object.assign(p, { status: 'approved', by: who.name, decidedAt: iso() });
         for (const u of gone) await dropFile(u);
         tell(p.by, 'JOM × TAM: your update is live', 'Your update is live', `<p>Your changes to ${e(o.name || p.act)}’s page are now on <a href="${e(site())}/jom/${e(p.act)}">their page</a>.</p>`);
