@@ -90,11 +90,24 @@ function draw(a) {
         <label class="field"><span>Your page’s vibe</span><select name="vibe">${Object.entries(a.vibes).map(([k, v]) => `<option value="${k}" ${a.vibe === k ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></label>
         <label class="check"><input type="checkbox" name="ownWork" ${a.ownWork ? 'checked' : ''}> Everything here is mine to share, and I’m 18+ (or have a parent’s OK)</label>
         <button class="btn hot" type="submit">Save</button><p class="err" role="status" aria-live="polite"></p></form></section>
+      <section class="cl-panel st-posts-edit"><h2>Your posts</h2><p class="small">Add your Instagram, TikTok, Facebook or YouTube posts, or upload your own photos and videos. They show on your page under your story.</p>
+        <form id="st-post"><label class="field"><span>Paste a link</span><input name="url" placeholder="instagram.com/p/…, tiktok.com/@you/video/…, facebook.com/…, youtu.be/…"></label>
+          <label class="field"><span>A line about it (optional)</span><input name="caption" maxlength="200"></label>
+          <div class="ar-row"><button class="btn hot" type="submit">Add the link</button><label class="btn ghost">Upload a photo<input type="file" accept="image/*" data-up="photo" class="sr"></label>
+          <label class="btn ghost">Upload a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="video" class="sr"></label></div>
+          <progress max="100" value="0" hidden></progress><p class="err" role="status" aria-live="polite"></p><p class="small muted">Videos up to 60 MB (MP4 plays everywhere).</p></form>
+        <ul class="plain st-postlist">${a.posts.map((p) => `<li><span>${esc({ youtube: 'YouTube video', instagram: 'Instagram post', tiktok: 'TikTok', facebook: 'Facebook post', image: 'Photo', video: 'Video' }[p.kind] || 'Post')}${p.caption ? `: ${esc(p.caption)}` : ''}</span><button class="sh-x" type="button" data-rm-post="${esc(p.id)}" aria-label="Remove">×</button></li>`).join('') || '<li class="muted">No posts yet.</li>'}</ul></section>
     </div></div>`;
 }
 if (me) {
   api('/api/stage/me').then((r) => draw(r.artist)).catch((err) => { me.innerHTML = `<h1 class="chrome">Your TAM Stage page</h1><p>${esc(err.message)}</p><p><a class="btn hot" href="/stage/apply">Get a new link</a></p>`; });
   me.addEventListener('submit', async (e) => {
+    if (e.target.id === 'st-post') {
+      e.preventDefault();
+      try { draw((await api('/api/stage/me/post', { method: 'POST', body: { url: e.target.url.value, caption: e.target.caption.value } })).artist); }
+      catch (err) { formMessage(e.target, err.message); }
+      return;
+    }
     if (e.target.id !== 'st-edit') return;
     e.preventDefault();
     const f = new FormData(e.target);
@@ -105,12 +118,36 @@ if (me) {
     } catch (err) { formMessage(e.target, err.message); }
   });
   me.addEventListener('change', async (e) => {
+    const up = e.target.closest('[data-up]');
+    if (up && up.files[0]) {
+      const f = up.closest('form'), file = up.files[0];
+      try {
+        if (up.dataset.up === 'photo') draw((await api('/api/stage/me/post-photo', { method: 'POST', body: { image: await shrinkImage(file, 1600, 0.85), caption: f.caption.value } })).artist);
+        else {
+          if (file.size > 60 * 1024 * 1024) throw new Error('Videos can be up to 60 MB. Trim it, or post it and paste the link.');
+          const bar = f.querySelector('progress'); bar.hidden = false;
+          const r = await new Promise((ok, no) => {
+            const x = new XMLHttpRequest();
+            x.open('POST', `/api/stage/me/post-video?caption=${encodeURIComponent(f.caption.value)}`);
+            x.setRequestHeader('Content-Type', file.type || 'video/mp4');
+            x.upload.onprogress = (p) => { if (p.lengthComputable) bar.value = Math.round((p.loaded / p.total) * 100); };
+            x.onload = () => { try { const j = JSON.parse(x.responseText); x.status < 300 ? ok(j) : no(new Error(j.error)); } catch { no(new Error(`Upload failed (${x.status}).`)); } };
+            x.onerror = () => no(new Error('Upload failed. Check your connection and try again.'));
+            x.send(file);
+          });
+          draw(r.artist);
+        }
+      } catch (err) { formMessage(f, err.message); }
+      return;
+    }
     if (!e.target.matches('[data-photo]') || !e.target.files[0]) return;
     try { draw((await api('/api/stage/me/photo', { method: 'POST', body: { photo: await shrinkImage(e.target.files[0], 1000, 0.84) } })).artist); }
     catch (err) { alert(err.message); }
   });
   me.addEventListener('click', async (e) => {
     if (e.target.closest('[data-submit]')) { try { draw((await api('/api/stage/me/submit', { method: 'POST', body: {} })).artist); track('stage_submit'); } catch (err) { alert(err.message); } }
+    const rm = e.target.closest('[data-rm-post]');
+    if (rm && confirm('Remove this post from your page?')) { try { draw((await api(`/api/stage/me/post/${rm.dataset.rmPost}/remove`, { method: 'POST', body: {} })).artist); } catch (err) { alert(err.message); } }
     if (e.target.closest('[data-copy-me]')) { try { await navigator.clipboard.writeText(A.shareUrl); e.target.textContent = 'Copied'; } catch { prompt('Your link', A.shareUrl); } }
     if (e.target.closest('[data-out]')) { await api('/api/stage/signout', { method: 'POST', body: {} }); location.href = '/stage'; }
   });

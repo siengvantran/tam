@@ -5,14 +5,13 @@
 // Everything else on showcase.tam.tv goes to the same page on www.tam.tv.
 // Words are in content/showcases.json → microsite.
 
-import { html } from './html.js';
+import { html, raw } from './html.js';
+import { embedHtml } from '../lib/media-posts.js';
 import { html as respond, redirect, send } from '../lib/http.js';
 import { layout, when, nightHref } from './layout.js';
 import { lineupCarousel, showcaseLockup } from './showcases.js';
 
-const embed = (w) => (w.kind === 'youtube'
-  ? html`<div class="aw-embed aw-yt"><iframe src="https://www.youtube-nocookie.com/embed/${w.videoId}" title="YouTube video" loading="lazy" allowfullscreen></iframe></div>`
-  : html`<div class="aw-embed aw-ig"><iframe src="https://www.instagram.com/${w.postType || 'p'}/${w.postId}/embed" title="Instagram post" loading="lazy" scrolling="no"></iframe></div>`);
+const embed = (w) => raw(embedHtml(w)); // src/lib/media-posts.js
 
 function home(ctx, showcase) {
   const W = ctx.cfg.siteUrl, s = ctx.content.showcases, m = s.microsite;

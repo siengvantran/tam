@@ -56,7 +56,7 @@ const SECURITY_HEADERS = {
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://i.ytimg.com https://img.evbuc.com https://cdn.evbuc.com",
     "media-src 'self' blob:",
-    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.instagram.com", // Instagram posts on artists' walls
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.instagram.com https://www.tiktok.com https://www.facebook.com", // artists' posts on their walls (src/lib/media-posts.js)
     "connect-src 'self'",
     "form-action 'self' https://checkout.stripe.com",
     "base-uri 'self'",
@@ -174,7 +174,7 @@ export const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif',
-  '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg', '.txt': 'text/plain; charset=utf-8',
+  '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.txt': 'text/plain; charset=utf-8',
   '.ics': 'text/calendar; charset=utf-8', '.woff2': 'font/woff2', '.xml': 'application/xml; charset=utf-8',
 };
 
