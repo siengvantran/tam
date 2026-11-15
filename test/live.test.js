@@ -24,7 +24,7 @@ test('the big screen and self check-in: TAM × JOM, counts by act, follow and pl
   const screen = await (await fetch(`${B}/screen${q}`)).text();
   assert.match(screen, /class="lv-screen lv-jom"/);
   assert.match(screen, /\/img\/jom\/jom-logo\.png/);
-  assert.match(screen, /Scan to check in/);
+  assert.match(screen, /Scan to check(&nbsp;| )in/);
   assert.match(screen, /\/live\/qr\.svg\?u=/);
   assert.match(screen, /JOM Youth Music[\s\S]*BBC Make A Difference Awards[\s\S]*Finalist 2023/);
   const qr = await fetch(`${B}/live/qr.svg?u=${encodeURIComponent(`${B}/checkin`)}`);
