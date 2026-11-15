@@ -102,6 +102,15 @@ test('JOM at TAM: permanent act pages, pledges, parents claim and update (TAM ap
   assert.match(live, /looked after by Yellowhammer’s parent or guardian/);
   assert.doesNotMatch(live, /pat@family\.test/);
 
+  // staff can clear pledges (after testing): one act's, then everyone's
+  assert.equal((await call('/api/jom/manage/pledges/reset', { method: 'POST', body: { all: true } })).status, 401);
+  assert.equal((await call('/api/jom/manage/pledges/reset', { method: 'POST', headers: staff, body: {} })).status, 400);
+  await call('/api/jom/colette/pledge', { method: 'POST', body: { id, n: 2 } });
+  assert.equal((await call('/api/jom/manage/pledges/reset', { method: 'POST', headers: staff, body: { slug: 'yellowhammer' } })).body.removed, 2);
+  assert.match((await call('/jom/colette')).body, /data-count>2</);
+  assert.equal((await call('/api/jom/manage/pledges/reset', { method: 'POST', headers: staff, body: { all: true } })).body.removed, 1);
+  assert.match((await call('/jom/yellowhammer')).body, /data-count>0</);
+
   // a concern lands with the team; staff can hide a page
   assert.equal((await call('/api/jom/the-whippets/concern', { method: 'POST', body: { message: 'Please take this down' } })).status, 201);
   assert.ok(app.ctx.db.enquiries.some((x) => x.source === 'jom' && /The Whippets/.test(x.message)));
