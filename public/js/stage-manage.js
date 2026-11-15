@@ -34,7 +34,7 @@ async function start() {
 
 const card = (a) => `<button type="button" class="anr-card" data-open="${a.id}">
   ${a.photo ? `<img src="${esc(a.photo)}" alt="" width="48" height="48">` : '<span class="anr-noimg">✦</span>'}
-  <span><b>${esc(a.act)}</b><small>${esc(a.plays || '')}</small><small>✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
+  <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
   ${a.suggest.action !== 'wait' && ACTIONS[a.suggest.action] ? `<em class="anr-sug ${a.suggest.action}">${ACTIONS[a.suggest.action]}</em>` : ''}</span>
   <i class="anr-score" title="Score">${a.score}</i></button>`;
 

@@ -64,7 +64,7 @@ export function stageDomain(ctx) {
   const boostLimited = rateLimiter({ max: 40 });
 
   const bySlug = (slug) => db.arArtists.find((a) => a.slug === slug);
-  const byEmail = (mail) => db.arArtists.find((a) => a.email === mail);
+  const byEmail = (mail) => db.arArtists.find((a) => a.email === mail && !a.jom); // a JOM act's profile belongs to its JOM page, not to an email
   const RESERVED = new Set(['apply', 'in', 'me', 'manage']);
   const uniqueSlug = (name) => { const b = RESERVED.has(slugOf(name)) ? `${slugOf(name)}-act` : slugOf(name); let s = b, i = 2; while (bySlug(s)) s = `${b}-${i++}`; return s; };
 
@@ -133,6 +133,7 @@ export function stageDomain(ctx) {
       stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, xp: xpOf(a, s),
       goals: goals(a, s).map(([label, done, part]) => ({ label, done, part: done ? 1 : Math.max(0, Math.min(0.99, part || 0)) })),
       backers: backers(a), href: `/stage/${a.slug}`, posts: (a.posts || []).slice().reverse(),
+      jom: a.jom ? { slug: a.jomSlug, group: a.plays } : null,
     };
   }
   const progress = (v) => (v.goals.length ? v.goals.reduce((t, g) => t + g.part, 0) / v.goals.length : 1);
@@ -391,7 +392,7 @@ export function stageDomain(ctx) {
         case 'sendBack':
           a.status = 'draft';
           a.decisions = (a.decisions || []).concat({ at: iso(), by: who.name, action: 'sendBack', message: text(b.message, 1000) });
-          tell(a, 'Your TAM Stage page: a few changes', 'Nearly there', `<p>${e(b.message || 'We’d love a few changes before your page goes live.')}</p>`, ['Edit my page', `${site()}/stage/apply`]);
+          tell(a, 'Your TAM Stage page: a few changes', 'Nearly there', `<p>${e(b.message || 'We’d love a few changes before your page goes live.')}</p>`, ['Edit my page', a.jom ? `${site()}/jom/me` : `${site()}/stage/apply`]);
           break;
         case 'advance': case 'back': {
           if (a.status !== 'live') throw fail(409, 'Put their page live first.');
@@ -445,6 +446,50 @@ export function stageDomain(ctx) {
     save();
   }
 
+  // ---------- JOM acts: a TAM artist profile, if their parent or guardian opts in ----------
+  // The profile shows only what TAM has already approved on the act's JOM page,
+  // and follows it: an approved JOM update updates the profile. It starts at
+  // the Open Night planet (they've played a TAM session) and waits for TAM to
+  // review it before it's public. The parent is the contact; they never sign in
+  // here: they keep updating the JOM page.
+  const byJom = (slug) => db.arArtists.find((a) => a.jom && a.jomSlug === slug);
+  function fromJom(j) {
+    const yt = (j.posts || []).find((p) => p.kind === 'youtube');
+    return {
+      act: j.name, plays: j.groupName || 'JOM Youth Music', bio: j.bio || '', photo: j.photo || '',
+      links: (j.links || []).filter((l) => /^https:\/\//.test(l)).slice(0, 8), youtube: yt ? yt.videoId : '', posts: (j.posts || []).slice(0, 24),
+    };
+  }
+  function linkJom(j, email, who) {
+    let a = byJom(j.slug);
+    const firstNight = (j.sessions || []).map((s) => (ctx.content.nightBy.get(s) || {}).date).filter(Boolean).sort()[0] || today();
+    if (!a) {
+      a = { id: newId('AR', 6), slug: uniqueSlug(j.name), jom: true, jomSlug: j.slug, email, name: who || '', from: '', vibe: 'pop', ownWork: true,
+        status: 'review', stage: 2, source: 'JOM opt-in', createdAt: iso(), submittedAt: iso(), views: {}, shares: 0, ratings: {}, notes: [], played: { open: firstNight },
+        decisions: [{ at: iso(), by: who || 'Parent or guardian', action: 'jom-opt-in', from: 0, to: 2, message: '' }] };
+      db.arArtists.push(a);
+    } else if (a.status === 'paused' && a.optedOut) {
+      Object.assign(a, { status: 'review', optedOut: false, submittedAt: iso(), email });
+    }
+    Object.assign(a, fromJom(j), { updatedAt: iso() });
+    save();
+    return a;
+  }
+  function syncJom(j) {
+    const a = byJom(j.slug);
+    if (!a || a.optedOut) return;
+    Object.assign(a, fromJom(j), { updatedAt: iso() });
+    save();
+  }
+  function unlinkJom(slug) {
+    const a = byJom(slug);
+    if (!a) return;
+    Object.assign(a, { status: 'paused', optedOut: true, updatedAt: iso() });
+    a.decisions = (a.decisions || []).concat({ at: iso(), by: 'Parent or guardian', action: 'jom-opt-out', message: '' });
+    save();
+  }
+  const jomStatus = (slug) => { const a = byJom(slug); return a && !a.optedOut ? { slug: a.slug, status: a.status, planet: STAGES[a.stage].name, href: `/stage/${a.slug}` } : null; };
+
   const live = () => db.arArtists.filter((a) => a.status === 'live').map(publicView);
-  return { routes, apply, publicView, ownerView, artistOf, bySlug, live, viewed, progress, stats, score, suggest };
+  return { routes, apply, publicView, ownerView, artistOf, bySlug, live, viewed, progress, stats, score, suggest, linkJom, syncJom, unlinkJom, jomStatus };
 }

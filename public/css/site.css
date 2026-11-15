@@ -1617,3 +1617,6 @@ body.lv-screen.idle { cursor: none; }
 .jm-posts-edit .ar-row input { flex: 1; min-width: 0; } .jm-posts-edit progress { flex: 1; }
 .jmm-posts { display: flex; flex-wrap: wrap; gap: 10px; } .jmm-posts figure { margin: 0; display: grid; gap: 4px; max-width: 200px; } .jmm-posts img, .jmm-posts video { border-radius: 8px; }
 .jm-posts { margin-bottom: 18px; }
+.jm-stage { margin: -6px 0 22px; display: grid; gap: 8px; border-color: var(--gold-deep); } .jm-stage h3 { margin: 0; }
+.st-jom { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--v-3, var(--ink-dim)); margin: 0 0 6px; } .st-jom img { border-radius: 50%; }
+.anr-jom { color: #9fd8ff !important; }

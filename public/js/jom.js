@@ -111,7 +111,14 @@ function draw(d) {
           <div class="ar-row"><input name="posturl" placeholder="Paste a link: instagram.com/p/…, tiktok.com/@…/video/…, facebook.com/…, youtu.be/…" aria-label="Link to a post"><button class="btn ghost small" type="button" data-addpost>Add</button></div>
           <div class="ar-row"><label class="btn ghost small">Upload a photo<input type="file" accept="image/*" data-postphoto class="sr"></label><label class="btn ghost small">Upload a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-postvideo class="sr"></label><progress max="100" value="0" hidden></progress></div>
           <small class="muted">Videos up to 60 MB (MP4 plays everywhere). Nothing goes on the page until TAM approves it.</small></div>
-        <button class="btn hot" type="submit">Send to TAM for approval</button><p class="err" role="status" aria-live="polite"></p></form>`;
+        <button class="btn hot" type="submit">Send to TAM for approval</button><p class="err" role="status" aria-live="polite"></p></form>
+        <div class="formbox jm-stage" data-stage="${esc(a.slug)}"><div class="label">TAM artist profile</div>
+        ${a.stage ? `<h3>${esc(a.name)} is on the TAM Stage</h3><p>Planet: <b>${esc(a.stage.planet)}</b> · ${a.stage.status === 'live' ? `<a href="${esc(a.stage.href)}" target="_blank">See their profile ↗</a>` : 'TAM is reviewing it before it goes public.'}</p>
+          <p class="small muted">It shows what TAM has approved on this page, and updates when your updates are approved. TAM will contact you about opportunities.</p><button class="linkish small" type="button" data-stage-out>Opt out</button>`
+        : `<h3>Open doors across TAM</h3><p>Opt in to give ${esc(a.name)} a <b>TAM artist profile</b> on <a href="/stage" target="_blank">the TAM Stage</a>: TAM’s path for new acts, from open nights to the Sunday Showcase, TAM’s own nights and festival spots like <b>The Best Christmas Ever</b>. Fans can back them, and TAM’s team will see them when choosing who plays.</p>
+          <p class="small muted">The profile shows only what TAM has approved on this page, starts at the Open Night planet (they’ve played TAM already), and TAM reviews it before it goes public. Opt out any time.</p>
+          <label class="check"><input type="checkbox" data-stage-consent> I’m their parent or guardian (or I’m in the act and 18+). I agree to TAM showing ${esc(a.name)} on the TAM Stage and contacting me about opportunities to play at TAM.</label>
+          <button class="btn hot" type="button" data-stage-in>Opt in to a TAM artist profile</button>`}<p class="err" role="status" aria-live="polite"></p></div>`;
     }).join('')}
     <p class="small"><button class="linkish" type="button" data-out>Sign out</button></p>`;
   for (const f of $$('form.jm-edit', me)) { thumbs(f); postList(f); }
@@ -181,6 +188,15 @@ if (me) {
       } catch (err) { formMessage(f, err.message); }
     }
     if (e.target.dataset.first) { const l = photosOf[f.dataset.act]; l.unshift(l.splice(Number(e.target.dataset.first), 1)[0]); thumbs(f); }
+    const st = e.target.closest('[data-stage]');
+    if (st && (e.target.closest('[data-stage-in]') || e.target.closest('[data-stage-out]'))) {
+      const optIn = Boolean(e.target.closest('[data-stage-in]'));
+      if (optIn && !st.querySelector('[data-stage-consent]').checked) { st.querySelector('.err').textContent = 'Tick the box to confirm.'; return; }
+      if (!optIn && !confirm('Take them off the TAM Stage? You can opt in again later.')) return;
+      try { await api(`/api/jom/me/${st.dataset.stage}/stage`, { method: 'POST', body: { optIn, consent: optIn } }); await load(); }
+      catch (err) { st.querySelector('.err').textContent = err.message; }
+      return;
+    }
     if (e.target.closest('[data-out]')) { await api('/api/jom/signout', { method: 'POST', body: {} }); location.href = `${base}/` || '/'; }
   });
   me.addEventListener('submit', async (e) => {

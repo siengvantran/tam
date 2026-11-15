@@ -131,7 +131,7 @@ export function routes(r, ctx, stage) {
       description: `${v.act}${v.plays ? `: ${v.plays}` : ''}. On the TAM Stage at ${STAGES[v.stage].name}${next ? `, on the way to ${next.name}` : ''}. Boost them.`,
       body: html`${preview ? html`<p class="st-preview">Preview: only you${owner ? '' : ' (TAM staff)'} can see this until TAM puts it live.</p>` : ''}
       <section class="st-top"><div class="wrap st-top-grid">
-        <div class="st-id"><div class="label">TAM Stage · ${STAGES[v.stage].planet}</div><h1>${v.act}</h1>
+        <div class="st-id"><div class="label">TAM Stage · ${STAGES[v.stage].planet}</div>${v.jom ? html`<p class="st-jom"><img src="/img/jom/jom-logo.png" alt="" width="28" height="28"> A young artist with JOM Youth Music · <a href="/jom/${v.jom.slug}">their JOM page</a></p>` : ''}<h1>${v.act}</h1>
           ${v.plays ? html`<p class="st-plays">${v.plays}</p>` : ''}${v.from ? html`<p class="small">From ${v.from}</p>` : ''}
           <div class="st-boost"><button class="btn hot" type="button" data-boost="${v.slug}">✦ Boost ${v.act}</button><b data-boosts>${v.boosts}</b><span>boosts</span></div>
           <p class="small muted" data-boost-msg role="status" aria-live="polite">One boost a day. TAM Club members earn a point, and a scout bonus when ${v.act} moves up.</p>
