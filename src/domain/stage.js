@@ -21,6 +21,7 @@ import { clubShell, clubButton } from '../services/mailer.js';
 import { escape as e } from '../views/html.js';
 import { londonToday } from '../lib/content.js';
 import { VIBES } from './showcases.js';
+import { postOf, POST_HELP, saveVideo, saveImage as savePhoto, dropUpload } from '../lib/media-posts.js';
 
 export const STAGES = [
   { id: 'signal', name: 'Signal', planet: 'Your first signal', blurb: 'You’ve asked to play. Build your page and send it for review.' },
@@ -131,7 +132,7 @@ export function stageDomain(ctx) {
       slug: a.slug, act: a.act || a.name, plays: a.plays, from: a.from, bio: a.bio, links: a.links || [], youtube: a.youtube, photo: a.photo, vibe: a.vibe || 'stage',
       stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, xp: xpOf(a, s),
       goals: goals(a, s).map(([label, done, part]) => ({ label, done, part: done ? 1 : Math.max(0, Math.min(0.99, part || 0)) })),
-      backers: backers(a), href: `/stage/${a.slug}`,
+      backers: backers(a), href: `/stage/${a.slug}`, posts: (a.posts || []).slice().reverse(),
     };
   }
   const progress = (v) => (v.goals.length ? v.goals.reduce((t, g) => t + g.part, 0) / v.goals.length : 1);
@@ -285,6 +286,41 @@ export function stageDomain(ctx) {
       await dropPhoto(a);
       a.photo = url;
       a.updatedAt = iso();
+      await save();
+      send(res, 200, { artist: ownerView(a) });
+    });
+    // their posts: Instagram, TikTok, Facebook or YouTube links, and their own photos and videos
+    const addPost = async (a, p, caption) => {
+      if ((a.posts || []).length >= 24) throw fail(400, 'Your page has 24 posts: remove one to add another.');
+      a.posts = (a.posts || []).concat({ id: newId('P', 6), ...p, caption: text(caption, 200), at: iso() });
+      a.updatedAt = iso();
+      await save();
+    };
+    r.post('/api/stage/me/post', async (req, res) => {
+      const a = mine(req);
+      const b = await readJson(req, 4096);
+      const p = postOf(b.url);
+      if (!p) throw fail(400, POST_HELP);
+      await addPost(a, p, b.caption);
+      send(res, 201, { artist: ownerView(a) });
+    });
+    r.post('/api/stage/me/post-photo', async (req, res) => {
+      const a = mine(req);
+      const b = await readJson(req, 1300 * 1024);
+      await addPost(a, { kind: 'image', src: await savePhoto(ctx, b.image, `stage-${a.id}`) }, b.caption);
+      send(res, 201, { artist: ownerView(a) });
+    });
+    r.post('/api/stage/me/post-video', async (req, res, { url }) => {
+      const a = mine(req);
+      await addPost(a, { kind: 'video', src: await saveVideo(ctx, req, `stage-${a.id}`) }, url.searchParams.get('caption'));
+      send(res, 201, { artist: ownerView(a) });
+    });
+    r.post('/api/stage/me/post/:id/remove', async (req, res, { params }) => {
+      const a = mine(req);
+      const p = (a.posts || []).find((x) => x.id === params.id);
+      if (!p) throw fail(404, 'That post isn’t on your page.');
+      if (p.src) await dropUpload(ctx, p.src);
+      a.posts = a.posts.filter((x) => x !== p);
       await save();
       send(res, 200, { artist: ownerView(a) });
     });

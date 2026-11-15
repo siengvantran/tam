@@ -10,6 +10,7 @@
 import crypto from 'node:crypto';
 import { fail, send, readJson, text, rateLimiter, newId, email as cleanEmail } from '../lib/http.js';
 import { longDate } from '../lib/content.js';
+import { postOf as mediaPostOf, POST_HELP, saveVideo, saveImage as savePhoto, dropUpload } from '../lib/media-posts.js';
 import { PLACES, placeOf } from '../lib/places.js';
 import { autoArrange, withTimes, checks, metrics, suggest, rewhy, isTime, DEFAULTS } from '../lib/running-order.js';
 
@@ -141,14 +142,14 @@ export function showcaseDomain(ctx) {
   const wallOf = (date, slug) => { const d = (db.showcaseWall[date] = db.showcaseWall[date] || {}); return (d[slug] = d[slug] || []); };
   const artistOk = (date, slug, req) => actsFor(artistEmail(req)).some((a) => a.date === date && a.slug === slug);
   const staffOk = (req) => { try { ctx.team.guard(req, 'ops'); return true; } catch { return false; } };
-  // a YouTube video or an Instagram post (or reel), from any link form
-  const postOf = (u) => {
-    const s = String(u || '').trim();
-    const yt = /(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/.exec(s);
-    if (yt && /youtu/.test(s)) return { kind: 'youtube', videoId: yt[1] };
-    const ig = /instagram\.com\/(?:[\w.]+\/)?(p|reel|tv)\/([\w-]{5,40})/.exec(s);
-    if (ig) return { kind: 'instagram', postId: ig[2], postType: ig[1] === 'tv' ? 'p' : ig[1] };
-    return null;
+  // an Instagram, TikTok, Facebook or YouTube post, from any link form (src/lib/media-posts.js)
+  const postOf = mediaPostOf;
+  const canPost = (req, params) => { if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.'); if (!artistOk(params.date, params.slug, req) && !staffOk(req)) throw fail(403, 'This link isn’t valid any more. Ask TAM for a new one.'); };
+  const addPost = async (req, params, p, caption) => {
+    const w = { id: newId('W'), ...p, caption: text(caption, 200), at: new Date(ctx.now()).toISOString(), status: 'shown', by: staffOk(req) ? 'staff' : 'artist' };
+    wallOf(params.date, params.slug).push(w);
+    await save();
+    return w;
   };
 
   // ----- the running order (staff), and how visitors react to each act -----
@@ -287,11 +288,20 @@ export function showcaseDomain(ctx) {
         if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
         if (!artistOk(params.date, params.slug, req) && !staffOk(req)) throw fail(403, 'This link isn’t valid any more. Ask TAM for a new one.');
         const p = postOf(b.url);
-        if (!p) throw fail(400, 'Paste a YouTube video or an Instagram post link.');
-        const w = { id: newId('W'), ...p, caption: text(b.caption, 200), at: new Date(ctx.now()).toISOString(), status: 'shown', by: staffOk(req) ? 'staff' : 'artist' };
-        wallOf(params.date, params.slug).push(w);
-        await save();
-        send(res, 201, { ok: true, item: w });
+        if (!p) throw fail(400, POST_HELP);
+        send(res, 201, { ok: true, item: await addPost(req, params, p, b.caption) });
+      });
+      // their own photos and videos, uploaded to TAM
+      r.post('/api/showcases/:date/act/:slug/wall/photo', async (req, res, { params }) => {
+        canPost(req, params);
+        const b = await readJson(req, 1300 * 1024);
+        const src = await savePhoto(ctx, b.image, `wall-${params.slug}`);
+        send(res, 201, { ok: true, item: await addPost(req, params, { kind: 'image', src }, b.caption) });
+      });
+      r.post('/api/showcases/:date/act/:slug/wall/video', async (req, res, { params, url }) => {
+        canPost(req, params);
+        const src = await saveVideo(ctx, req, `wall-${params.slug}`);
+        send(res, 201, { ok: true, item: await addPost(req, params, { kind: 'video', src }, url.searchParams.get('caption')) });
       });
       // show, hide or remove a post: the act or staff
       r.post('/api/showcases/:date/act/:slug/wall/:id', async (req, res, { params }) => {
@@ -301,6 +311,7 @@ export function showcaseDomain(ctx) {
         if (!w) throw fail(404, 'That post isn’t on the wall.');
         if (!['shown', 'hidden', 'removed'].includes(b.status)) throw fail(400, 'Show, hide or remove.');
         w.status = b.status;
+        if (b.status === 'removed' && w.src) { await dropUpload(ctx, w.src); w.src = ''; } // their upload goes too
         await save();
         send(res, 200, { ok: true });
       });

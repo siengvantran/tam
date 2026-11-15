@@ -7,6 +7,8 @@ import { html as respond } from '../lib/http.js';
 import { layout } from './layout.js';
 import { STAGES } from '../domain/stage.js';
 import { VIBE_MARKS } from '../domain/showcases.js';
+import { embedHtml } from '../lib/media-posts.js';
+import { raw as rawHtml } from './html.js';
 
 const OPEN_NIGHTS = ['TAM Open Mic', 'The Original Singers Club', 'The Great British Blues Jam', 'Junior Open Mic / JOM'];
 
@@ -142,7 +144,8 @@ export function routes(r, ctx, stage) {
       </div></section>
       <section class="section"><div class="wrap st-body">
         <div>${v.youtube ? html`<div class="aw-embed aw-yt st-video"><iframe src="https://www.youtube-nocookie.com/embed/${v.youtube}" title="${v.act}, live" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>` : ''}
-          ${v.bio ? html`<div class="prose">${v.bio.split(/\n\s*\n/).map((p) => html`<p>${p}</p>`)}</div>` : ''}</div>
+          ${v.bio ? html`<div class="prose">${v.bio.split(/\n\s*\n/).map((p) => html`<p>${p}</p>`)}</div>` : ''}
+          ${v.posts.length ? html`<h2 class="st-h">From ${v.act}</h2><div class="aw-grid st-posts">${v.posts.map((p) => html`<figure class="aw-post">${rawHtml(embedHtml(p))}${p.caption ? html`<figcaption>${p.caption}</figcaption>` : ''}</figure>`)}</div>` : ''}</div>
         <aside>${v.links.length ? html`<h2>Listen and follow</h2><ul class="st-links">${v.links.map((l) => html`<li><a href="${l}" target="_blank" rel="noopener">${(() => { try { return new URL(l).hostname.replace(/^www\./, ''); } catch { return l; } })()} ↗</a></li>`)}</ul>` : ''}
           ${v.backers.length ? html`<h2>Early backers</h2><p class="st-backers">${v.backers.join(' · ')}</p>` : ''}
           <p><a href="/stage">More acts on the TAM Stage</a> · <a href="/stage/apply">Ask to play</a></p></aside>

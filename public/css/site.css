@@ -1605,3 +1605,11 @@ body.lv-screen.idle { cursor: none; }
 .lv-stepper output { font: 400 56px/1 var(--f-display); color: var(--gold); min-width: 2ch; text-align: center; }
 .lv-go { font-size: 20px; padding: 16px; } .lv-yes { text-align: center; } .lv-yes h2 { font-size: 40px; }
 .lv-phone .lv-wrap { white-space: normal; max-width: 100%; }
+/* artists' own posts: TikTok and Facebook embeds, their photos and videos (src/lib/media-posts.js) */
+.aw-embed.aw-tt { aspect-ratio: 9 / 16; max-height: 760px; margin: 0 auto; } /* the iframe fills its box (.aw-embed iframe) */
+.aw-embed.aw-fb { height: 560px; background: #fff; }
+.aw-embed.aw-fbv { aspect-ratio: 16 / 9; }
+.aw-media { margin: 0; } .aw-media img, .aw-media video { width: 100%; height: auto; border-radius: 14px; display: block; background: #000; }
+.ar-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .ar-add progress { width: 100%; height: 8px; }
+.ar-thumb { border-radius: 8px; object-fit: cover; vertical-align: middle; margin-right: 6px; }
+.st-h { font-size: clamp(26px, 3.4vw, 40px); margin-top: 26px; } .st-posts { margin-top: 10px; } .st-posts-edit { grid-column: 1 / -1; } .st-posts-edit form { display: grid; gap: 10px; } .st-postlist li { display: flex; justify-content: space-between; align-items: center; }

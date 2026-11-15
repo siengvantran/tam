@@ -4,7 +4,8 @@
 // kind "perform", and is emailed to the box office). Words and the circuit
 // are in content/showcases.json; the dates come live from the listings.
 
-import { html } from './html.js';
+import { html, raw } from './html.js';
+import { embedHtml } from '../lib/media-posts.js';
 import { html as respond, redirect } from '../lib/http.js';
 import { layout, when, times, nightHref } from './layout.js';
 import { bookingData, bookingSection } from './sections.js';
@@ -249,9 +250,7 @@ export const showcaseLockup = (cls = '') => html`<span class="ss-lockup ${cls}">
 export const showcaseTitle = () => html`<span class="ss-title"><span class="ss-t-ss"><i>Sunday</i> <b>Showcase</b></span><span class="ss-x">×</span><span class="ss-t-tam"><img src="/img/tam-mark-96.png" alt="" width="40" height="40">TAM</span></span>`;
 
 // The wall: notes from fans (shown once checked), and the act's own YouTube and Instagram posts.
-const embedOf = (w) => (w.kind === 'youtube'
-  ? html`<div class="aw-embed aw-yt"><iframe src="https://www.youtube-nocookie.com/embed/${w.videoId}" title="YouTube video" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
-  : html`<div class="aw-embed aw-ig"><iframe src="https://www.instagram.com/${w.postType || 'p'}/${w.postId}/embed" title="Instagram post" loading="lazy" scrolling="no"></iframe></div>`);
+const embedOf = (w) => raw(embedHtml(w)); // Instagram, TikTok, Facebook, YouTube, or their own photo or video
 function wall(a, l, showcase) {
   const items = showcase.wallShown(l.date, a.slug);
   return html`<section class="section aw" id="wall" aria-labelledby="aw-h"><div class="wrap">
