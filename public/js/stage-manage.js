@@ -85,7 +85,7 @@ function detail(id) {
   const st = a.stats;
   box.innerHTML = `<button class="linkish small" type="button" data-close>Close</button>
     <div class="anr-head">${a.photo ? `<img src="${esc(a.photo)}" alt="" width="88" height="88">` : ''}<div><h2>${esc(a.act)}</h2><p class="small">${esc(a.plays || '')}${a.from ? ` · ${esc(a.from)}` : ''}</p>
-    <p class="small">${esc(D.stages[a.stage].name)} · ${esc(a.status)} · came from ${esc(a.source)} · ${esc(when(a.createdAt))}</p>
+    <p class="small">${esc(D.stages[a.stage].name)} · ${esc(a.status)} · came from ${esc(a.source)} · ${esc(when(a.createdAt))}${a.invitedAt ? ` · invited ${esc(when(a.invitedAt))}` : ''}${a.enquiry ? ` · ${esc(a.enquiry)}` : ''}</p>
     <p class="small"><a href="/stage/${esc(a.slug)}" target="_blank">Their microverse ↗</a>${a.youtube ? ` · <a href="https://www.youtube.com/watch?v=${esc(a.youtube)}" target="_blank" rel="noopener">Video ↗</a>` : ''}${a.email ? ` · <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>` : ''}</p></div><i class="anr-score big">${a.score}</i></div>
     <p class="anr-suggest ${a.suggest.action}"><b>Suggested:</b> ${esc(a.suggest.text)}</p>
     ${application(a)}
