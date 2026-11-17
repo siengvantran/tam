@@ -249,7 +249,10 @@ export function stageDomain(ctx) {
       db.arArtists.push(a);
     }
     await save();
-    await mailLink(a, created && application).catch((err) => console.warn(`Stage link ${a.id}: ${err.message}`));
+    // The application form: their link to the page. An enquiry (the musician form, Ask TAM): the invitation to update and share it.
+    if (application || !created) await mailLink(a, created && application).catch((err) => console.warn(`Stage link ${a.id}: ${err.message}`));
+    else await mailInvite(a).catch((err) => console.warn(`Stage invite ${a.id}: ${err.message}`));
+    if (application) await tellTeam(a, application, created).catch((err) => console.warn(`Stage team email ${a.id}: ${err.message}`));
     return { a, created };
   }
 
@@ -267,6 +270,25 @@ export function stageDomain(ctx) {
       ${clubButton('Build my page', url)}<p style="font-size:13px;color:#8a7f86">The link works once, for 3 days. Ask for a new one any time at ${e(site())}/stage/apply.</p>`;
     await ctx.mail.send({ to: a.email, subject: 'Your TAM Stage page: build your microverse', html: clubShell(inner, { preheader: 'Your path to a festival spot at TAM starts here.' }), text: `Build your TAM Stage page: ${url}` });
   }
+  // A new application from /stage/apply goes to the team's enquiries inbox, like other enquiries.
+  async function tellTeam(a, app, created) {
+    if (!cfg.enquiriesTo || !ctx.mail.enabled()) return;
+    const names = app.paths.map((k) => PATHWAYS[k].name).join(', ');
+    const d = app.draw || {};
+    const nums = [['Instagram', d.instagram], ['TikTok', d.tiktok], ['Spotify monthly', d.spotify], ['YouTube', d.youtube], ['Mailing list', d.mailing], ['Could bring', d.bring]].filter(([, v]) => v != null);
+    const rows = [['Act', a.act], ['Name', a.name], ['Email', a.email], ['Wants to play', names], ['Age', a.age === 'under18' ? 'someone is under 18' : '18+'], ['From', a.from],
+      ['Crowd', nums.map(([k, v]) => `${k} ${v}`).join(' · ')], ['Last gig', d.lastGig], ['Biggest show', d.biggest], ['Sold tickets before', d.sold],
+      ['Story in a line', (app.story || {}).hook], ['Happening now', (app.story || {}).now], ['Show idea', app.show ? [app.show.title, app.show.idea, app.show.when].filter(Boolean).join(' · ') : '']].filter(([, v]) => v);
+    await ctx.mail.send({
+      to: cfg.enquiriesTo, replyTo: a.email,
+      subject: `New application (Play at TAM): ${a.act} · ${names}${created ? '' : ' (applied again)'}`,
+      html: `<h2>Play at TAM application</h2><table>${rows.map(([k, v]) => `<tr><td>${e(k)}</td><td><b>${e(v)}</b></td></tr>`).join('')}</table>
+        <p>Their page: <a href="${e(site())}/stage/${e(a.slug)}">${e(site())}/stage/${e(a.slug)}</a>${a.shareable ? ' (shareable now, for pledges)' : ' (private until TAM checks it)'}</p>
+        <p><a href="${e(site())}/stage/manage">Open the A&amp;R board</a></p>`,
+      text: `${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\n${site()}/stage/${a.slug}\n${site()}/stage/manage`,
+    });
+  }
+
   // TAM made this page from the artist's enquiry: send them their page and a link to update it.
   async function mailInvite(a) {
     const t = token();
