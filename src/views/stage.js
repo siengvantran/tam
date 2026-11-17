@@ -59,7 +59,8 @@ function pledgeBox(v) {
       <label class="field"><span>How many of you?</span><select name="n">${[1, 2, 3, 4, 5, 6, 8, 10].map((n) => html`<option>${n}</option>`)}</select></label>
       <label class="check small"><input type="checkbox" name="consent" required> Email me when ${v.act} plays at TAM. <a href="/privacy#stage">Privacy</a></label>
       <button class="btn hot" type="submit">Pledge</button><p class="err" role="status" aria-live="polite"></p></form>
-    <p class="st-pledged"><b data-pledged>${v.pledged}</b> pledged so far</p></div>`;
+    <p class="st-pledged"><b data-pledged>${v.pledged}</b> pledged so far</p>
+    ${v.christmas ? html`<p class="small muted">🎄 Including <b>${v.christmas}</b> pledged on their JOM page to see them at <a href="/the-best-christmas-ever">The Best Christmas Ever</a>.</p>` : ''}</div>`;
 }
 // what the poster maker draws (public/js/stage-card.js)
 const cardData = (v, url) => jsonData('st-card-data', { act: v.act, plays: v.plays || '', photo: v.photo || '', slug: v.slug, url, planet: STAGES[v.stage].name, next: STAGES[v.stage + 1] ? STAGES[v.stage + 1].name : '', pledged: v.pledged, paths: v.paths || [] });

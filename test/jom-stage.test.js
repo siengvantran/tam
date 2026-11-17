@@ -65,6 +65,14 @@ test('JOM parents opt in to a TAM artist profile; it follows the approved JOM pa
   assert.doesNotMatch(pg, /sarah@family\.test/);
   assert.match((await call('/stage')).body, /Jessica Quilter/);
 
+  // pledges on their JOM page to see them at The Best Christmas Ever count on the profile too
+  await call('/api/jom/jessica-quilter/pledge', { method: 'POST', body: { id: 'browser-id-0123456789', n: 3 } });
+  pg = (await call(`/stage/${slug}`)).body;
+  assert.match(pg, /data-pledged>3</);
+  assert.match(pg, /Including <b>3<\/b> pledged on their JOM page to see them at/);
+  await call(`/api/stage/${slug}/pledge`, { method: 'POST', body: { email: 'fan@x.test', n: 2, consent: true } });
+  assert.equal((await call('/api/stage/manage', { headers: staff })).body.artists.find((x) => x.slug === slug).stats.pledged, 5);
+
   // an approved JOM update flows to the profile (an unapproved one doesn't)
   await call('/api/jom/me/jessica-quilter', { method: 'POST', cookie, body: { name: 'Jessica Quilter', bio: 'Jessica sings her own songs on keys.', posts: [{ url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }] } });
   assert.doesNotMatch((await call(`/stage/${slug}`)).body, /sings her own songs/);
