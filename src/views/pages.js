@@ -48,7 +48,7 @@ function eventLd(ctx, n, d) {
   const av = d ? availability(ctx, d, n) : null;
   const stock = av ? (av.soldOut ? 'https://schema.org/SoldOut' : av.left !== null && av.left <= 10 ? 'https://schema.org/LimitedAvailability' : 'https://schema.org/InStock') : 'https://schema.org/InStock';
   const offers = n.sale ? (n.sale.mode === 'own' ? n.sale.tickets : n.sale.mode === 'schedule' ? n.sale.tiers : [{ name: 'Ticket', price: n.sale.price }])
-    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}#book`, availability: stock,
+    .map((t) => ({ '@type': 'Offer', name: t.name, price: (t.price / 100).toFixed(2), priceCurrency: 'GBP', url: `${ctx.cfg.siteUrl}/events/${n.slug}#book`, availability: t.soldOut ? 'https://schema.org/SoldOut' : stock,
       ...(av && av.left !== null ? { inventoryLevel: { '@type': 'QuantitativeValue', value: av.left } } : {}), seller: { '@type': 'Organization', name: 'TAM, Temple of Art and Music' }, ...(t.until ? { validThrough: t.until } : {}) }))
     : n.eventbrite && n.eventbrite.url ? ebOffers(n.eventbrite) : undefined;
   return {

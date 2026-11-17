@@ -3,7 +3,8 @@
 // All amounts are whole pence. Pure functions: no I/O, no clock unless passed.
 //
 // Every night carries a `sale` (built by the content loader):
-//   { mode: 'own',      tickets: [{ id, name, price, limit?, tableRequest? }] }
+//   { mode: 'own',      tickets: [{ id, name, price, limit?, soldOut?, tableRequest? }] }
+//     (soldOut: closed by hand, e.g. early birds that sold out across every site)
 //   { mode: 'schedule', tiers: [{ id, name, price, until?, limit? }], door? }
 //   { mode: 'flat',     price }
 //   { mode: 'standard', price, groupTiers: [{ min, off, label }], packs: [{ id, name, min, max, off, needsTeam }] }
@@ -29,7 +30,7 @@ export function currentTier(sale, now = Date.now(), tierSold = {}) {
 export function ticketOptions(sale, { now = Date.now(), tierSold = {}, typeSold = {} } = {}) {
   if (!sale) return [];
   if (sale.mode === 'own') {
-    return sale.tickets.map((t) => ({ ...t, left: t.limit ? Math.max(0, t.limit - (typeSold[t.id] || 0)) : null }));
+    return sale.tickets.map((t) => ({ ...t, left: t.soldOut ? 0 : t.limit ? Math.max(0, t.limit - (typeSold[t.id] || 0)) : null }));
   }
   if (sale.mode === 'schedule') {
     const t = currentTier(sale, now, tierSold);
@@ -64,6 +65,7 @@ export function quote(sale, type, qty, { now = Date.now(), tierSold = {}, typeSo
   if (sale.mode === 'own') {
     const t = sale.tickets.find((x) => x.id === type);
     if (!t) return { error: 'Pick a ticket for this night.' };
+    if (t.soldOut) return { error: `${t.name} tickets have sold out.` };
     if (t.limit && qty > t.limit - (typeSold[t.id] || 0)) {
       const left = Math.max(0, t.limit - (typeSold[t.id] || 0));
       return { error: left ? `Only ${left} ${t.name} tickets left.` : `${t.name} tickets have sold out.` };
