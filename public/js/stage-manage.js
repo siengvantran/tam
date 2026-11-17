@@ -104,6 +104,12 @@ function detail(id) {
     <h3>They played</h3><p class="row-btn small">${[['open', 'An open night'], ['showcase', 'A Sunday Showcase'], ['headline', 'Headline or support']].map(([k, v]) => `<button class="btn ${a.played[k] ? 'hot' : 'ghost'} small" type="button" data-played="${k}" data-on="${a.played[k] ? '' : '1'}">${a.played[k] ? '✓ ' : ''}${v}${a.played[k] ? ` · ${esc(a.played[k])}` : ''}</button>`).join('')}</p>
     <h3>Your rating</h3><form class="anr-rate" data-id="${a.id}">${Object.entries(D.ratings).map(([k, v]) => `<label class="anr-stars"><span>${esc(v)}</span><select name="${k}"><option value="">–</option>${[1, 2, 3, 4, 5].map((n) => `<option ${mine[k] === n ? 'selected' : ''}>${n}</option>`).join('')}</select></label>`).join('')}<button class="btn hot small" type="submit">Save my rating</button></form>
     ${Object.keys(a.ratings).length ? `<p class="small muted">Rated by ${Object.entries(a.ratings).map(([n, r]) => `${esc(n)} (${esc(when(r.at))})`).join(', ')}</p>` : ''}
+    <details class="anr-editbox"><summary>Edit the page text</summary><form class="anr-edit" data-id="${a.id}">
+      <label class="field"><span>Act</span><input name="act" maxlength="80" value="${esc(a.act)}"></label>
+      <label class="field"><span>Plays</span><input name="plays" maxlength="120" value="${esc(a.plays || '')}"></label>
+      <label class="field"><span>From</span><input name="from" maxlength="80" value="${esc(a.from || '')}"></label>
+      <label class="field"><span>Bio (public, so no phone numbers or emails)</span><textarea name="bio" rows="6" maxlength="1500">${esc(a.bio || '')}</textarea></label>
+      <button class="btn hot small" type="submit">Save page text</button></form></details>
     <h3>Notes (TAM only)</h3><ul class="plain small">${a.notes.map((n) => `<li><b>${esc(n.by)}</b> ${esc(when(n.at))}: ${esc(n.text)}</li>`).join('') || '<li class="muted">No notes yet.</li>'}</ul>
     <form class="anr-note" data-id="${a.id}"><input name="note" maxlength="1000" placeholder="Add a note: saw them at the open mic, great crowd…" aria-label="Add a note"><button class="btn ghost small" type="submit">Add</button></form>
     ${a.decisions.length ? `<h3>History</h3><ul class="plain small">${a.decisions.slice().reverse().map((d) => `<li>${esc(when(d.at))} · ${esc(d.by)} · ${esc(d.action)}${Number.isInteger(d.to) ? ` → ${esc(D.stages[d.to].name)}` : ''}${d.message ? `: “${esc(d.message)}”` : ''}</li>`).join('')}</ul>` : ''}`;
@@ -140,6 +146,7 @@ root.addEventListener('submit', async (e) => {
   try {
     if (f.classList.contains('anr-rate')) await act(f.dataset.id, { action: 'rate', ratings: Object.fromEntries(Object.keys(D.ratings).map((k) => [k, Number(f[k].value)])) });
     if (f.classList.contains('anr-note')) await act(f.dataset.id, { action: 'note', note: f.note.value });
+    if (f.classList.contains('anr-edit')) await act(f.dataset.id, { action: 'edit', act: f.act.value, plays: f.plays.value, from: f.from.value, bio: f.bio.value });
   } catch (err) { alert(err.message); }
 });
 

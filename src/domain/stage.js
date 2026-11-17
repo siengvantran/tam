@@ -550,6 +550,15 @@ export function stageDomain(ctx) {
           a.ratings = { ...(a.ratings || {}), [who.name]: { ...r0, at: iso() } };
           break;
         }
+        // TAM tidies a page made from an email or form: the act's name, what they play, where from, the bio
+        case 'edit': {
+          const f = { act: [80, true], plays: [120], from: [80], bio: [1500] };
+          const changed = Object.keys(f).filter((k) => typeof b[k] === 'string');
+          if (!changed.length) throw fail(400, 'Nothing to change.');
+          for (const k of changed) { const v = text(b[k], f[k][0]); if (f[k][1] && !v) throw fail(400, 'The act needs a name.'); a[k] = v; }
+          a.decisions = (a.decisions || []).concat({ at: iso(), by: who.name, action: 'edit', message: `Edited ${changed.join(', ')}` });
+          break;
+        }
         case 'note': { const t = text(b.note, 1000); if (!t) throw fail(400, 'Write a note.'); a.notes = (a.notes || []).concat({ at: iso(), by: who.name, text: t }); break; }
         case 'approve':
           if (a.status === 'live') throw fail(409, 'Already live.');
