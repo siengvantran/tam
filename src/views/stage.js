@@ -146,7 +146,11 @@ export function routes(r, ctx, stage) {
 
   r.get('/stage/in', (req, res) => respond(res, page(ctx, {
     title: 'Your TAM Stage page', path: '/stage/in', noindex: true,
-    body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome gold">Your TAM Stage page</h1><div class="formbox" id="st-in"><p>Open your page on this device.</p><button class="btn hot" type="button">Open my page</button><p class="err" role="status" aria-live="polite"></p></div></div></section>`,
+    body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome gold">Your TAM Stage page</h1><div class="formbox" id="st-in"><p>Open your page on this device.</p><button class="btn hot" type="button">Open my page</button><p class="err" role="status" aria-live="polite"></p></div>
+      <form class="formbox" id="st-relink" hidden novalidate><h2>Get a link to your page</h2><p>Already have a page on the TAM Stage? Type the email TAM has for you and we’ll send you a link to open it.</p>
+        <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email"></label>
+        <button class="btn hot" type="submit">Email me a link</button><p class="err" role="status" aria-live="polite"></p>
+        <p class="small muted">New to the TAM Stage? <a href="/stage/apply">Apply to play</a>.</p></form></div></section>`,
   })));
 
   r.get('/stage/me', (req, res) => respond(res, page(ctx, {

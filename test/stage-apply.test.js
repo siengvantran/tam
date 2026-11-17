@@ -154,3 +154,35 @@ test('staff make a page from a play enquiry and invite the artist; they confirm 
   assert.match(sent.at(-1).html, /stays private until TAM has checked it/);
   assert.equal((await call(`/stage/${y.body.artist.slug}`)).status, 404);
 });
+
+test('an artist says they still want to play, and gets a new link with just their email', async (t) => {
+  const sent = [];
+  const resend = http.createServer((req, res) => { let b = ''; req.on('data', (c) => { b += c; }); req.on('end', () => { sent.push(JSON.parse(b)); res.end('{"id":"x"}'); }); });
+  await new Promise((r) => resend.listen(0, r));
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-still-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(() => resend.close(r)); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  app.ctx.cfg.siteUrl = B;
+  const staff = { 'x-staff-token': ADMIN };
+  const call = async (p, { method = 'GET', body, cookie = '', headers = {} } = {}) => {
+    const r = await fetch(`${B}${p}`, { method, headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(cookie ? { cookie } : {}), ...headers }, body: body ? JSON.stringify(body) : undefined });
+    const ct = r.headers.get('content-type') || '';
+    return { status: r.status, headers: r.headers, body: ct.includes('json') ? await r.json() : await r.text() };
+  };
+  const wait = async (n) => { for (let i = 0; i < 100 && sent.length < n; i++) await new Promise((x) => setTimeout(x, 15)); };
+  await call('/api/stage/invite', { method: 'POST', headers: staff, body: { email: 'band@x.test', act: 'The Band', send: false } });
+  // a stranger's email gets the same answer and no email; the artist's gets a link
+  assert.equal((await call('/api/stage/link', { method: 'POST', body: { email: 'nobody@x.test' } })).body.ok, true);
+  assert.equal(sent.length, 0);
+  await call('/api/stage/link', { method: 'POST', body: { email: 'band@x.test' } });
+  await wait(1);
+  const t0 = /stage\/in\?t=([\w-]+)/.exec(sent[0].html)[1];
+  const cookie = (await call('/api/stage/in', { method: 'POST', body: { t: t0 } })).headers.get('set-cookie').split(';')[0];
+  assert.equal((await call('/api/stage/me', { cookie })).body.artist.stillPlay, null);
+  const r = await call('/api/stage/me/still-play', { method: 'POST', cookie, body: { when: 'Friday nights in January', note: 'Now a five-piece' } });
+  assert.equal(r.body.artist.stillPlay.when, 'Friday nights in January');
+  const a = (await call('/api/stage/manage', { headers: staff })).body.artists.find((x) => x.act === 'The Band');
+  assert.equal(a.stillPlay.note, 'Now a five-piece');
+  assert.match((await call('/stage/in')).body, /Get a link to your page/);
+});
