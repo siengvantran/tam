@@ -196,7 +196,7 @@ export function stageDomain(ctx) {
     const s = stats(a);
     return { ...ownerView(a), id: a.id, source: a.source, createdAt: a.createdAt, submittedAt: a.submittedAt, score: score(a, s), stats: s,
       suggest: suggest(a, s), ratings: a.ratings || {}, notes: a.notes || [], decisions: a.decisions || [], played: a.played || {}, circuit: a.circuit || '',
-      applications: a.applications || [], age: a.age || '' };
+      applications: a.applications || [], age: a.age || '', invitedAt: a.invitedAt || '', enquiry: a.enquiry || '' };
   }
 
   // ---------- applying (from any play request) ----------
@@ -265,6 +265,28 @@ export function stageDomain(ctx) {
       ${clubButton('Build my page', url)}<p style="font-size:13px;color:#8a7f86">The link works once, for 3 days. Ask for a new one any time at ${e(site())}/stage/apply.</p>`;
     await ctx.mail.send({ to: a.email, subject: 'Your TAM Stage page: build your microverse', html: clubShell(inner, { preheader: 'Your path to a festival spot at TAM starts here.' }), text: `Build your TAM Stage page: ${url}` });
   }
+  // TAM made this page from the artist's enquiry: send them their page and a link to update it.
+  async function mailInvite(a) {
+    const t = token();
+    db.arLinks = db.arLinks.filter((l) => Date.parse(l.expires) > ctx.now() && !l.usedAt);
+    db.arLinks.push({ hash: hash(t), a: a.id, expires: iso(ctx.now() + 14 * DAY) });
+    a.invitedAt = iso();
+    await save();
+    if (!ctx.mail.enabled()) return;
+    const url = `${site()}/stage/in?t=${t}`, page = `${site()}/stage/${a.slug}`;
+    const young = a.age === 'under18';
+    const inner = `<h1 style="font-size:28px;margin:0 0 10px">Your TAM artist page${a.act ? `: ${e(a.act)}` : ''}</h1>
+      <p>Thank you for getting in touch about playing at TAM. We’ve made you an artist page on the <b>TAM Stage</b> from what you sent us. It’s yours to update and share.</p>
+      ${young ? `<p>Because the performer is under 18, the page stays private until TAM has checked it, and a parent or guardian looks after it. The <b>Junior &amp; Youth Open Mic</b> (with JOM Youth Music) is the usual first stage for young performers at TAM.</p>`
+    : `<p><b>Share it</b> with fans, friends, family and the TAM community so they can <b>pledge to see you live</b>. A pledge tells us people will come, and you can make a poster or story card for it in one tap. (First, tick the box on your page to confirm everyone in the act is 18 or over: then the page can be shared.)</p>`}
+      <p><b>Update it</b> any time: add a photo, your story, links, a live video and your Instagram, TikTok or YouTube posts. The more you add, and the more pledges you get, the better we can plan your show.</p>
+      ${clubButton('Open my page', url)}
+      <p>TAM’s team will use everything you share, and your pledges, to find the best show format at TAM for you: an open night, the Sunday Showcase, Friday Night Live, your own night or a festival spot.</p>
+      ${young ? '' : `<p style="font-size:14px">Your page: <a href="${e(page)}">${e(page)}</a></p>`}
+      <p style="font-size:13px;color:#8a7f86">The button works once, for 14 days. Ask for a new link any time at ${e(site())}/stage/apply (use this email).</p>`;
+    await ctx.mail.send({ to: a.email, subject: `Your TAM artist page${a.act ? `: ${a.act}` : ''}`, html: clubShell(inner, { preheader: 'Your page on the TAM Stage: update it, share it, and gather pledges to see you live.' }), text: `Your TAM artist page: ${url}${young ? '' : `\nShare: ${page}`}` });
+  }
+
   function tell(a, subject, heading, body, button) {
     if (!ctx.mail.enabled()) return;
     const inner = `<h1 style="font-size:28px;margin:0 0 10px">${e(heading)}</h1>${body}${button ? clubButton(button[0], button[1]) : ''}`;
@@ -400,6 +422,15 @@ export function stageDomain(ctx) {
       await save();
       send(res, 200, { artist: ownerView(a) });
     });
+    r.post('/api/stage/me/adults', async (req, res) => {
+      const a = mine(req);
+      const b = await readJson(req, 512);
+      if (b.confirm !== true) throw fail(400, 'Tick the box to confirm everyone in the act is 18 or over.');
+      if (a.age === 'under18') throw fail(409, 'Pages for under-18s are checked by TAM before they can be shared.');
+      Object.assign(a, { age: '18+', shareable: true, updatedAt: iso() });
+      await save();
+      send(res, 200, { artist: ownerView(a) });
+    });
     r.post('/api/stage/me/submit', async (req, res) => {
       const a = mine(req);
       if (a.status !== 'draft') throw fail(409, a.status === 'review' ? 'It’s with us: we’ll be in touch.' : 'Your page is already live.');
@@ -517,6 +548,39 @@ export function stageDomain(ctx) {
       if (!a) throw fail(404, 'No such artist.');
       const rows = [['Name', 'Email', 'People', 'Pledged'], ...db.arPledges.filter((p) => p.a === a.id).map((p) => [p.name, p.email, p.n, p.at.slice(0, 10)])];
       send(res, 200, rows.map((r0) => r0.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="pledges-${a.slug}.csv"` });
+    });
+    // Staff: a page from a play enquiry (fills only what's empty, so the artist's own edits stay), then invite them.
+    r.post('/api/stage/invite', async (req, res) => {
+      const who = guard(req);
+      const b = await readJson(req, 16 * 1024);
+      const mail = cleanEmail(b.email);
+      if (!mail) throw fail(400, 'Add the artist’s email.');
+      let a = byEmail(mail);
+      if (!a) {
+        const act = text(b.act, 80) || text(b.name, 80);
+        if (!act) throw fail(400, 'Add the act’s name.');
+        a = { id: newId('AR', 6), slug: uniqueSlug(act), email: mail, name: text(b.name, 80), act, plays: '', from: '', bio: '', links: [], youtube: '', photo: '', vibe: '',
+          status: 'draft', stage: 0, source: text(b.source, 40) || 'Play at TAM enquiry', createdAt: iso(), updatedAt: iso(), views: {}, shares: 0, ratings: {}, notes: [], decisions: [], played: {} };
+        db.arArtists.push(a);
+      }
+      const fill = (k, v) => { if (v && !a[k]) a[k] = v; };
+      if (b.act && (a.act === a.name || !a.act)) a.act = text(b.act, 80) || a.act;
+      fill('name', text(b.name, 80));
+      fill('plays', text(b.plays, 120));
+      fill('from', text(b.from, 80));
+      fill('bio', text(b.bio, 1500));
+      if (!(a.links || []).length) a.links = cleanLinks(b.links);
+      fill('youtube', ytId(b.youtube));
+      a.paths = [...new Set([...(a.paths || []), ...(Array.isArray(b.paths) ? b.paths : []).filter((k) => PATHWAYS[k])])];
+      if (['18+', 'under18'].includes(b.age)) a.age = b.age;
+      if (a.age === 'under18') a.shareable = false;
+      if (b.enquiry) a.enquiry = text(b.enquiry, 20);
+      if (b.note) a.notes = (a.notes || []).concat({ at: iso(), by: who.name, text: text(b.note, 1000) });
+      a.decisions = (a.decisions || []).concat({ at: iso(), by: who.name, action: 'invite', message: '' });
+      a.updatedAt = iso();
+      await save();
+      if (b.send !== false) await mailInvite(a).catch((err) => console.warn(`Stage invite ${a.id}: ${err.message}`));
+      send(res, 200, { artist: staffView(a) });
     });
     r.post('/api/stage/import-showcase', async (req, res) => {
       const who = guard(req);

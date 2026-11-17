@@ -106,6 +106,7 @@ function draw(a) {
       ${a.paths.length ? `<p class="small">You applied for: <b>${a.paths.map(esc).join(' · ')}</b> · <a href="/stage/apply">apply for more</a></p>` : ''}
       <p><a class="btn ghost small" href="/stage/${esc(a.slug)}" target="_blank">${a.shareable ? 'See my page ↗' : 'Preview my page ↗'}</a>
       ${a.shareable ? '<button class="btn hot small" type="button" data-copy-me>Copy my link</button> <button class="btn hot small" type="button" data-poster>🖼 Make my poster</button>' : ''} <button class="linkish small" type="button" data-out>Sign out</button></p></div></div>
+    ${!a.shareable && a.age !== 'under18' && ['draft', 'review'].includes(a.status) ? `<form class="st-msg st-adults" data-adults><b>Share your page and gather pledges.</b> Confirm everyone in the act is 18 or over and your page can be shared straight away, so fans, friends and family can pledge to see you live. (Under 18? A parent or guardian should get in touch, and TAM checks the page first.)<label class="check"><input type="checkbox" name="confirm"> Everyone in the act is 18 or over</label><button class="btn hot small" type="submit">Make my page shareable</button><p class="err" role="status" aria-live="polite"></p></form>` : ''}
     ${welcome ? `<div class="st-msg"><b>Welcome to the TAM Stage!</b> This is your page. ${a.shareable ? 'It’s up already, so share it and make a poster: friends, fans and family can pledge to see you live. ' : 'TAM checks pages for under-18s before anyone else can see them. '}Add a photo, your story and a live video, then send it to TAM. We’ve emailed you a link to get back here.</div>` : ''}
     ${a.messages.length ? `<div class="st-msg"><b>From TAM:</b> ${esc(a.messages[0].message)}</div>` : ''}
     <div class="st-dash-grid">
@@ -143,6 +144,11 @@ if (me) {
       e.preventDefault();
       try { draw((await api('/api/stage/me/post', { method: 'POST', body: { url: e.target.url.value, caption: e.target.caption.value } })).artist); }
       catch (err) { formMessage(e.target, err.message); }
+      return;
+    }
+    if (e.target.matches('[data-adults]')) {
+      e.preventDefault();
+      try { draw((await api('/api/stage/me/adults', { method: 'POST', body: { confirm: e.target.confirm.checked } })).artist); } catch (err) { formMessage(e.target, err.message); }
       return;
     }
     if (e.target.id !== 'st-edit') return;

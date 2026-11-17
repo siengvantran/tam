@@ -1664,3 +1664,5 @@ body.ar-embed { min-height: 0; background: transparent; }
 .ar-embed-in { max-width: 760px; margin: 0 auto; padding: 8px 16px 20px; }
 .ar-embed-in h1 { margin-top: 6px; }
 .ar-embed-foot { margin-top: 18px; }
+
+.st-adults { display: grid; gap: 8px; } .st-adults .btn { justify-self: start; }

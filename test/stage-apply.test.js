@@ -105,3 +105,48 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
   const csv = await call(`/api/stage/manage/${a.id}/pledges.csv`, { headers: staff });
   assert.match(csv.body, /"Ana","fan@x\.test","4"/);
 });
+
+test('staff make a page from a play enquiry and invite the artist; they confirm 18+ to share it', async (t) => {
+  const sent = [];
+  const resend = http.createServer((req, res) => { let b = ''; req.on('data', (c) => { b += c; }); req.on('end', () => { sent.push(JSON.parse(b)); res.end('{"id":"x"}'); }); });
+  await new Promise((r) => resend.listen(0, r));
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-stinv-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(() => resend.close(r)); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  app.ctx.cfg.siteUrl = B;
+  const staff = { 'x-staff-token': ADMIN };
+  const call = async (p, { method = 'GET', body, cookie = '', headers = {} } = {}) => {
+    const r = await fetch(`${B}${p}`, { method, redirect: 'manual', headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(cookie ? { cookie } : {}), ...headers }, body: body ? JSON.stringify(body) : undefined });
+    const ct = r.headers.get('content-type') || '';
+    return { status: r.status, headers: r.headers, body: ct.includes('json') ? await r.json() : await r.text() };
+  };
+  const wait = async (n) => { for (let i = 0; i < 100 && sent.length < n; i++) await new Promise((x) => setTimeout(x, 15)); };
+  assert.equal((await call('/api/stage/invite', { method: 'POST', body: { email: 'c@folk.test', act: 'Clary' } })).status, 401);
+  const inv = await call('/api/stage/invite', { method: 'POST', headers: staff, body: { email: 'c@folk.test', name: 'Clary', act: 'Clary Campbell Carter', plays: 'Folk singer-songwriter', from: 'London', bio: 'An independent folk singer from London.', links: ['https://instagram.com/clary'], paths: ['showcase'], enquiry: 'ENQ-4LC8BL' } });
+  assert.equal(inv.status, 200);
+  assert.equal(inv.body.artist.enquiry, 'ENQ-4LC8BL');
+  await wait(1);
+  const mail = sent.at(-1);
+  assert.match(mail.subject, /Your TAM artist page: Clary Campbell Carter/);
+  assert.match(mail.html, /pledge to see you live/);
+  assert.match(mail.html, /best show format/);
+  const slug = inv.body.artist.slug;
+  assert.equal((await call(`/stage/${slug}`)).status, 404); // not shareable until they confirm 18+
+  // the artist opens the link and confirms 18+: the page can be shared, with pledges
+  const t0 = /stage\/in\?t=([\w-]+)/.exec(mail.html)[1];
+  const cookie = (await call('/api/stage/in', { method: 'POST', body: { t: t0 } })).headers.get('set-cookie').split(';')[0];
+  assert.match((await call('/api/stage/me/adults', { method: 'POST', cookie, body: {} })).body.error, /Tick the box/);
+  assert.equal((await call('/api/stage/me/adults', { method: 'POST', cookie, body: { confirm: true } })).body.artist.shareable, true);
+  assert.equal((await call(`/stage/${slug}`)).status, 200);
+  assert.equal((await call(`/api/stage/${slug}/pledge`, { method: 'POST', body: { email: 'fan@x.test', consent: true } })).body.pledged, 1);
+  // inviting again keeps their own edits
+  await call('/api/stage/me', { method: 'POST', cookie, body: { bio: 'My own words about my folk songs, written by me for my page on the TAM Stage.' } });
+  await call('/api/stage/invite', { method: 'POST', headers: staff, body: { email: 'c@folk.test', bio: 'TAM words', send: false } });
+  assert.match((await call('/api/stage/me', { cookie })).body.artist.bio, /My own words/);
+  // a youth performer stays private, and can't be made shareable by the parent's tick
+  const y = await call('/api/stage/invite', { method: 'POST', headers: staff, body: { email: 'p@x.test', name: 'Mondli', act: 'Youth singer', age: 'under18', paths: ['jom'] } });
+  await wait(sent.length);
+  assert.match(sent.at(-1).html, /stays private until TAM has checked it/);
+  assert.equal((await call(`/stage/${y.body.artist.slug}`)).status, 404);
+});
