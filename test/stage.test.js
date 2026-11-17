@@ -41,7 +41,8 @@ test('a request to play becomes a microverse: the artist vets their page, staff 
   assert.ok(a0, 'an act was made');
   assert.equal(a0.source, 'Sunday Showcase call-out');
   assert.deepEqual(a0.links, ['https://instagram.com/jowaves']);
-  const mail = sent.find((m) => m.to[0] === 'jo@band.test' && /TAM Stage/.test(m.subject));
+  const mail = sent.find((m) => m.to[0] === 'jo@band.test' && /Your TAM artist page/.test(m.subject));
+  assert.match(mail.html, /pledge to see you live/); // an enquiry gets the invitation to update and share their page
   assert.ok(mail, 'they get a link to build their page');
 
   // not public until TAM puts it live

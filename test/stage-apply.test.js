@@ -16,7 +16,7 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
   const sent = [];
   const resend = http.createServer((req, res) => { let b = ''; req.on('data', (c) => { b += c; }); req.on('end', () => { sent.push(JSON.parse(b)); res.end('{"id":"x"}'); }); });
   await new Promise((r) => resend.listen(0, r));
-  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-sta-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0' } });
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-sta-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off', RESEND_API_KEY: 're', RESEND_API: `http://127.0.0.1:${resend.address().port}`, MAIL_GAP_MS: '0', ENQUIRIES_TO: 'team@tam.test' } });
   await new Promise((r) => app.listen(0, r));
   t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(() => resend.close(r)); }));
   const B = `http://127.0.0.1:${app.server.address().port}`;
@@ -45,6 +45,10 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
   assert.equal(ap.status, 201);
   assert.equal(ap.body.next, '/stage/me?welcome=1');
   const cookie = ap.headers.get('set-cookie').split(';')[0];
+  for (let i = 0; i < 100 && !sent.some((m) => m.to[0] === 'team@tam.test'); i++) await new Promise((x) => setTimeout(x, 15));
+  const team = sent.find((m) => m.to[0] === 'team@tam.test');
+  assert.match(team.subject, /New application \(Play at TAM\): Mo Soul · Open Mic, Propose a show/);
+  assert.match(team.html, /Night Shift Soul/);
   const me = (await call('/api/stage/me', { cookie })).body.artist;
   assert.deepEqual(me.paths, ['Open Mic', 'Propose a show']);
   assert.equal(me.from, 'Brixton');
