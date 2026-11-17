@@ -95,7 +95,9 @@ export function stageDomain(ctx) {
   function stats(a) {
     const boosts = db.arBoosts.filter((b) => b.a === a.id);
     const pl = db.arPledges.filter((p) => p.a === a.id);
-    const pledged = pl.reduce((t, p) => t + p.n, 0);
+    // a JOM act's pledges to see them at The Best Christmas Ever (made on their JOM page) count here too
+    const christmas = a.jom && a.jomSlug ? (db.jomPledges || []).filter((p) => p.act === a.jomSlug).reduce((t, p) => t + p.n, 0) : 0;
+    const pledged = pl.reduce((t, p) => t + p.n, 0) + christmas;
     const recent = boosts.filter((b) => Date.parse(b.at) > ctx.now() - 14 * DAY).length;
     const before = boosts.filter((b) => Date.parse(b.at) <= ctx.now() - 14 * DAY && Date.parse(b.at) > ctx.now() - 28 * DAY).length;
     const raters = Object.values(a.ratings || {});
@@ -105,13 +107,13 @@ export function stageDomain(ctx) {
     const avg = filled.length ? filled.reduce((t, x) => t + x, 0) / filled.length : 0;
     const checks = pageChecks(a);
     const page = checks.filter((c) => c.done).length / checks.length;
-    return { boosts: boosts.length, pledged, pledgers: pl.length, support: boosts.length + pledged * PLEDGE_WEIGHT, recent, momentum: recent - before, views: Object.values(a.views || {}).reduce((t, x) => t + x, 0), shares: a.shares || 0,
+    return { boosts: boosts.length, pledged, christmas, pledgers: pl.length, support: boosts.length + pledged * PLEDGE_WEIGHT, recent, momentum: recent - before, views: Object.values(a.views || {}).reduce((t, x) => t + x, 0), shares: a.shares || 0,
       rating: { avg: Math.round(avg * 10) / 10, by, raters: raters.length }, page };
   }
   // 0–100: what the A&R board sorts by. Ratings count most; fans next; then momentum and the page.
   function score(a, s = stats(a)) {
     const live = db.arArtists.filter((x) => x.status === 'live');
-    const most = Math.max(25, ...live.map((x) => db.arBoosts.filter((b) => b.a === x.id).length + db.arPledges.filter((p) => p.a === x.id).reduce((t, p) => t + p.n, 0) * PLEDGE_WEIGHT));
+    const most = Math.max(25, ...live.map((x) => db.arBoosts.filter((b) => b.a === x.id).length + stats(x).pledged * PLEDGE_WEIGHT));
     const fan = Math.min(1, s.support / most);
     const mom = Math.max(0, Math.min(1, (s.recent + Math.max(0, s.momentum)) / 20));
     return Math.round(s.rating.avg / 5 * 50 + fan * 25 + mom * 15 + s.page * 10);
@@ -166,7 +168,7 @@ export function stageDomain(ctx) {
     const s = stats(a);
     return {
       slug: a.slug, act: a.act || a.name, plays: a.plays, from: a.from, bio: a.bio, links: a.links || [], youtube: a.youtube, photo: a.photo, vibe: a.vibe || 'stage',
-      stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, pledged: s.pledged, support: s.support, xp: xpOf(a, s), live: a.status === 'live',
+      stage: a.stage, stageName: STAGES[a.stage].name, boosts: s.boosts, pledged: s.pledged, christmas: s.christmas, support: s.support, xp: xpOf(a, s), live: a.status === 'live',
       paths: (a.paths || []).filter((k) => PATHWAYS[k]).map((k) => PATHWAYS[k].name),
       goals: goals(a, s).map(([label, done, part]) => ({ label, done, part: done ? 1 : Math.max(0, Math.min(0.99, part || 0)) })),
       backers: backers(a), href: `/stage/${a.slug}`, posts: (a.posts || []).slice().reverse(),

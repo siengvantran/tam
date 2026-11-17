@@ -36,7 +36,7 @@ const lastApp = (a) => a.applications[a.applications.length - 1] || null;
 const n = (v) => (v === null || v === undefined ? '' : Number(v).toLocaleString('en-GB'));
 const card = (a) => `<button type="button" class="anr-card" data-open="${a.id}">
   ${a.photo ? `<img src="${esc(a.photo)}" alt="" width="48" height="48">` : '<span class="anr-noimg">✦</span>'}
-  <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>🎟 ${a.stats.pledged} pledged · ✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
+  <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>🎟 ${a.stats.pledged} pledged${a.stats.christmas ? ` (🎄 ${a.stats.christmas} for Christmas)` : ''} · ✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
   ${lastApp(a) ? `<small class="anr-paths">${lastApp(a).paths.map((k) => esc((D.pathways[k] || {}).name || k)).join(' · ')}${lastApp(a).draw.bring ? ` · brings ~${n(lastApp(a).draw.bring)}` : ''}${lastApp(a).show ? ' · 💡 show idea' : ''}</small>` : ''}
   ${a.suggest.action !== 'wait' && ACTIONS[a.suggest.action] ? `<em class="anr-sug ${a.suggest.action}">${ACTIONS[a.suggest.action]}</em>` : ''}</span>
   <i class="anr-score" title="Score">${a.score}</i></button>`;
