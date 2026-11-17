@@ -176,7 +176,7 @@ export function routes(r, ctx, stage) {
     const shared = a && a.status !== 'live' && stage.isPublic(a);
     const preview = a && a.status !== 'live' && !shared && ((owner && owner.id === a.id) || ctx.isDoor(req));
     if (!a || (a.status !== 'live' && !preview && !shared)) {
-      return respond(res, page(ctx, { title: 'Not here', noindex: true, body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome">That act isn’t on the Stage</h1><p><a href="/stage">Discover the acts on the TAM Stage</a>.</p></div></section>` }), 404);
+      return respond(res, page(ctx, { title: 'Not here', noindex: true, body: html`<section class="section"><div class="wrap narrow"><h1 class="chrome">This page isn’t public yet</h1><p>New TAM Stage pages stay private until the artist (or TAM) makes them shareable.</p><p><b>Is it your page?</b> Open it from the email TAM sent you, or <a class="btn hot small" href="/stage/in">get a link to open it</a></p><p class="small muted">Looking for someone else? <a href="/stage">Discover the acts on the TAM Stage</a>.</p></div></section>` }), 404);
     }
     if (!preview) stage.viewed(a, req);
     const v = withProgress(stage.publicView(a));
