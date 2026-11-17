@@ -1666,3 +1666,5 @@ body.ar-embed { min-height: 0; background: transparent; }
 .ar-embed-foot { margin-top: 18px; }
 
 .st-adults { display: grid; gap: 8px; } .st-adults .btn { justify-self: start; }
+.st-still { display: grid; gap: 8px; } .st-still .btn { justify-self: start; } .st-still.ok { border-color: #7fe0a8; }
+.anr-still { display: block; font-style: normal; font-size: 11px; color: #7fe0a8; margin-top: 2px; }

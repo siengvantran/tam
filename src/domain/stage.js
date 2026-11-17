@@ -190,7 +190,7 @@ export function stageDomain(ctx) {
   }
   function ownerView(a) {
     const s = stats(a);
-    return { ...publicView(a), name: a.name, email: a.email, status: a.status, ownWork: Boolean(a.ownWork), checks: pageChecks(a), boosters: boosters(a, s), shareable: isPublic(a),
+    return { ...publicView(a), name: a.name, email: a.email, status: a.status, ownWork: Boolean(a.ownWork), checks: pageChecks(a), boosters: boosters(a, s), shareable: isPublic(a), stillPlay: a.stillPlay || null,
       canSubmit: a.status === 'draft' && pageChecks(a).every((c) => c.done), views: s.views, shares: s.shares, vibes: VIBES,
       messages: (a.decisions || []).filter((d) => d.message).map((d) => ({ at: d.at, message: d.message })).reverse(), shareUrl: `${site()}/stage/${a.slug}` };
   }
@@ -198,7 +198,7 @@ export function stageDomain(ctx) {
     const s = stats(a);
     return { ...ownerView(a), id: a.id, source: a.source, createdAt: a.createdAt, submittedAt: a.submittedAt, score: score(a, s), stats: s,
       suggest: suggest(a, s), ratings: a.ratings || {}, notes: a.notes || [], decisions: a.decisions || [], played: a.played || {}, circuit: a.circuit || '',
-      applications: a.applications || [], age: a.age || '', invitedAt: a.invitedAt || '', enquiry: a.enquiry || '' };
+      applications: a.applications || [], age: a.age || '', invitedAt: a.invitedAt || '', enquiry: a.enquiry || '', stillPlay: a.stillPlay || null };
   }
 
   // ---------- applying (from any play request) ----------
@@ -267,7 +267,7 @@ export function stageDomain(ctx) {
       <p>Thanks for asking to play at TAM. Every act gets its own page on the TAM Stage: your <b>microverse</b>. It shows your music to TAM’s crowd and your path to a festival spot, planet by planet: Signal, Orbit, Open Night, Showcase, Headline, Festival.</p>
       ${fresh && a.shareable ? `<p>Your basic page is up already: <a href="${e(site())}/stage/${e(a.slug)}">${e(site())}/stage/${e(a.slug)}</a>. Share it, and make a poster for it, so friends, fans and family can <b>pledge to see you live</b>. Every pledge moves you along the path five times as fast as a boost.</p>` : ''}
       <p>Tap below to build it: add a photo, your story, your links and a live video, tick the checklist, and send it to us to review. The more you add, and the more pledges you get, the faster you move.</p>
-      ${clubButton('Build my page', url)}<p style="font-size:13px;color:#8a7f86">The link works once, for 3 days. Ask for a new one any time at ${e(site())}/stage/apply.</p>`;
+      ${clubButton('Build my page', url)}<p style="font-size:13px;color:#8a7f86">The link works once, for 3 days. Ask for a new one any time at ${e(site())}/stage/in.</p>`;
     await ctx.mail.send({ to: a.email, subject: 'Your TAM Stage page: build your microverse', html: clubShell(inner, { preheader: 'Your path to a festival spot at TAM starts here.' }), text: `Build your TAM Stage page: ${url}` });
   }
   // A new application from /stage/apply goes to the team's enquiries inbox, like other enquiries.
@@ -303,11 +303,12 @@ export function stageDomain(ctx) {
       <p>Thank you for getting in touch about playing at TAM. We’ve made you an artist page on the <b>TAM Stage</b> from what you sent us. It’s yours to update and share.</p>
       ${young ? `<p>Because the performer is under 18, the page stays private until TAM has checked it, and a parent or guardian looks after it. The <b>Junior &amp; Youth Open Mic</b> (with JOM Youth Music) is the usual first stage for young performers at TAM.</p>`
     : `<p><b>Share it</b> with fans, friends, family and the TAM community so they can <b>pledge to see you live</b>. A pledge tells us people will come, and you can make a poster or story card for it in one tap. (First, tick the box on your page to confirm everyone in the act is 18 or over: then the page can be shared.)</p>`}
+      <p><b>Still keen to play?</b> Tap “Yes, we’d still love to play at TAM” on your page, and add anything we should know (dates, line-up, what you’d like to do).</p>
       <p><b>Update it</b> any time: add a photo, your story, links, a live video and your Instagram, TikTok or YouTube posts. The more you add, and the more pledges you get, the better we can plan your show.</p>
       ${clubButton('Open my page', url)}
       <p>TAM’s team will use everything you share, and your pledges, to find the best show format at TAM for you: an open night, the Sunday Showcase, Friday Night Live, your own night or a festival spot.</p>
       ${young ? '' : `<p style="font-size:14px">Your page: <a href="${e(page)}">${e(page)}</a></p>`}
-      <p style="font-size:13px;color:#8a7f86">The button works once, for 14 days. Ask for a new link any time at ${e(site())}/stage/apply (use this email).</p>`;
+      <p style="font-size:13px;color:#8a7f86">The button works once, for 14 days. Ask for a new link any time at ${e(site())}/stage/in (use this email).</p>`;
     await ctx.mail.send({ to: a.email, subject: `Your TAM artist page${a.act ? `: ${a.act}` : ''}`, html: clubShell(inner, { preheader: 'Your page on the TAM Stage: update it, share it, and gather pledges to see you live.' }), text: `Your TAM artist page: ${url}${young ? '' : `\nShare: ${page}`}` });
   }
 
@@ -366,11 +367,20 @@ export function stageDomain(ctx) {
       if (created) { await startSession(res, a); return send(res, 201, { ok: true, next: '/stage/me?welcome=1' }); }
       send(res, 201, { ok: true });
     });
+    r.post('/api/stage/link', async (req, res) => {
+      if (linkLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
+      const b = await readJson(req, 1024);
+      const mail = cleanEmail(b.email);
+      if (!mail) throw fail(400, 'Add a valid email address.');
+      const a = db.arArtists.find((x) => x.email === mail && !x.jom);
+      if (a) await mailLink(a).catch((err) => console.warn(`Stage link ${a.id}: ${err.message}`));
+      send(res, 200, { ok: true }); // the same answer either way: nobody learns which emails have a page
+    });
     r.post('/api/stage/in', async (req, res) => {
       const b = await readJson(req, 1024);
       const l = db.arLinks.find((x) => x.hash === hash(String(b.t || '')) && !x.usedAt && Date.parse(x.expires) > ctx.now());
       const a = l && db.arArtists.find((x) => x.id === l.a);
-      if (!a) throw fail(400, 'That link has expired or was already used. Ask for a new one on the apply page.');
+      if (!a) throw fail(400, 'That link has expired or was already used. Ask for a new one at /stage/in.');
       l.usedAt = iso();
       await startSession(res, a);
       send(res, 200, { ok: true, next: '/stage/me' });
@@ -443,6 +453,15 @@ export function stageDomain(ctx) {
       if (!p) throw fail(404, 'That post isn’t on your page.');
       if (p.src) await dropUpload(ctx, p.src);
       a.posts = a.posts.filter((x) => x !== p);
+      await save();
+      send(res, 200, { artist: ownerView(a) });
+    });
+    // "Yes, we'd still love to play at TAM": the artist confirms, with anything they'd like to add.
+    r.post('/api/stage/me/still-play', async (req, res) => {
+      const a = mine(req);
+      const b = await readJson(req, 4096);
+      a.stillPlay = { at: iso(), note: text(b.note, 1000), when: text(b.when, 200) };
+      a.updatedAt = iso();
       await save();
       send(res, 200, { artist: ownerView(a) });
     });

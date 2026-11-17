@@ -41,6 +41,13 @@ if (apply) {
 
 // ---------- the emailed link ----------
 const inBox = $('#st-in');
+const relink = $('#st-relink');
+if (inBox && relink && !new URLSearchParams(location.search).get('t')) { inBox.hidden = true; relink.hidden = false; }
+if (relink) relink.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try { await api('/api/stage/link', { method: 'POST', body: { email: relink.email.value } }); formMessage(relink, 'If that email has a page on the TAM Stage, a link is on its way. Check your inbox.', true); }
+  catch (err) { formMessage(relink, err.message); }
+});
 if (inBox) inBox.querySelector('button').addEventListener('click', async () => {
   try { const r = await api('/api/stage/in', { method: 'POST', body: { t: new URLSearchParams(location.search).get('t') || '' } }); location.replace(r.next); }
   catch (err) { inBox.querySelector('.err').textContent = err.message; }
@@ -106,6 +113,11 @@ function draw(a) {
       ${a.paths.length ? `<p class="small">You applied for: <b>${a.paths.map(esc).join(' · ')}</b> · <a href="/stage/apply">apply for more</a></p>` : ''}
       <p><a class="btn ghost small" href="/stage/${esc(a.slug)}" target="_blank">${a.shareable ? 'See my page ↗' : 'Preview my page ↗'}</a>
       ${a.shareable ? '<button class="btn hot small" type="button" data-copy-me>Copy my link</button> <button class="btn hot small" type="button" data-poster>🖼 Make my poster</button>' : ''} <button class="linkish small" type="button" data-out>Sign out</button></p></div></div>
+    ${a.stillPlay ? `<div class="st-msg st-still ok">✓ You’ve told us you’d still love to play at TAM${a.stillPlay.when ? ` (${esc(a.stillPlay.when)})` : ''}. Thank you! Share your page so fans can pledge, and we’ll be in touch.</div>`
+    : `<form class="st-msg st-still" data-still><b>Would you still like to play at TAM?</b> Let us know, and add anything we should know: dates that work, your line-up, what kind of show you’d love to do.
+      <label class="field"><span>Dates or times that work (optional)</span><input name="when" maxlength="200" placeholder="e.g. Friday nights in January"></label>
+      <label class="field"><span>Anything else (optional)</span><textarea name="note" rows="2" maxlength="1000"></textarea></label>
+      <button class="btn hot small" type="submit">Yes, we’d still love to play at TAM</button><p class="err" role="status" aria-live="polite"></p></form>`}
     ${!a.shareable && a.age !== 'under18' && ['draft', 'review'].includes(a.status) ? `<form class="st-msg st-adults" data-adults><b>Share your page and gather pledges.</b> Confirm everyone in the act is 18 or over and your page can be shared straight away, so fans, friends and family can pledge to see you live. (Under 18? A parent or guardian should get in touch, and TAM checks the page first.)<label class="check"><input type="checkbox" name="confirm"> Everyone in the act is 18 or over</label><button class="btn hot small" type="submit">Make my page shareable</button><p class="err" role="status" aria-live="polite"></p></form>` : ''}
     ${welcome ? `<div class="st-msg"><b>Welcome to the TAM Stage!</b> This is your page. ${a.shareable ? 'It’s up already, so share it and make a poster: friends, fans and family can pledge to see you live. ' : 'TAM checks pages for under-18s before anyone else can see them. '}Add a photo, your story and a live video, then send it to TAM. We’ve emailed you a link to get back here.</div>` : ''}
     ${a.messages.length ? `<div class="st-msg"><b>From TAM:</b> ${esc(a.messages[0].message)}</div>` : ''}
@@ -138,12 +150,17 @@ function draw(a) {
     </div></div>`;
 }
 if (me) {
-  api('/api/stage/me').then((r) => draw(r.artist)).catch((err) => { me.innerHTML = `<h1 class="chrome">Your TAM Stage page</h1><p>${esc(err.message)}</p><p><a class="btn hot" href="/stage/apply">Get a new link</a></p>`; });
+  api('/api/stage/me').then((r) => draw(r.artist)).catch((err) => { me.innerHTML = `<h1 class="chrome">Your TAM Stage page</h1><p>${esc(err.message)}</p><p><a class="btn hot" href="/stage/in">Get a new link</a></p>`; });
   me.addEventListener('submit', async (e) => {
     if (e.target.id === 'st-post') {
       e.preventDefault();
       try { draw((await api('/api/stage/me/post', { method: 'POST', body: { url: e.target.url.value, caption: e.target.caption.value } })).artist); }
       catch (err) { formMessage(e.target, err.message); }
+      return;
+    }
+    if (e.target.matches('[data-still]')) {
+      e.preventDefault();
+      try { draw((await api('/api/stage/me/still-play', { method: 'POST', body: { when: e.target.when.value, note: e.target.note.value } })).artist); track('stage_still_play'); } catch (err) { formMessage(e.target, err.message); }
       return;
     }
     if (e.target.matches('[data-adults]')) {

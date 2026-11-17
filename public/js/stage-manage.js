@@ -39,7 +39,7 @@ const card = (a) => `<button type="button" class="anr-card" data-open="${a.id}">
   <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>🎟 ${a.stats.pledged} pledged${a.stats.christmas ? ` (🎄 ${a.stats.christmas} for Christmas)` : ''} · ✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
   ${lastApp(a) ? `<small class="anr-paths">${lastApp(a).paths.map((k) => esc((D.pathways[k] || {}).name || k)).join(' · ')}${lastApp(a).draw.bring ? ` · brings ~${n(lastApp(a).draw.bring)}` : ''}${lastApp(a).show ? ' · 💡 show idea' : ''}</small>` : ''}
   ${a.suggest.action !== 'wait' && ACTIONS[a.suggest.action] ? `<em class="anr-sug ${a.suggest.action}">${ACTIONS[a.suggest.action]}</em>` : ''}</span>
-  <i class="anr-score" title="Score">${a.score}</i></button>`;
+  <i class="anr-score" title="Score">${a.score}</i>${a.stillPlay ? '<em class="anr-still" title="Still wants to play">✓ keen</em>' : ''}</button>`;
 
 function draw() {
   const by = (st) => D.artists.filter((a) => a.status === st);
@@ -86,6 +86,7 @@ function detail(id) {
   box.innerHTML = `<button class="linkish small" type="button" data-close>Close</button>
     <div class="anr-head">${a.photo ? `<img src="${esc(a.photo)}" alt="" width="88" height="88">` : ''}<div><h2>${esc(a.act)}</h2><p class="small">${esc(a.plays || '')}${a.from ? ` · ${esc(a.from)}` : ''}</p>
     <p class="small">${esc(D.stages[a.stage].name)} · ${esc(a.status)} · came from ${esc(a.source)} · ${esc(when(a.createdAt))}${a.invitedAt ? ` · invited ${esc(when(a.invitedAt))}` : ''}${a.enquiry ? ` · ${esc(a.enquiry)}` : ''}</p>
+    ${a.stillPlay ? `<p class="anr-suggest advance"><b>✓ Still wants to play</b> (${esc(when(a.stillPlay.at))})${a.stillPlay.when ? `: ${esc(a.stillPlay.when)}` : ''}${a.stillPlay.note ? `<br><small>${esc(a.stillPlay.note)}</small>` : ''}</p>` : ''}
     <p class="small"><a href="/stage/${esc(a.slug)}" target="_blank">Their microverse ↗</a>${a.youtube ? ` · <a href="https://www.youtube.com/watch?v=${esc(a.youtube)}" target="_blank" rel="noopener">Video ↗</a>` : ''}${a.email ? ` · <a href="mailto:${esc(a.email)}">${esc(a.email)}</a>` : ''}</p></div><i class="anr-score big">${a.score}</i></div>
     <p class="anr-suggest ${a.suggest.action}"><b>Suggested:</b> ${esc(a.suggest.text)}</p>
     ${application(a)}
