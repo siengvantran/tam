@@ -87,3 +87,11 @@ test('collection orders', () => {
   assert.equal(pounds(1760), '£17.60');
   assert.equal(pounds(1000), '£10');
 });
+
+test('a ticket closed by hand (soldOut) shows 0 left and cannot be bought', () => {
+  const sale = { mode: 'own', capacity: 250, tickets: [{ id: 'robin', name: 'Robin', price: 700, soldOut: true }, { id: 'ga', name: 'General Admission', price: 1000 }] };
+  assert.equal(ticketOptions(sale).find((t) => t.id === 'robin').left, 0);
+  assert.match(quote(sale, 'robin', 1).error, /Robin tickets have sold out/);
+  assert.equal(quote(sale, 'ga', 2).total, 2000);
+  assert.equal(fromPrice(sale), 1000); // "from £10" now, not £7
+});

@@ -56,7 +56,8 @@
     "name": "Robin",
     "tag": "Early bird",
     "price": 700,
-    "blurb": "Our early bird ticket. Grab them fast!"
+    "soldOut": true,
+    "blurb": "Our early bird ticket: all 15 have gone."
    },
    {
     "id": "ga",
