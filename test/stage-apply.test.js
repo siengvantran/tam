@@ -105,6 +105,12 @@ test('an act applies, gets a page at once, gathers pledges; staff see the applic
   assert.equal(a.applications[0].story.filmed, true);
   assert.equal(a.stats.pledged, 5);
   assert.ok(board.pathways.friday);
+  // staff tidy the page text
+  const ed = (await call(`/api/stage/manage/${a.id}`, { method: 'POST', headers: staff, body: { action: 'edit', bio: 'A tidy bio.', plays: 'Soul' } })).body.artist;
+  assert.equal(ed.bio, 'A tidy bio.');
+  assert.equal(ed.plays, 'Soul');
+  assert.equal((await call(`/api/stage/manage/${a.id}`, { method: 'POST', headers: staff, body: { action: 'edit', act: '' } })).status, 400);
+  assert.equal((await call(`/api/stage/manage/${a.id}`, { method: 'POST', body: { action: 'edit', bio: 'x' } })).status, 401);
   assert.equal((await call(`/api/stage/manage/${a.id}/pledges.csv`)).status, 401);
   const csv = await call(`/api/stage/manage/${a.id}/pledges.csv`, { headers: staff });
   assert.match(csv.body, /"Ana","fan@x\.test","4"/);
