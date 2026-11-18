@@ -168,8 +168,29 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.deepEqual(app.ctx.db.vendorState['korean-green-choy'].claimedBy, ['min@greenchoy.test']);
   assert.equal((await call('/food/korean-green-choy')).status, 404); // still a draft to the public
 
+  // emails found on the web: private, with confidence; confirm one, flag others to ask in person
+  const imp = await call('/api/food/manage/leads', { method: 'POST', headers: staff, body: { leads: {
+    'the-duck-shed': { leads: [{ email: 'Hello@Duck.test', confidence: 'high', source: 'https://duck.test/contact', note: 'contact page' }, { email: 'old@duck.test', confidence: 'low' }], phone: '020 0000 0000' },
+    'cocktail-caravan': { leads: [], notes: 'Probably run by MM', check: 'shack', checkWhy: 'Ask who manages the bar' },
+    nobody: { leads: [{ email: 'x@y.test' }] } } } });
+  assert.equal(imp.body.updated, 2);
+  let MM = (await call('/api/food/manage', { headers: staff })).body;
+  const duck = MM.vendors.find((v) => v.slug === 'the-duck-shed');
+  assert.deepEqual(duck.leads.map((l) => [l.email, l.confidence, l.status]), [['hello@duck.test', 'high', 'unverified'], ['old@duck.test', 'low', 'unverified']]);
+  assert.equal(MM.vendors.find((v) => v.slug === 'cocktail-caravan').check, 'shack');
+  await call('/api/food/manage/vendors/the-duck-shed', { method: 'POST', headers: staff, body: { action: 'lead', email: 'hello@duck.test', status: 'confirmed' } });
+  await call('/api/food/manage/vendors/the-duck-shed', { method: 'POST', headers: staff, body: { action: 'check', where: 'mm-group', why: 'Is old@ still used?' } });
+  MM = (await call('/api/food/manage', { headers: staff })).body;
+  assert.equal(MM.vendors.find((v) => v.slug === 'the-duck-shed').email, 'hello@duck.test');
+  assert.equal(MM.vendors.find((v) => v.slug === 'the-duck-shed').check, 'mm-group');
+  // a fresh crawl keeps what's been confirmed
+  await call('/api/food/manage/leads', { method: 'POST', headers: staff, body: { leads: { 'the-duck-shed': { leads: [{ email: 'new@duck.test', confidence: 'medium' }] } } } });
+  assert.deepEqual(app.ctx.db.vendorState['the-duck-shed'].leads.map((l) => l.email), ['new@duck.test', 'hello@duck.test']);
+  assert.equal((await call('/api/food/manage/leads', { method: 'POST', body: { leads: {} } })).status, 401);
+
   // public data carries no private contact details
   const pub = JSON.stringify((await call('/api/food')).body);
-  assert.doesNotMatch(pub, /sam@hotchick|hello@molo|@x\.test/);
+  assert.doesNotMatch(pub, /sam@hotchick|hello@molo|@x\.test|duck\.test/);
+  for (const p of ['/food', '/food/the-duck-shed', '/api/food/preorder']) assert.doesNotMatch((await call(p)).body.toString?.() || JSON.stringify((await call(p)).body), /duck\.test/);
   assert.match((await call('/api/food/manage/orders.csv', { headers: staff })).body, /Ana/);
 });
