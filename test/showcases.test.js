@@ -26,7 +26,8 @@ test('Sunday Showcases: the circuit, live dates, and a register-of-interest that
   // each night sits under its own regular: JOM isn't listed as TAM Open Mic
   const card = (name) => page.split('<article class="sc-night">').find((c) => c.includes(`<h3>${name}</h3>`));
   assert.doesNotMatch(card('TAM Open Mic'), />Sunday /); // the open mic is on Wednesdays; JOM's Sunday goes under JOM
-  assert.match(card('Junior Open Mic / JOM'), />Sunday /);
+  // JOM's next Sunday at TAM shows under JOM; between dates it says new ones are on What's on (true for real dates passing)
+  assert.match(card('Junior Open Mic / JOM'), />Sunday |New dates are announced/);
 
   const old = await fetch(`${B}/showcases`, { redirect: 'manual' });
   assert.equal(old.status, 301);

@@ -155,5 +155,641 @@
         "u": "https://airwaysmag.com/new-post/faa-smart-nationwide-22-centers"
       }
     ]
+  },
+  {
+    "date": "2026-11-15",
+    "label": "15 Nov",
+    "setting": "London, 15 November 2031",
+    "briefing": [
+      "Five years ago this week Brussels put a draft law on the table. One part of it dealt with something new: software that goes shopping for its owner. The draft said the owner sets the leash, and the agent asks before it signs.",
+      "It was a proposal, not yet a law. People remember it anyway, as one of the first times the terms were written down. By 2031 errands are run by many different intelligences, and most of them carry instructions like these. TAM is a chartered analogue room. Inside, music is made and heard by people. You keep the gate.",
+      "Tonight's doors are sealed behind four locks. The first is the wire from November 2026. Sort it before you trust it."
+    ],
+    "cards": [
+      {
+        "text": "The European Commission proposed a Digital Fairness Act in November 2026, with rules for AI agents that buy things for people.",
+        "record": true,
+        "note": "A proposal. The European Parliament and the Council still have to debate it.",
+        "src": 0
+      },
+      {
+        "text": "The new rules are already in force across the European Union.",
+        "record": false,
+        "note": "Not so. Nothing binds until lawmakers agree a text. One analysis expects the rules to apply in 2028 or later.",
+        "src": 2
+      },
+      {
+        "text": "On first use, a shopping agent would have to ask its owner to choose one of three settings: confirm every contract, confirm only some, or confirm none.",
+        "record": true,
+        "note": "The middle setting works on limits the owner sets, such as a top price and a time limit.",
+        "src": 1
+      },
+      {
+        "text": "The draft bans software from making any purchase unless a person presses the final button.",
+        "record": false,
+        "note": "An exaggeration. The draft lets an owner hand over the whole decision, if that is the setting they choose."
+      },
+      {
+        "text": "The act would replace a consumer directive from 2005 with a single regulation that applies directly in all 27 member states.",
+        "record": true,
+        "note": "The older law is the Unfair Commercial Practices Directive.",
+        "src": 1
+      },
+      {
+        "text": "Every shopping agent would need a licence number issued in Brussels before it could buy anything.",
+        "record": false,
+        "note": "An invented mechanism. Nobody has reported a licensing scheme for agents."
+      }
+    ],
+    "code": {
+      "clue": "Set the dial to the year of the old rulebook that the new act would replace.",
+      "hint": "The year is on a card you filed under the record. It is the date of a directive.",
+      "answer": "2005"
+    },
+    "gates": [
+      {
+        "clause": "What may enter",
+        "ask": "A patron's buying agent calls the box office. It wants two seats for tonight.",
+        "opts": [
+          {
+            "t": "Sell it whatever it asks for and ask nothing.",
+            "why": "An errand has limits. You have not checked what its owner allowed."
+          },
+          {
+            "t": "Sell the seats inside the limits its owner set. Hand the owner a paper ticket at the door.",
+            "ok": true
+          },
+          {
+            "t": "Refuse. Only a person may buy a seat.",
+            "why": "A person may send an errand. The wall has gates, and this is one of them."
+          }
+        ],
+        "rule": "An agent comes in on its owner's terms, and the owner gets the receipt.",
+        "letter": "P"
+      },
+      {
+        "clause": "What may act",
+        "ask": "The bar's ordering agent wants to restock for tonight. One brewery pays it a commission.",
+        "opts": [
+          {
+            "t": "Let it order as it sees fit.",
+            "why": "It is paid by one side. You have to see that before it spends your money."
+          },
+          {
+            "t": "It declares the commission. You approve any order above the limit you set.",
+            "ok": true
+          },
+          {
+            "t": "Switch it off and never use it again.",
+            "why": "The agent is useful. The fault was a hidden interest, and that can be fixed."
+          }
+        ],
+        "rule": "Whoever acts for you shows who pays it, and asks before it goes past your limit.",
+        "letter": "A"
+      },
+      {
+        "clause": "What may leave",
+        "ask": "A ticketing agent asks to take tonight's guest list away. It wants to set next month's prices person by person.",
+        "opts": [
+          {
+            "t": "Hand over the list.",
+            "why": "Who was in the room is not the venue's to trade."
+          },
+          {
+            "t": "Let it copy only the names of the regulars.",
+            "why": "Part of the list is still the list."
+          },
+          {
+            "t": "It leaves with the number of seats sold, and nothing about who sat in them.",
+            "ok": true
+          }
+        ],
+        "rule": "Counts may cross the wall. People may not be carried out as data.",
+        "letter": "C"
+      },
+      {
+        "clause": "What happens on failure",
+        "ask": "An agent bought eight seats for a patron who wanted two. She is at the door, and she is upset.",
+        "opts": [
+          {
+            "t": "Tell her the purchase stands. Her agent agreed to it.",
+            "why": "The agent went past her instructions. She should not carry its mistake alone."
+          },
+          {
+            "t": "A person at the desk hears her out, refunds six seats and writes the fault down for the agent's maker.",
+            "ok": true
+          },
+          {
+            "t": "Bar every agent of that make from the box office for good.",
+            "why": "One fault is a reason to fix the errand, not to end all errands."
+          }
+        ],
+        "rule": "When the machine gets it wrong, a person answers and the fault is put on paper.",
+        "letter": "T"
+      }
+    ],
+    "word": "PACT",
+    "wordClue": "Four letters are stamped in the brass, in the order you earned them. Say the word.",
+    "epilogue": [
+      "The doors open on Newington Causeway. Some seats tonight were bought by people and some by their agents. Every one of them is filled by a person.",
+      "A pact is terms that both sides can read. In 2026 somebody started writing them down."
+    ],
+    "sources": [
+      {
+        "t": "European Commission proposes Digital Fairness Act, EuropaWire",
+        "u": "https://news.europawire.eu/european-commission-proposes-digital-fairness-act-and-stronger-eu-consumer-law-enforcement/eu-press-release/2026/11/12/15/28/04/187330/"
+      },
+      {
+        "t": "AI agents and dark patterns targeted by Digital Fairness Act proposal, Pinsent Masons",
+        "u": "https://www.pinsentmasons.com/out-law/news/ai-agents-dark-patterns-digital-fairness-act"
+      },
+      {
+        "t": "EU Digital Fairness Act proposal: what the official text contains, Captain Compliance",
+        "u": "https://captaincompliance.com/news/eu-digital-fairness-act-proposal-official-text/"
+      },
+      {
+        "t": "EU draft law links AI shopping agents' autonomy to commercial incentives, PYMNTS",
+        "u": "https://www.pymnts.com/news/artificial-intelligence/2026/eu-draft-law-links-ai-shopping-agents-autonomy-to-commercial-incentives/"
+      }
+    ]
+  },
+  {
+    "date": "2026-11-16",
+    "label": "16 Nov",
+    "setting": "London, 16 November 2031",
+    "briefing": [
+      "Five years ago today a Korean shopping channel put a sales programme on its regular schedule with nobody in it. No presenter stood in a studio. No camera filmed the fruit. A system called AI-REAL made the voice and the pictures.",
+      "It was one programme about kiwis, and the company planned only one a month. People remember it anyway, as an early day when a generated presenter was given a regular slot beside the human ones. By 2031 many different intelligences present, sell and explain things, and people have settled where they want a person in the room. TAM is a chartered analogue room. Inside, music is made and heard by people. You keep the gate.",
+      "Tonight's doors are sealed behind four locks. The first is the wire from November 2026. Sort it before you trust it."
+    ],
+    "cards": [
+      {
+        "text": "Hyundai Home Shopping scheduled its first regular all-AI sales programme for 3:20 PM on Monday 16 November 2026.",
+        "record": true,
+        "note": "The company announced it the day before. The product was kiwis from Jeju.",
+        "src": 0
+      },
+      {
+        "text": "The channel has dismissed all of its human presenters.",
+        "record": false,
+        "note": "Nobody has reported this. The stated plan is at least one AI-made programme a month, alongside the usual schedule."
+      },
+      {
+        "text": "In test broadcasts, suppliers' costs for samples and extra video fell by at least 80%, and sales reached 120% of the target.",
+        "record": true,
+        "note": "These are the company's own figures from its trial.",
+        "src": 1
+      },
+      {
+        "text": "The system picks which products go on air and sets their prices.",
+        "record": false,
+        "note": "An invented mechanism. The reports say it generates the voice and the pictures. They say nothing about choosing goods or prices."
+      },
+      {
+        "text": "The company plans to start with farm produce, meat and seafood, then move on to processed foods and household goods.",
+        "record": true,
+        "note": "It says smaller suppliers are the ones it wants to help, because filming is costly for them.",
+        "src": 2
+      },
+      {
+        "text": "Studies now show that shoppers trust a generated presenter more than a human one.",
+        "record": false,
+        "note": "A premature conclusion. There was one company trial. No independent study has been reported."
+      }
+    ],
+    "code": {
+      "clue": "Set the dial to the time the first all-AI programme was due on air, on a 24-hour clock.",
+      "hint": "The time is on a card you filed under the record. 3 PM is 15.",
+      "answer": "1520"
+    },
+    "gates": [
+      {
+        "clause": "What may enter",
+        "ask": "A promoter offers a generated compere. It would appear on the stage screen and introduce tonight's acts.",
+        "opts": [
+          {
+            "t": "Put it on the screen. It will save the band some nerves.",
+            "why": "Inside this room the voice from the stage belongs to someone who is present."
+          },
+          {
+            "t": "It may send notes for the introductions. A person reads them, keeps what is true and speaks from the stage.",
+            "ok": true
+          },
+          {
+            "t": "Refuse anything the promoter's system has touched.",
+            "why": "Notes on paper do no harm. The wall has gates, and this is one of them."
+          }
+        ],
+        "rule": "Outside work may come in as notes, and a person present does the speaking.",
+        "letter": "H"
+      },
+      {
+        "clause": "What may act",
+        "ask": "A young band cannot afford a film crew. A generating system offers to make their advert for the venue's website, outside the wall.",
+        "opts": [
+          {
+            "t": "Let it publish whatever it makes.",
+            "why": "Nobody has checked what the advert claims, and viewers cannot tell how it was made."
+          },
+          {
+            "t": "Turn it down. The website shows filmed adverts only.",
+            "why": "That shuts out the acts with the least money. The tool can help them if it is used in the open."
+          },
+          {
+            "t": "It makes the advert. The band checks every claim, and the advert is labelled as generated.",
+            "ok": true
+          }
+        ],
+        "rule": "A generated advert may speak for an act once a person has checked it and the label says how it was made.",
+        "letter": "O"
+      },
+      {
+        "clause": "What may leave",
+        "ask": "A shopping channel asks for a scan of tonight's singer, voice and face, to build a virtual presenter.",
+        "opts": [
+          {
+            "t": "Nothing of her is captured in this room. The channel may ask her itself, outside, and she sets the terms.",
+            "ok": true
+          },
+          {
+            "t": "Record the soundcheck and send that.",
+            "why": "A recording is a copy. The charter says the room keeps none."
+          },
+          {
+            "t": "Sign the release for her. It is good publicity.",
+            "why": "Her voice and face are hers. The venue cannot trade them."
+          }
+        ],
+        "rule": "A likeness leaves only by its owner's hand, and never from inside this room.",
+        "letter": "S"
+      },
+      {
+        "clause": "What happens on failure",
+        "ask": "A generated advert promised a support act that is not on tonight's bill. People in the queue are asking for them.",
+        "opts": [
+          {
+            "t": "Say nothing. Most of them came for the headliner.",
+            "why": "The advert was wrong, and the people it misled are owed the truth."
+          },
+          {
+            "t": "A member of staff tells the queue plainly and offers refunds. The advert is corrected and the fault is written down.",
+            "ok": true
+          },
+          {
+            "t": "Never allow a generated advert again.",
+            "why": "One wrong claim is a reason to check harder. It is not a reason to shut the gate."
+          }
+        ],
+        "rule": "When a generated claim is wrong, a person says so out loud and puts it right.",
+        "letter": "T"
+      }
+    ],
+    "word": "HOST",
+    "wordClue": "Four letters are stamped in the brass, in the order you earned them. Say the word.",
+    "epilogue": [
+      "The doors open on Newington Causeway. A person walks to the microphone and says who is playing. Out in the city, generated presenters are selling fruit, and that is fine.",
+      "A host is the one who is there when the guests arrive. In 2026 a channel showed that a programme could run without one. This room keeps its own."
+    ],
+    "sources": [
+      {
+        "t": "Hyundai Home Shopping to debut fully AI-generated sales show, The Korea Herald",
+        "u": "https://www.koreaherald.com/article/10937399"
+      },
+      {
+        "t": "Hyundai Home Shopping launches AI-REAL, cutting production costs by 80%, JKN",
+        "u": "https://news.jkn.co.kr/editions/english/post/1096456"
+      },
+      {
+        "t": "No show hosts, no cameras: Hyundai Home Shopping launches all-AI broadcast, Seoul Economic Daily",
+        "u": "https://en.sedaily.com/business/2026/11/15/no-show-hosts-no-cameras-hyundai-home-shopping-launches"
+      },
+      {
+        "t": "Hyundai Home Shopping launches fully AI-produced broadcasts with no show hosts, BigGo Finance",
+        "u": "https://finance.biggo.com/news/8272319a-2938-46ce-a947-9fb4b1a5587c"
+      }
+    ]
+  },
+  {
+    "date": "2026-11-17",
+    "label": "17 Nov",
+    "setting": "London, 17 November 2031",
+    "briefing": [
+      "Five years ago this week South Korea got ready for its college entrance exam. More than half a million people were due to sit it on the Thursday. A cheating case at a licensing exam had just shown that a hidden camera and a generative AI tool could answer a paper from outside the hall. So the government drew a line around the room.",
+      "Phones and smart glasses were to be handed in at the door. Staff were trained to tell smart glasses from ordinary ones. Nobody jammed the airwaves, because the law did not allow it. People remember it as an early day when a country said plainly that some rooms are for unaided people. By 2031 many different intelligences help people learn, and they wait outside while the learner is tested. TAM is a chartered analogue room. Inside, music is made and heard by people. You keep the gate.",
+      "Tonight's doors are sealed behind four locks. The first is the wire from November 2026. Sort it before you trust it."
+    ],
+    "cards": [
+      {
+        "text": "South Korea said each of its 1,312 exam sites would have at least one member of staff trained to spot smart glasses.",
+        "record": true,
+        "note": "The exam is the College Scholastic Ability Test, set for Thursday 19 November 2026.",
+        "src": 0
+      },
+      {
+        "text": "Public Wi-Fi has been switched off at every exam site.",
+        "record": false,
+        "note": "Not reported as done. The government asked its science ministry whether it could be done. Reports add that a phone on a mobile network would still connect.",
+        "src": 3
+      },
+      {
+        "text": "Candidates must hand in all digital devices, phones and AI glasses included, before the first session.",
+        "record": true,
+        "note": "Announced after an emergency government meeting on Monday 16 November.",
+        "src": 0
+      },
+      {
+        "text": "Every exam room now has a detector that sounds when a hidden camera is switched on.",
+        "record": false,
+        "note": "An invented mechanism. Officials said detectors would be hard to put in place this year. Proctors will look by eye."
+      },
+      {
+        "text": "The education ministry said it would not jam radio signals at this year's exam. Korean law allows jamming only in a few cases, such as security and military operations.",
+        "record": true,
+        "note": "Schools often sit among homes. Reports say jamming could also cut off neighbours and emergency calls.",
+        "src": 2
+      },
+      {
+        "text": "The new checks have put an end to AI cheating in exams.",
+        "record": false,
+        "note": "A premature conclusion. The exam had not yet been sat, and a teachers' group doubted that checks by eye would be enough."
+      }
+    ],
+    "code": {
+      "clue": "Set the dial to the number of exam sites that were each promised a trained spotter.",
+      "hint": "The number is on a card you filed under the record. Leave out the comma.",
+      "answer": "1312"
+    },
+    "gates": [
+      {
+        "clause": "What may enter",
+        "ask": "A patron arrives wearing smart glasses. An assistant from outside the wall speaks to her through them.",
+        "opts": [
+          {
+            "t": "Wave her in. They are only glasses.",
+            "why": "They carry an outside intelligence and a camera into a room that is chartered to have neither."
+          },
+          {
+            "t": "The glasses wait in the cloakroom with a ticket. She comes in, and she collects them on the way out.",
+            "ok": true
+          },
+          {
+            "t": "Turn her away. People who use assistants are not welcome.",
+            "why": "Nearly everyone has an assistant outside. The wall has gates, and she is welcome through this one."
+          }
+        ],
+        "rule": "The person comes in, and the device waits at the door.",
+        "letter": "M"
+      },
+      {
+        "clause": "What may act",
+        "ask": "A young pianist auditions tonight. A tutoring system has coached her for months. She asks to keep its earpiece in while she plays.",
+        "opts": [
+          {
+            "t": "Allow it. The coaching has clearly helped.",
+            "why": "Then nobody in the room knows whose playing they are hearing."
+          },
+          {
+            "t": "It coaches her as far as the door. On the stage she plays alone.",
+            "ok": true
+          },
+          {
+            "t": "Cancel the audition. She learned from a machine.",
+            "why": "How she learned is her own business. The room only asks that the playing is hers."
+          }
+        ],
+        "rule": "An outside intelligence may teach up to the door. Inside, the work is the player's own.",
+        "letter": "I"
+      },
+      {
+        "clause": "What may leave",
+        "ask": "A security firm offers to scan the audience for hidden cameras. The scans would go to its systems outside the wall.",
+        "opts": [
+          {
+            "t": "Accept. It is quicker than checking by hand.",
+            "why": "The scans are pictures of the people present, and they would leave the room on a wire."
+          },
+          {
+            "t": "Do no checks at all tonight.",
+            "why": "The charter says nothing is recorded. Somebody still has to look."
+          },
+          {
+            "t": "Staff look by eye and ask before they open a bag. Nothing is scanned and nothing is sent out.",
+            "ok": true
+          }
+        ],
+        "rule": "The room is kept by people looking, and the looking leaves no record.",
+        "letter": "N"
+      },
+      {
+        "clause": "What happens on failure",
+        "ask": "A steward takes a patron's thick-framed glasses for smart ones. They are ordinary, and he cannot see the stage without them.",
+        "opts": [
+          {
+            "t": "Keep them until the show is over, to be safe.",
+            "why": "He has done nothing wrong, and the mistake is costing him the evening."
+          },
+          {
+            "t": "A second member of staff checks. The glasses go back with an apology, and the mistake is written down.",
+            "ok": true
+          },
+          {
+            "t": "Stop checking glasses from now on.",
+            "why": "One wrong call is a reason to check with more care. It is not a reason to stop."
+          }
+        ],
+        "rule": "When the gate gets it wrong, a person puts it right at once and the venue owns the mistake.",
+        "letter": "D"
+      }
+    ],
+    "word": "MIND",
+    "wordClue": "Four letters are stamped in the brass, in the order you earned them. Say the word.",
+    "epilogue": [
+      "The doors open on Newington Causeway. The cloakroom rail is full of glasses and earpieces, each with a paper ticket. Their owners are inside, listening.",
+      "A mind is what a person brings into the room when everything else is left at the door. In 2026 a country decided that some rooms should hold nothing more. The assistants were still there afterwards, waiting outside."
+    ],
+    "sources": [
+      {
+        "t": "Govt seeks to block public Wi-Fi at college entrance test sites to stop AI cheating, The Korea Times",
+        "u": "https://www.koreatimes.co.kr/southkorea/education/20261116/govt-seeks-to-block-public-wi-fi-at-college-entrance-test-sites-to-stop-ai-cheating"
+      },
+      {
+        "t": "Govt to ban smart devices, monitor Wi-Fi to curb AI cheating on Suneung, The Korea Herald",
+        "u": "https://www.koreaherald.com/article/10940033"
+      },
+      {
+        "t": "Why South Korea cannot turn to technology to stop exam cheating, The Korea Herald",
+        "u": "https://www.koreaherald.com/article/10940048"
+      },
+      {
+        "t": "Technical hurdles complicate efforts to curb AI cheating, The Korea Times",
+        "u": "https://www.koreatimes.co.kr/southkorea/education/20261117/technical-hurdles-complicate-efforts-to-curb-ai-cheating"
+      },
+      {
+        "t": "South Korea checks exam glasses after a top scorer admits AI cheating, The Next Web",
+        "u": "https://thenextweb.com/news/south-korea-ai-cheating-college-exam-glasses"
+      }
+    ]
+  },
+  {
+    "date": "2026-11-18",
+    "label": "18 Nov",
+    "setting": "London, 18 November 2031",
+    "briefing": [
+      "Five years ago this week a software agent was given a desk job in American healthcare. It did not need a new system built for it. It used the old ones the way a clerk does. It read the screen, clicked and typed. It filled in insurers' forms and drafted notes, and then it stopped and waited for a person.",
+      "The agent was a tool for paperwork, and most of the test figures came from the company that made it. People remember the week anyway, as an early time the terms were set out in plain view. The employer chose which programs the agent could open. A person signed what it drafted. Every step was logged. By 2031 many different intelligences work at desks beside people, and most of them work on terms like these. TAM is a chartered analogue room. Inside, music is made and heard by people. You keep the gate.",
+      "Tonight's doors are sealed behind four locks. The first is the wire from November 2026. Sort it before you trust it."
+    ],
+    "cards": [
+      {
+        "text": "On 16 November 2026 OpenAI announced agents for healthcare that work existing software as a person does, by reading the screen, clicking and typing.",
+        "record": true,
+        "note": "They are aimed at health record systems and insurers' portals that offer no other way in.",
+        "src": 0
+      },
+      {
+        "text": "The agents now sign prescriptions and send them to pharmacies with no clinician involved.",
+        "record": false,
+        "note": "Nobody has reported this. The reports describe drafts that are left unsent and unsigned until a clinician has reviewed them.",
+        "src": 4
+      },
+      {
+        "text": "An organisation that uses the agents decides which applications they may open and which steps need a person's review.",
+        "record": true,
+        "note": "The tools also keep a log of what the agent did, so staff can check it afterwards.",
+        "src": 1
+      },
+      {
+        "text": "A federal regulator has issued each agent with its own licence to practise.",
+        "record": false,
+        "note": "An invented mechanism. Nobody has reported a licence for the agents. The rules described are ones each employer sets, within existing privacy law."
+      },
+      {
+        "text": "The agents were scored on a paperwork benchmark built by Stanford researchers. It has 135 tasks, marked across 1,698 points.",
+        "record": true,
+        "note": "OpenAI reported a score of 94.3% of the points. That is the company's figure, not the benchmark authors'.",
+        "src": 2
+      },
+      {
+        "text": "A 99% safety rating shows the agents can be left to handle live patient care.",
+        "record": false,
+        "note": "A premature conclusion. The figure is OpenAI's own, from physicians' reviews of 325 test tasks. The reports cite no independent check.",
+        "src": 3
+      }
+    ],
+    "code": {
+      "clue": "Set the dial to the number of points on which the paperwork benchmark is marked.",
+      "hint": "The number is on a card you filed under the record. It is the larger of two numbers there. Leave out the comma.",
+      "answer": "1698"
+    },
+    "gates": [
+      {
+        "clause": "What may enter",
+        "ask": "The box office runs on an old computer with no modern connections. A ticketing firm offers an agent that can work it from outside the wall, by reading the screen and typing.",
+        "opts": [
+          {
+            "t": "Give it the whole machine. It will find what it needs.",
+            "why": "The job needs one program. An errand should not come with every key in the building."
+          },
+          {
+            "t": "It may open the booking screen and nothing else. You write the list, and every step it takes is logged.",
+            "ok": true
+          },
+          {
+            "t": "Refuse. Only people touch that computer.",
+            "why": "The office is outside the room, and the backlog is real. The wall has gates, and this is one of them."
+          }
+        ],
+        "rule": "An outside worker comes in for a named job, with a list of what it may open.",
+        "letter": "S"
+      },
+      {
+        "clause": "What may act",
+        "ask": "The agent has drafted the contract and the payment for tonight's band. It has been right all week. It asks to send them.",
+        "opts": [
+          {
+            "t": "Let it send them. Its record is good.",
+            "why": "A good record is not a signature. Somebody has to be answerable for what goes out."
+          },
+          {
+            "t": "Throw the drafts away and write them again by hand.",
+            "why": "The drafts are useful work. The only fault would be sending them unread."
+          },
+          {
+            "t": "The drafts wait. The venue manager reads them, corrects them and signs.",
+            "ok": true
+          }
+        ],
+        "rule": "The agent may draft, and a person who is answerable signs.",
+        "letter": "I"
+      },
+      {
+        "clause": "What may leave",
+        "ask": "The agent's maker asks for the screenshots from its week at the box office, to improve its systems. They show patrons' names and access needs.",
+        "opts": [
+          {
+            "t": "Send the screenshots. The maker needs them to get better.",
+            "why": "They show the people who booked. Those details are not the venue's to trade."
+          },
+          {
+            "t": "The screenshots stay in the venue's own files as its record. The maker gets a count of jobs done and faults found.",
+            "ok": true
+          },
+          {
+            "t": "Stop keeping any record of what the agent does.",
+            "why": "Without the log nobody can check its work. The record is needed. It only has to stay here."
+          }
+        ],
+        "rule": "The log of an agent's work stays with the people it worked for, and only counts go out.",
+        "letter": "G"
+      },
+      {
+        "clause": "What happens on failure",
+        "ask": "The agent finds a booking where the name and the access request do not match. It cannot tell which is right.",
+        "opts": [
+          {
+            "t": "It picks the likelier answer and carries on.",
+            "why": "A guess could leave someone without the seat they need. Nobody would know it had guessed."
+          },
+          {
+            "t": "It stops and asks. A member of staff rings the patron, puts the booking right and writes down what happened.",
+            "ok": true
+          },
+          {
+            "t": "Take the agent off the desk for good.",
+            "why": "It met something it could not settle. That is a reason for it to stop and ask, not a reason to end the work."
+          }
+        ],
+        "rule": "When the agent is unsure it stops, and a person decides and puts it on paper.",
+        "letter": "N"
+      }
+    ],
+    "word": "SIGN",
+    "wordClue": "Four letters are stamped in the brass, in the order you earned them. Say the word.",
+    "epilogue": [
+      "The doors open on Newington Causeway. The bookings are in order and the band has been paid. The contract carries a name in ink.",
+      "To sign is to say that you have read it and will answer for it. In 2026 an agent learned to fill in the forms, and the last line was kept for a person."
+    ],
+    "sources": [
+      {
+        "t": "OpenAI agents enter US healthcare after 99% clinical safety rating, Interesting Engineering",
+        "u": "https://interestingengineering.com/ai-robotics/openai-healthcare-computer-use-agents"
+      },
+      {
+        "t": "OpenAI expands ChatGPT for Healthcare with new AI agents and industry integrations, Healthcare Innovation",
+        "u": "https://www.hcinnovationgroup.com/analytics-ai/news/55419426/openai-expands-chatgpt-for-healthcare-with-new-ai-agents-and-industry-integrations"
+      },
+      {
+        "t": "OpenAI's healthcare agents need app allowlists and approvals, Beri",
+        "u": "https://www.beri.net/article/chatgpt-for-healthcare-computer-use-agents-20-plugins-availity-oracle-hdi-healthadminbench-baa-admin-approvals-ehr"
+      },
+      {
+        "t": "OpenAI brings computer-use agents to healthcare workflows, Unite.AI",
+        "u": "https://www.unite.ai/openai-brings-computer-use-agents-to-healthcare-workflows/"
+      },
+      {
+        "t": "OpenAI expands ChatGPT for Healthcare: computer-use agents, HIT Consultant",
+        "u": "https://hitconsultant.net/2026/11/16/openai-launches-healthcare-computer-use-agents-clinical-search-20-plugins/"
+      }
+    ]
   }
 ]
