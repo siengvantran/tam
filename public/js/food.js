@@ -215,7 +215,7 @@ if (me) {
       <label class="field full"><span>About you</span><textarea name="description" rows="5" maxlength="1500">${esc(P.description)}</textarea></label>
       <div class="field full"><span>Dietary options you offer</span><div class="row-btn">${dietBoxes('dietary', P.dietary)}</div></div></div>
       <h3>Photos</h3><div class="jm-thumbs" id="fd-photos"></div><label class="btn ghost small">Add a photo<input type="file" accept="image/*" id="fd-photo" hidden></label>
-      <h3>Menu</h3><p class="small muted">Dishes with a price can be pre-ordered. V = vegetarian, Ve = vegan, H = halal, GF = gluten-free.</p><div id="fd-menu">${rows()}</div>
+      <h3>Menu</h3><p class="small muted">Food only: TAM runs the bar, and no outside drinks are allowed in, so please leave drinks off. Dishes with a price can be pre-ordered. V = vegetarian, Ve = vegan, H = halal, GF = gluten-free.</p><div id="fd-menu">${rows()}</div>
       <button type="button" class="btn ghost small" id="fd-add">Add a dish</button>
       <p><button class="btn hot" type="submit">Send to TAM to approve</button></p><p class="err" role="status" aria-live="polite"></p></form>`;
     const f = $('#fd-prof');

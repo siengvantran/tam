@@ -45,7 +45,9 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
 
   // the import: every food and drink trader at MM Elephant & Castle, all drafts, menus included
   const all = app.ctx.food.all();
-  assert.equal(all.length, 29);
+  assert.equal(all.length, 24);
+  assert.ok(!all.some((v) => /beershack|cocktail|wine|german-kraft/.test(v.slug)), 'no bars: TAM runs the bar');
+  assert.ok(all.every((v) => v.menu.every((m) => !/drink|beer|cocktail|spirit|soft/i.test(m.section))), 'no drinks on menus');
   assert.ok(all.every((v) => v.status === 'draft'));
   assert.ok(!all.some((v) => v.name === 'TAM'));
   const hc = app.ctx.food.vendor('hot-chick');
@@ -64,7 +66,7 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.match(prev.body, /Preview: this listing is <b>draft<\/b>/);
   assert.equal((await call('/api/food/manage')).status, 401);
   const M = await call('/api/food/manage', { headers: staff });
-  assert.equal(M.body.vendors.length, 29);
+  assert.equal(M.body.vendors.length, 24);
 
   // approve: live
   assert.equal((await call('/api/food/manage/vendors/hot-chick', { method: 'POST', headers: staff, body: { action: 'approve' } })).status, 200);
@@ -95,6 +97,13 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.equal(me.body.vendors[0].slug, 'hot-chick');
   assert.equal((await call('/api/food/me/molo', { method: 'POST', cookie, body: {} })).status, 403);
 
+  // food only: a menu with drinks is refused (TAM runs the bar)
+  const drinks = await call('/api/food/me/hot-chick', { method: 'POST', cookie, body: { ...me.body.vendors[0], menu: [{ section: 'Cocktails', name: 'Rum punch', price: '8' }] } });
+  assert.equal(drinks.status, 400);
+  assert.match(drinks.body.error, /food only/);
+  // Vivian's list to ask in person
+  const visit = (await call('/api/food/manage', { headers: staff })).body.vendors.filter((v) => v.check === 'visit').map((v) => v.slug);
+  assert.ok(visit.includes('hot-chick') && visit.includes('badiani') && visit.length === 16, visit.join());
   // a profile update waits for TAM; contact details are refused
   const v0 = me.body.vendors[0];
   assert.equal((await call('/api/food/me/hot-chick', { method: 'POST', cookie, body: { ...v0, description: 'Call 020 7946 0000 now' } })).status, 400);
@@ -171,13 +180,13 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   // emails found on the web: private, with confidence; confirm one, flag others to ask in person
   const imp = await call('/api/food/manage/leads', { method: 'POST', headers: staff, body: { leads: {
     'the-duck-shed': { leads: [{ email: 'Hello@Duck.test', confidence: 'high', source: 'https://duck.test/contact', note: 'contact page' }, { email: 'old@duck.test', confidence: 'low' }], phone: '020 0000 0000' },
-    'cocktail-caravan': { leads: [], notes: 'Probably run by MM', check: 'shack', checkWhy: 'Ask who manages the bar' },
+    mazavaroo: { leads: [], notes: 'No email online', check: 'shack', checkWhy: 'Ask who manages the bar' },
     nobody: { leads: [{ email: 'x@y.test' }] } } } });
   assert.equal(imp.body.updated, 2);
   let MM = (await call('/api/food/manage', { headers: staff })).body;
   const duck = MM.vendors.find((v) => v.slug === 'the-duck-shed');
   assert.deepEqual(duck.leads.map((l) => [l.email, l.confidence, l.status]), [['hello@duck.test', 'high', 'unverified'], ['old@duck.test', 'low', 'unverified']]);
-  assert.equal(MM.vendors.find((v) => v.slug === 'cocktail-caravan').check, 'shack');
+  assert.equal(MM.vendors.find((v) => v.slug === 'mazavaroo').check, 'shack');
   await call('/api/food/manage/vendors/the-duck-shed', { method: 'POST', headers: staff, body: { action: 'lead', email: 'hello@duck.test', status: 'confirmed' } });
   await call('/api/food/manage/vendors/the-duck-shed', { method: 'POST', headers: staff, body: { action: 'check', where: 'mm-group', why: 'Is old@ still used?' } });
   MM = (await call('/api/food/manage', { headers: staff })).body;
