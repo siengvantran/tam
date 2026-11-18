@@ -9,6 +9,28 @@ import { html as respond, redirect, cspFramedBy } from '../lib/http.js';
 import { layout } from './layout.js';
 import { RULES, HALF } from '../domain/club.js';
 
+// Why the room exists: TAM in five years' time, and why live music needs keeping alive.
+// The same words every day, whatever the day's news, for fans and for artists. `site` prefixes links in the embed.
+const NEWS = 'https://southwarknews.co.uk/area/elephant-and-castle/southwark-council-refuse-massive-elephant-castle-development-as-just-60-out-of-892-flats-would-be-affordable/';
+function intro() {
+  return html`<p class="ar-why-intro">It’s 2031. Machines write, compose and recommend almost everything. TAM is still a room where music is played once, by people, in front of people, and never copied. Today you keep its gate.</p>`;
+}
+function why(site = '') {
+  return html`<section class="ar-why" aria-labelledby="ar-why-title">
+    <h2 id="ar-why-title" class="chrome">Why this room exists</h2>
+    <p>The Analogue Room is a game. The stakes are real. Small venues are where live music starts: where an artist plays their first gig, finds their first fans and learns their craft, and where you hear something no algorithm would have picked for you. Every year more of them close.</p>
+    <p>TAM’s home at Elephant &amp; Castle is in the path of redevelopment. In September, <a href="${NEWS}" target="_blank" rel="noopener">Southwark Council turned down the developers’ revised plans</a>. That gives us more time, and we’re using it to hand the stage to our community.</p>
+    <h3>TAM in five years’ time</h3>
+    <p>Still a room for people, not playlists: open nights for first-timers, the Sunday Showcase, the TAM Stage path for new acts, young artists from JOM on the same stage as the headliners, and festivals like The Best Christmas Ever. The future in this game is fiction. Whether rooms like this one are still here in 2031 isn’t: that part is up to us.</p>
+    <div class="ar-why-two">
+      <div><h3>If you love live music</h3><p>Every ticket, pledge and boost keeps a stage open. Come to a show, bring a friend, and back an act you believe in on the TAM Stage.</p>
+        <p><a class="btn hot small" href="${site}/whats-on">What’s on</a> <a class="btn ghost small" href="${site}/artists#want-to-play">Back an artist</a></p></div>
+      <div><h3>If you make music</h3><p>This is your room. Ask to play, build your page on the TAM Stage, and let your fans pledge to see you live. The more support you gather, the faster you move from an open night to a festival stage.</p>
+        <p><a class="btn hot small" href="${site}/stage/apply">Ask to play at TAM</a> <a class="btn ghost small" href="${site}/stage">The TAM Stage</a></p></div>
+    </div>
+  </section>`;
+}
+
 function page(ctx, room) {
   const r = room.today();
   const pts = RULES.room.pts;
@@ -19,12 +41,14 @@ function page(ctx, room) {
       <div class="label">TAM · a new room every morning</div>
       <h1 class="chrome gold">The Analogue Room</h1>
       <p class="ar-note">The news in this room is real and sourced. The future it is set in is fiction.</p>
+      ${intro()}
       ${r ? html`<p class="ar-setting">${r.setting}</p>
       <div class="ar-briefing">${r.briefing.map((p) => html`<p>${p}</p>`)}</div>
       <p class="ar-points">Open the doors and <a href="/club">TAM Club</a> members bank <b>+${pts} points</b>, once a day. ${HALF} points is a drink on the house.</p>
       <div id="room" data-room><p class="muted">Unlocking the gatehouse…</p></div>
       <noscript><p class="muted">The locks need JavaScript switched on.</p></noscript>`
     : html`<p class="lede">The gatehouse is quiet today. A new room opens tomorrow morning.</p>`}
+      ${why()}
     </div></section>`,
   });
 }
@@ -79,12 +103,14 @@ function playPage(ctx, room) {
   <div class="label">TAM · a new escape room every morning</div>
   <h1 class="chrome gold">The Analogue Room</h1>
   <p class="ar-note">The news in this room is real and sourced. The future it is set in is fiction.</p>
+  ${intro()}
   ${r ? html`<p class="ar-setting">${r.setting}</p>
   <div class="ar-briefing">${r.briefing.map((p) => html`<p>${p}</p>`)}</div>
   <p class="ar-points">Open the doors and <a href="${site}/club">TAM Club</a> members bank <b>+${pts} points</b>, once a day. ${HALF} points is a drink on the house at TAM.</p>
   <div id="room" data-room><p class="muted">Unlocking the gatehouse…</p></div>
   <noscript><p class="muted">The locks need JavaScript switched on.</p></noscript>`
     : html`<p class="lede">The gatehouse is quiet today. A new room opens tomorrow morning.</p>`}
+  ${why(site)}
   <p class="small muted ar-embed-foot">Made by <a href="${site}/analogue-room">TAM, the Temple of Art and Music</a>.</p>
 </div></main><script type="module" src="/js/room.js"></script><script type="module" src="/js/room-embed.js"></script></body></html>`}`;
 }
