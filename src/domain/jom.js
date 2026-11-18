@@ -363,11 +363,11 @@ export function jomDomain(ctx) {
           .concat((o.posts || []).filter((x) => x.src && !next.some((y) => y.src === x.src)).map((x) => x.src));
         Object.assign(o, { name: p.changes.name, bio: p.changes.bio, links: p.changes.links, photos: p.changes.photos, posts: next });
         if (ctx.stage && o.stage) ctx.stage.syncJom(act(p.act)); // their TAM artist profile follows the approved page
-        Object.assign(p, { status: 'approved', by: who.name, decidedAt: iso() });
+        Object.assign(p, { status: 'approved', decidedBy: who.name, decidedAt: iso() }); // p.by stays the parent's email
         for (const u of gone) await dropFile(u);
         tell(p.by, 'JOM × TAM: your update is live', 'Your update is live', `<p>Your changes to ${e(o.name || p.act)}’s page are now on <a href="${e(site())}/jom/${e(p.act)}">their page</a>.</p>`);
       } else if (b.action === 'reject') {
-        Object.assign(p, { status: 'rejected', by: who.name, decidedAt: iso(), reason: text(b.message, 600) });
+        Object.assign(p, { status: 'rejected', decidedBy: who.name, decidedAt: iso(), reason: text(b.message, 600) });
         tell(p.by, 'JOM × TAM: about your update', 'A change we couldn’t make', `<p>${e(b.message || 'We couldn’t put this update on the page.')}</p><p>You can edit it and send it again.</p>`);
       } else throw fail(400, 'Approve or reject.');
       await save();

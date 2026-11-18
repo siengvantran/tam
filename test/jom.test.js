@@ -103,6 +103,9 @@ test('JOM at TAM: permanent act pages, pledges, parents claim and update (TAM ap
   m = (await call('/api/jom/manage', { headers: staff })).body;
   assert.equal(m.changes.length, 1);
   await call(`/api/jom/manage/changes/${m.changes[0].id}`, { method: 'POST', headers: staff, body: { action: 'approve' } });
+  // the parent is told it's live (their email isn't overwritten by the approver's name)
+  for (let i = 0; i < 60 && !sent.some((x) => /your update is live/.test(x.subject)); i++) await new Promise((x) => setTimeout(x, 15));
+  assert.deepEqual(sent.filter((x) => /your update is live/.test(x.subject)).map((x) => [].concat(x.to)[0]), ['pat@family.test']);
   const live = (await call('/jom/yellowhammer')).body;
   assert.match(live, /A five-piece from JOM who love 70s rock\./);
   assert.ok(live.includes(ph));
