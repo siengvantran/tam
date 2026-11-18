@@ -174,3 +174,14 @@ test('JOM hub: a carousel of banners and acts, the next JOM dates, and applicati
   assert.equal(app.ctx.db.jomApplications.find((x) => x.id === yh.id).status, 'shortlist');
   assert.doesNotMatch(await (await fetch(`${B}/jom`)).text(), /pat@family\.test/);
 });
+
+test('JOM parents: links are tidied, and refusals say exactly what to fix', async () => {
+  const { tidyLink, linkProblem, contactIn } = await import('../src/domain/jom.js');
+  assert.equal(tidyLink('instagram.com/immyeloise'), 'https://instagram.com/immyeloise');
+  assert.equal(tidyLink('www.youtube.com/@immy'), 'https://www.youtube.com/@immy');
+  assert.equal(tidyLink('Spotify: https://open.spotify.com/artist/abc.'), 'https://open.spotify.com/artist/abc');
+  assert.equal(tidyLink('http://soundcloud.com/x'), 'https://soundcloud.com/x');
+  assert.match(linkProblem('@immyeloise'), /handle, not a link.*https:\/\/www\.instagram\.com\/immyeloise/);
+  assert.equal(contactIn('Call 07700 900123 today'), '07700 900123');
+  assert.equal(contactIn('Immy started singing in 2019 and plays piano'), '');
+});

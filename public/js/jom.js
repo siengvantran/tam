@@ -99,7 +99,8 @@ function draw(d) {
       photosOf[a.slug] = (p ? p.photos : a.photos).slice();
       postsOf[a.slug] = ((p && p.posts) || a.posts || []).map((x) => ({ ...x }));
       return `<form class="formbox jm-edit" data-act="${esc(a.slug)}"><h2>${esc(a.name)} <a class="small" href="${base}/${esc(a.slug)}" target="_blank">See their page ↗</a></h2>
-        ${a.pending ? `<p class="jm-wait">Waiting for TAM to approve your update from ${esc(new Date(a.pending.at).toLocaleDateString('en-GB'))}. Sending another replaces it.</p>` : ''}
+        ${a.pending ? waiting(a.pending) : ''}
+        <div class="jm-alert" role="alert" hidden></div>
         ${a.rejected && !a.pending ? `<p class="err">TAM couldn’t make your last update${a.rejected.reason ? `: ${esc(a.rejected.reason)}` : '.'}</p>` : ''}
         <label class="field"><span>Name as shown</span><input name="name" value="${esc(v.name)}" maxlength="60"></label>
         <label class="field"><span>Short bio</span><textarea name="bio" rows="5" maxlength="1200" placeholder="What they play, who’s in the band, what they love about performing">${esc(v.bio)}</textarea></label>
@@ -111,6 +112,7 @@ function draw(d) {
           <div class="ar-row"><input name="posturl" placeholder="Paste a link: instagram.com/p/…, tiktok.com/@…/video/…, facebook.com/…, youtu.be/…" aria-label="Link to a post"><button class="btn ghost small" type="button" data-addpost>Add</button></div>
           <div class="ar-row"><label class="btn ghost small">Upload a photo<input type="file" accept="image/*" data-postphoto class="sr"></label><label class="btn ghost small">Upload a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-postvideo class="sr"></label><progress max="100" value="0" hidden></progress></div>
           <small class="muted">Videos up to 60 MB (MP4 plays everywhere). Nothing goes on the page until TAM approves it.</small></div>
+        <p class="jm-unsent small" hidden>You have changes that aren’t sent yet. Tap “Send to TAM for approval” to send them.</p>
         <button class="btn hot" type="submit">Send to TAM for approval</button><p class="err" role="status" aria-live="polite"></p></form>
         <div class="formbox jm-stage" data-stage="${esc(a.slug)}"><div class="label">TAM artist profile</div>
         ${a.stage ? `<h3>${esc(a.name)} is on the TAM Stage</h3><p>Planet: <b>${esc(a.stage.planet)}</b> · ${a.stage.status === 'live' ? `<a href="${esc(a.stage.href)}" target="_blank">See their profile ↗</a>` : 'TAM is reviewing it before it goes public.'}</p>
@@ -123,6 +125,52 @@ function draw(d) {
     <p class="small"><button class="linkish" type="button" data-out>Sign out</button></p>`;
   for (const f of $$('form.jm-edit', me)) { thumbs(f); postList(f); }
 }
+// What's waiting for TAM: so a parent can see exactly what they sent.
+function waiting(p) {
+  const c = p.changes || {};
+  const bits = [c.bio ? `a bio (“${esc(c.bio.slice(0, 120))}${c.bio.length > 120 ? '…' : ''}”)` : 'no bio',
+    `${(c.photos || []).length} photo${(c.photos || []).length === 1 ? '' : 's'}`, `${(c.links || []).length} link${(c.links || []).length === 1 ? '' : 's'}`,
+    ...((c.posts || []).length ? [`${c.posts.length} post${c.posts.length === 1 ? '' : 's'}`] : [])];
+  return `<div class="jm-wait"><b>Waiting for TAM to approve</b> your update from ${esc(new Date(p.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }))}: ${bits.join(', ')}.
+    ${(c.photos || []).length ? `<span class="jm-wait-pics">${c.photos.map((u) => `<img src="${esc(u)}" alt="" width="44" height="54">`).join('')}</span>` : ''}
+    <small>We’ll email you when it’s on the page. Sending another update replaces this one.</small></div>`;
+}
+// The same checks the server makes, before sending: so a parent sees which field to fix.
+const CONTACT_RE = /[\w.+-]+@[\w-]+\.[\w.]+|(?:\+?\d[\s-]?){9,}/;
+const MUSIC_RE = /^https:\/\/([\w-]+\.)*(youtube\.com|youtu\.be|spotify\.com|soundcloud\.com|bandcamp\.com|instagram\.com|tiktok\.com|music\.apple\.com|facebook\.com)\//i;
+function tidyLink(v) {
+  let u = String(v || '').trim();
+  const m = /https?:\/\/\S+/i.exec(u);
+  if (m) u = m[0];
+  else if (/^(www\.)?[\w-]+(\.[\w-]+)+\/\S*$/i.test(u)) u = `https://${u}`;
+  return u.replace(/^http:\/\//i, 'https://').replace(/[).,;]+$/, '');
+}
+function problems(f) {
+  const out = [];
+  const c = CONTACT_RE.exec(f.bio.value);
+  if (c) out.push(['bio', `The bio can’t include phone numbers or email addresses, because it’s a public page. Please take out “${c[0].trim().slice(0, 40)}”.`]);
+  for (const raw of f.links.value.split(/[\n,]+/).map((x) => x.trim()).filter(Boolean)) {
+    const l = tidyLink(raw);
+    if (/^@\w/.test(l)) out.push(['links', `“${raw.slice(0, 60)}” is a handle, not a link. Paste the full address, like https://www.instagram.com/${l.slice(1, 40)}`]);
+    else if (!MUSIC_RE.test(l)) out.push(['links', `This link can’t go on the page: ${raw.slice(0, 80)}. Links can go to YouTube, Spotify, SoundCloud, Bandcamp, Apple Music, Instagram, TikTok or Facebook.`]);
+  }
+  return out;
+}
+// Show what needs fixing at the top of the form, mark the field, and bring it into view.
+function alertIn(f, list) {
+  const box = f.querySelector('.jm-alert');
+  for (const el of f.querySelectorAll('.bad')) el.classList.remove('bad');
+  if (!list.length) { box.hidden = true; box.innerHTML = ''; return; }
+  box.innerHTML = `<b>Not sent yet: please fix ${list.length === 1 ? 'this' : 'these'} and tap Send again.</b><ul>${list.map(([, m]) => `<li>${esc(m)}</li>`).join('')}</ul><small>Your photos and everything you typed are still here.</small>`;
+  box.hidden = false;
+  for (const [field] of list) if (field && f[field]) f[field].classList.add('bad');
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+const fieldOf = (msg) => (/bio|phone|email/i.test(msg) ? 'bio' : /link|handle/i.test(msg) ? 'links' : '');
+let dirty = false;
+function markDirty(f) { dirty = true; const u = f && f.querySelector('.jm-unsent'); if (u) u.hidden = false; }
+addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
 function postList(f) {
   const list = postsOf[f.dataset.act];
   f.querySelector('[data-posts]').innerHTML = list.map((x, i) => `<li><span>${x.src && x.kind === 'image' ? `<img src="${esc(x.src)}" alt="" width="48" height="48" class="ar-thumb">` : ''}${esc(KINDS[x.kind] || 'Post')}</span>
@@ -169,7 +217,8 @@ if (me) {
       if (photosOf[f.dataset.act].length >= 6) throw new Error('Six photos at most: remove one first.');
       const r = await api(`/api/jom/me/${f.dataset.act}/photo`, { method: 'POST', body: { photo: await shrinkImage(e.target.files[0], 1200, 0.84) } });
       photosOf[f.dataset.act].push(r.photo);
-      thumbs(f);
+      thumbs(f); markDirty(f);
+      formMessage(f, 'Photo added. Tap “Send to TAM for approval” when you’re ready.', true);
     } catch (err) { formMessage(f, err.message); }
     e.target.value = '';
   });
@@ -184,7 +233,7 @@ if (me) {
         if (postsOf[f.dataset.act].length >= 12) throw new Error('Twelve posts at most: remove one first.');
         const r = await api(`/api/jom/me/${f.dataset.act}/check-post`, { method: 'POST', body: { url: u } });
         postsOf[f.dataset.act].push({ ...r.post, url: u, caption: '' });
-        f.posturl.value = ''; postList(f);
+        f.posturl.value = ''; postList(f); markDirty(f);
       } catch (err) { formMessage(f, err.message); }
     }
     if (e.target.dataset.first) { const l = photosOf[f.dataset.act]; l.unshift(l.splice(Number(e.target.dataset.first), 1)[0]); thumbs(f); }
@@ -199,14 +248,23 @@ if (me) {
     }
     if (e.target.closest('[data-out]')) { await api('/api/jom/signout', { method: 'POST', body: {} }); location.href = `${base}/` || '/'; }
   });
+  me.addEventListener('input', (e) => { const f = e.target.closest('form.jm-edit'); if (f && ['name', 'bio', 'links'].includes(e.target.name)) { markDirty(f); e.target.classList.remove('bad'); } });
   me.addEventListener('submit', async (e) => {
+    if (!e.target.matches('form.jm-edit')) return;
     e.preventDefault();
     const f = e.target, d = new FormData(f);
+    const issues = problems(f);
+    if (issues.length) return alertIn(f, issues);
+    const btn = f.querySelector('button[type=submit]');
+    btn.disabled = true;
     try {
-      await api(`/api/jom/me/${f.dataset.act}`, { method: 'POST', body: { name: d.get('name'), bio: d.get('bio'), links: d.get('links'), photos: photosOf[f.dataset.act], posts: postsOf[f.dataset.act] } });
+      await api(`/api/jom/me/${f.dataset.act}`, { method: 'POST', body: { name: d.get('name'), bio: d.get('bio'), links: d.get('links').split(/[\n,]+/).map(tidyLink).filter(Boolean).join('\n'), photos: photosOf[f.dataset.act], posts: postsOf[f.dataset.act] } });
+      dirty = false;
       await load();
-      formMessage($(`form[data-act="${f.dataset.act}"]`, me), 'Sent. We’ll email you when it’s on the page.', true);
-    } catch (err) { formMessage(f, err.message); }
+      const nf = $(`form[data-act="${f.dataset.act}"]`, me);
+      const w = nf.querySelector('.jm-wait');
+      if (w) { w.classList.add('just'); w.insertAdjacentHTML('afterbegin', '<p class="good"><b>Sent to TAM.</b></p>'); w.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    } catch (err) { alertIn(f, [[fieldOf(err.message), err.message]]); btn.disabled = false; }
   });
 }
 
