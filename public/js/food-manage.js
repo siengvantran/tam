@@ -30,28 +30,33 @@ async function start() {
 }
 const act = async (url, body) => { await api(url, { method: 'POST', body }); await load(); draw(); };
 const diff = (label, was, now) => (String(was ?? '') === String(now ?? '') ? '' : `<div class="jmm-diff"><b>${label}</b><del>${esc(was || '(empty)')}</del><ins>${esc(now || '(empty)')}</ins></div>`);
+const RANK = { high: 0, medium: 1, low: 2 };
+const best = (v) => v.leads.filter((l) => l.status !== 'wrong').sort((a, b) => (b.status === 'confirmed') - (a.status === 'confirmed') || RANK[a.confidence] - RANK[b.confidence])[0] || null;
+const conf = (l) => `<span class="fdm-conf fdm-${l.status === 'confirmed' ? 'ok' : l.confidence}" title="${esc(D.confidence[l.confidence] || '')}">${l.status === 'confirmed' ? 'confirmed' : `${l.confidence} confidence`}</span>`;
+const flag = (v) => (v.check ? `<span class="fdm-flag" title="${esc(v.checkWhy)}">⚑ ${esc(D.checks[v.check])}</span>` : '');
+const emailCell = (v) => { const l = best(v); return v.email ? `${esc(v.email)} <span class="fdm-conf fdm-ok">confirmed</span>` : l ? `${esc(l.email)} ${conf(l)}` : '<small class="muted">no email found</small>'; };
 const menuText = (m) => (m || []).map((x) => `${x.section ? `[${x.section}] ` : ''}${x.name}${x.price !== null && x.price !== undefined ? ` ${pounds(x.price)}` : ''}${x.dietary && x.dietary.length ? ` (${x.dietary.join(', ')})` : ''}`).join('\n');
 
 function draw() {
   const count = (s) => D.vendors.filter((v) => v.status === s).length;
   const partners = D.vendors.filter((v) => v.partner === 'partner').length;
   root.innerHTML = `<p class="small muted">${D.vendors.length} traders from ${esc(D.market.name)} · ${count('live')} live · ${count('draft')} waiting for approval · ${partners} taking part in pre-orders. Nothing shows on <a href="/food" target="_blank">tam.tv/food</a> until you approve it.</p>
-    <nav class="cm-tabs">${[['listings', `Listings (${D.vendors.length})`], ['claims', `Claims (${D.claims.length})`], ['changes', `Profile changes (${D.changes.length})`], ['outreach', 'Partner outreach'], ['orders', `Pre-orders (${D.orders.filter((o) => o.status !== 'cancelled').length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="fdm-body"></div>`;
+    <nav class="cm-tabs">${[['listings', `Listings (${D.vendors.length})`], ['claims', `Claims (${D.claims.length})`], ['changes', `Profile changes (${D.changes.length})`], ['contacts', `Contacts to check (${D.vendors.filter((v) => v.check).length})`], ['outreach', 'Partner outreach'], ['orders', `Pre-orders (${D.orders.filter((o) => o.status !== 'cancelled').length})`]].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav><div id="fdm-body"></div>`;
   $$('[data-tab]', root).forEach((b) => b.onclick = () => { tab = b.dataset.tab; draw(); });
   const b = $('#fdm-body');
-  ({ listings, claims, changes, outreach, orders })[tab](b);
+  ({ listings, claims, changes, contacts, outreach, orders })[tab](b);
 }
 
 function listings(b) {
-  const vs = D.vendors.filter((v) => filter === 'all' || v.status === filter);
-  b.innerHTML = `<div class="row-btn">${[['all', 'All'], ['draft', 'Waiting for approval'], ['live', 'Live'], ['hidden', 'Hidden']].map(([k, l]) => `<button type="button" class="chip ${filter === k ? 'on' : ''}" data-filter="${k}">${l}</button>`).join('')}
+  const vs = D.vendors.filter((v) => filter === 'all' || v.status === filter || (filter === 'check' && v.check) || (filter === 'noemail' && !v.email));
+  b.innerHTML = `<div class="row-btn">${[['all', 'All'], ['draft', 'Waiting for approval'], ['live', 'Live'], ['hidden', 'Hidden'], ['check', 'To check'], ['noemail', 'No confirmed email']].map(([k, l]) => `<button type="button" class="chip ${filter === k ? 'on' : ''}" data-filter="${k}">${l}</button>`).join('')}
     <button type="button" class="btn ghost small" id="fdm-new">Add a trader</button></div>
     <table class="fd-orders fdm-list"><thead><tr><th></th><th>Trader</th><th>Status</th><th>Menu</th><th>Contact</th><th>Partner</th><th></th></tr></thead><tbody>
     ${vs.map((v) => `<tr data-slug="${esc(v.slug)}"><td>${v.photos[0] ? `<img src="${esc(v.photos[0])}" alt="" width="64" height="48">` : ''}</td>
       <td><b>${esc(v.name)}</b><br><small>${esc(v.tagline)}</small>${v.traders.length ? `<br><small>Managed by ${v.traders.map(esc).join(', ')}</small>` : ''}</td>
       <td>${esc(D.statuses[v.status])}${v.approvedBy && v.status === 'live' ? `<br><small>by ${esc(v.approvedBy)}</small>` : ''}</td>
       <td>${v.menu.length} dishes${v.menu.length ? `, ${v.menu.filter((m) => m.price !== null).length} priced` : ''}</td>
-      <td>${v.instagram ? `<a href="https://www.instagram.com/${esc(v.instagram)}/" target="_blank" rel="noopener">@${esc(v.instagram)}</a>` : '<small class="muted">no Instagram</small>'}<br>${v.email ? esc(v.email) : '<small class="muted">no email</small>'}</td>
+      <td>${v.instagram ? `<a href="https://www.instagram.com/${esc(v.instagram)}/" target="_blank" rel="noopener">@${esc(v.instagram)}</a>` : '<small class="muted">no Instagram</small>'}<br>${emailCell(v)}${v.check ? `<br>${flag(v)}` : ''}</td>
       <td>${esc(D.partner[v.partner])}${v.preorder.enabled ? '<br><small>pre-orders on</small>' : ''}${v.orders ? `<br><small>${v.orders} upcoming orders</small>` : ''}</td>
       <td class="row-btn">${v.status !== 'live' ? '<button class="btn hot small" data-do="approve">Approve: go live</button>' : '<button class="btn ghost small" data-do="hide">Hide</button>'}
         <a class="btn ghost small" href="/food/${esc(v.slug)}" target="_blank">${v.status === 'live' ? 'View' : 'Preview'}</a><button class="btn ghost small" data-open>Details</button></td></tr>
@@ -78,11 +83,13 @@ function listings(b) {
         await act(`/api/food/manage/vendors/${open}`, { action: 'edit', profile: { name: ef.name.value, tagline: ef.tagline.value, category: ef.category.value, description: ef.description.value, instagram: ef.instagram.value, website: ef.website.value, dietary: $$('input[name=diet]:checked', ef).map((x) => x.value), photos: v.photos, menu } });
       } catch (err) { formMessage(ef, err.message); }
     });
+    $$('[data-lead]', f).forEach((li) => $$('[data-lst]', li).forEach((x) => x.onclick = () => act(`/api/food/manage/vendors/${open}`, { action: 'lead', email: li.dataset.lead, status: x.dataset.lst }).catch((err) => alert(err.message))));
+    f.check.onchange = () => act(`/api/food/manage/vendors/${open}`, { action: 'check', where: f.check.value, why: (D.vendors.find((x) => x.slug === open) || {}).checkWhy || '' }).catch((err) => alert(err.message));
     for (const ch of ['email', 'instagram']) { const btn = $(`[data-reach="${ch}"]`); if (btn) btn.onclick = () => { tab = 'outreach'; outreachFor = open; draw(); }; }
   }
 }
 function detail(v) {
-  return `<div class="fdm-detail-grid"><form class="formbox" id="fdm-contact"><h3>Private: how TAM reaches them</h3>
+  return `<div class="fdm-detail-grid"><form class="formbox" id="fdm-contact"><h3>Private: how TAM reaches them</h3>${leadsBlock(v)}
       <label class="field"><span>Email</span><input name="email" type="email" value="${esc(v.email)}"></label><label class="field"><span>Phone</span><input name="phone" value="${esc(v.phone)}"></label>
       <label class="field"><span>Partnership</span><select name="partner">${Object.entries(D.partner).map(([k, l]) => `<option value="${k}" ${v.partner === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
       <label class="field"><span>Notes</span><textarea name="notes" rows="2">${esc(v.notes)}</textarea></label>
@@ -97,6 +104,24 @@ function detail(v) {
       <div class="field full"><span>Dietary</span><div class="row-btn">${Object.entries(D.dietary).map(([k, l]) => `<label class="check small"><input type="checkbox" name="diet" value="${k}" ${v.dietary.includes(k) ? 'checked' : ''}> <span>${l}</span></label>`).join('')}</div></div>
       <label class="field full"><span>Menu: one dish a line, “[Section] Dish £9.50 (vegan, halal)”</span><textarea name="menu" rows="8">${esc(menuText(v.menu))}</textarea></label></div>
       <button class="btn hot small" type="submit">Save the listing</button><p class="err" role="status" aria-live="polite"></p></form></div>`;
+}
+
+function leadsBlock(v) {
+  return `<div class="fdm-leads"><b>Emails found on the web</b>${v.leads.length ? `<ul>${v.leads.map((l) => `<li data-lead="${esc(l.email)}"><span>${esc(l.email)}</span> ${conf(l)}${l.status === 'wrong' ? ' <span class="fdm-conf fdm-low">wrong</span>' : ''}
+      <small>${esc(l.note)}${l.source ? ` · <a href="${esc(l.source)}" target="_blank" rel="noopener">where we saw it</a>` : ''}</small>
+      <span class="row-btn">${l.status !== 'confirmed' ? '<button type="button" class="btn ghost small" data-lst="confirmed">It’s right: use it</button>' : ''}${l.status !== 'wrong' ? '<button type="button" class="linkish small" data-lst="wrong">Wrong</button>' : ''}</span></li>`).join('')}</ul>` : '<p class="small muted">None found.</p>'}
+    ${v.leadNotes ? `<p class="small muted">${esc(v.leadNotes)}</p>` : ''}
+    <label class="field"><span>Check in person</span><select name="check">${Object.entries(D.checks).map(([k, l]) => `<option value="${k}" ${v.check === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>
+    ${v.checkWhy ? `<p class="small">⚑ ${esc(v.checkWhy)}</p>` : ''}</div>`;
+}
+
+// Every trader's best email and how sure we are; the ones to confirm in person, by where to ask.
+function contacts(b) {
+  const groups = Object.entries(D.checks).filter(([k]) => k).map(([k, l]) => [l, D.vendors.filter((v) => v.check === k)]).filter(([, l]) => l.length);
+  b.innerHTML = `<p>Emails found on the web for each trader, and how sure we are. <b>High</b>: on their own website. <b>Medium</b>: a generic, head-office or third-party address. <b>Low</b>: old or unclear. The flagged traders are worth confirming in person: on the MM family group, or by asking the staff at the shack. When someone confirms an email, open the trader under Listings, then Details, and tap “It’s right: use it”, or type the right one in.</p>
+    ${groups.length ? groups.map(([label, vs]) => `<section class="formbox fdm-check"><h3>⚑ ${esc(label)} (${vs.length})</h3><table class="fd-orders"><thead><tr><th>Trader</th><th>What we have</th><th>What to ask</th></tr></thead><tbody>
+      ${vs.map((v) => `<tr><td><b>${esc(v.name)}</b><br><small>${v.instagram ? `@${esc(v.instagram)}` : 'no Instagram'}</small></td><td>${emailCell(v)}${v.phone ? `<br><small>${esc(v.phone)}</small>` : ''}</td><td>${esc(v.checkWhy || 'Who runs it, and the best email for them?')}</td></tr>`).join('')}</tbody></table></section>`).join('') : '<p class="muted">Nothing flagged to check.</p>'}
+    <h3>Everyone</h3><table class="fd-orders"><thead><tr><th>Trader</th><th>Best email</th><th>Found</th></tr></thead><tbody>${D.vendors.map((v) => `<tr><td>${esc(v.name)} ${flag(v)}</td><td>${emailCell(v)}</td><td><small>${v.leads.length} email${v.leads.length === 1 ? '' : 's'}</small></td></tr>`).join('')}</tbody></table>`;
 }
 
 function claims(b) {
@@ -125,7 +150,7 @@ async function outreach(b) {
   const v = vs.find((x) => x.slug === outreachFor) || null;
   b.innerHTML = `<p>Offer a trader a partnership for TAM’s festivals: pre-orders from people coming to TAM nights. Each message carries a personal invite link (30 days): when they open it and add their email, the listing is theirs to manage, with no claim to check.</p>
     <div class="row-btn"><select id="fdm-who-v"><option value="">Choose a trader…</option>${vs.map((x) => `<option value="${esc(x.slug)}" ${x.slug === outreachFor ? 'selected' : ''}>${esc(x.name)} · ${esc(D.partner[x.partner])}</option>`).join('')}</select></div>
-    ${v ? `<div class="fdm-detail-grid"><form class="formbox" id="fdm-mail"><h3>By email</h3><label class="field"><span>To</span><input name="email" type="email" value="${esc(v.email)}" placeholder="their email"></label>
+    ${v ? `<div class="fdm-detail-grid"><form class="formbox" id="fdm-mail"><h3>By email</h3><label class="field"><span>To</span><input name="email" type="email" value="${esc(v.email || (best(v) || {}).email || '')}" placeholder="their email">${!v.email && best(v) ? `<small>Not confirmed yet: ${conf(best(v))}</small>` : ''}</label>
       <label class="field"><span>Subject</span><input name="subject" value="Partner with TAM for The Best Christmas Ever: pre-orders for ${esc(v.name)}"></label>
       <label class="field"><span>Message ({link} becomes their invite link)</span><textarea name="message" rows="14"></textarea></label>
       <button class="btn hot small" type="submit">Send from tickets@tam.tv</button><p class="err" role="status" aria-live="polite"></p></form>

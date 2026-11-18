@@ -1738,3 +1738,7 @@ body.ar-embed { min-height: 0; background: transparent; }
   .fd-mrow { grid-template-columns: 1fr 1fr; } .fd-mrow [name=description] { grid-column: 1 / -1; }
   .fd-orders { display: block; overflow-x: auto; }
 }
+.fdm-conf { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.fdm-ok { border-color: #5fae6b; color: #8fd59a; } .fdm-high { border-color: #5b9bd5; color: #9cc6ef; } .fdm-medium { border-color: #d5a35b; color: #f0c98c; } .fdm-low { border-color: #c96b6b; color: #f0a0a0; }
+.fdm-flag { font-size: 12px; color: var(--gold); }
+.fdm-leads ul { list-style: none; padding: 0; margin: 6px 0; } .fdm-leads li { display: grid; gap: 2px; padding: 6px 0; border-bottom: 1px solid var(--line); } .fdm-leads li small { color: var(--muted); }

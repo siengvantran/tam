@@ -28,8 +28,12 @@ export const DIETARY = { vegetarian: 'Vegetarian', vegan: 'Vegan', halal: 'Halal
 export const CATEGORIES = { food: 'Food', dessert: 'Sweet things', drinks: 'Drinks' };
 export const STATUSES = { draft: 'Draft: waiting for TAM', live: 'Live', hidden: 'Hidden' };
 export const PARTNER = { none: 'Not contacted', invited: 'Invited', talking: 'Talking', partner: 'Partner', declined: 'Not now' };
+// Where Vivian (or anyone on the team) can confirm a trader's contact in person
+export const CHECKS = { '': 'Nothing to check', 'mm-group': 'Ask on the MM family group', shack: 'Ask the staff at the shack', both: 'MM family group or the shack' };
+export const CONFIDENCE = { high: 'High: on their own site', medium: 'Medium: generic, HQ or third party', low: 'Low: old or unclear' };
 export const ORDER_STATES = { new: 'New', confirmed: 'Confirmed', ready: 'Ready to collect', collected: 'Collected', cancelled: 'Cancelled' };
 const slugOf = (s) => String(s || '').normalize('NFKD').replace(/[̀-ͯ’']/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+export const bestLead = (leads) => (leads || []).filter((l) => l.status !== 'wrong').sort((a, b) => (b.status === 'confirmed') - (a.status === 'confirmed') || ['high', 'medium', 'low'].indexOf(a.confidence) - ['high', 'medium', 'low'].indexOf(b.confidence))[0] || null;
 const RESERVED = ['manage', 'me', 'in', 'sign-in', 'join', 'preorder', 'order', 'claim'];
 export const handleOf = (v) => {
   const s = text(v, 200).replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/[/?#].*$/, '');
@@ -382,8 +386,8 @@ export function vendorsDomain(ctx) {
       const who = guard(req);
       const vs = all();
       send(res, 200, {
-        me: { name: who.name }, market: V.market, dietary: DIETARY, categories: CATEGORIES, statuses: STATUSES, partner: PARTNER, orderStates: ORDER_STATES,
-        vendors: vs.map((v) => { const s = db.vendorState[v.slug] || {}; return { ...v, email: s.email || '', phone: s.phone || '', notes: s.notes || '', traders: s.claimedBy || [], approvedBy: s.approvedBy || '', approvedAt: s.approvedAt || '',
+        me: { name: who.name }, market: V.market, checks: CHECKS, confidence: CONFIDENCE, dietary: DIETARY, categories: CATEGORIES, statuses: STATUSES, partner: PARTNER, orderStates: ORDER_STATES,
+        vendors: vs.map((v) => { const s = db.vendorState[v.slug] || {}; return { ...v, email: s.email || '', phone: s.phone || '', notes: s.notes || '', leads: s.leads || [], leadNotes: s.leadNotes || '', check: s.check || '', checkWhy: s.checkWhy || '', traders: s.claimedBy || [], approvedBy: s.approvedBy || '', approvedAt: s.approvedAt || '',
           outreach: db.vendorOutreach.filter((x) => x.vendor === v.slug), orders: ordersFor(v.slug).filter((o) => { const n = c.nightBy.get(o.night); return n && n.date >= ctx.today(); }).length }; }),
         claims: db.vendorClaims.filter((x) => x.status === 'pending').map((x) => ({ ...x, vendorName: (vs.find((v) => v.slug === x.vendor) || {}).name })),
         changes: db.vendorPending.filter((x) => x.status === 'pending').map((x) => ({ ...x, current: vs.find((v) => v.slug === x.vendor) })),
@@ -407,11 +411,46 @@ export function vendorsDomain(ctx) {
         s.phone = text(b.phone, 30);
         s.notes = text(b.notes, 1000);
         if (b.partner && PARTNER[b.partner]) s.partner = b.partner;
+      } else if (b.action === 'lead') { // a found email: confirmed (it becomes their email) or wrong
+        const l = (s.leads || []).find((x) => x.email === cleanEmail(b.email));
+        if (!l) throw fail(404, 'No such email for them.');
+        if (!['confirmed', 'wrong', 'unverified'].includes(b.status)) throw fail(400, 'Confirmed, wrong or unverified?');
+        Object.assign(l, { status: b.status, by: who.name, decidedAt: iso() });
+        if (b.status === 'confirmed') { s.email = l.email; if (s.check && !(s.leads || []).some((x) => x.status === 'unverified')) s.check = ''; }
+        if (b.status === 'wrong' && s.email === l.email) s.email = '';
+      } else if (b.action === 'check') { // flag it for someone to ask in person
+        if (!(b.where in CHECKS)) throw fail(400, 'Unknown place to check.');
+        s.check = b.where;
+        s.checkWhy = text(b.why, 300);
       } else if (b.action === 'edit') s.profile = cleanProfile(b.profile || {}, v); // staff edit: applies straight away
       else if (b.action === 'unclaim') s.claimedBy = [];
       else throw fail(400, 'Unknown action.');
       await save();
       send(res, 200, { vendor: vendor(v.slug) });
+    });
+    // contact emails found on the web (crawled): private, with how sure we are and where we saw each one
+    r.post('/api/food/manage/leads', async (req, res) => {
+      const who = guard(req);
+      const b = await readJson(req, 256 * 1024);
+      let n = 0;
+      for (const [slug, x] of Object.entries(b.leads || {})) {
+        const v = vendor(slug);
+        if (!v || !x || typeof x !== 'object') continue;
+        const s = stateOf(slug);
+        const was = s.leads || [];
+        s.leads = (Array.isArray(x.leads) ? x.leads : []).slice(0, 8).map((l) => {
+          const mail = cleanEmail(l && l.email);
+          if (!mail) return null;
+          const old = was.find((y) => y.email === mail);
+          return { email: mail, confidence: CONFIDENCE[l.confidence] ? l.confidence : 'low', source: website(l.source) || '', note: text(l.note, 300), status: old ? old.status : 'unverified', foundAt: old ? old.foundAt : iso(), addedBy: who.name };
+        }).filter(Boolean).concat(was.filter((y) => y.status !== 'unverified' && !(x.leads || []).some((l) => cleanEmail(l && l.email) === y.email)));
+        if (x.phone && !s.phone) s.phone = text(x.phone, 30);
+        s.leadNotes = text(x.notes, 600);
+        if (x.check !== undefined && CHECKS[x.check] !== undefined) { s.check = x.check; s.checkWhy = text(x.checkWhy, 300); }
+        n++;
+      }
+      await save();
+      send(res, 200, { updated: n });
     });
     r.post('/api/food/manage/vendors', async (req, res) => {
       guard(req);
