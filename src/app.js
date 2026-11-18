@@ -29,6 +29,8 @@ import { stageDomain } from './domain/stage.js';
 import * as stagePages from './views/stage.js';
 import { jomDomain } from './domain/jom.js';
 import * as jomPages from './views/jom.js';
+import { vendorsDomain } from './domain/vendors.js';
+import * as foodPages from './views/food.js';
 import { liveDomain } from './domain/live.js';
 import * as livePages from './views/live.js';
 import * as clubPages from './views/club.js';
@@ -114,6 +116,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   ctx.club = clubDomain(ctx);
   // The TAM Stage: every request to play becomes an act with its own microverse (A&R, as a game)
   ctx.stage = stageDomain(ctx);
+  ctx.food = vendorsDomain(ctx); // the food and drink traders at Mercato Metropolitano: /food, claims, pre-orders for TAM nights
   ctx.jom = jomDomain(ctx); // JOM Youth Music × TAM: evergreen pages for every act, claimed by parents
   const tickets = ticketsDomain(ctx);
   const community = communityDomain(ctx);
@@ -138,7 +141,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   d.concierge = concierge;
 
   const api = new Router();
-  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage, ctx.jom, onNow]) dom.routes(api);
+  for (const dom of [tickets, community, collections, raffle, admin, enquiries, ctx.links, ctx.team, shows, blues, showcase, ctx.club, room, ctx.stage, ctx.jom, ctx.food, onNow]) dom.routes(api);
 
   // Ask TAM: one visitor turn, streamed to the page as server-sent events.
   const agentLimited = rateLimiter({ max: 20 });
@@ -165,6 +168,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
+  foodPages.routes(site, ctx, ctx.food); // /food: the traders, pre-orders, /food/me and /food/manage
   jomPages.routes(site, ctx, ctx.jom); // /jom (and jom.tam.tv): JOM acts' permanent pages
   livePages.routes(site, ctx, onNow, qr); // /screen for the projector, /checkin for phones
   ctx.club.pageRoutes(site); // /c/…: newsletter link clicks

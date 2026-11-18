@@ -1,0 +1,5354 @@
+{
+ "market": {
+  "name": "Mercato Metropolitano Elephant & Castle",
+  "address": "42 Newington Causeway, London SE1 6DR",
+  "source": "https://mercatometropolitano.com/locations/elephant-and-castle/",
+  "importedAt": "2026-11-18",
+  "hours": [
+   "Mon–Wed 12pm–11pm",
+   "Thu 12pm–12am",
+   "Fri 12pm–1am",
+   "Sat 11am–1am",
+   "Sun 11am–10pm"
+  ]
+ },
+ "vendors": [
+  {
+   "slug": "argentinian-grill",
+   "name": "Argentinian Grill",
+   "tagline": "Steakhouse",
+   "category": "food",
+   "description": "The Argentinian Grill has been bringing the flavours of Argentina to London since 2015. From the start, it has built a reputation for serving prime Argentine beef cooked to perfection over a traditional charcoal grill, creating steaks that are tender, juicy and full of flavour. Their homemade chimichurri is a point of pride, a family recipe that is both unique and unforgettable. Sourcing is central to everything they do. The team works closely with independent UK farmers to ensure quality meat and partners with local bakers for fresh, handmade breads and accompaniments. The menu is concise but carefully crafted, offering sirloin steaks, classic and spicy chorizo, and chicken wings spiced in-house alongside other meat-led dishes. Every plate reflects a passion for honest cooking, noble ingredients and the laid-back spirit of Argentine dining.",
+   "dietary": [
+    "halal"
+   ],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/New-menu-MM-Feb-25-2.pdf"
+   ],
+   "photo": "/img/vendors/argentinian-grill.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/argentinian-grill/",
+   "mmSlug": "argentinian-grill",
+   "menu": [
+    {
+     "id": "argentinian-grill-1",
+     "section": "Sandwiches",
+     "name": "Steak sandwich",
+     "description": "On ciabatta with tomato & rocket salad, chimichurri sauce",
+     "price": 1225,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-2",
+     "section": "Sandwiches",
+     "name": "Don Diablo sandwich",
+     "description": "Steak with jalapeno sauce",
+     "price": 1275,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-3",
+     "section": "Sandwiches",
+     "name": "Chorizo sandwich",
+     "description": "",
+     "price": 1125,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-4",
+     "section": "Sandwiches",
+     "name": "Chicken sandwich",
+     "description": "",
+     "price": 1175,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-5",
+     "section": "Burgers",
+     "name": "Argentinian Burger",
+     "description": "Cheese, bacon, home-made rosemary mayonnaise, lettuce & tomato",
+     "price": 1400,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-6",
+     "section": "Burgers",
+     "name": "Steak & Chorizo Burger",
+     "description": "Steak & chorizo, tomato, rocket salad & chilli mole sauce",
+     "price": 1400,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-7",
+     "section": "Burgers",
+     "name": "Chicken Burger",
+     "description": "Cheese, bacon, home-made rosemary mayonnaise, lettuce & tomato",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-8",
+     "section": "Grill",
+     "name": "Classic Mix Grill (for 1)",
+     "description": "Steak, spicy & criollo chorizo; served with salad, fries & rice. For 2 £31.50, for 3 £42.50",
+     "price": 1750,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-9",
+     "section": "Grill",
+     "name": "Chicken Mix Grill (for 1)",
+     "description": "Chicken breast, spicy & criollo chorizo. For 2 £30.50, for 3 £39.50",
+     "price": 1650,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-10",
+     "section": "Grill",
+     "name": "Gaucho Mix Grill (for 1)",
+     "description": "3 beef short ribs, 3 chicken wings, 1 empanada. For 2 £32, for 3 £44",
+     "price": 1800,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-11",
+     "section": "Grill",
+     "name": "Special Mix Grill (for 1)",
+     "description": "Steak, chicken breast, spicy & criollo chorizo. For 2 £34.50, for 3 £45.50",
+     "price": 1950,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-12",
+     "section": "Grill",
+     "name": "1kg Tomahawk to share",
+     "description": "Served for 2 with salad, fries, sweet potato & chimichurri; weekend only",
+     "price": 5750,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-13",
+     "section": "Grill",
+     "name": "Churrasco Steak",
+     "description": "",
+     "price": 1650,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-14",
+     "section": "Grill",
+     "name": "Grilled Chicken Breast",
+     "description": "",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-15",
+     "section": "Salads",
+     "name": "Chorizo salad",
+     "description": "Tomato & rocket salad with chimichurri",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-16",
+     "section": "Salads",
+     "name": "Chicken salad",
+     "description": "",
+     "price": 1025,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-17",
+     "section": "Salads",
+     "name": "Steak salad",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-18",
+     "section": "Sides",
+     "name": "Rice",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-19",
+     "section": "Sides",
+     "name": "Regular fries",
+     "description": "",
+     "price": 375,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-20",
+     "section": "Sides",
+     "name": "Sweet potato",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-21",
+     "section": "Sides",
+     "name": "Extra steak",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-22",
+     "section": "Sides",
+     "name": "Extra chicken",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-23",
+     "section": "Sides",
+     "name": "4 chicken wings",
+     "description": "",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-24",
+     "section": "Sides",
+     "name": "Extra chimichurri",
+     "description": "",
+     "price": 100,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-25",
+     "section": "Sides",
+     "name": "Bread",
+     "description": "",
+     "price": 100,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-26",
+     "section": "Sides",
+     "name": "Empanada",
+     "description": "Ham & cheese, beef or chicken",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-27",
+     "section": "Dessert",
+     "name": "Chocolate or cornflour alfajor",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-28",
+     "section": "Drinks",
+     "name": "Soft drink",
+     "description": "",
+     "price": 275,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-29",
+     "section": "Drinks",
+     "name": "Beer pint",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "argentinian-grill-30",
+     "section": "Drinks",
+     "name": "Wine glass",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "badiani",
+   "name": "Badiani",
+   "tagline": "Italian Dessert, Gelato & Coffee",
+   "category": "dessert",
+   "description": "Born in Florence in 1932, Badiani is one of the most prestigious gelato producers in the world. From its origins in the home of gelato, Badiani expanded to the UK in 2016 and now operates over ten stores across London and Brighton. In 2021, the brand opened new locations in Barcelona and Malaga as part of an ambitious expansion plan in the Iberian market. In 2024, Badiani opened in France within the world-famous Carrousel du Louvre. Badiani’s mission is to bring joy to consumers of all ages through the taste of historical artisan gelato, always made to the highest standards of quality and sustainability. The brand’s vision is to become the finest gelato brand in the world and inspire people with the flavour of freshly made artisan products",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "badiani1932",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/no-price-19.02.26-80x110-BADIANI-MENU.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/BADIANI-DRINKS-MENU.pdf"
+   ],
+   "photo": "/img/vendors/badiani.jpg",
+   "alsoAt": [
+    "Wood Wharf",
+    "Mayfair"
+   ],
+   "source": "https://mercatometropolitano.com/traders/badiani/",
+   "mmSlug": "badiani",
+   "menu": [
+    {
+     "id": "badiani-1",
+     "section": "Cones & Cups",
+     "name": "Piccolo",
+     "description": "1 flavour",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-2",
+     "section": "Cones & Cups",
+     "name": "Medio",
+     "description": "Up to 2 flavours",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-3",
+     "section": "Cones & Cups",
+     "name": "Grande",
+     "description": "Up to 3 flavours",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-4",
+     "section": "Cones & Cups",
+     "name": "Gluten free cone",
+     "description": "Up to 2 flavours",
+     "price": null,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "badiani-5",
+     "section": "Cones & Cups",
+     "name": "Choco cone",
+     "description": "Up to 2 flavours",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-6",
+     "section": "Cones & Cups",
+     "name": "Add a mini cone",
+     "description": "",
+     "price": 120,
+     "dietary": []
+    },
+    {
+     "id": "badiani-7",
+     "section": "Fresh Crêpes",
+     "name": "Signature crêpe",
+     "description": "Crêpe with a sauce of choice and a scoop of Buontalenti",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-8",
+     "section": "Fresh Crêpes",
+     "name": "Buontalenti crêpe",
+     "description": "Plain crêpe with a scoop of Buontalenti",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-9",
+     "section": "Fresh Crêpes",
+     "name": "Sauce crêpe",
+     "description": "Crêpe with a sauce of choice",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-10",
+     "section": "Take Me Home",
+     "name": "Piccolo 500ml",
+     "description": "",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-11",
+     "section": "Take Me Home",
+     "name": "Medio 750ml",
+     "description": "",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-12",
+     "section": "Take Me Home",
+     "name": "Grande 1000ml",
+     "description": "",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-13",
+     "section": "Frozen Treats",
+     "name": "Gelato Croissant",
+     "description": "Your favourite gelato + one sauce in a fresh croissant",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-14",
+     "section": "Frozen Treats",
+     "name": "Gelato Burger",
+     "description": "Your favourite gelato + one sauce, toasted in a brioche bun",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "badiani-15",
+     "section": "Hot Drinks",
+     "name": "Espresso",
+     "description": "",
+     "price": 290,
+     "dietary": []
+    },
+    {
+     "id": "badiani-16",
+     "section": "Hot Drinks",
+     "name": "Double espresso",
+     "description": "",
+     "price": 310,
+     "dietary": []
+    },
+    {
+     "id": "badiani-17",
+     "section": "Hot Drinks",
+     "name": "Macchiato",
+     "description": "",
+     "price": 320,
+     "dietary": []
+    },
+    {
+     "id": "badiani-18",
+     "section": "Hot Drinks",
+     "name": "Americano",
+     "description": "Grande £3.60",
+     "price": 330,
+     "dietary": []
+    },
+    {
+     "id": "badiani-19",
+     "section": "Hot Drinks",
+     "name": "Flat white",
+     "description": "",
+     "price": 390,
+     "dietary": []
+    },
+    {
+     "id": "badiani-20",
+     "section": "Hot Drinks",
+     "name": "Latte",
+     "description": "Grande £4.10",
+     "price": 390,
+     "dietary": []
+    },
+    {
+     "id": "badiani-21",
+     "section": "Hot Drinks",
+     "name": "Cappuccino",
+     "description": "Grande £4.10",
+     "price": 390,
+     "dietary": []
+    },
+    {
+     "id": "badiani-22",
+     "section": "Hot Drinks",
+     "name": "Mocha",
+     "description": "",
+     "price": 430,
+     "dietary": []
+    },
+    {
+     "id": "badiani-23",
+     "section": "Hot Drinks",
+     "name": "Chai latte",
+     "description": "",
+     "price": 410,
+     "dietary": []
+    },
+    {
+     "id": "badiani-24",
+     "section": "Hot Drinks",
+     "name": "Tea",
+     "description": "",
+     "price": 320,
+     "dietary": []
+    },
+    {
+     "id": "badiani-25",
+     "section": "Cold Drinks",
+     "name": "Affogato",
+     "description": "",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "badiani-26",
+     "section": "Cold Drinks",
+     "name": "Iced latte",
+     "description": "",
+     "price": 430,
+     "dietary": []
+    },
+    {
+     "id": "badiani-27",
+     "section": "Cold Drinks",
+     "name": "Iced americano",
+     "description": "",
+     "price": 410,
+     "dietary": []
+    },
+    {
+     "id": "badiani-28",
+     "section": "Cold Drinks",
+     "name": "Gelato shake",
+     "description": "Your favourite gelato, milk, whipped cream",
+     "price": 795,
+     "dietary": []
+    },
+    {
+     "id": "badiani-29",
+     "section": "Cold Drinks",
+     "name": "Sorbet shake",
+     "description": "Any sorbet shaken with ice",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "badiani-30",
+     "section": "Cold Drinks",
+     "name": "Pistachio iced latte",
+     "description": "With pistachio sauce + whipped cream",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "badiani-31",
+     "section": "Cold Drinks",
+     "name": "La Dolcevita iced latte",
+     "description": "With hazelnut chocolate sauce + whipped cream",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "badiani-32",
+     "section": "Cold Drinks",
+     "name": "Smoothies (Rosso / Giallo / Verde)",
+     "description": "",
+     "price": 730,
+     "dietary": []
+    },
+    {
+     "id": "badiani-33",
+     "section": "Cold Drinks",
+     "name": "Fresh juices",
+     "description": "",
+     "price": 730,
+     "dietary": []
+    },
+    {
+     "id": "badiani-34",
+     "section": "Cold Drinks",
+     "name": "Fresh orange juice",
+     "description": "",
+     "price": 625,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Gelato/food menu is a 'no-price' edition; only the drinks menu has prices"
+  },
+  {
+   "slug": "bebek-baklava",
+   "name": "Bebek Baklava",
+   "tagline": "Baklava, Borek, Kunefe",
+   "category": "dessert",
+   "description": "Bebek Baklava carries a legacy of craftsmanship and a passion for perfecting traditional Turkish sweets. The family behind Bebek Baklava began their culinary journey generations ago, blending time-honoured Turkish recipes with a dedication to creating the finest Baklava. Each layer of phyllo dough is meticulously handcrafted, and every nut filling carefully selected, delivering a taste that reflects the heart of Turkey. Bebak offer more than indulgent treats; it is a place where heritage, rich aromas, and warm hospitality come together. Bebek Baklava invites visitors to experience its traditions, where every bite tells the story of quality, care, and a love for sharing history through food.",
+   "dietary": [
+    "vegetarian",
+    "halal"
+   ],
+   "instagram": "bebekbaklava",
+   "website": "https://www.bebekbaklava.co.uk",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/bebek_baklava_menu_compressed.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/bebek_tukish_breakfast_mayfair_compressed.pdf"
+   ],
+   "photo": "/img/vendors/bebek-baklava.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/bebek-baklava/",
+   "mmSlug": "bebek-baklava",
+   "menu": [
+    {
+     "id": "bebek-baklava-1",
+     "section": "Baklava",
+     "name": "Midye baklava",
+     "description": "Filo with pistachio and cream; 1 piece £3, 3 for £8, 6 for £14, 10 for £20",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-2",
+     "section": "Baklava",
+     "name": "Chocolate baklava",
+     "description": "Filo with chocolate, milk cream and pistachio; priced per piece as above",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-3",
+     "section": "Baklava",
+     "name": "Walnut baklava",
+     "description": "Filo with walnuts; priced per piece as above",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-4",
+     "section": "Baklava",
+     "name": "Square baklava",
+     "description": "Filo with pistachio in original form; priced per piece as above",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-5",
+     "section": "Baklava",
+     "name": "Şöbiyet",
+     "description": "Filo with pistachio and cream; priced per piece as above",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-6",
+     "section": "Desserts",
+     "name": "Havuç dilimi baklava",
+     "description": "Carrot-shaped pistachio baklava; add Marash ice cream +£3",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-7",
+     "section": "Desserts",
+     "name": "Churros halka",
+     "description": "Fried dough in sugar syrup; 3 for £5",
+     "price": 200,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-8",
+     "section": "Desserts",
+     "name": "Triliche (milky cake)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-9",
+     "section": "Desserts",
+     "name": "Other cakes (per slice)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-10",
+     "section": "Desserts",
+     "name": "Künefe",
+     "description": "Shredded pastry with cheese and sweet syrup; add ice cream +£3",
+     "price": 900,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-11",
+     "section": "Savoury",
+     "name": "Spinach & cheese gozleme",
+     "description": "Stuffed flatbread with a hint of spice",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-12",
+     "section": "Savoury",
+     "name": "Spinach & cheese borek",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-13",
+     "section": "Savoury",
+     "name": "Simit",
+     "description": "Round soft bread with sesame seeds",
+     "price": 200,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-14",
+     "section": "Breakfast",
+     "name": "Turkish breakfast",
+     "description": "Cheeses, su börek, olives, tomatoes, cucumber, kaymak & honey, simit, Turkish tea; all day",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-15",
+     "section": "Breakfast",
+     "name": "Add sucuk",
+     "description": "",
+     "price": 200,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-16",
+     "section": "Offers",
+     "name": "Mix offer",
+     "description": "Künefe with ice cream, havuç with ice cream, cake, 2 churros, 4 Turkish teas",
+     "price": 3000,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-17",
+     "section": "Drinks",
+     "name": "Turkish tea",
+     "description": "",
+     "price": 200,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-18",
+     "section": "Drinks",
+     "name": "Turkish cola",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-19",
+     "section": "Drinks",
+     "name": "Turkish mix fruit bottle",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "bebek-baklava-20",
+     "section": "Drinks",
+     "name": "Water",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "beershack",
+   "name": "BeerShack",
+   "tagline": "Craft beers",
+   "category": "drinks",
+   "description": "Located in the vibrant heart of Mercato Metropolitano in Elephant and Castle, Craft Beer is a destination for both craft beer enthusiasts and casual drinkers. The venue specialises in a curated selection of craft brews from local London breweries as well as top international names, serving fresh pints in an energetic market atmosphere. Whether guests are seeking a crisp lager, a bold IPA, or something experimental, there is always a new flavour to discover.",
+   "dietary": [],
+   "instagram": "mmbeershacks",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/beer_shack_menu.pdf"
+   ],
+   "photo": "/img/vendors/beershack.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/beershack/",
+   "mmSlug": "beershack",
+   "menu": [
+    {
+     "id": "beershack-1",
+     "section": "Beer",
+     "name": "Two Tribes Classic Lager",
+     "description": "Pint; jug £25",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "beershack-2",
+     "section": "Beer",
+     "name": "Two Tribes Dream Pale Ale",
+     "description": "Pint; jug £26",
+     "price": 670,
+     "dietary": []
+    },
+    {
+     "id": "beershack-3",
+     "section": "Beer",
+     "name": "Two Tribes Metro IPA",
+     "description": "Pint; jug £26",
+     "price": 670,
+     "dietary": []
+    },
+    {
+     "id": "beershack-4",
+     "section": "Beer",
+     "name": "Two Tribes Campfire IPA",
+     "description": "Pint; jug £28",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "beershack-5",
+     "section": "Beer",
+     "name": "Two Tribes Power Pils",
+     "description": "Pint; jug £29",
+     "price": 750,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "beershack-6",
+     "section": "Beer",
+     "name": "Two Tribes Metro Tokyo IPA",
+     "description": "Pint; jug £26",
+     "price": 670,
+     "dietary": []
+    },
+    {
+     "id": "beershack-7",
+     "section": "Beer",
+     "name": "Two Tribes Midnight Stout",
+     "description": "Pint",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "beershack-8",
+     "section": "Beer",
+     "name": "Prime Time Lager",
+     "description": "Pint; jug £27",
+     "price": 720,
+     "dietary": []
+    },
+    {
+     "id": "beershack-9",
+     "section": "Beer",
+     "name": "Prime Time Session IPA",
+     "description": "Pint; jug £28",
+     "price": 720,
+     "dietary": []
+    },
+    {
+     "id": "beershack-10",
+     "section": "Beer",
+     "name": "Prime Time Caffein Lager",
+     "description": "Pint; jug £27",
+     "price": 680,
+     "dietary": []
+    },
+    {
+     "id": "beershack-11",
+     "section": "Cider",
+     "name": "Apple cider",
+     "description": "Pint; jug £27",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "beershack-12",
+     "section": "Cider",
+     "name": "Fruit cider",
+     "description": "Pint; jug £29",
+     "price": 745,
+     "dietary": []
+    },
+    {
+     "id": "beershack-13",
+     "section": "Low/No",
+     "name": "Lucky Saint (0.5%)",
+     "description": "",
+     "price": 550,
+     "dietary": []
+    },
+    {
+     "id": "beershack-14",
+     "section": "Wine",
+     "name": "Brut Bebeme",
+     "description": "Prosecco; glass, bottle £33.75",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "beershack-15",
+     "section": "Wine",
+     "name": "Palmares Rose",
+     "description": "Sparkling; glass, bottle £36.75",
+     "price": 770,
+     "dietary": []
+    },
+    {
+     "id": "beershack-16",
+     "section": "Wine",
+     "name": "Soave Classico",
+     "description": "White; glass, bottle £30.75",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "beershack-17",
+     "section": "Wine",
+     "name": "Petit Chardonnay",
+     "description": "White; glass, bottle £42.5",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "beershack-18",
+     "section": "Wine",
+     "name": "Rosa Venti",
+     "description": "Rosé; glass, bottle £34.0",
+     "price": 925,
+     "dietary": []
+    },
+    {
+     "id": "beershack-19",
+     "section": "Wine",
+     "name": "Le Girafe",
+     "description": "Rosé; glass, bottle £38.5",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "beershack-20",
+     "section": "Wine",
+     "name": "Amber Demon",
+     "description": "Orange; glass, bottle £50.5",
+     "price": 1375,
+     "dietary": []
+    },
+    {
+     "id": "beershack-21",
+     "section": "Wine",
+     "name": "Barbera Rosa",
+     "description": "Red; glass, bottle £30.0",
+     "price": 825,
+     "dietary": []
+    },
+    {
+     "id": "beershack-22",
+     "section": "Wine",
+     "name": "Chateau Callac Bordeaux",
+     "description": "Red; glass, bottle £37.5",
+     "price": 1025,
+     "dietary": []
+    },
+    {
+     "id": "beershack-23",
+     "section": "Soft drinks",
+     "name": "Soft drinks",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Photos of letter boards; 3 pages overlap (older board also lists Xena/Borealis cans £7.50). Power Pils marked G.F."
+  },
+  {
+   "slug": "butchers-grill",
+   "name": "Butchers Grill",
+   "tagline": "Grilled meat",
+   "category": "food",
+   "description": "The Butcher’s Grill your one-stop destination for juicy steaks, loaded toasted sandwiches, and crispy topped fries.",
+   "dietary": [],
+   "instagram": "butchers_grill",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/butchers_grill_menu.pdf"
+   ],
+   "photo": "/img/vendors/butchers-grill.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/butchers-grill/",
+   "mmSlug": "butchers-grill",
+   "menu": [
+    {
+     "id": "butchers-grill-1",
+     "section": "Meal from the Grill",
+     "name": "Steak",
+     "description": "Prime GB topside, with salad, fries and rice",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-2",
+     "section": "Meal from the Grill",
+     "name": "Chicken",
+     "description": "Free range Red Tractor chicken breast, with salad, fries and rice",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-3",
+     "section": "Meal from the Grill",
+     "name": "Lamb",
+     "description": "Prime GB lamb shoulder, with salad, fries and rice",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-4",
+     "section": "Mix Grill",
+     "name": "Mix Grill",
+     "description": "Half rack BBQ pork ribs, 5 peri-peri wings & fries",
+     "price": 1850,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-5",
+     "section": "Mix Grill",
+     "name": "Mix Grill Large",
+     "description": "200g topside steak, half rack pork ribs, 5 peri-peri wings & fries",
+     "price": 3250,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-6",
+     "section": "Mix Grill",
+     "name": "Mix Grill X Large",
+     "description": "400g topside steak, full rack pork ribs, 8 peri-peri wings & fries",
+     "price": 4450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-7",
+     "section": "Mix Grill",
+     "name": "Mix Grill XX Large",
+     "description": "400g topside, full rack pork ribs, lamb shoulder, 8 peri-peri wings & fries",
+     "price": 5650,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-8",
+     "section": "Burgers",
+     "name": "Beef Burger & Fries",
+     "description": "Cheese, bacon, rosemary & garlic mayo, lettuce & tomato",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-9",
+     "section": "Burgers",
+     "name": "Double Burger & Fries",
+     "description": "",
+     "price": 1750,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-10",
+     "section": "Burgers",
+     "name": "Chicken Burger & Fries",
+     "description": "",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-11",
+     "section": "Burgers",
+     "name": "Pulled Pork Burger & Fries",
+     "description": "Cheese, bacon, rosemary & garlic mayo, BBQ, lettuce & tomato",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-12",
+     "section": "Chicken",
+     "name": "Chicken wings (6 pieces)",
+     "description": "Peri peri or BBQ, with salad, rice & fries; 12 pcs £17.50, 18 pcs £25.50",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-13",
+     "section": "Chicken",
+     "name": "Half chicken",
+     "description": "Peri peri or BBQ, with salad, rice & fries",
+     "price": 1550,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-14",
+     "section": "Steak",
+     "name": "Prime sirloin steak 250g",
+     "description": "With salad, rice & fries",
+     "price": 1850,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-15",
+     "section": "Steak",
+     "name": "Prime rib-eye steak 250g",
+     "description": "With salad, rice & fries",
+     "price": 1950,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-16",
+     "section": "Pork",
+     "name": "BBQ pork ribs (half rack)",
+     "description": "Full rack £23.50",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-17",
+     "section": "Pork",
+     "name": "Pulled pork loaded fries",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-18",
+     "section": "Salads",
+     "name": "Steak salad",
+     "description": "Topside, cucumber, lettuce, tomato, honey & mustard dressing",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-19",
+     "section": "Salads",
+     "name": "Chicken salad",
+     "description": "",
+     "price": 950,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-20",
+     "section": "Special Loaded Fries",
+     "name": "Rib-eye loaded fries",
+     "description": "Aged rib eye, cheese, house sauce, garlic mayo; large £15.50",
+     "price": 1350,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-21",
+     "section": "Special Loaded Fries",
+     "name": "Short rib loaded fries",
+     "description": "Large £14.50",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-22",
+     "section": "Special Loaded Fries",
+     "name": "Pulled pork loaded fries (special)",
+     "description": "Smoked BBQ & garlic mayo; large £13.50",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-23",
+     "section": "Sandwiches",
+     "name": "Rib-eye sandwich",
+     "description": "On sourdough; add fries £2.50",
+     "price": 1550,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-24",
+     "section": "Sandwiches",
+     "name": "Short rib sandwich",
+     "description": "",
+     "price": 1550,
+     "dietary": []
+    },
+    {
+     "id": "butchers-grill-25",
+     "section": "Sandwiches",
+     "name": "Pulled pork sandwich",
+     "description": "",
+     "price": 1450,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "central-cocktail-bar",
+   "name": "Central Cocktail Bar",
+   "tagline": "Cocktail bar",
+   "category": "drinks",
+   "description": "",
+   "dietary": [],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/grand_central_cocktail_bar_menu.pdf"
+   ],
+   "photo": "/img/vendors/central-cocktail-bar.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/central-cocktail-bar/",
+   "mmSlug": "central-cocktail-bar",
+   "menu": [
+    {
+     "id": "central-cocktail-bar-1",
+     "section": "Cocktails",
+     "name": "Mocha Martini",
+     "description": "Vodka, coffee liqueur, creme de cacao, cinnamon, cold brew",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-2",
+     "section": "Cocktails",
+     "name": "Black Forest Martini",
+     "description": "Dark rum, creme de cacao, cherry liqueur, raspberry, cold brew",
+     "price": 1350,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-3",
+     "section": "Cocktails",
+     "name": "Cherry Drop",
+     "description": "Vodka, cherry & vanilla, apple, lemon, soda",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-4",
+     "section": "Cocktails",
+     "name": "Tokyo Iced Tea",
+     "description": "Melon liqueur, vodka, tequila, rum, triple sec, gin, lime, lemonade",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-5",
+     "section": "Cocktails",
+     "name": "Spiced Banana Split",
+     "description": "Spiced rum, pineapple, banana, lime, cinnamon",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-6",
+     "section": "Cocktails",
+     "name": "Airplane",
+     "description": "Bourbon, amaretto, Select aperitivo, lemon",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-7",
+     "section": "Cocktails",
+     "name": "Verdita",
+     "description": "Tequila, triple sec, pineapple, lime, chilli salt rim",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-8",
+     "section": "Cocktails",
+     "name": "Ginger Old Fashioned",
+     "description": "Bourbon, ginger syrup, bitters, candied ginger",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-9",
+     "section": "Cocktails",
+     "name": "Peachy Keen",
+     "description": "Grapefruit gin, peach liqueur, lemon, soda, mint",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-10",
+     "section": "Cocktails",
+     "name": "Bubble Bee",
+     "description": "Rhubarb gin, raspberry, lemon, prosecco",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-11",
+     "section": "Cocktails",
+     "name": "Godfather Sour",
+     "description": "Bourbon, amaretto, lemon, bitters, vegan foamer",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-12",
+     "section": "Cocktails",
+     "name": "Rumgo",
+     "description": "White rum, St Germain, lemon, elderflower tonic",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-13",
+     "section": "Alcohol-free",
+     "name": "Sunny Drive Home",
+     "description": "Lyre's Italian Orange, lemon, grapefruit tonic",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-14",
+     "section": "Alcohol-free",
+     "name": "Spritz To The Rubble",
+     "description": "Everleaf Mountain, pineapple, lime, Mallorcan tonic",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "central-cocktail-bar-15",
+     "section": "Classics",
+     "name": "Classic cocktails on request",
+     "description": "From £12",
+     "price": 1200,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "chang-thai-kitchen",
+   "name": "Chang Thai Kitchen",
+   "tagline": "Every day Thai food",
+   "category": "food",
+   "description": "Chang Thai Kitchen, Thai Bar brings the vibrant flavours of Thailand to London with a menu rooted in authentic home-cooked recipes. Every dish is prepared with fresh ingredients, showcasing the rich tastes and aromatic spices that define Thai cuisine. From crispy Moo Tod to perfectly grilled Gai Yang and a variety of other classic favourites, Chang Thai Kitchen delivers a memorable and satisfying culinary experience that transports diners straight to Thailand.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "changthaikitchenlondon",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/chang_thai_kitchen_compressed.pdf"
+   ],
+   "photo": "/img/vendors/chang-thai-kitchen.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/chang-thai-kitchen/",
+   "mmSlug": "chang-thai-kitchen",
+   "menu": [
+    {
+     "id": "chang-thai-kitchen-1",
+     "section": "Starters",
+     "name": "Vegetable spring rolls",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-2",
+     "section": "Starters",
+     "name": "Duck spring rolls",
+     "description": "",
+     "price": 795,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-3",
+     "section": "Starters",
+     "name": "Butterfly prawns",
+     "description": "",
+     "price": 895,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-4",
+     "section": "Starters",
+     "name": "Thai calamari",
+     "description": "",
+     "price": 895,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-5",
+     "section": "Starters",
+     "name": "Chicken satay",
+     "description": "",
+     "price": 795,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-6",
+     "section": "Starters",
+     "name": "Prawn crackers",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-7",
+     "section": "Curries",
+     "name": "Green curry",
+     "description": "With jasmine rice; Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-8",
+     "section": "Curries",
+     "name": "Massaman peanut curry",
+     "description": "Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-9",
+     "section": "Curries",
+     "name": "Red curry",
+     "description": "Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-10",
+     "section": "Noodles",
+     "name": "Pad Thai",
+     "description": "Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-11",
+     "section": "Noodles",
+     "name": "Pad Kee Mao (drunken, hot)",
+     "description": "Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-12",
+     "section": "Noodles",
+     "name": "Chow mein",
+     "description": "Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-13",
+     "section": "Chef's Specials",
+     "name": "Pad Krapao (hot)",
+     "description": "Stir fry in spicy basil sauce, jasmine rice, fried egg; Vegetables/tofu £11, chicken £12, beef £13.50, prawns £13.95",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-14",
+     "section": "Chef's Specials",
+     "name": "Gai Yang",
+     "description": "Marinated grilled chicken with jasmine rice",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-15",
+     "section": "Chef's Specials",
+     "name": "Moo Tod",
+     "description": "Deep fried pork with jasmine rice",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-16",
+     "section": "Soups",
+     "name": "Tom Yum (medium hot)",
+     "description": "Veg/tofu £6.95, chicken £7.50, prawns £8.95",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-17",
+     "section": "Soups",
+     "name": "Tom Kha",
+     "description": "Veg/tofu £6.95, chicken £7.50, prawns £8.95",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-18",
+     "section": "Drinks",
+     "name": "Water still/sparkling",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-19",
+     "section": "Drinks",
+     "name": "Karma cola / orange",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "chang-thai-kitchen-20",
+     "section": "Drinks",
+     "name": "Thai iced tea",
+     "description": "",
+     "price": 495,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Prices shown are lowest (vegetable/tofu) option"
+  },
+  {
+   "slug": "cocktail-caravan",
+   "name": "Cocktail Caravan",
+   "tagline": "Cocktail bar",
+   "category": "drinks",
+   "description": "",
+   "dietary": [],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/cocktail_caravan_menu.pdf"
+   ],
+   "photo": "/img/vendors/cocktail-caravan.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/cocktail-caravan/",
+   "mmSlug": "cocktail-caravan",
+   "menu": [
+    {
+     "id": "cocktail-caravan-1",
+     "section": "Cocktails",
+     "name": "That's Spritz",
+     "description": "Aperitivo Berto, prosecco, soda",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-2",
+     "section": "Cocktails",
+     "name": "London Spritz",
+     "description": "Gin, prosecco, elderflower",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-3",
+     "section": "Cocktails",
+     "name": "Bitter Spritz",
+     "description": "Bitter Berto, prosecco, soda",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-4",
+     "section": "Cocktails",
+     "name": "Gin & Tonic",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-5",
+     "section": "Cocktails",
+     "name": "Gin & Tonic Raspberry",
+     "description": "",
+     "price": 1160,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-6",
+     "section": "Cocktails",
+     "name": "Negroni",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-7",
+     "section": "Cocktails",
+     "name": "Negroni Sbagliato",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-8",
+     "section": "Cocktails",
+     "name": "Americano",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-9",
+     "section": "Cocktails",
+     "name": "Boulevardier",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-10",
+     "section": "Cocktails",
+     "name": "Old Fashioned",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-11",
+     "section": "Cocktails",
+     "name": "Smoky Old Fashioned",
+     "description": "",
+     "price": 1240,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-12",
+     "section": "Cocktails",
+     "name": "Whisky Sour",
+     "description": "",
+     "price": 1190,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-13",
+     "section": "Cocktails",
+     "name": "Amaretto Sour",
+     "description": "",
+     "price": 1160,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-14",
+     "section": "Cocktails",
+     "name": "Moscow Mule",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-15",
+     "section": "Cocktails",
+     "name": "Caipirinha",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-16",
+     "section": "Cocktails",
+     "name": "Margarita",
+     "description": "",
+     "price": 1170,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-17",
+     "section": "Cocktails",
+     "name": "Spicy Margarita",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-18",
+     "section": "Cocktails",
+     "name": "Cosmopolitan",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-19",
+     "section": "Cocktails",
+     "name": "Lychee Martini",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-20",
+     "section": "Cocktails",
+     "name": "Espresso Martini",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-21",
+     "section": "Cocktails",
+     "name": "Bloody Mary",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-22",
+     "section": "Frozen Cocktails",
+     "name": "Frozen daiquiri (passion fruit, raspberry, strawberry, peach, melon, mango)",
+     "description": "Vodka or rum, lime, sugar, fruit purée",
+     "price": 1190,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-23",
+     "section": "Frozen Cocktails",
+     "name": "Piña Colada",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-24",
+     "section": "Mojito Club",
+     "name": "Mojito",
+     "description": "Flavoured versions £11.60",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-25",
+     "section": "Mocktails",
+     "name": "Virgin Mojito",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "cocktail-caravan-26",
+     "section": "Mocktails",
+     "name": "Fruity Mojito",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Capped at ~25 drinks; 3-page menu has more flavour variants"
+  },
+  {
+   "slug": "wine-and-aperitif-bar",
+   "name": "Wine & Aperitif Bar",
+   "tagline": "Wine Bar",
+   "category": "drinks",
+   "description": "Enjoy delicious wines and small bites at E&C",
+   "dietary": [
+    "vegetarian",
+    "vegan"
+   ],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [],
+   "photo": "/img/vendors/crypt-of-wine.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/crypt-of-wine/",
+   "mmSlug": "crypt-of-wine",
+   "menu": [],
+   "menuNotes": "No menu file listed for this trader"
+  },
+  {
+   "slug": "dub-pan-burger-shack",
+   "name": "Dub Pan Burger Shack",
+   "tagline": "",
+   "category": "food",
+   "description": "",
+   "dietary": [],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/dub_pan_burger_shack_menu.pdf"
+   ],
+   "photo": "/img/vendors/dub-pan-burger-shack.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/dub-pan-burger-shack/",
+   "mmSlug": "dub-pan-burger-shack",
+   "menu": [
+    {
+     "id": "dub-pan-burger-shack-1",
+     "section": "Burgers",
+     "name": "Jerk Burger",
+     "description": "Grilled jerk beef, emmental, lettuce, red onion, gherkin, jerk BBQ & burger sauces",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-2",
+     "section": "Burgers",
+     "name": "Boss Burger",
+     "description": "Double jerk beef, american cheese, grilled red onion, jalapeño",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-3",
+     "section": "Burgers",
+     "name": "Chicken Burger",
+     "description": "Grilled jerk chicken, jerk gravy, lettuce, coleslaw, scotch bonnet jam",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-4",
+     "section": "Burgers",
+     "name": "Halloumi Burger",
+     "description": "Jerk seasoned halloumi, sweet fried plantain, rocket, spicy mayo",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-5",
+     "section": "Extras",
+     "name": "JC Wrap",
+     "description": "Jerk chicken thigh, salad, coleslaw & sauces",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-6",
+     "section": "Extras",
+     "name": "Boston Wings (6)",
+     "description": "9 for £11, 12 for £13.50",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-7",
+     "section": "Extras",
+     "name": "Saltfish Fritters",
+     "description": "Saltcod fritters w/ spicy mayo dip",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-8",
+     "section": "Extras",
+     "name": "Loaded Fries",
+     "description": "Topped with jerk chicken, gravy, sauces",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-9",
+     "section": "Sides",
+     "name": "Fried plantain",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-10",
+     "section": "Sides",
+     "name": "Jerk fries",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-11",
+     "section": "Sides",
+     "name": "Rice & peas w/ gravy",
+     "description": "",
+     "price": 575,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-12",
+     "section": "Sides",
+     "name": "Coleslaw",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-13",
+     "section": "Beers",
+     "name": "London Steam Lager (pint)",
+     "description": "",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-14",
+     "section": "Beers",
+     "name": "Picnic Session IPA (can)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-15",
+     "section": "Cocktails",
+     "name": "Rum Punch",
+     "description": "Pitcher £39.50",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-16",
+     "section": "Cocktails",
+     "name": "Mai Tai",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-17",
+     "section": "Cocktails",
+     "name": "Rum Ting",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-18",
+     "section": "Cocktails",
+     "name": "Dark & Stormy",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-19",
+     "section": "Cocktails",
+     "name": "Mojito",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-20",
+     "section": "Cocktails",
+     "name": "Katch A Fire",
+     "description": "",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-21",
+     "section": "Spirits",
+     "name": "Single + mixer",
+     "description": "",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-burger-shack-22",
+     "section": "Softs",
+     "name": "Soft drinks",
+     "description": "",
+     "price": 325,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "dub-pan-jerk",
+   "name": "Dub Pan Jamming Jerk & Rum Punch",
+   "tagline": "Caribbean Food",
+   "category": "food",
+   "description": "DubPan bring the vibrant flavours of Jamaica straight to London with food that packs a punch. From spicy jerk chicken and tender curry goat to golden flaky patties, every dish is made fresh and full of island spice. Pair your meal with their signature cocktails, including a sweet and refreshing rum punch, and enjoy a taste of Jamaica wherever you are.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "dub_pan",
+   "website": "https://www.dubpan.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/dub_pan_jamaican_style_menu.pdf"
+   ],
+   "photo": "/img/vendors/dub-pan-jamming-jerk-rum-punch.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/dub-pan-jamming-jerk-rum-punch/",
+   "mmSlug": "dub-pan-jamming-jerk-rum-punch",
+   "menu": [
+    {
+     "id": "dub-pan-jerk-1",
+     "section": "Boxfood",
+     "name": "Jerk It Up",
+     "description": "Charcoal grilled jerk chicken, gravy, one side & sauce",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-2",
+     "section": "Boxfood",
+     "name": "Yardi",
+     "description": "Jamaican curry goat w/ one side & sauce",
+     "price": 1350,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-3",
+     "section": "Boxfood",
+     "name": "Jah Love",
+     "description": "Vegan chickpea curry, rice & peas, fried plantain and sauce",
+     "price": 1200,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "dub-pan-jerk-4",
+     "section": "Sharing",
+     "name": "Yeah Mon! Platter",
+     "description": "Half jerk chicken, wings or saltfish fritters, two sides & sauces",
+     "price": 2950,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-5",
+     "section": "Extras",
+     "name": "JC Wrap",
+     "description": "Jerk chicken thigh, salad, coleslaw & sauces",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-6",
+     "section": "Extras",
+     "name": "Boston Wings (6)",
+     "description": "9 for £11, 12 for £13.50",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-7",
+     "section": "Extras",
+     "name": "Saltfish Fritters",
+     "description": "Saltcod fritters w/ spicy mayo dip",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-8",
+     "section": "Extras",
+     "name": "Loaded Fries",
+     "description": "Topped with jerk chicken, gravy, sauces",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-9",
+     "section": "Sides",
+     "name": "Fried plantain",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-10",
+     "section": "Sides",
+     "name": "Fries",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-11",
+     "section": "Sides",
+     "name": "Rice & peas",
+     "description": "",
+     "price": 475,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-12",
+     "section": "Sides",
+     "name": "Coleslaw",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-13",
+     "section": "Sides",
+     "name": "Dumplings",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-14",
+     "section": "Lunch Deal",
+     "name": "Jerk It Up or Jah Love box & soft drink (Mon-Fri)",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-15",
+     "section": "Beer",
+     "name": "Picnic Session IPA",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-16",
+     "section": "Cocktails",
+     "name": "Rum Punch",
+     "description": "Pitcher £39.50",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-17",
+     "section": "Cocktails",
+     "name": "Mai Tai",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-18",
+     "section": "Cocktails",
+     "name": "Rum Ting",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-19",
+     "section": "Cocktails",
+     "name": "Dark & Stormy",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-20",
+     "section": "Cocktails",
+     "name": "Mojito",
+     "description": "",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-21",
+     "section": "Spirits",
+     "name": "Single + mixer",
+     "description": "",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "dub-pan-jerk-22",
+     "section": "Softs",
+     "name": "Soft drinks",
+     "description": "",
+     "price": 325,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "farmhouse-kebabs",
+   "name": "Farmhouse Kebabs",
+   "tagline": "Turkish. BBQ. Kebabs",
+   "category": "food",
+   "description": "Farmhouse Kebabs was awarded Best Kebab Restaurant in South and East London by the British Kebab Awards. The eatery specialises in a variety of hearty wraps and sides, with the Chicken Wrap and Lamb Wrap among its most popular dishes, often enjoyed alongside Chips or Cheesy Chips. Farmhouse Kebabs also offers a selection of salads, including build-your-own Chicken or Lamb Salad Bowls, as well as diverse sides such as Halloumi Fries and Olives.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "farmhouse_kebab",
+   "website": "https://farmhousekebab.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/farm_house_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/farm-house.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/farm-house/",
+   "mmSlug": "farm-house",
+   "menu": [
+    {
+     "id": "farmhouse-kebabs-1",
+     "section": "Wraps",
+     "name": "Chicken wrap",
+     "description": "With chilli & garlic sauce, fresh salad",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-2",
+     "section": "Wraps",
+     "name": "Lamb shish wrap",
+     "description": "",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-3",
+     "section": "Wraps",
+     "name": "Chicken shish wrap",
+     "description": "",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-4",
+     "section": "Wraps",
+     "name": "Mix wrap",
+     "description": "",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-5",
+     "section": "Wraps",
+     "name": "Adana kofte wrap",
+     "description": "",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-6",
+     "section": "Wraps",
+     "name": "Halloumi wrap",
+     "description": "",
+     "price": 1095,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-7",
+     "section": "Wraps",
+     "name": "Falafel wrap",
+     "description": "",
+     "price": 995,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-8",
+     "section": "Plates",
+     "name": "Chicken doner",
+     "description": "With bread, bulgur rice, salad & sauces",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-9",
+     "section": "Plates",
+     "name": "Chicken kebab",
+     "description": "Chicken cubes in yoghurt & red pepper paste",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-10",
+     "section": "Plates",
+     "name": "Lamb kebab",
+     "description": "",
+     "price": 1575,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-11",
+     "section": "Plates",
+     "name": "Adana kebab",
+     "description": "Minced lamb with red peppers & parsley",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-12",
+     "section": "Plates",
+     "name": "Mixed kebab",
+     "description": "Chicken shish, lamb shish, chicken wings",
+     "price": 1650,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-13",
+     "section": "Plates",
+     "name": "Chicken wings (8pcs)",
+     "description": "",
+     "price": 1095,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-14",
+     "section": "Plates",
+     "name": "Turkish combo kebab",
+     "description": "Chicken shish, lamb shish, adana kofte, wings, chicken doner",
+     "price": 3495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-15",
+     "section": "Sides",
+     "name": "Rice",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-16",
+     "section": "Sides",
+     "name": "Chips",
+     "description": "",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-17",
+     "section": "Sides",
+     "name": "Halloumi fries",
+     "description": "",
+     "price": 595,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-18",
+     "section": "Sides",
+     "name": "Falafel fries",
+     "description": "",
+     "price": 595,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-19",
+     "section": "Sides",
+     "name": "Side salad",
+     "description": "",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-20",
+     "section": "Drinks",
+     "name": "Water",
+     "description": "",
+     "price": 225,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-21",
+     "section": "Drinks",
+     "name": "Ayran",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-22",
+     "section": "Drinks",
+     "name": "Turkish cola",
+     "description": "",
+     "price": 295,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-23",
+     "section": "Drinks",
+     "name": "Turkish tea",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-24",
+     "section": "Lunch Deal",
+     "name": "Falafel wrap or chicken wings (Mon-Fri 12-5pm)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "fresco-pizzeria-napoletana",
+   "name": "Fresco Pizzeria Napoletana",
+   "tagline": "Neapolitan Pizza",
+   "category": "food",
+   "description": "Fresco brings the authentic taste of Neapolitan pizza from Naples to London. The menu includes classic Neapolitan pizzas, smaller bites and the signature Arrotolatas, or pizza wraps, all made with authentic ingredients and slow-risen dough. Every dish captures the flavours of Naples, offering a true taste of Italy in the heart of London.",
+   "dietary": [
+    "vegetarian",
+    "vegan"
+   ],
+   "instagram": "frescotrattoria",
+   "website": "https://frescotrattoria.it/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/No-Price_pizza.MF_.10.12.2025.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/no-price-19.02.26-50X90cm-FRESCO-MENU.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/No-Price_EC-FRESCO-PIZZERIA-NAPOLETANA-12.2025.pdf"
+   ],
+   "photo": "/img/vendors/fresco-pizzeria-napoletana.jpg",
+   "alsoAt": [
+    "Wood Wharf",
+    "Mayfair"
+   ],
+   "source": "https://mercatometropolitano.com/traders/fresco-pizzeria-napoletana/",
+   "mmSlug": "fresco-pizzeria-napoletana",
+   "menu": [
+    {
+     "id": "fresco-pizzeria-napoletana-1",
+     "section": "Pizza",
+     "name": "Marinara",
+     "description": "tomato sauce, garlic, oregano, evo oil",
+     "price": null,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-2",
+     "section": "Pizza",
+     "name": "Margherita",
+     "description": "tomato, mozzarella, basil, evo oil",
+     "price": null,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-3",
+     "section": "Pizza",
+     "name": "Double One",
+     "description": "tomato, double mozzarella, basil",
+     "price": null,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-4",
+     "section": "Pizza",
+     "name": "Diavola",
+     "description": "tomato, spicy salami, mozzarella, basil",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-5",
+     "section": "Pizza",
+     "name": "Cosacca",
+     "description": "tomato, parmesan, pecorino, basil",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-6",
+     "section": "Pizza",
+     "name": "Parma",
+     "description": "tomato, Parma ham, mozzarella, basil",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-7",
+     "section": "Pizza",
+     "name": "Capricciosa",
+     "description": "tomato, artichokes, cooked ham, mushrooms, mozzarella",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-8",
+     "section": "Pizza",
+     "name": "Napoletana",
+     "description": "tomato, mozzarella, anchovies, oregano, olives, capers",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-9",
+     "section": "Pizza",
+     "name": "Calzone",
+     "description": "folded pizza: tomato, mozzarella, ricotta, sweet salami, parmesan",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-10",
+     "section": "Pizza",
+     "name": "Bufala PDO",
+     "description": "tomato, buffalo mozzarella, basil",
+     "price": null,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-11",
+     "section": "Pizza",
+     "name": "Piccantissima",
+     "description": "tomato, spicy salami, nduja, jalapeno, mozzarella",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-12",
+     "section": "Pizza",
+     "name": "Ortolana",
+     "description": "tomato, mozzarella, courgette, aubergine, peppers",
+     "price": null,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-13",
+     "section": "Pizza",
+     "name": "Pumpkinella",
+     "description": "pumpkin base, pancetta, provolone, mozzarella (white)",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-14",
+     "section": "Pizza",
+     "name": "Boscaiola",
+     "description": "mixed mushrooms with porcini, garlic, pancetta, mozzarella (white)",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-15",
+     "section": "Pizza",
+     "name": "Pasqualina",
+     "description": "italian sausage, friarielli, mozzarella (white)",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-16",
+     "section": "Pizza",
+     "name": "5 Formaggi",
+     "description": "blue cheese, provolone, ricotta, parmesan, mozzarella (white)",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-17",
+     "section": "Pizza",
+     "name": "Tartufella",
+     "description": "truffle sauce, mushrooms, mozzarella (white)",
+     "price": null,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-18",
+     "section": "Pizza",
+     "name": "Pesto Delight",
+     "description": "basil pesto, mozzarella, cooked ham, ricotta (white)",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-19",
+     "section": "Extras",
+     "name": "Garlic focaccia",
+     "description": "Pizza base, garlic, evo oil",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-20",
+     "section": "Extras",
+     "name": "Add mozzarella",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-21",
+     "section": "Extras",
+     "name": "Swap to buffalo mozzarella",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-22",
+     "section": "Extras",
+     "name": "Swap to vegan cheese",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-23",
+     "section": "Extras",
+     "name": "Gluten free base",
+     "description": "Trace flour always present",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-24",
+     "section": "Dips",
+     "name": "Basil pesto",
+     "description": "",
+     "price": 290,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-25",
+     "section": "Dips",
+     "name": "Spicy mayo",
+     "description": "",
+     "price": 290,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-26",
+     "section": "Dips",
+     "name": "Aioli mayo",
+     "description": "",
+     "price": 290,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-27",
+     "section": "Dips",
+     "name": "All 3 dips",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "fresco-pizzeria-napoletana-28",
+     "section": "Lunch Deal",
+     "name": "Marinara & any soft drink (Mon-Fri 12-5pm)",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Menus are 'no-price' editions: pizza prices not printed; only extras/dips priced (one variant lists buffalo swap +£4.50). Margherita/Ortolana can be made vegan"
+  },
+  {
+   "slug": "german-kraft",
+   "name": "German Kraft",
+   "tagline": "Fresh & Authentic German Craft Beer",
+   "category": "drinks",
+   "description": "Established in 2017, German Kraft aims to revive the Franconian beer-drinking tradition by producing authentic German-style beers brewed and served fresh on-site directly from the brewery. Following the 1516 German Purity Law, the beers are made using only water, malt, hops and yeast, and are unfiltered, unpasteurized and free from additives. Guests can enjoy some of the finest German beers in a memorable setting at all German Kraft locations.",
+   "dietary": [
+    "vegetarian",
+    "vegan"
+   ],
+   "instagram": "germankraftmayfair",
+   "website": "https://www.germankraft.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/tap_room_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/germankraft.jpg",
+   "alsoAt": [
+    "Mayfair"
+   ],
+   "source": "https://mercatometropolitano.com/traders/germankraft/",
+   "mmSlug": "germankraft",
+   "menu": [
+    {
+     "id": "german-kraft-1",
+     "section": "Brewed on Site",
+     "name": "Heidi (Helles, 5.2%)",
+     "description": "Malt-forward Franconian Helles, unfiltered",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-2",
+     "section": "Brewed on Site",
+     "name": "Lotte (Hefeweizen, 5.3%)",
+     "description": "Creamy Bavarian wheat beer, hints of banana",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-3",
+     "section": "Brewed on Site",
+     "name": "Heinrich (Zwickel Lager, 4.8%)",
+     "description": "Unfiltered young Franconian lager",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-4",
+     "section": "Brewed on Site",
+     "name": "Seasonal specials",
+     "description": "Rotating beers brewed on site",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-5",
+     "section": "Beer Prices",
+     "name": "German Kraft beer – half",
+     "description": "From; pint from £6.65, stein from £13",
+     "price": 360,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-6",
+     "section": "Beer Prices",
+     "name": "German Kraft beer – pint",
+     "description": "From",
+     "price": 665,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-7",
+     "section": "Beer Prices",
+     "name": "Guest draught – pint",
+     "description": "From; half from £3.80, stein from £14",
+     "price": 710,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-8",
+     "section": "Wine",
+     "name": "Red / White / Rosé (125ml)",
+     "description": "175ml £7.40, 250ml £10, bottle £28",
+     "price": 540,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-9",
+     "section": "Non-alcoholic",
+     "name": "Non-alcoholic beer 33cl (lager/IPA/stout)",
+     "description": "",
+     "price": 520,
+     "dietary": []
+    },
+    {
+     "id": "german-kraft-10",
+     "section": "Non-alcoholic",
+     "name": "Belu water 330ml",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Drinks only (taproom); beer priced 'from' by size, not per beer"
+  },
+  {
+   "slug": "hermanos-taco-house",
+   "name": "Hermanos Taco House",
+   "tagline": "Mexican Tacos",
+   "category": "food",
+   "description": "Born from a love of great food and a passion for exploring bold, alternative flavours, Hermanos Taco House combines inventive dishes with the best of Mexican cooking. Every bite is packed with flavour, thanks to the freshest ingredients and inspiration drawn from traditional Mexican recipes with a creative twist. From sizzling fajitas to crispy tacos, each dish is designed to transport diners to the vibrant streets of Mexico City. For Hermanos Taco House, food isn’t just something to eat – it’s an experience.",
+   "dietary": [
+    "vegetarian",
+    "vegan"
+   ],
+   "instagram": "hermanostacohouse",
+   "website": "https://www.hermanostacohouse.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/hermanos_taco_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/hermanos-taco-house.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/hermanos-taco-house/",
+   "mmSlug": "hermanos-taco-house",
+   "menu": [
+    {
+     "id": "hermanos-taco-house-1",
+     "section": "Tacos",
+     "name": "Tacos x3 – Smoky Beef",
+     "description": "With habanero sauce; lettuce, red onion, coriander",
+     "price": 1295,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-2",
+     "section": "Tacos",
+     "name": "Tacos x3 – Pollo Hermanos chicken",
+     "description": "With salsa verde",
+     "price": 1295,
+     "dietary": [
+      "gluten-free",
+      "halal"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-3",
+     "section": "Tacos",
+     "name": "Tacos x3 – Cajun Sweet Potato",
+     "description": "With guacamole sauce",
+     "price": 1295,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-4",
+     "section": "Tacos",
+     "name": "Tacos x3 – Pork Carnitas",
+     "description": "With chipotle mayo",
+     "price": 1295,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-5",
+     "section": "Tacos",
+     "name": "Triple Taco",
+     "description": "Mix any three tacos",
+     "price": 1395,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-6",
+     "section": "Tacos",
+     "name": "Six Spectacolar",
+     "description": "Choose 6 tacos",
+     "price": 2400,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-7",
+     "section": "Tacos",
+     "name": "Taco Tuesday (each)",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-8",
+     "section": "Birria",
+     "name": "Birria tacos (x3)",
+     "description": "Melted cheese, birria beef, onion & coriander, consomé",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-9",
+     "section": "Birria",
+     "name": "Birria burrito",
+     "description": "Rice, beans, sour cream, lettuce, cheese, birria beef, consomé",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-10",
+     "section": "Burritos",
+     "name": "Burrito wrap (smoky beef / chicken tinga / cajun sweet potato / pork carnitas)",
+     "description": "Rice, pinto beans, cheese, sour cream; chicken tinga halal",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-11",
+     "section": "Burritos",
+     "name": "Burrito box",
+     "description": "Gluten free",
+     "price": 1400,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-12",
+     "section": "Sides & Sharing",
+     "name": "Quesadillas (beef, chicken or sweet potato)",
+     "description": "Beans and cheese version £7.50",
+     "price": 990,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-13",
+     "section": "Sides & Sharing",
+     "name": "Dirty nachos",
+     "description": "",
+     "price": 1200,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "hermanos-taco-house-14",
+     "section": "Sides & Sharing",
+     "name": "Loaded nachos",
+     "description": "+ beef, chicken or sweet potato",
+     "price": 1500,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-15",
+     "section": "Extras",
+     "name": "Add guacamole",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-16",
+     "section": "Extras",
+     "name": "Add cheese",
+     "description": "",
+     "price": 120,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-17",
+     "section": "Extras",
+     "name": "Corn chips bag",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-18",
+     "section": "Drinks",
+     "name": "Jarritos",
+     "description": "",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-19",
+     "section": "Drinks",
+     "name": "Water",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-20",
+     "section": "Drinks",
+     "name": "Frozen margarita",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "hermanos-taco-house-21",
+     "section": "Drinks",
+     "name": "Tequila shot",
+     "description": "",
+     "price": 550,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "himalayan-dumplings",
+   "name": "Himalayan Dumplings",
+   "tagline": "Traditional Himalayan Dumplings",
+   "category": "food",
+   "description": "Himalayan Dumpling was born from a passion for sharing the rich, authentic flavours of Nepalese cuisine. Founded by a female entrepreneur during the challenges of the COVID-19 pandemic, the business grew from a small street food pop-up into an award-winning brand recognised at Mercato Metropolitano in 2022. The mission is to create delicious, healthy and easy-to-cook dumplings, known as momo, that bring a taste of the Himalayas into homes. Made with preservative-free, responsibly sourced ingredients, these dumplings are crafted to deliver flavour and quality that customers can feel good about. Himalayan Dumpling is committed to empowering communities and championing female leadership, with sustainability and purpose guiding every decision, from ethical sourcing to reducing environmental impact. Each dumpling is a celebration of tradition, care and the joy of bringing people together over good food.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "",
+   "website": "https://www.hymalaiandumplings.co.uk",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/hymalaian_dumplings_menu.pdf"
+   ],
+   "photo": "/img/vendors/himalayan-dumplings.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/himalayan-dumplings/",
+   "mmSlug": "himalayan-dumplings",
+   "menu": [
+    {
+     "id": "himalayan-dumplings-1",
+     "section": "Momo",
+     "name": "Mountain chicken dumpling (8 pcs)",
+     "description": "Steamed chicken momo with Himalayan spices",
+     "price": 950,
+     "dietary": []
+    },
+    {
+     "id": "himalayan-dumplings-2",
+     "section": "Momo",
+     "name": "Mountain veggie dumpling (8 pcs)",
+     "description": "Seasonal vegetables with Nepalese spice",
+     "price": 950,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "himalayan-dumplings-3",
+     "section": "Momo",
+     "name": "Be a Dragon (chilli momo)",
+     "description": "Air-fried chicken or veg momo with hot sweet & sour sauce",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "himalayan-dumplings-4",
+     "section": "Momo",
+     "name": "Mix and match combo momo",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "himalayan-dumplings-5",
+     "section": "Lunch Deal",
+     "name": "Steamed chicken or veg dumplings with tomato sauce (5 pcs), Mon-Fri 12-5pm",
+     "description": "Price not legible in text (likely £5 MM deal)",
+     "price": null,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Short menu"
+  },
+  {
+   "slug": "hot-chick",
+   "name": "Hot Chick",
+   "tagline": "Award Winning Fried Chicken",
+   "category": "food",
+   "description": "Wing Fest award-winning saucy fried chicken. Serving up succulent chicken wings, tenders & burgers coated in our signature sauces. Now with a dark side – introducing the INFERNO range. Feeling brave? Make any menu item extra hot – dial it up with XXX Ghost Chilli.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "hotchick_chicken",
+   "website": "https://www.thelkn.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/12/Hot-Chick-MM-Menu-2025.pdf"
+   ],
+   "photo": "/img/vendors/hot-chick.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/hot-chick/",
+   "mmSlug": "hot-chick",
+   "menu": [
+    {
+     "id": "hot-chick-1",
+     "section": "Wings",
+     "name": "Bombay Bad Boy wings (regular)",
+     "description": "Naga sauce, coriander yoghurt, mango chutney; large £15",
+     "price": 800,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-2",
+     "section": "Wings",
+     "name": "Snap Crack(le) & Pop Buffalo wings (regular)",
+     "description": "Hot honey buffalo, blue cheese ranch; large £15",
+     "price": 800,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-3",
+     "section": "Wings",
+     "name": "Signature wings & tenders (regular)",
+     "description": "Naked / Korean BBQ / Smokey BBQ / Creamy Ranch; large £14.50",
+     "price": 750,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-4",
+     "section": "Burgers",
+     "name": "Bombay Bad Boy burger",
+     "description": "Naga chilli sauce, coriander yoghurt, mango chutney, lettuce",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-5",
+     "section": "Burgers",
+     "name": "Honey Buffalo & Blue Cheese burger",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-6",
+     "section": "Burgers",
+     "name": "The OG burger",
+     "description": "Crispy fried chicken, ranch, lettuce, pickles, cheese",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-7",
+     "section": "Burgers",
+     "name": "Korean BBQ burger",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-8",
+     "section": "Burgers",
+     "name": "Smokey BBQ burger",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-9",
+     "section": "Sides",
+     "name": "Chicken loaded fries",
+     "description": "",
+     "price": 950,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "hot-chick-10",
+     "section": "Sides",
+     "name": "Hot Chick fries",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "hot-chick-11",
+     "section": "Sides",
+     "name": "Jalapeño poppers",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "hot-chick-12",
+     "section": "Sides",
+     "name": "Sauces",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "hot-chick-13",
+     "section": "Sides",
+     "name": "Lava Wing Challenge (3 wings)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "hot-chick-14",
+     "section": "Drinks",
+     "name": "Drinks",
+     "description": "From",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "hot-chick-15",
+     "section": "Meal Deal",
+     "name": "Add a drink + fries",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "All chicken halal; burgers can be made veggie"
+  },
+  {
+   "slug": "karapincha",
+   "name": "Karapincha",
+   "tagline": "Sri Lankan Food",
+   "category": "food",
+   "description": "Karapincha celebrates real food grown from its roots. Founded by twin sisters from Sri Lanka, the concept brings their mother’s time-honoured recipes to life through a growing collection of authentic Sri Lankan cafés and kitchens. Raised in a household where every meal was made with love and layers of spice, they carry forward a rich culinary legacy that celebrates flavour, family and home. Born in Kandy and raised on the vibrant streets of Colombo, where their family owned one of the city’s most loved vegetarian restaurants, they grew up surrounded by homely dishes and the unmistakable aroma of hand-ground spices. These are the flavours that shaped them, and today they share them with new audiences every day.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "karapincha_kitchen",
+   "website": "https://karapinchakitchen.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/Mercato-Menu-4.-1.pdf"
+   ],
+   "photo": "/img/vendors/karapincha.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/karapincha/",
+   "mmSlug": "karapincha",
+   "menu": [
+    {
+     "id": "karapincha-1",
+     "section": "Mains",
+     "name": "Kothu roti – mixed vegetables",
+     "description": "Chopped roti stir-fry with curry of choice; chicken £11.50, lamb £12.50",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-2",
+     "section": "Mains",
+     "name": "Paratha / rice box – Humble Veggies",
+     "description": "",
+     "price": 1050,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "karapincha-3",
+     "section": "Mains",
+     "name": "Paratha / rice box – Dhal & Spinach",
+     "description": "",
+     "price": 900,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "karapincha-4",
+     "section": "Mains",
+     "name": "Paratha / rice box – Mum's Chicken",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-5",
+     "section": "Mains",
+     "name": "Paratha / rice box – Slow Cooked Beef",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-6",
+     "section": "Mains",
+     "name": "Paratha / rice box – Home-style Lamb",
+     "description": "",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-7",
+     "section": "Add-ons",
+     "name": "Aubergine moju",
+     "description": "Fried aubergine in sweet & savoury sauce",
+     "price": 150,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "karapincha-8",
+     "section": "Add-ons",
+     "name": "Pickled pineapple",
+     "description": "",
+     "price": 150,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "karapincha-9",
+     "section": "Mains",
+     "name": "Devilled chicken & fried rice",
+     "description": "",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-10",
+     "section": "Short Eats",
+     "name": "Spicy rolls – mixed veg (1 roll)",
+     "description": "2 rolls £7.50; lamb 1 £4.50 / 2 £8.50",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-11",
+     "section": "Short Eats",
+     "name": "Samosa – mixed vegetables",
+     "description": "",
+     "price": 100,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-12",
+     "section": "Short Eats",
+     "name": "Samosa – chicken",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-13",
+     "section": "Short Eats",
+     "name": "Masala papadum",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-14",
+     "section": "Tapas",
+     "name": "Meat platter",
+     "description": "",
+     "price": 2500,
+     "dietary": []
+    },
+    {
+     "id": "karapincha-15",
+     "section": "Tapas",
+     "name": "Veg platter",
+     "description": "",
+     "price": 2200,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Halal certified (badge); leaf icon = vegan"
+  },
+  {
+   "slug": "korean-green-choy",
+   "name": "Korean Green Choy",
+   "tagline": "Bibimbap and Korean Pancakes",
+   "category": "food",
+   "description": "From crispy Korean fried chicken to sizzling bibimbap, the menu is crafted to satisfy cravings and excite the taste buds. Whether it’s a classic favourite or something new to discover, every dish is made with the finest ingredients and infused with authentic Korean zest. Sourcing from trusted suppliers ensures premium quality and flavour in every bite. Join us, savour the thrill, and let your taste buds be inspired.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "greenchoy",
+   "website": "https://www.greenchoy.com",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/green_choy_menu.pdf"
+   ],
+   "photo": "/img/vendors/korean-green-choy.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/korean-green-choy/",
+   "mmSlug": "korean-green-choy",
+   "menu": [
+    {
+     "id": "korean-green-choy-1",
+     "section": "Bibimbap",
+     "name": "Crispy tofu bibimbap",
+     "description": "Rice, pickles, vegan kimchi, fried egg, gochujang",
+     "price": 950,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-2",
+     "section": "Bibimbap",
+     "name": "Bang bang cauliflower bibimbap",
+     "description": "",
+     "price": 950,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-3",
+     "section": "Bibimbap",
+     "name": "Korean fried chicken bibimbap",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "korean-green-choy-4",
+     "section": "Bibimbap",
+     "name": "5h slow cooked beef brisket bibimbap",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "korean-green-choy-5",
+     "section": "Korean Fried Chicken",
+     "name": "KFC meal 2pcs",
+     "description": "With rice or chips & Asian slaw; 3pcs £12.50, 4pcs £14",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "korean-green-choy-6",
+     "section": "Korean Fried Chicken",
+     "name": "KFC platter 6pcs",
+     "description": "12 pcs £28",
+     "price": 1400,
+     "dietary": []
+    },
+    {
+     "id": "korean-green-choy-7",
+     "section": "Small Plates",
+     "name": "Spring onion pancakes",
+     "description": "",
+     "price": 600,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-8",
+     "section": "Small Plates",
+     "name": "Kimchi pancakes",
+     "description": "",
+     "price": 600,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-9",
+     "section": "Small Plates",
+     "name": "Bang bang Korean fried cauliflower",
+     "description": "",
+     "price": 700,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-10",
+     "section": "Sides",
+     "name": "Steamed Korean rice",
+     "description": "",
+     "price": 300,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-11",
+     "section": "Sides",
+     "name": "Rosemary & gochugaru fries",
+     "description": "",
+     "price": 400,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-12",
+     "section": "Sides",
+     "name": "Asian slaw",
+     "description": "",
+     "price": 400,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-13",
+     "section": "Sides",
+     "name": "Kimchi cabbage",
+     "description": "",
+     "price": 400,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-14",
+     "section": "Sides",
+     "name": "Kimchi cucumber",
+     "description": "",
+     "price": 400,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "korean-green-choy-15",
+     "section": "Drinks",
+     "name": "On Lemon soft drink 33cl",
+     "description": "",
+     "price": 380,
+     "dietary": []
+    },
+    {
+     "id": "korean-green-choy-16",
+     "section": "Drinks",
+     "name": "Water 33cl",
+     "description": "",
+     "price": 200,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "HMC certified chicken & beef; (VG) = vegan friendly"
+  },
+  {
+   "slug": "mazavaroo",
+   "name": "Mazavaroo",
+   "tagline": "Authentic Mauritian Cuisine",
+   "category": "food",
+   "description": "Mazavaroo Club is a family kitchen serving classic and comforting Mauritian dishes, with a mission to share the rich street food culture of this small island with the people of London. Known as the rainbow nation, Mauritius has a diverse food culture shaped by Indian, Chinese, French and Creole influences, all of which come together to create a proudly unique cuisine. Mazavaroo Club offers dishes rarely found in central London, including the iconic Mauritian rice dish Bol Renversé.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "mazavaroo_club",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/mazavaroo_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/mazavaroo.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/mazavaroo/",
+   "mmSlug": "mazavaroo",
+   "menu": [
+    {
+     "id": "mazavaroo-1",
+     "section": "Combos",
+     "name": "Combo 1",
+     "description": "Bol chicken or tofu + dumplings + croquettes",
+     "price": 1800,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-2",
+     "section": "Combos",
+     "name": "Combo 2",
+     "description": "Curry (venison or butterbean) + soup + dippers + pickled fruit; £17 vegan",
+     "price": 2000,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-3",
+     "section": "Mains",
+     "name": "Bol Chicken (Bol Renversé)",
+     "description": "Chicken, fried egg, sweet soy, greens, rice",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-4",
+     "section": "Mains",
+     "name": "Bol Tofu",
+     "description": "",
+     "price": 900,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-5",
+     "section": "Mains",
+     "name": "Creole Venison Curry (Cari Cerf)",
+     "description": "With steamed rice + pickled fruits",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-6",
+     "section": "Mains",
+     "name": "Creole Butterbean Curry (Cari Gros Pois)",
+     "description": "With two flatbreads + pickled fruits",
+     "price": 1000,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-7",
+     "section": "Wraps",
+     "name": "Chicken curry wrap (Cari Poulet)",
+     "description": "",
+     "price": 900,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-8",
+     "section": "Wraps",
+     "name": "Yellow split pea fritter curry wrap (Cari Gato Pima)",
+     "description": "",
+     "price": 900,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-9",
+     "section": "Soup",
+     "name": "Spiced red lentil soup",
+     "description": "With potato dippers, rice and pickled fruit salad",
+     "price": 750,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-10",
+     "section": "Dumplings & Sides",
+     "name": "Pork + prawn dumplings in broth",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "mazavaroo-11",
+     "section": "Dumplings & Sides",
+     "name": "Carrot + mushroom dumplings in broth",
+     "description": "",
+     "price": 450,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-12",
+     "section": "Dumplings & Sides",
+     "name": "Taro croquettes",
+     "description": "",
+     "price": 450,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-13",
+     "section": "Dumplings & Sides",
+     "name": "Fried potato bajas",
+     "description": "",
+     "price": 450,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-14",
+     "section": "Dumplings & Sides",
+     "name": "Pickled tropical fruits",
+     "description": "",
+     "price": 350,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "mazavaroo-15",
+     "section": "Dumplings & Sides",
+     "name": "Flaky flatbread (paratha)",
+     "description": "",
+     "price": 200,
+     "dietary": [
+      "vegan"
+     ]
+    }
+   ],
+   "menuNotes": "V = vegan on menu"
+  },
+  {
+   "slug": "molo",
+   "name": "Molo",
+   "tagline": "Lobster, Oysters and Fish Burgers",
+   "category": "food",
+   "description": "Created and led by a Michelin-star-trained chef, Molo delivers bold, globally inspired seafood with influences from the shores of Britain, the Mediterranean and Latin America. The menu features indulgent lobster rolls, crispy fritto misto, classic fish and chips, freshly shucked oysters and vibrant tacos. Every dish reimagines coastal street food, flavourful, responsibly sourced and crafted with care.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "moloseafood",
+   "website": "https://www.thisismolo.com",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/molo_menu.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/MOLO-4.03.25.pdf"
+   ],
+   "photo": "/img/vendors/molo-2.jpg",
+   "alsoAt": [
+    "Mayfair"
+   ],
+   "source": "https://mercatometropolitano.com/traders/molo-2/",
+   "mmSlug": "molo-2",
+   "menu": [
+    {
+     "id": "molo-1",
+     "section": "Molo Classics",
+     "name": "Prawn tempura tacos (2pcs)",
+     "description": "3pcs £12",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "molo-2",
+     "section": "Molo Classics",
+     "name": "Fish tempura tacos (2pcs)",
+     "description": "3pcs £11",
+     "price": 900,
+     "dietary": []
+    },
+    {
+     "id": "molo-3",
+     "section": "Molo Classics",
+     "name": "Tuna tostada (1pc)",
+     "description": "2pcs £15.90",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "molo-4",
+     "section": "Molo Classics",
+     "name": "Salmon tartare",
+     "description": "",
+     "price": 1090,
+     "dietary": []
+    },
+    {
+     "id": "molo-5",
+     "section": "Molo Classics",
+     "name": "Prawn tempura burger",
+     "description": "",
+     "price": 1490,
+     "dietary": []
+    },
+    {
+     "id": "molo-6",
+     "section": "Lobster Roll",
+     "name": "Classic lobster roll",
+     "description": "Garlic soy butter, lettuce, pink Molo mayo; with chips +£3",
+     "price": 2290,
+     "dietary": []
+    },
+    {
+     "id": "molo-7",
+     "section": "Lobster Roll",
+     "name": "Special lobster roll",
+     "description": "Dill, cucumber, salmon roe",
+     "price": 2390,
+     "dietary": []
+    },
+    {
+     "id": "molo-8",
+     "section": "Fish & Chips",
+     "name": "Classic cod & chips",
+     "description": "With mushy peas, tartar and curry sauce",
+     "price": 2390,
+     "dietary": []
+    },
+    {
+     "id": "molo-9",
+     "section": "Fish & Chips",
+     "name": "Cod & chips",
+     "description": "",
+     "price": 1990,
+     "dietary": []
+    },
+    {
+     "id": "molo-10",
+     "section": "Fish & Chips",
+     "name": "Haddock & chips",
+     "description": "",
+     "price": 1890,
+     "dietary": []
+    },
+    {
+     "id": "molo-11",
+     "section": "Fish & Chips",
+     "name": "Halibut & chips",
+     "description": "",
+     "price": 2490,
+     "dietary": []
+    },
+    {
+     "id": "molo-12",
+     "section": "Oysters",
+     "name": "Rock oysters",
+     "description": "Price not printed",
+     "price": null,
+     "dietary": []
+    },
+    {
+     "id": "molo-13",
+     "section": "Sides",
+     "name": "Chips",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "molo-14",
+     "section": "Sides",
+     "name": "Padron peppers",
+     "description": "",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "molo-15",
+     "section": "Sides",
+     "name": "House pickles",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "molo-16",
+     "section": "Older menu",
+     "name": "Fritto misto",
+     "description": "Calamari, prawn, whitebait, garlic mayo",
+     "price": 1350,
+     "dietary": []
+    },
+    {
+     "id": "molo-17",
+     "section": "Older menu",
+     "name": "Cod croquettes (4pcs)",
+     "description": "6pcs £8, 8pcs £9.50",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "molo-18",
+     "section": "Lunch Deal",
+     "name": "2 fish tacos and fries (Mon-Fri 12-5pm)",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Two menus (older + newer); newer prices used where duplicated"
+  },
+  {
+   "slug": "nativo",
+   "name": "Nativo",
+   "tagline": "Latin American Kitchen",
+   "category": "food",
+   "description": "We are a creative Latin American kitchen, bringing together bold flavours and textures to create unique dishes. Our use of the robata grill adds a distinctive Japanese touch, giving our food an irresistible depth of flavour. We began with a ceviche bar at Latin American and local summer festivals, before securing our first permanent home at MM in the middle of the pandemic. Since then, we’ve taken our food on the road with pop-ups in pubs, hotels and small markets across the city.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "nativolondon",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/Nativo-MM-Menu-10th-oct-final.png",
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/Mayfair-Nativo-Nov-pop-up-Menu.jpg"
+   ],
+   "photo": "/img/vendors/nativo.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/nativo/",
+   "mmSlug": "nativo",
+   "menu": [
+    {
+     "id": "nativo-1",
+     "section": "Robata Grill",
+     "name": "Chicken yakitori & fries (regular)",
+     "description": "Grilled chicken thighs, tare sauce, Peruvian spicy mayo; large £16.95",
+     "price": 1350,
+     "dietary": []
+    },
+    {
+     "id": "nativo-2",
+     "section": "Robata Grill",
+     "name": "4h pork belly & fries (regular)",
+     "description": "Ecuadorian style; large £18.50",
+     "price": 1550,
+     "dietary": []
+    },
+    {
+     "id": "nativo-3",
+     "section": "Robata Grill",
+     "name": "Picada mix grill for 2",
+     "description": "Pork belly & yakitori, fries, pico de gallo, plantain; for 3 £32.95",
+     "price": 2595,
+     "dietary": []
+    },
+    {
+     "id": "nativo-4",
+     "section": "Wraps",
+     "name": "Grilled portobello mushroom wrap",
+     "description": "",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "nativo-5",
+     "section": "Wraps",
+     "name": "Grilled chicken wrap",
+     "description": "",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "nativo-6",
+     "section": "Wraps",
+     "name": "Grilled pork belly wrap",
+     "description": "",
+     "price": 1595,
+     "dietary": []
+    },
+    {
+     "id": "nativo-7",
+     "section": "Wraps",
+     "name": "Mix of any 2 wrap",
+     "description": "",
+     "price": 1695,
+     "dietary": []
+    },
+    {
+     "id": "nativo-8",
+     "section": "Arepa",
+     "name": "Nativo arepa – portobello",
+     "description": "Cassava cheese arepa, avocado, pico de gallo",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "nativo-9",
+     "section": "Arepa",
+     "name": "Nativo arepa – yakitori chicken",
+     "description": "",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "nativo-10",
+     "section": "Arepa",
+     "name": "Nativo arepa – pork belly",
+     "description": "",
+     "price": 1550,
+     "dietary": []
+    },
+    {
+     "id": "nativo-11",
+     "section": "Sides",
+     "name": "Sweet plantain & cheese",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "nativo-12",
+     "section": "Sides",
+     "name": "Hand cut fries",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "nativo-13",
+     "section": "Sides",
+     "name": "Colombian empanada + 1 dip",
+     "description": "2 for £7, 3 for £10",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "nativo-14",
+     "section": "Sides",
+     "name": "Dips",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "nativo-15",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Green plantain with guacamole",
+     "description": "",
+     "price": 950,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-16",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Colombian empanadas x2",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-17",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Lobster causa",
+     "description": "",
+     "price": 1450,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-18",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Nikei tuna tiradito",
+     "description": "",
+     "price": 1350,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-19",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Ecuadorian pork belly",
+     "description": "",
+     "price": 1450,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-20",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Lamb cutlets",
+     "description": "",
+     "price": 2650,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "nativo-21",
+     "section": "Mayfair pop-up (GF)",
+     "name": "Dulce de leche cheesecake",
+     "description": "",
+     "price": 750,
+     "dietary": [
+      "gluten-free"
+     ]
+    }
+   ],
+   "menuNotes": "Transcribed from images; second image is a Mayfair pop-up menu (plates marked GF)"
+  },
+  {
+   "slug": "oshpaz",
+   "name": "OshPaz",
+   "tagline": "Traditional Uzbek food",
+   "category": "food",
+   "description": "OshPaz brings the vibrant flavours of Uzbekistan to London, offering a taste of home-cooked tradition with every dish. Founded by chefs whose love of cooking runs through generations, the restaurant serves authentic Uzbek cuisine made with care, skill, and passion. From rich, aromatic plov to delicate, hand-crafted pastries, each dish is designed to showcase the depth and diversity of Uzbek flavours. Beyond the food, OshPaz is dedicated to building community and celebrating culture, hosting events and festivals that bring people together. Every meal is an invitation to connect, share, and experience the warmth and heritage of Uzbekistan.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "oshpaz",
+   "website": "https://www.oshpaz.co.uk/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/oshpaz_menu.pdf"
+   ],
+   "photo": "/img/vendors/oshpaz.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/oshpaz/",
+   "mmSlug": "oshpaz",
+   "menu": [
+    {
+     "id": "oshpaz-1",
+     "section": "Dumplings",
+     "name": "Classical manty (5, beef)",
+     "description": "With carrot salad, sour cream, chilli oil",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-2",
+     "section": "Dumplings",
+     "name": "Chicken manty (5)",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-3",
+     "section": "Dumplings",
+     "name": "Combo manty (8)",
+     "description": "Beef, chicken and vegetable",
+     "price": 1500,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-4",
+     "section": "Noodles",
+     "name": "Lamb lag-man noodles",
+     "description": "Broth or pan-fried",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-5",
+     "section": "Noodles",
+     "name": "Chicken noodles",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-6",
+     "section": "Noodles",
+     "name": "Vegan noodles",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "oshpaz-7",
+     "section": "Shashlik",
+     "name": "Lamb shashlik",
+     "description": "With pitta, salad, chilli sauce, pickles",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-8",
+     "section": "Shashlik",
+     "name": "Chicken shashlik",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-9",
+     "section": "Shashlik",
+     "name": "Minced kebab",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-10",
+     "section": "Shashlik",
+     "name": "Grilled halloumi",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-11",
+     "section": "Shashlik",
+     "name": "Mix grill for 2",
+     "description": "",
+     "price": 2400,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-12",
+     "section": "Plov",
+     "name": "Lamb plov",
+     "description": "",
+     "price": 1100,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "oshpaz-13",
+     "section": "Plov",
+     "name": "Chicken plov",
+     "description": "",
+     "price": 1000,
+     "dietary": [
+      "gluten-free"
+     ]
+    },
+    {
+     "id": "oshpaz-14",
+     "section": "Sides",
+     "name": "Samsy (2)",
+     "description": "Pastries filled with spiced beef",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "oshpaz-15",
+     "section": "Sides",
+     "name": "Bread & humus",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "tandoori-tadkaa",
+   "name": "Tandoori Tadkaa",
+   "tagline": "Indian Food",
+   "category": "food",
+   "description": "Tandoori Tadkaa brings the authentic taste of India to London, specialising in dishes cooked in the traditional tandoor. Marinated in spiced yoghurt blends and cooked at high heat, their food is full of rich flavour while naturally lower in fat than deep-fried alternatives. The menu features favourites such as Butter Chicken, Chana Masala and Butter Paneer Masala, served with rice, salad, raita and crisp pappadams. With spices sourced directly from India and a focus on freshness, every dish is packed with genuine taste. Tandoori Tadkaa also offers a wide choice for different diets, with plenty of vegetarian and vegan options alongside their meat dishes, making it a stall that truly caters for everyone.",
+   "dietary": [
+    "vegetarian",
+    "halal"
+   ],
+   "instagram": "tandooritadkaalondon",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/Indian.31.03.25.pdf"
+   ],
+   "photo": "/img/vendors/tandoori-tadkaa.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/tandoori-tadkaa/",
+   "mmSlug": "tandoori-tadkaa",
+   "menu": [
+    {
+     "id": "tandoori-tadkaa-1",
+     "section": "Street Food",
+     "name": "Samosa chaat",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-2",
+     "section": "Street Food",
+     "name": "Aloo tikki chaat",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-3",
+     "section": "Naan Wraps",
+     "name": "Chicken tikka naan wrap",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-4",
+     "section": "Naan Wraps",
+     "name": "Paneer naan wrap",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-5",
+     "section": "Naan Wraps",
+     "name": "Seekh kebab naan wrap",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-6",
+     "section": "Naan Wraps",
+     "name": "Aloo tikki naan wrap",
+     "description": "",
+     "price": 1000,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-7",
+     "section": "Loaded Fries",
+     "name": "Chicken tikka masala loaded fries",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-8",
+     "section": "Loaded Fries",
+     "name": "Paneer makhani loaded fries",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-9",
+     "section": "Loaded Fries",
+     "name": "Lamb loaded fries",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-10",
+     "section": "Grill",
+     "name": "Chicken tikka & chicken seekh",
+     "description": "With naan, salad & dips",
+     "price": 1400,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-11",
+     "section": "Grill",
+     "name": "Lamb chop & lamb kebab",
+     "description": "",
+     "price": 1600,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-12",
+     "section": "Curry House",
+     "name": "Butter chicken / paneer makhani thali",
+     "description": "With cumin rice, chana masala, raita, chutney, poppadom",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-13",
+     "section": "Curry House",
+     "name": "Korma",
+     "description": "",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-14",
+     "section": "Curry House",
+     "name": "Mixed vegetable",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-15",
+     "section": "Curry House",
+     "name": "Lamb rogan josh",
+     "description": "",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-16",
+     "section": "Biryani",
+     "name": "Chicken biryani",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-17",
+     "section": "Biryani",
+     "name": "Lamb biryani",
+     "description": "",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-18",
+     "section": "Extras",
+     "name": "Garlic naan",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-19",
+     "section": "Extras",
+     "name": "Poppadum tray",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-20",
+     "section": "Extras",
+     "name": "Masala fries",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-21",
+     "section": "Extras",
+     "name": "Fries",
+     "description": "",
+     "price": 250,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-22",
+     "section": "Drinks",
+     "name": "Mango lassi",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-23",
+     "section": "Drinks",
+     "name": "Jarritos",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-24",
+     "section": "Drinks",
+     "name": "Karma",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "tandoori-tadkaa-25",
+     "section": "Drinks",
+     "name": "Water",
+     "description": "",
+     "price": 200,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "thats-pasta",
+   "name": "That’s Pasta",
+   "tagline": "Handmade Pasta",
+   "category": "food",
+   "description": "With a deep passion for authentic Italian cuisine, I decided to bring the tradition of fresh pasta to a wider audience through a new artisanal business focused on quality, simplicity, and genuine ingredients. Combining creativity with respect for culinary heritage, I work to craft fresh pasta that celebrates Italian flavors and offers a truly handmade experience. This project represents not only a professional journey but also a way to share my love for good food and authentic craftsmanship.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2026/03/Thats-Pasta-Menu-2026.pdf"
+   ],
+   "photo": "/img/vendors/thats-pasta.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/thats-pasta/",
+   "mmSlug": "thats-pasta",
+   "menu": [
+    {
+     "id": "thats-pasta-1",
+     "section": "Fresh Pasta",
+     "name": "Tonnarelli cacio e pepe",
+     "description": "",
+     "price": 1280,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-2",
+     "section": "Fresh Pasta",
+     "name": "Paccheri carbonara",
+     "description": "",
+     "price": 1290,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-3",
+     "section": "Fresh Pasta",
+     "name": "Cavatelli bolognese",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-4",
+     "section": "Fresh Pasta",
+     "name": "Tonnarelli puttanesca",
+     "description": "",
+     "price": 1140,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-5",
+     "section": "Specials",
+     "name": "Truffle ravioli with creamy mushroom sauce",
+     "description": "",
+     "price": 1450,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-6",
+     "section": "Specials",
+     "name": "Pappardelle beef shin ragù Chianti",
+     "description": "",
+     "price": 1400,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-7",
+     "section": "Toppings",
+     "name": "Crispy pancetta",
+     "description": "",
+     "price": 190,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-8",
+     "section": "Toppings",
+     "name": "Fresh chilli",
+     "description": "",
+     "price": 50,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-9",
+     "section": "Toppings",
+     "name": "Parmesan",
+     "description": "",
+     "price": 70,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-10",
+     "section": "Kids",
+     "name": "Kids menu (gnocchi or cavatelli with tomato, bolognese or oil & parmesan, juice)",
+     "description": "",
+     "price": 690,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-11",
+     "section": "Drinks",
+     "name": "Still / sparkling water",
+     "description": "",
+     "price": 200,
+     "dietary": []
+    },
+    {
+     "id": "thats-pasta-12",
+     "section": "Drinks",
+     "name": "Soft drinks",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    }
+   ]
+  },
+  {
+   "slug": "the-duck-shed",
+   "name": "The Duck Shed",
+   "tagline": "Duck Burger, duck Wraps and duck Salads",
+   "category": "food",
+   "description": "Duck Shed serves roasted duck with bold flavours inspired by favourite dishes from around the world. Everything is made from scratch, including the sauces, such as their legendary bacon jam. The menu includes wraps and burgers, as well as fresh salads and vegan options for lighter choices. The food offers the excitement of festival-style dining with high-quality flavours and preparation.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "the_duck_shed_london",
+   "website": "https://www.hodgeandhuggett.co.uk/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/the_duck_shed_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/the-duck-shed.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/the-duck-shed/",
+   "mmSlug": "the-duck-shed",
+   "menu": [
+    {
+     "id": "the-duck-shed-1",
+     "section": "Duck",
+     "name": "The British Duck",
+     "description": "Pulled duck, bacon jam, pig in stuffing, spinach; as burger, wrap or salad box",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "the-duck-shed-2",
+     "section": "Duck",
+     "name": "The Vietnamese Duck",
+     "description": "Green chilli jam, pickled carrot, cucumber, coriander, Thai basil",
+     "price": 1150,
+     "dietary": []
+    },
+    {
+     "id": "the-duck-shed-3",
+     "section": "Duck",
+     "name": "The French Duck",
+     "description": "Raclette, onion chutney, cornichons, rocket",
+     "price": 1300,
+     "dietary": []
+    },
+    {
+     "id": "the-duck-shed-4",
+     "section": "Duck",
+     "name": "The Vegan-amese \"Duck\"",
+     "description": "Vegan duck with ginger, soy, lemongrass",
+     "price": 1150,
+     "dietary": [
+      "vegan"
+     ]
+    },
+    {
+     "id": "the-duck-shed-5",
+     "section": "Sides",
+     "name": "Fries with roasted garlic mayo & Szechuan salt",
+     "description": "",
+     "price": 450,
+     "dietary": []
+    },
+    {
+     "id": "the-duck-shed-6",
+     "section": "Sides",
+     "name": "Hoisin duck croquettes with plum sauce",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "the-duck-shed-7",
+     "section": "Lunch Deal",
+     "name": "Vegan-amese duck salad (Mon-Fri 12-5pm)",
+     "description": "",
+     "price": 500,
+     "dietary": [
+      "vegan"
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "the-italian-corner",
+   "name": "The Italian Corner",
+   "tagline": "Pizza, Handmade Pasta, Artisanal Gelato, Italian Coffee & Pastries and Cocktail Bar.",
+   "category": "food",
+   "description": "The Italian Corner is your go-to spot for authentic Italian flavors, offering pizza by the slice, handmade pasta, artisanal Badiani gelato, Italian coffee and pastries, and a stylish cocktail bar – all in one cozy, vibrant space. Opening hours below: Cafe: Monday to Friday: 8AM-4PM Saturday and Sunday: 9AM-4PM The Bar: Monday to Wednesday: 12PM-10:30PM Thursday: 12PM-11:30PM Friday and Saturday: 12PM-00:30AM Sunday: 12PM-9:30PM Pizza, Focaccia & Pasta as per the general market hours.",
+   "dietary": [
+    "vegetarian",
+    "vegan"
+   ],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-pizza-1.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-pasta.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2026/02/badiani-menu-ec.pdf",
+    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-bar3.pdf"
+   ],
+   "photo": "/img/vendors/the-italian-corner.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/the-italian-corner/",
+   "mmSlug": "the-italian-corner",
+   "menu": [
+    {
+     "id": "the-italian-corner-1",
+     "section": "Pizza by the slice",
+     "name": "Marinara",
+     "description": "Tomato, parsley, spicy oil",
+     "price": 500,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "the-italian-corner-2",
+     "section": "Pizza by the slice",
+     "name": "Margherita",
+     "description": "",
+     "price": 600,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-3",
+     "section": "Pizza by the slice",
+     "name": "Parma ham",
+     "description": "",
+     "price": 900,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-4",
+     "section": "Pizza by the slice",
+     "name": "Peppers & onions",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-5",
+     "section": "Pizza by the slice",
+     "name": "Sausage & friarielli",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-6",
+     "section": "Pizza by the slice",
+     "name": "Spicy salame",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-7",
+     "section": "Focaccia",
+     "name": "Bari",
+     "description": "Tuna, mayo, corn, rocket",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-8",
+     "section": "Focaccia",
+     "name": "Bologna",
+     "description": "Mortadella, bufala",
+     "price": 950,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-9",
+     "section": "Focaccia",
+     "name": "Genova",
+     "description": "Pesto, bufala, sundried tomatoes",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-10",
+     "section": "Focaccia",
+     "name": "Focaccia Parma",
+     "description": "",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-11",
+     "section": "Focaccia",
+     "name": "Reggio Calabria",
+     "description": "Nduja, bufala, aubergine cream",
+     "price": 1100,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-12",
+     "section": "Focaccia",
+     "name": "Roma",
+     "description": "Salame & pecorino",
+     "price": 850,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-13",
+     "section": "Pasta",
+     "name": "Pici cacio e pepe",
+     "description": "",
+     "price": 1260,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-14",
+     "section": "Pasta",
+     "name": "Tagliatelle bolognese",
+     "description": "",
+     "price": 1200,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-15",
+     "section": "Pasta",
+     "name": "Rigatoni carbonara",
+     "description": "",
+     "price": 1190,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-16",
+     "section": "Pasta",
+     "name": "Lunch deal: gnocchi al pomodoro",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-17",
+     "section": "Crêpes",
+     "name": "Signature crêpe",
+     "description": "",
+     "price": 790,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-18",
+     "section": "Crêpes",
+     "name": "Buontalenti crêpe",
+     "description": "",
+     "price": 590,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-19",
+     "section": "Crêpes",
+     "name": "Sauce crêpe",
+     "description": "",
+     "price": 690,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-20",
+     "section": "Gelato",
+     "name": "Piccolo box (500ml)",
+     "description": "",
+     "price": 2000,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-21",
+     "section": "Gelato",
+     "name": "Medio box (750ml)",
+     "description": "",
+     "price": 2500,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-22",
+     "section": "Gelato",
+     "name": "Grande box (1000ml)",
+     "description": "",
+     "price": 3000,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-23",
+     "section": "Gelato",
+     "name": "Gelato burger",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-24",
+     "section": "Gelato",
+     "name": "Gelato croissant",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-25",
+     "section": "Gelato",
+     "name": "Gelato shake",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-26",
+     "section": "Drinks",
+     "name": "Affogato / pistachio / La Dolcevita iced latte",
+     "description": "",
+     "price": 650,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-27",
+     "section": "Drinks",
+     "name": "Smoothies (Giallo/Rosso/Verde)",
+     "description": "",
+     "price": 695,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-28",
+     "section": "Drinks",
+     "name": "Espresso",
+     "description": "",
+     "price": 280,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-29",
+     "section": "Drinks",
+     "name": "Cappuccino",
+     "description": "",
+     "price": 380,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-30",
+     "section": "Drinks",
+     "name": "Latte",
+     "description": "",
+     "price": 380,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-31",
+     "section": "Bar",
+     "name": "Prosecco (glass)",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-32",
+     "section": "Bar",
+     "name": "House red/white (glass)",
+     "description": "",
+     "price": 800,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-33",
+     "section": "Bar",
+     "name": "Zwickel lager (pint)",
+     "description": "",
+     "price": 660,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-34",
+     "section": "Bar",
+     "name": "Siggy IPA (pint)",
+     "description": "",
+     "price": 720,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-35",
+     "section": "Bar",
+     "name": "Lucky Saint",
+     "description": "",
+     "price": 550,
+     "dietary": []
+    },
+    {
+     "id": "the-italian-corner-36",
+     "section": "Bar",
+     "name": "Mocktails",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Combined pizza, pasta, Badiani gelato and bar menus; capped ~40"
+  },
+  {
+   "slug": "twisted-london",
+   "name": "Twisted London",
+   "tagline": "Smashed burgers & Wings",
+   "category": "food",
+   "description": "Born from Twisted, the home of outrageous food and the UK’s largest online food community with over 45 million followers, Twisted brings the world’s first social-first restaurant to London. The menu features famous smash patty burgers, alongside visually striking wings, sides and desserts, all created with a playful twist.",
+   "dietary": [
+    "vegetarian",
+    "halal"
+   ],
+   "instagram": "twisted_london",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/twisted_london_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/twisted-london.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/twisted-london/",
+   "mmSlug": "twisted-london",
+   "menu": [
+    {
+     "id": "twisted-london-1",
+     "section": "Cheeseburgers",
+     "name": "Twisted Truffle Cheese (single)",
+     "description": "Aged beef, cheese, secret sauce, onions; double £13",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-2",
+     "section": "Cheeseburgers",
+     "name": "Jalapeño Cheeseburger (single)",
+     "description": "Double £13",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-3",
+     "section": "Cheeseburgers",
+     "name": "BBQ Maple Bacon (single)",
+     "description": "Double £13.50",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-4",
+     "section": "Cheeseburgers",
+     "name": "Mighty Steak Burger (single)",
+     "description": "Seared steak, peppercorn sauce; double £16.50",
+     "price": 1350,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-5",
+     "section": "Chicken",
+     "name": "Buttermilk Chicken burger",
+     "description": "Tenders, creamy slaw, choice of flavour",
+     "price": 1000,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-6",
+     "section": "Wings & Tenders",
+     "name": "Wings & tenders (regular)",
+     "description": "Large £14.50",
+     "price": 750,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-7",
+     "section": "Loaded Fries",
+     "name": "Twisted fries",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-8",
+     "section": "Loaded Fries",
+     "name": "Truffle loaded fries",
+     "description": "",
+     "price": 750,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-9",
+     "section": "Loaded Fries",
+     "name": "Dirty chicken loaded fries",
+     "description": "",
+     "price": 950,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-10",
+     "section": "Loaded Fries",
+     "name": "Steak loaded fries",
+     "description": "",
+     "price": 1250,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-11",
+     "section": "Sharers",
+     "name": "Dirty Bucket",
+     "description": "Wings, tenders, dirty fries & slaw",
+     "price": 2500,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-12",
+     "section": "Sharers",
+     "name": "Mates Rates (for two)",
+     "description": "Two single burgers, slaw & fries",
+     "price": 2300,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "twisted-london-13",
+     "section": "Extras",
+     "name": "Add bacon",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-14",
+     "section": "Extras",
+     "name": "Add cheese",
+     "description": "",
+     "price": 100,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-15",
+     "section": "Extras",
+     "name": "Sauces",
+     "description": "",
+     "price": 150,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-16",
+     "section": "Extras",
+     "name": "Make it a meal (fries + drink)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    },
+    {
+     "id": "twisted-london-17",
+     "section": "Drinks",
+     "name": "Drinks",
+     "description": "From",
+     "price": 250,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "All beef & chicken halal; fries marked 'VE' (not mapped); burgers can be made veggie"
+  },
+  {
+   "slug": "utopia",
+   "name": "Utopia",
+   "tagline": "Syrian Middle Eastern",
+   "category": "food",
+   "description": "Utopia Food was born from a vision to create a place of belonging and cultural connection. The menu began with the founder’s mother’s recipes and expanded to include authentic dishes from renowned falafel shops, family kitchens and friends. Starting from a street food stall and now at Mercato Metropolitano, Utopia Food shares Syrian Middle Eastern flavours through events, catering and pop-ups. The concept is about more than food; it celebrates tradition, hospitality and bringing people together through memorable culinary experiences.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "utopia_food_",
+   "website": "https://utopiauk.net/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/08/utopia_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/utopia.jpg",
+   "alsoAt": [
+    "Wood Wharf"
+   ],
+   "source": "https://mercatometropolitano.com/traders/utopia/",
+   "mmSlug": "utopia",
+   "menu": [
+    {
+     "id": "utopia-1",
+     "section": "Wraps & Platters",
+     "name": "Wrap on its own",
+     "description": "Choice of protein: sujuk, mosakhan, falafel (vegan), musakkaa (vegan), sawda",
+     "price": 1099,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-2",
+     "section": "Wraps & Platters",
+     "name": "Design your platter",
+     "description": "Protein in wrap or over rice with fattoush & 3 dips",
+     "price": 1599,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-3",
+     "section": "Proteins",
+     "name": "Sujuk",
+     "description": "Slow cooked minced lamb, garlic sauce, pickles",
+     "price": null,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-4",
+     "section": "Proteins",
+     "name": "Mosakhan",
+     "description": "Sumac chicken, caramelised onion",
+     "price": null,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-5",
+     "section": "Proteins",
+     "name": "Smashed & grilled falafel",
+     "description": "Not fried; hummus, tahini, salad",
+     "price": null,
+     "dietary": [
+      "vegan",
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-6",
+     "section": "Proteins",
+     "name": "Musakkaa",
+     "description": "Aubergine, potato, tomato, pepper, tahini",
+     "price": null,
+     "dietary": [
+      "vegan",
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-7",
+     "section": "Proteins",
+     "name": "Sawda",
+     "description": "Grilled chicken liver, caramelised onion",
+     "price": null,
+     "dietary": [
+      "halal"
+     ]
+    },
+    {
+     "id": "utopia-8",
+     "section": "Sides",
+     "name": "Fattoush salad",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-9",
+     "section": "Sides",
+     "name": "Loaded hummus",
+     "description": "Topped with sujuk",
+     "price": 700,
+     "dietary": []
+    },
+    {
+     "id": "utopia-10",
+     "section": "Sides",
+     "name": "Hummus",
+     "description": "Add-on £2.99",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-11",
+     "section": "Sides",
+     "name": "Baba ghanoush",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-12",
+     "section": "Sides",
+     "name": "Muhamara",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-13",
+     "section": "Sides",
+     "name": "Labneh",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-14",
+     "section": "Sides",
+     "name": "Marinated zaitoon",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-15",
+     "section": "Sides",
+     "name": "Grilled halloumi",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-16",
+     "section": "Sides",
+     "name": "Rice",
+     "description": "Add-on £1.99",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-17",
+     "section": "Sides",
+     "name": "Falafel pattie",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-18",
+     "section": "Sides",
+     "name": "Bread",
+     "description": "",
+     "price": 100,
+     "dietary": []
+    },
+    {
+     "id": "utopia-19",
+     "section": "Sides",
+     "name": "Sauce",
+     "description": "",
+     "price": 50,
+     "dietary": []
+    },
+    {
+     "id": "utopia-20",
+     "section": "Special Offer",
+     "name": "Sharing offer (2-3 pax)",
+     "description": "Wrap or rice, 4 dips, 4 falafel, halloumi & fattoush; 4-5 pax £52.99",
+     "price": 3299,
+     "dietary": []
+    },
+    {
+     "id": "utopia-21",
+     "section": "Drinks",
+     "name": "Cardamom lemonade",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-22",
+     "section": "Drinks",
+     "name": "Cinnamon lemonade",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-23",
+     "section": "Drinks",
+     "name": "Fizzy drink",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "utopia-24",
+     "section": "Drinks",
+     "name": "Still water",
+     "description": "",
+     "price": 300,
+     "dietary": []
+    },
+    {
+     "id": "utopia-25",
+     "section": "Drinks",
+     "name": "Chai",
+     "description": "",
+     "price": 400,
+     "dietary": []
+    },
+    {
+     "id": "utopia-26",
+     "section": "Drinks",
+     "name": "Spicy bhar chai",
+     "description": "",
+     "price": 700,
+     "dietary": []
+    }
+   ],
+   "menuNotes": "Image-only PDF, transcribed; 100% halal certified badge"
+  }
+ ]
+}
