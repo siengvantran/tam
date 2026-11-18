@@ -1668,3 +1668,15 @@ body.ar-embed { min-height: 0; background: transparent; }
 .st-adults { display: grid; gap: 8px; } .st-adults .btn { justify-self: start; }
 .st-still { display: grid; gap: 8px; } .st-still .btn { justify-self: start; } .st-still.ok { border-color: #7fe0a8; }
 .anr-still { display: block; font-style: normal; font-size: 11px; color: #7fe0a8; margin-top: 2px; }
+/* JOM parents: what's waiting for TAM, and what to fix before sending */
+.jm-wait b { color: #ffd36b; }
+.jm-wait small { display: block; margin-top: 6px; color: var(--muted, #b9aab3); }
+.jm-wait .good { margin: 0 0 6px; color: #7fe0a8; }
+.jm-wait.just { border-color: #7fe0a8; background: rgba(127, 224, 168, .1); }
+.jm-wait-pics { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.jm-wait-pics img { width: 44px; height: 54px; object-fit: cover; border-radius: 6px; }
+.jm-alert { overflow-wrap: anywhere; border: 2px solid #ff6b8a; background: rgba(255, 107, 138, .1); border-radius: 12px; padding: 12px 14px; }
+.jm-alert ul { margin: 6px 0; padding-left: 20px; }
+.jm-alert small { color: var(--muted, #b9aab3); }
+.jm-edit .bad { border-color: #ff6b8a !important; box-shadow: 0 0 0 2px rgba(255, 107, 138, .35); }
+.jm-unsent { color: #ffd36b; margin: 8px 0 0; }

@@ -27,6 +27,21 @@ const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex');
 const token = () => crypto.randomBytes(24).toString('base64url');
 const MUSIC = /^https:\/\/([\w-]+\.)*(youtube\.com|youtu\.be|spotify\.com|soundcloud\.com|bandcamp\.com|instagram\.com|tiktok\.com|music\.apple\.com|facebook\.com)\//i;
 const CONTACT = /[\w.+-]+@[\w-]+\.[\w.]+|(?:\+?\d[\s-]?){9,}/;
+// A parent's link as typed ("instagram.com/x", "www.youtube.com/…", "Spotify: https://…") made into a full https address.
+export function tidyLink(v) {
+  let u = String(v || '').trim();
+  const m = /https?:\/\/\S+/i.exec(u);
+  if (m) u = m[0];
+  else if (/^(www\.)?[\w-]+(\.[\w-]+)+\/\S*$/i.test(u)) u = `https://${u}`;
+  return u.replace(/^http:\/\//i, 'https://').replace(/[).,;]+$/, '');
+}
+// Why a link was refused, in words a parent can act on.
+export function linkProblem(l) {
+  if (/^@\w/.test(l)) return `“${l.slice(0, 60)}” is a handle, not a link. Paste the full address of the profile instead, like https://www.instagram.com/${l.slice(1, 40)}`;
+  return `Links can go to YouTube, Spotify, SoundCloud, Bandcamp, Apple Music, Instagram, TikTok or Facebook, and start with https://. This one can’t go on the page: ${l.slice(0, 80)}`;
+}
+// What in a bio looks like contact details, so the parent can find it.
+export function contactIn(t) { const m = CONTACT.exec(String(t || '')); return m ? m[0].trim() : ''; }
 const slugOf = (s) => String(s || '').normalize('NFKD').replace(/[̀-ͯ’']/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
 export const RELATIONS = { parent: 'Parent', guardian: 'Guardian', adult: 'I’m in the act and 18 or over' };
 
@@ -290,10 +305,11 @@ export function jomDomain(ctx) {
       if (!a) throw fail(403, 'That isn’t one of your acts.');
       const b = await readJson(req, 32 * 1024);
       const bio = text(b.bio, 1200);
-      if (CONTACT.test(bio)) throw fail(400, 'Please leave email addresses and phone numbers out of the bio: it’s a public page.');
-      const links = (Array.isArray(b.links) ? b.links : String(b.links || '').split(/[\n,]+/)).map((x) => String(x).trim()).filter(Boolean);
+      const contact = contactIn(bio);
+      if (contact) throw fail(400, `The bio can’t include phone numbers or email addresses, because it’s a public page. Please take out “${contact.slice(0, 40)}” and send again.`);
+      const links = (Array.isArray(b.links) ? b.links : String(b.links || '').split(/[\n,]+/)).map(tidyLink).filter(Boolean);
       const bad = links.find((l) => !MUSIC.test(l));
-      if (bad) throw fail(400, `Links can go to YouTube, Spotify, SoundCloud, Bandcamp, Apple Music, Instagram, TikTok or Facebook. This one can’t: ${bad.slice(0, 80)}`);
+      if (bad) throw fail(400, linkProblem(bad));
       const photos = (Array.isArray(b.photos) ? b.photos : []).filter((p) => typeof p === 'string' && (/^\/uploads\/jom-[\w-]+\.(jpg|png|webp)$/.test(p) || a.photos.includes(p))).slice(0, 6);
       const name = text(b.name, 60) || a.name;
       // posts: a link to Instagram, TikTok, Facebook or YouTube, or their own photo or video (uploaded above)
