@@ -1,4 +1,4 @@
-// The food and drink traders at Mercato Metropolitano Elephant & Castle, TAM's
+// The food traders at Mercato Metropolitano Elephant & Castle (food only: TAM runs the bar), TAM's
 // neighbours, as a directory on tam.tv (/food), and pre-orders for TAM nights.
 //
 // - Every listing starts as a draft (content/vendors.json, imported from MM's
@@ -25,11 +25,13 @@ const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex');
 const token = () => crypto.randomBytes(24).toString('base64url');
 const CONTACT = /[\w.+-]+@[\w-]+\.[\w.]+|(?:\+?\d[\s-]?){9,}/;
 export const DIETARY = { vegetarian: 'Vegetarian', vegan: 'Vegan', halal: 'Halal', 'gluten-free': 'Gluten-free' };
-export const CATEGORIES = { food: 'Food', dessert: 'Sweet things', drinks: 'Drinks' };
+export const CATEGORIES = { food: 'Food', dessert: 'Sweet things' };
+// Food only: TAM runs the bar, and no outside drinks are allowed in, so drinks are never listed or pre-ordered.
+export const isDrink = (section) => /drink|beer|wine|cocktail|spirit|soft|^bar$|cider|mocktail|coffee/i.test(String(section || ''));
 export const STATUSES = { draft: 'Draft: waiting for TAM', live: 'Live', hidden: 'Hidden' };
 export const PARTNER = { none: 'Not contacted', invited: 'Invited', talking: 'Talking', partner: 'Partner', declined: 'Not now' };
 // Where Vivian (or anyone on the team) can confirm a trader's contact in person
-export const CHECKS = { '': 'Nothing to check', 'mm-group': 'Ask on the MM family group', shack: 'Ask the staff at the shack', both: 'MM family group or the shack' };
+export const CHECKS = { '': 'Nothing to check', visit: 'Vivian to ask in person', 'mm-group': 'Ask on the MM family group', shack: 'Ask the staff at the shack', both: 'MM family group or the shack' };
 export const CONFIDENCE = { high: 'High: on their own site', medium: 'Medium: generic, HQ or third party', low: 'Low: old or unclear' };
 export const ORDER_STATES = { new: 'New', confirmed: 'Confirmed', ready: 'Ready to collect', collected: 'Collected', cancelled: 'Cancelled' };
 const slugOf = (s) => String(s || '').normalize('NFKD').replace(/[̀-ͯ’']/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
@@ -47,7 +49,7 @@ export function pitch({ vendor, link, from = 'TAM' }) {
 
 We're TAM (the Temple of Art and Music), your neighbours at Mercato Metropolitano Elephant & Castle. We'd love to partner with you for our festivals and live nights, starting with The Best Christmas Ever this December.
 
-The idea: people coming to a TAM night can pre-order your food before the event and collect it from you at a time they choose. You see every order and a prep list for each night before the cut-off, so you can cook the right amount, waste less and plan your staff and time. They pay you when they collect, and there's no cost to you.
+The idea: people coming to a TAM night can pre-order your food (food only, as TAM runs the bar) before the event and collect it from you at a time they choose. You see every order and a prep list for each night before the cut-off, so you can cook the right amount, waste less and plan your staff and time. They pay you when they collect, and there's no cost to you.
 
 We've made a draft listing for you on TAM's food guide from your MM page. Claim it here to check your profile and menu, and turn pre-orders on if you'd like to take part:
 ${link}
@@ -65,6 +67,19 @@ export function vendorsDomain(ctx) {
   if (!db.vendorState || typeof db.vendorState !== 'object') db.vendorState = {}; // per slug: { status, profile, claimedBy[], email, partner, preorder }
   const iso = (t = ctx.now()) => new Date(t).toISOString();
   const site = () => cfg.siteUrl;
+  // Once (18 Nov 2026): the stall staff usually aren't the owners, so Vivian asks in person for the owner's or
+  // manager's contact at the traders with no email online, or only a head-office or uncertain one.
+  db.meta = db.meta || {};
+  if (!db.meta.foodVisit1118) {
+    const ask = 'Who owns or manages it, and their best email or number? (The stall staff often aren’t in charge.)';
+    const visit = { 'argentinian-grill': ask, 'bebek-baklava': ask, 'butchers-grill': ask, 'chang-thai-kitchen': ask, 'farmhouse-kebabs': ask, 'hermanos-taco-house': ask,
+      'himalayan-dumplings': `${ask} We have a number from a listing: 07586 115273.`, 'hot-chick': ask, mazavaroo: ask, 'tandoori-tadkaa': ask, 'thats-pasta': ask,
+      badiani: 'We only have head office (media@badiani1932.com). Who runs the E&C counter?', 'dub-pan-burger-shack': 'Same owners as Dub Pan Jerk & Rum Punch (info@dubpan.com)?',
+      'fresco-pizzeria-napoletana': 'We only have the Italian company’s legal address. Who manages Fresco here?', 'twisted-london': 'We only have the parent company. Who runs the kitchen here?',
+      'the-italian-corner': 'Is it run by MM? If so, who manages it?' };
+    for (const [slug, why] of Object.entries(visit)) Object.assign((db.vendorState[slug] = db.vendorState[slug] || {}), { check: 'visit', checkWhy: why });
+    db.meta.foodVisit1118 = new Date().toISOString();
+  }
   const claimLimited = rateLimiter({ max: 6 });
   const orderLimited = rateLimiter({ max: 12 });
 
@@ -74,10 +89,10 @@ export function vendorsDomain(ctx) {
     return V.vendors.concat(db.vendorExtra).map((v) => {
       const s = db.vendorState[v.slug] || {};
       const p = s.profile || {};
-      const menu = (p.menu || v.menu || []).map((m, i) => ({ id: m.id || `${v.slug}-${i}`, section: m.section || '', name: m.name, description: m.description || '', price: Number.isInteger(m.price) ? m.price : null, dietary: m.dietary || [] }));
+      const menu = (p.menu || v.menu || []).filter((m) => !isDrink(m.section)).map((m, i) => ({ id: m.id || `${v.slug}-${i}`, section: m.section || '', name: m.name, description: m.description || '', price: Number.isInteger(m.price) ? m.price : null, dietary: m.dietary || [] }));
       const pre = s.preorder || {};
       return {
-        slug: v.slug, name: p.name || v.name, tagline: p.tagline ?? v.tagline ?? '', category: p.category || v.category || 'food',
+        slug: v.slug, name: p.name || v.name, tagline: p.tagline ?? v.tagline ?? '', category: CATEGORIES[p.category || v.category] ? p.category || v.category : 'food',
         description: p.description ?? v.description ?? '', dietary: p.dietary || v.dietary || [], instagram: p.instagram ?? v.instagram ?? '',
         website: p.website ?? v.website ?? '', menuLinks: v.menuLinks || [], photos: (p.photos || []).length ? p.photos : v.photo ? [v.photo] : [],
         menu, alsoAt: v.alsoAt || [], source: v.source || '', status: s.status || 'draft', claimed: Boolean((s.claimedBy || []).length),
@@ -171,6 +186,7 @@ export function vendorsDomain(ctx) {
     for (const m of (Array.isArray(b.menu) ? b.menu : []).slice(0, 80)) {
       const name = text(m && m.name, 80);
       if (!name) continue;
+      if (isDrink(m.section)) throw fail(400, `“${text(m.section, 40)}” looks like drinks. The TAM food guide is food only: TAM runs the bar and no outside drinks are allowed in, so please leave drinks off.`);
       const price = m.price === '' || m.price === null || m.price === undefined ? null : pence(m.price);
       if (price === null && m.price !== '' && m.price !== null && m.price !== undefined) throw fail(400, `Check the price for “${name}”: use pounds, like 9.50.`);
       menu.push({ id: text(m.id, 40) || newId('MI', 5), section: text(m.section, 40), name, description: text(m.description, 200), price, dietary: (Array.isArray(m.dietary) ? m.dietary : []).filter((d) => DIETARY[d]) });

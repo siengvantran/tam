@@ -25,11 +25,11 @@ function directory(ctx, food) {
   const nights = food.nights();
   const cats = Object.entries(CATEGORIES).filter(([k]) => vs.some((v) => v.category === k));
   return page(ctx, {
-    title: 'Food and drink at Mercato Metropolitano', path: '/food',
-    description: `Every food and drink trader at ${m.name || 'Mercato Metropolitano Elephant & Castle'}, TAM’s home: what they cook, dietary options, menus, and pre-orders for TAM nights.`,
+    title: 'Food at Mercato Metropolitano', path: '/food',
+    description: `Every food trader at ${m.name || 'Mercato Metropolitano Elephant & Castle'}, TAM’s home: what they cook, dietary options, menus, and pre-orders for TAM nights.`,
     body: html`<section class="section fd-hero"><div class="wrap"><div class="label">TAM’s neighbours · ${m.name}</div>
-      <h1 class="chrome gold">Eat and drink before the show</h1>
-      <p class="lede">TAM lives inside Mercato Metropolitano, with kitchens from all over the world a few steps from the stage. Here’s every trader, what they cook and what suits you.${nights.length ? ' Coming to a TAM night? Pre-order and pick it up when you arrive: no queue, and nothing goes to waste.' : ''}</p>
+      <h1 class="chrome gold">Eat before the show</h1>
+      <p class="lede">TAM lives inside Mercato Metropolitano, with kitchens from all over the world a few steps from the stage. Here’s every trader, what they cook and what suits you. Drinks are at TAM’s bar.${nights.length ? ' Coming to a TAM night? Pre-order and pick it up when you arrive: no queue, and nothing goes to waste.' : ''}</p>
       ${nights.length ? html`<p><a class="btn hot" href="/food/preorder">Pre-order for a TAM night</a></p>` : ''}
       <p class="small muted">${m.address}${(m.hours || []).length ? html` · Market hours: ${m.hours.join(' · ')}` : ''}</p></div></section>
     <section class="section"><div class="wrap">
@@ -60,13 +60,13 @@ function profile(ctx, food, v, preview) {
   return page(ctx, {
     title: `${v.name}: ${v.tagline || 'at Mercato Metropolitano'}`, path: `/food/${v.slug}`, og: p.photo || undefined, noindex: preview,
     description: `${v.name} at Mercato Metropolitano Elephant & Castle${v.tagline ? `: ${v.tagline}` : ''}. ${String(v.description).slice(0, 140)}`,
-    jsonLd: preview ? null : { '@context': 'https://schema.org', '@type': v.category === 'drinks' ? 'BarOrPub' : 'Restaurant', name: v.name, description: v.description || v.tagline, image: p.photo ? `${ctx.cfg.siteUrl}${p.photo}` : undefined,
+    jsonLd: preview ? null : { '@context': 'https://schema.org', '@type': 'Restaurant', name: v.name, description: v.description || v.tagline, image: p.photo ? `${ctx.cfg.siteUrl}${p.photo}` : undefined,
       servesCuisine: v.tagline || undefined, address: { '@type': 'PostalAddress', streetAddress: '42 Newington Causeway', addressLocality: 'London', postalCode: 'SE1 6DR', addressCountry: 'GB' },
       sameAs: [v.website, v.instagram ? `https://www.instagram.com/${v.instagram}/` : ''].filter(Boolean), containedInPlace: { '@type': 'Place', name: food.market.name } },
     body: html`${preview ? html`<p class="fd-preview">Preview: this listing is <b>${v.status}</b> and only TAM’s team can see it. <a href="/food/manage">Back office</a></p>` : ''}
     <section class="section fd-profile"><div class="wrap fd-profile-grid">
       <div class="fd-photos">${p.photos.length ? p.photos.map((u, i) => html`<img src="${u}" alt="${i ? '' : v.name}" ${i ? html`loading="lazy"` : ''} width="720" height="540">`) : html`<div class="fd-pic big"><span>${initials(v.name)}</span></div>`}</div>
-      <div><div class="label"><a href="/food">Food and drink</a> · ${CATEGORIES[v.category] || 'Food'}</div><h1 class="chrome gold">${v.name}</h1>
+      <div><div class="label"><a href="/food">Food at MM</a> · ${CATEGORIES[v.category] || 'Food'}</div><h1 class="chrome gold">${v.name}</h1>
         ${v.tagline ? html`<p class="lede">${v.tagline}</p>` : ''}${badges(v.dietary)}
         ${v.description ? v.description.split(/\n{2,}/).map((para) => html`<p>${para}</p>`) : ''}
         <p class="fd-links">${v.instagram ? html`<a class="chip" href="https://www.instagram.com/${v.instagram}/" rel="noopener" target="_blank">Instagram @${v.instagram}</a>` : ''}${v.website ? html`<a class="chip" href="${v.website}" rel="noopener" target="_blank">Website</a>` : ''}${v.menuLinks.map((u, i) => html`<a class="chip" href="${u}" rel="noopener" target="_blank">Menu${v.menuLinks.length > 1 ? ` ${i + 1}` : ''} (PDF)</a>`)}</p>
@@ -95,7 +95,7 @@ export function routes(r, ctx, food) {
   r.get('/food', (req, res) => respond(res, directory(ctx, food)));
   r.get('/food/preorder', (req, res) => respond(res, page(ctx, { title: 'Pre-order food for a TAM night', path: '/food/preorder',
     description: 'Order from the traders at Mercato Metropolitano before your TAM night and collect it when you arrive.',
-    body: html`<section class="section"><div class="wrap"><div class="label"><a href="/food">Food and drink</a></div><h1 class="chrome gold">Pre-order for a TAM night</h1>
+    body: html`<section class="section"><div class="wrap"><div class="label"><a href="/food">Food at MM</a></div><h1 class="chrome gold">Pre-order for a TAM night</h1>
       <p class="lede">Choose your night and a trader, pick your dishes and a collection time. You pay the trader when you collect. Ordering ahead means they cook what’s needed, so less goes to waste.</p>
       <div id="fd-pre"><p class="muted">Loading…</p></div></div></section>` }), 200, { 'Cache-Control': 'no-store' }));
   r.get('/food/order/:id', (req, res) => respond(res, shell(ctx, 'Your pre-order', '/order', html`<h1 class="chrome gold">Your pre-order</h1><div id="fd-order"><p class="muted">Loading…</p></div>`), 200, { 'Cache-Control': 'no-store' }));
