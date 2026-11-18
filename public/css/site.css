@@ -1693,3 +1693,48 @@ body.ar-embed { min-height: 0; background: transparent; }
 .ar-why h3 { margin: 18px 0 6px; }
 .ar-why-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 10px; }
 .ar-why-two > div { padding: 16px; border-radius: 14px; border: 1px solid rgba(232, 199, 122, .3); background: rgba(255, 255, 255, .03); }
+
+/* ---------- the food guide: /food, a trader's page, pre-orders, /food/me (src/views/food.js) ---------- */
+.fd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.fd-grid.small { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.fd-card { display: block; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; transition: transform .2s, border-color .2s; text-align: left; padding: 0; font: inherit; cursor: pointer; }
+.fd-card:hover, .fd-card.on { transform: translateY(-3px); border-color: var(--gold); color: var(--ink); }
+.fd-card[hidden] { display: none; }
+.fd-pic { position: relative; aspect-ratio: 4 / 3; background: color-mix(in srgb, var(--gold) 14%, var(--panel)); display: grid; place-items: center; overflow: hidden; }
+.fd-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fd-pic span { font: 40px var(--f-display, serif); color: var(--gold); }
+.fd-pic.big { border-radius: 22px; }
+.fd-pre { position: absolute; top: 10px; left: 10px; background: var(--gold); color: #2a1606; font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+.fd-body { padding: 12px 14px 14px; display: grid; gap: 4px; } .fd-body small { color: var(--muted); font-size: 13px; }
+.fd-badges { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+.fd-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-dim); }
+.fd-vegan, .fd-vegetarian { border-color: #5fae6b; color: #8fd59a; } .fd-halal { border-color: #5b9bd5; color: #9cc6ef; } .fd-gluten-free { border-color: #d5a35b; color: #f0c98c; }
+.fd-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.fd-trader-cta { margin: 32px 0 14px; }
+.fd-profile-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(18px, 4vw, 44px); align-items: start; }
+.fd-photos { display: grid; gap: 10px; } .fd-photos img { width: 100%; height: auto; border-radius: 22px; display: block; }
+.fd-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.fd-pre-box { margin-top: 18px; }
+.fd-preview { background: var(--gold); color: #2a1606; padding: 10px 16px; text-align: center; margin: 0; } .fd-preview a { color: inherit; }
+.fd-menu h3 { margin: 22px 0 6px; font-size: 15px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); }
+.fd-menu ul, .fd-pick { list-style: none; padding: 0; margin: 0; }
+.fd-menu li, .fd-pick li { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.fd-menu li small, .fd-pick li small { display: block; color: var(--muted); font-size: 13px; }
+.fd-pick li > div { flex: 1; }
+.fd-qty { display: inline-flex; align-items: center; gap: 8px; } .fd-qty button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-size: 18px; cursor: pointer; } .fd-qty output { min-width: 1.5em; text-align: center; }
+.fd-total { font-size: 18px; margin: 14px 0; }
+.fd-steps { display: grid; gap: 18px; }
+.fd-join-head { display: flex; gap: 14px; align-items: center; } .fd-join-head img { border-radius: 12px; object-fit: cover; }
+.fd-prep { margin-bottom: 18px; } .fd-prep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; } .fd-prep ul { padding-left: 18px; }
+.fd-orders { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; } .fd-orders th, .fd-orders td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; } .fd-orders tr.muted { opacity: .55; }
+.fd-orders img { border-radius: 8px; object-fit: cover; }
+.fdm-list .row-btn { flex-wrap: wrap; }
+.fdm-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.fd-mrow { display: grid; grid-template-columns: 1fr 2fr .7fr 2.5fr auto auto; gap: 6px; margin-bottom: 6px; align-items: center; }
+.fd-mdiet { display: flex; gap: 4px; font-size: 12px; } .fd-mdiet label { display: flex; align-items: center; gap: 2px; }
+.fd-nights { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 14px 0; } .fd-night-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 4px; margin-top: 8px; max-height: 260px; overflow: auto; }
+@media (max-width: 760px) {
+  .fd-profile-grid { grid-template-columns: 1fr; }
+  .fd-mrow { grid-template-columns: 1fr 1fr; } .fd-mrow [name=description] { grid-column: 1 / -1; }
+  .fd-orders { display: block; overflow-x: auto; }
+}
