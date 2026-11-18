@@ -39,11 +39,21 @@ const card = (a) => `<button type="button" class="anr-card" data-open="${a.id}">
   <span><b>${esc(a.act)}</b>${a.jom ? '<small class="anr-jom">JOM · young artist</small>' : ''}<small>${esc(a.plays || '')}</small><small>🎟 ${a.stats.pledged} pledged${a.stats.christmas ? ` (🎄 ${a.stats.christmas} for Christmas)` : ''} · ✦ ${a.stats.boosts} · ★ ${a.stats.rating.avg || '–'} · ${a.stats.views} views</small>
   ${lastApp(a) ? `<small class="anr-paths">${lastApp(a).paths.map((k) => esc((D.pathways[k] || {}).name || k)).join(' · ')}${lastApp(a).draw.bring ? ` · brings ~${n(lastApp(a).draw.bring)}` : ''}${lastApp(a).show ? ' · 💡 show idea' : ''}</small>` : ''}
   ${a.suggest.action !== 'wait' && ACTIONS[a.suggest.action] ? `<em class="anr-sug ${a.suggest.action}">${ACTIONS[a.suggest.action]}</em>` : ''}</span>
-  <i class="anr-score" title="Score">${a.score}</i>${a.stillPlay ? '<em class="anr-still" title="Still wants to play">✓ keen</em>' : ''}</button>`;
+  <i class="anr-score" title="${SCORE_HELP}">${a.score}<small>/100</small></i>${a.stillPlay ? '<em class="anr-still" title="Still wants to play">✓ keen</em>' : ''}</button>`;
 
+// What the number and the tabs mean, said on the board itself.
+const SCORE_HELP = 'A&R score out of 100: your team’s ratings (up to 50), fan support from pledges and boosts (25), momentum this week (15) and how complete their page is (10). Not a pledge count.';
+const TAB_HELP = {
+  review: 'Artists who have finished their page and sent it to TAM to check. Approve it to put them on the path, or send it back with a note.',
+  path: 'Live on the TAM Stage: approved by TAM and moving along the path (Signal, Orbit, Open Night, Showcase, Headline, Festival).',
+  draft: 'They’ve applied, or TAM made them a page from their email, but they haven’t sent it in to check yet. Their page is private unless they’ve made it shareable.',
+  off: 'Paused or declined by TAM. You can put them back on the path any time.',
+  how: '',
+};
 function draw() {
   const by = (st) => D.artists.filter((a) => a.status === st);
   root.innerHTML = `<nav class="cm-tabs">${[['review', `To review (${D.counts.review})`], ['path', `On the path (${D.counts.live})`], ['draft', `Applied, building their page (${D.counts.draft})`], ['off', `Paused or declined (${D.counts.paused + D.counts.declined})`], ['how', 'How we decide']].map(([k, v]) => `<button type="button" class="${tab === k ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</nav>
+  ${TAB_HELP[tab] ? `<p class="small muted anr-tabhelp">${esc(TAB_HELP[tab])} The number on each act is their <b title="${SCORE_HELP}">A&amp;R score out of 100</b> (ratings, pledges and boosts, momentum, page), not a pledge count.</p>` : ''}
   <div class="anr-wrap"><div id="anr-list"></div><aside id="anr-detail" class="anr-detail"></aside></div>`;
   const list = $('#anr-list');
   if (tab === 'path') {

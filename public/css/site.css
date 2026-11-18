@@ -1685,3 +1685,5 @@ body.ar-embed { min-height: 0; background: transparent; }
 .want-card { position: relative; }
 .want-keen { position: absolute; z-index: 2; top: 10px; left: 10px; padding: 4px 10px; border-radius: 999px; background: #7fe0a8; color: #0b0709; font-size: 12px; font-weight: 700; }
 .want-more { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+.anr-score small { font-size: 9px; opacity: .7; margin-left: 1px; }
+.anr-tabhelp { margin: 8px 0 12px; max-width: 760px; }
