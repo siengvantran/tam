@@ -40,7 +40,7 @@ export function microverse(v, { size = 560, label = true } = {}) {
 
 const page = (ctx, o) => layout(ctx, { ambient: 'stars', scripts: ['/js/stage.js', '/js/stage-card.js'], ...o });
 
-function card(v) {
+export function card(v) {
   return html`<a class="st-card vibe-${v.vibe}" href="${v.href}">
     <div class="st-pic">${v.photo ? html`<img src="${v.photo}" alt="" loading="lazy" width="320" height="320">` : html`<span>${(VIBE_MARKS[v.vibe] || ['', '★'])[1]}</span>`}</div>
     <div class="st-card-body"><span class="st-planet">${STAGES[v.stage].name}</span><h3>${v.act}</h3><p>${v.plays || ''}</p>

@@ -192,3 +192,25 @@ test('an artist says they still want to play, and gets a new link with just thei
   assert.equal(a.stillPlay.note, 'Now a five-piece');
   assert.match((await call('/stage/in')).body, /Get a link to your page/);
 });
+
+test('/artists lists the acts who want to play at TAM: shared ones only, keen ones first', async (t) => {
+  const app = await createApp({ env: { DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'tamtv-want-')), ADMIN_TOKEN: ADMIN, EVENTBRITE_SYNC: 'off' } });
+  await new Promise((r) => app.listen(0, r));
+  t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(r); }));
+  const B = `http://127.0.0.1:${app.server.address().port}`;
+  const staff = { 'x-staff-token': ADMIN, 'content-type': 'application/json' };
+  const invite = (b) => fetch(`${B}/api/stage/invite`, { method: 'POST', headers: staff, body: JSON.stringify({ send: false, paths: ['showcase'], ...b }) });
+  for (const [email, act, extra] of [['a@x.test', 'Shared Band', {}], ['b@x.test', 'Keen Duo', {}], ['c@x.test', 'Private Draft', {}], ['d@x.test', 'Young Act', { age: 'under18' }]]) await invite({ email, act, ...extra });
+  const db = app.ctx.db;
+  const by = (act) => db.arArtists.find((a) => a.act === act);
+  by('Shared Band').shareable = true;
+  Object.assign(by('Keen Duo'), { shareable: true, stillPlay: { at: new Date().toISOString(), note: '', when: '' } });
+  Object.assign(by('Young Act'), { shareable: true }); // even if set, under-18 pages are made unshareable on invite
+  const page = await (await fetch(`${B}/artists`)).text();
+  assert.match(page, /They’d love to play at TAM/);
+  assert.ok(page.indexOf('Keen Duo') < page.indexOf('Shared Band'), 'keen first');
+  assert.match(page, /✓ Keen to play/);
+  assert.doesNotMatch(page, /Private Draft/);
+  assert.doesNotMatch(page, /Young Act/); // under-18s only once TAM has approved their page
+  assert.match(page, /Everyone who has played TAM/);
+});
