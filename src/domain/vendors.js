@@ -63,7 +63,7 @@ TAM · Temple of Art & Music`;
 export function vendorsDomain(ctx) {
   const { db, save, cfg, content: c } = ctx;
   const V = c.vendors || { market: {}, vendors: [] };
-  for (const k of ['vendorClaims', 'vendorPending', 'vendorLinks', 'vendorSessions', 'vendorInvites', 'vendorOrders', 'vendorExtra', 'vendorOutreach']) if (!Array.isArray(db[k])) db[k] = [];
+  for (const k of ['vendorClaims', 'vendorPending', 'vendorLinks', 'vendorSessions', 'vendorInvites', 'vendorOrders', 'vendorExtra', 'vendorOutreach', 'vendorQuestions']) if (!Array.isArray(db[k])) db[k] = [];
   if (!db.vendorState || typeof db.vendorState !== 'object') db.vendorState = {}; // per slug: { status, profile, claimedBy[], email, partner, preorder }
   const iso = (t = ctx.now()) => new Date(t).toISOString();
   const site = () => cfg.siteUrl;
@@ -559,6 +559,34 @@ export function vendorsDomain(ctx) {
       o.status = b.status;
       await save();
       send(res, 200, { ok: true });
+    });
+    // the team's questions and challenges about the partnership and the pitch (/food/manage/pitch)
+    r.get('/api/food/manage/questions', (req, res) => { guard(req); send(res, 200, { questions: db.vendorQuestions.slice().reverse() }); });
+    r.post('/api/food/manage/questions', async (req, res) => {
+      const who = guard(req);
+      const b = await readJson(req, 8 * 1024);
+      const q = text(b.text, 2000);
+      if (!q) throw fail(400, 'Write your question or challenge.');
+      const x = { id: newId('VQ', 5), by: who.name, email: who.email || '', about: text(b.about, 80), text: q, at: iso(), answer: '', status: 'open' };
+      db.vendorQuestions.push(x);
+      await save();
+      tellTeam(`${who.name} asked about the trader pitch`, [`${x.about ? `About ${x.about}: ` : ''}${q}`, 'Answer it on /food/manage/pitch.']);
+      send(res, 201, { question: x });
+    });
+    r.post('/api/food/manage/questions/:id', async (req, res, { params }) => {
+      const who = guard(req);
+      const x = db.vendorQuestions.find((y) => y.id === params.id);
+      if (!x) throw fail(404, 'No such question.');
+      const b = await readJson(req, 8 * 1024);
+      if (b.status === 'done') x.status = 'done';
+      else {
+        const a = text(b.answer, 3000);
+        if (!a) throw fail(400, 'Write an answer.');
+        Object.assign(x, { answer: a, answeredBy: who.name, answeredAt: iso(), status: 'answered' });
+        if (x.email && x.email !== who.email) sendMail({ to: x.email, subject: 'TAM food guide: your question was answered', html: clubShell(`<h1 style="font-size:24px;margin:0 0 10px">${e(who.name)} answered</h1><p><i>${e(x.text)}</i></p><p>${e(a)}</p>${clubButton('See it', `${site()}/food/manage/pitch#questions`)}`), text: `${x.text}\n\n${who.name}: ${a}` });
+      }
+      await save();
+      send(res, 200, { question: x });
     });
     r.get('/api/food/manage/orders.csv', (req, res) => { guard(req); send(res, 200, csv(db.vendorOrders), csvHeaders('tam-food-preorders.csv')); });
   }
