@@ -22,6 +22,7 @@ test('JOM at TAM: permanent act pages, pledges, parents claim and update (TAM ap
   t.after(() => new Promise((r) => { app.server.closeAllConnections(); app.server.close(() => resend.close(r)); }));
   const B = `http://127.0.0.1:${app.server.address().port}`;
   app.ctx.cfg.siteUrl = B;
+  app.ctx.cfg.enquiriesTo = 'team@tam.test';
   const staff = { 'x-staff-token': ADMIN };
   const call = async (p, { method = 'GET', body, cookie = '', headers = {} } = {}) => {
     const r = await fetch(`${B}${p}`, { method, redirect: 'manual', headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(cookie ? { cookie } : {}), ...headers }, body: body ? JSON.stringify(body) : undefined });
@@ -91,6 +92,13 @@ test('JOM at TAM: permanent act pages, pledges, parents claim and update (TAM ap
   const sentUpdate = await call('/api/jom/me/yellowhammer', { method: 'POST', cookie, body: { name: 'Yellowhammer', bio: 'A five-piece from JOM who love 70s rock.', links: 'https://www.youtube.com/@yellowhammer', photos: [ph, '/img/jom-2026/yellowhammer.jpg'] } });
   assert.equal(sentUpdate.status, 201);
   assert.doesNotMatch((await call('/jom/yellowhammer')).body, /70s rock/); // not until TAM approves
+  // the team is told there's something to check: the claim, and the update
+  await wait(sent.length + 0);
+  for (let i = 0; i < 60 && !sent.some((x) => /an update to Yellowhammer/.test(x.subject)); i++) await new Promise((x) => setTimeout(x, 15));
+  const toTeam = sent.filter((x) => [].concat(x.to).includes('team@tam.test')).map((x) => x.subject);
+  assert.ok(toTeam.some((x) => /a claim for Yellowhammer to approve/.test(x)), toTeam.join(' | '));
+  assert.ok(toTeam.some((x) => /an update to Yellowhammer’s page to approve/.test(x)), toTeam.join(' | '));
+  assert.match(sent.find((x) => /an update to Yellowhammer/.test(x.subject)).html, /a bio, 2 photos, links/);
 
   m = (await call('/api/jom/manage', { headers: staff })).body;
   assert.equal(m.changes.length, 1);
