@@ -1680,3 +1680,8 @@ body.ar-embed { min-height: 0; background: transparent; }
 .jm-alert small { color: var(--muted, #b9aab3); }
 .jm-edit .bad { border-color: #ff6b8a !important; box-shadow: 0 0 0 2px rgba(255, 107, 138, .35); }
 .jm-unsent { color: #ffd36b; margin: 8px 0 0; }
+/* /artists: the artists who'd love to play at TAM */
+.want-play .lede { max-width: 760px; }
+.want-card { position: relative; }
+.want-keen { position: absolute; z-index: 2; top: 10px; left: 10px; padding: 4px 10px; border-radius: 999px; background: #7fe0a8; color: #0b0709; font-size: 12px; font-weight: 700; }
+.want-more { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }

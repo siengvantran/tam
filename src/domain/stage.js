@@ -709,5 +709,10 @@ export function stageDomain(ctx) {
   const jomStatus = (slug) => { const a = byJom(slug); return a && !a.optedOut ? { slug: a.slug, status: a.status, planet: STAGES[a.stage].name, href: `/stage/${a.slug}` } : null; };
 
   const live = () => db.arArtists.filter((a) => a.status === 'live').map(publicView);
-  return { routes, apply, publicView, ownerView, artistOf, bySlug, isPublic, live, viewed, progress, stats, score, suggest, linkJom, syncJom, unlinkJom, jomStatus };
+  // Acts that want to play at TAM and can be shown (live, or shared by the artist; never private or under-18 drafts):
+  // those who've said they'd still love to play first, then by pledges and boosts.
+  const wanting = () => db.arArtists.filter((a) => isPublic(a) && !['paused', 'declined'].includes(a.status) && (a.age !== 'under18' || a.status === 'live'))
+    .map((a) => ({ ...publicView(a), keen: Boolean(a.stillPlay) }))
+    .sort((x, y) => (y.keen - x.keen) || (y.pledged + y.boosts) - (x.pledged + x.boosts));
+  return { routes, apply, publicView, ownerView, artistOf, bySlug, isPublic, live, wanting, viewed, progress, stats, score, suggest, linkJom, syncJom, unlinkJom, jomStatus };
 }

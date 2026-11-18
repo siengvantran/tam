@@ -10,6 +10,7 @@ import { venueLd, placeLd, availability } from './ai.js';
 import { featuredNow, featuredHero } from './featured.js';
 import { christmasNow, christmasHero } from './christmas.js';
 import { pathwayOf, pathwayTiles } from './pathways.js';
+import { card as stageCard } from './stage.js';
 import { roomTile } from './room.js';
 import { layout, ticker, nightCard, when, times, artistChip, youtubeThumb, chatPanel, askTitle, listingPrice, ticketPrice, ticketState, fridayTile, friday, fridayUrl, isBluesJam, BLUES_JAM , ticketSite } from './layout.js';
 import {
@@ -397,10 +398,20 @@ function artistsIndex(ctx) {
   const c = ctx.content;
   const legends = c.artists.filter((a) => a.legend);
   const letters = [...new Set(c.artists.map((a) => a.name[0].toUpperCase()))].sort();
+  // the artists who'd love to play at TAM: the community can speed up their journey
+  const want = ctx.stage ? ctx.stage.wanting().map((v) => ({ ...v, progress: ctx.stage.progress(v) })) : [];
+  const SHOW = 12;
   return page(ctx, {
-    title: 'Artists', path: '/artists', description: 'Everyone who has played the Temple of Art and Music: cult legends, regulars and the next wave.',
-    body: html`<section class="section"><div class="wrap">
-  <h1 class="chrome gold">Artists</h1>
+    title: 'Artists', path: '/artists', description: 'Artists who’d love to play at TAM, and everyone who has played the Temple of Art and Music: cult legends, regulars and the next wave.',
+    body: html`${want.length ? html`<section class="section want-play" id="want-to-play" aria-labelledby="want-title"><div class="wrap">
+  <div class="label">The TAM Stage · help them get here</div>
+  <h1 id="want-title" class="chrome gold">They’d love to play at TAM</h1>
+  <p class="lede">These ${want.length} artists have asked to play at TAM, and we want our community to help speed up their journey. Pledge to see them live, boost them, and share their page: every pledge and boost moves them along the path from an open night to the Sunday Showcase, their own night and festival stages like The Best Christmas Ever.</p>
+  <div class="st-grid">${want.slice(0, SHOW).map((v) => html`<div class="want-card">${v.keen ? html`<span class="want-keen">✓ Keen to play</span>` : ''}${stageCard(v)}</div>`)}</div>
+  <p class="want-more">${want.length > SHOW ? html`<a class="btn hot" href="/stage#acts">See all ${want.length} on the TAM Stage</a> ` : html`<a class="btn hot" href="/stage#acts">Discover them on the TAM Stage</a> `}<a class="btn ghost" href="/stage/apply">Ask to play at TAM</a></p>
+</div></section>` : ''}
+<section class="section"><div class="wrap">
+  <h${want.length ? '2' : '1'} class="chrome gold">${want.length ? 'Everyone who has played TAM' : 'Artists'}</h${want.length ? '2' : '1'}>
   <h2 class="label">Cult legends</h2><div class="chips">${legends.map((a) => artistChip(a))}</div>
   <nav class="az" aria-label="A to Z">${letters.map((l) => html`<a href="#l-${l}">${l}</a>`)}</nav>
   ${letters.map((l) => html`<h2 class="month" id="l-${l}">${l}</h2><ul class="plain cols">${c.artists.filter((a) => a.name[0].toUpperCase() === l).map((a) => html`<li><a href="/artists/${a.slug}">${a.name}</a>${a.legend ? html` <span class="badge">Cult legend</span>` : ''}</li>`)}</ul>`)}
