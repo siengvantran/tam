@@ -93,6 +93,15 @@ export function jomDomain(ctx) {
     ctx.mail.send({ to: email, subject, html: clubShell(`<h1 style="font-size:26px;margin:0 0 10px">${e(heading)}</h1>${body}`), text: `${heading}\n\n${body.replace(/<[^>]+>/g, '')}` }).catch((err) => console.warn(`JOM email: ${err.message}`));
   }
 
+  // Something for TAM to check (a claim, a page update): tell the team, so nothing waits unseen.
+  function tellTeam(subject, lines) {
+    if (!ctx.mail.enabled() || !cfg.enquiriesTo) return;
+    const link = `${site()}/jom/manage`;
+    ctx.mail.send({ to: cfg.enquiriesTo, subject: `JOM × TAM: ${subject}`,
+      html: clubShell(`<h1 style="font-size:24px;margin:0 0 10px">${e(subject)}</h1>${lines.map((l) => `<p>${e(l)}</p>`).join('')}<p>Parents see “waiting for TAM” until someone approves it.</p>${clubButton('Check it on the JOM back office', link)}`),
+      text: `${subject}\n\n${lines.join('\n')}\n\nCheck it: ${link}` }).catch((err) => console.warn(`JOM team email: ${err.message}`));
+  }
+
   async function dropFile(url) {
     if (!url || !url.startsWith('/uploads/') || !ctx.uploadsDir) return;
     await fs.unlink(path.join(ctx.uploadsDir, path.basename(url))).catch(() => {});
@@ -199,6 +208,7 @@ export function jomDomain(ctx) {
       if (db.jomClaims.some((x) => x.act === a.slug && x.email === mail && x.status === 'pending')) return send(res, 200, { ok: true, already: true });
       db.jomClaims.push({ id: newId('JC', 6), act: a.slug, name: text(b.name, 80), email: mail, relation: b.relation, note: text(b.note, 600), at: iso(), status: 'pending' });
       await save();
+      tellTeam(`a claim for ${a.name} to approve`, [`${text(b.name, 80)} (${RELATIONS[b.relation]}) wants to manage ${a.name}’s JOM page.`]);
       send(res, 201, { ok: true });
     });
     r.post('/api/jom/sign-in', async (req, res) => {
@@ -302,6 +312,8 @@ export function jomDomain(ctx) {
       const p = { id: newId('JP', 6), act: a.slug, by: email, at: iso(), status: 'pending', changes: { name, bio, links: links.slice(0, 6), photos, posts } };
       db.jomPending.push(p);
       await save();
+      const what = [bio ? 'a bio' : '', photos.length ? `${photos.length} photo${photos.length === 1 ? '' : 's'}` : '', posts.length ? `${posts.length} post${posts.length === 1 ? '' : 's'}` : '', links.length ? 'links' : ''].filter(Boolean).join(', ');
+      tellTeam(`an update to ${a.name}’s page to approve`, [`${a.name}’s parent or guardian has sent an update${what ? `: ${what}` : ''}. It isn’t on the page until TAM approves it.`]);
       send(res, 201, { pending: p });
     });
 
