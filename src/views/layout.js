@@ -184,7 +184,7 @@ export const ticketState = (t, now = Date.now()) => (t.status === 'AVAILABLE' ? 
 
 // The Great British Blues Jam has its own page (hosts, house band, sign-up to jam): its nights link there.
 export const BLUES_JAM = '/great-british-blues-jam#jam';
-export const isBluesJam = (x) => /blues jam/i.test(String(x && (x.title || x.name) || x || ''));
+export const isBluesJam = (x) => /great british blues jam/i.test(String(x && (x.title || x.name) || x || ''));
 export const nightHref = (n) => (isBluesJam(n.title) && !n.festival ? BLUES_JAM : `/events/${n.slug}`);
 
 export function nightCard(ctx, n, avail) {

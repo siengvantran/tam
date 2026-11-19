@@ -8178,55 +8178,96 @@
  {
   "date": "2026-12-06",
   "series": "singers-sunday-spot",
-  "title": "Singers @ Sunday Spot"
+  "title": "The Original Singers Club",
+  "time": "19:30",
+  "ends": "22:30"
  },
  {
-  "date": "2026-12-12",
-  "series": "tam-karaoke",
-  "title": "TAM Karaoke"
+  "date": "2026-12-07",
+  "title": "Morley College Jazz Jam",
+  "time": "19:00",
+  "ends": "22:30"
+ },
+ {
+  "date": "2026-12-08",
+  "series": "word-of-mouth",
+  "title": "Word of Mouth Fusion Jazz",
+  "time": "20:30",
+  "ends": "22:30"
+ },
+ {
+  "date": "2026-12-09",
+  "title": "Morley College Pop and Big Band",
+  "time": "19:00",
+  "ends": "22:30"
  },
  {
   "date": "2026-12-12",
   "series": "great-british-blues-jam",
-  "title": "The Great British Blues Jam"
+  "title": "The Great British Blues Jam",
+  "time": "16:00",
+  "ends": "19:00"
+ },
+ {
+  "date": "2026-12-12",
+  "series": "tam-karaoke",
+  "title": "TAM Karaoke Night",
+  "time": "19:30",
+  "ends": "00:30"
  },
  {
   "date": "2026-12-13",
   "series": "singers-sunday-spot",
-  "title": "Singers @ Sunday Spot"
- },
- {
-  "date": "2026-12-15",
-  "series": "word-of-mouth",
-  "title": "Word of Mouth"
+  "title": "The Original Singers Club",
+  "time": "19:30",
+  "ends": "22:30"
  },
  {
   "date": "2026-12-18",
-  "title": "New Development"
- },
- {
-  "date": "2026-12-19",
-  "series": "tam-karaoke",
-  "title": "TAM Karaoke"
+  "title": "New Development: Blues Jam & Open Mic Night",
+  "time": "19:00",
+  "ends": "00:30"
  },
  {
   "date": "2026-12-19",
   "series": "great-british-blues-jam",
-  "title": "The Great British Blues Jam"
+  "title": "The Great British Blues Jam",
+  "time": "16:00",
+  "ends": "19:00"
+ },
+ {
+  "date": "2026-12-19",
+  "series": "tam-karaoke",
+  "title": "TAM Karaoke Night",
+  "time": "19:30",
+  "ends": "00:30"
+ },
+ {
+  "date": "2026-12-20",
+  "title": "World Music Big Band",
+  "time": "17:00",
+  "ends": "19:00"
  },
  {
   "date": "2026-12-20",
   "series": "singers-sunday-spot",
-  "title": "Singers @ Sunday Spot"
+  "title": "The Original Singers Club",
+  "time": "19:30",
+  "ends": "22:30"
  },
  {
-  "date": "2026-12-20",
-  "title": "World Music Big Band"
+  "date": "2026-12-22",
+  "series": "word-of-mouth",
+  "title": "Word of Mouth Fusion Jazz",
+  "time": "20:30",
+  "ends": "22:30"
  },
  {
   "date": "2026-12-23",
   "series": "open-mic",
-  "title": "Open Mic with Patrick Hinds"
+  "title": "TAM Open Mic hosted by Patrick Hinds",
+  "time": "19:00",
+  "ends": "22:30"
  },
  {
   "date": "2026-12-26",
@@ -8246,7 +8287,9 @@
  {
   "date": "2026-12-29",
   "series": "word-of-mouth",
-  "title": "Word of Mouth"
+  "title": "Word of Mouth Fusion Jazz",
+  "time": "20:30",
+  "ends": "22:30"
  },
  {
   "date": "2027-01-03",
