@@ -45,7 +45,7 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
 
   // the import: every food and drink trader at MM Elephant & Castle, all drafts, menus included
   const all = app.ctx.food.all();
-  assert.equal(all.length, 24);
+  assert.equal(all.length, 23);
   assert.ok(!all.some((v) => /beershack|cocktail|wine|german-kraft/.test(v.slug)), 'no bars: TAM runs the bar');
   assert.ok(all.every((v) => v.menu.every((m) => !/drink|beer|cocktail|spirit|soft/i.test(m.section))), 'no drinks on menus');
   assert.ok(all.every((v) => v.status === 'draft'));
@@ -66,7 +66,7 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.match(prev.body, /Preview: this listing is <b>draft<\/b>/);
   assert.equal((await call('/api/food/manage')).status, 401);
   const M = await call('/api/food/manage', { headers: staff });
-  assert.equal(M.body.vendors.length, 24);
+  assert.equal(M.body.vendors.length, 23);
 
   // approve: live
   assert.equal((await call('/api/food/manage/vendors/hot-chick', { method: 'POST', headers: staff, body: { action: 'approve' } })).status, 200);
@@ -103,7 +103,7 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.match(drinks.body.error, /food only/);
   // Vivian's list to ask in person
   const visit = (await call('/api/food/manage', { headers: staff })).body.vendors.filter((v) => v.check === 'visit').map((v) => v.slug);
-  assert.ok(visit.includes('hot-chick') && visit.includes('badiani') && visit.length === 16, visit.join());
+  assert.ok(visit.includes('hot-chick') && !visit.includes('badiani') && visit.length === 14, visit.join());
   // a profile update waits for TAM; contact details are refused
   const v0 = me.body.vendors[0];
   assert.equal((await call('/api/food/me/hot-chick', { method: 'POST', cookie, body: { ...v0, description: 'Call 020 7946 0000 now' } })).status, 400);

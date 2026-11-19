@@ -251,148 +251,6 @@
    ]
   },
   {
-   "slug": "badiani",
-   "name": "Badiani",
-   "tagline": "Italian Dessert, Gelato & Coffee",
-   "category": "dessert",
-   "description": "Born in Florence in 1932, Badiani is one of the most prestigious gelato producers in the world. From its origins in the home of gelato, Badiani expanded to the UK in 2016 and now operates over ten stores across London and Brighton. In 2021, the brand opened new locations in Barcelona and Malaga as part of an ambitious expansion plan in the Iberian market. In 2024, Badiani opened in France within the world-famous Carrousel du Louvre. Badiani’s mission is to bring joy to consumers of all ages through the taste of historical artisan gelato, always made to the highest standards of quality and sustainability. The brand’s vision is to become the finest gelato brand in the world and inspire people with the flavour of freshly made artisan products",
-   "dietary": [
-    "vegetarian",
-    "vegan",
-    "halal"
-   ],
-   "instagram": "badiani1932",
-   "website": "",
-   "menuLinks": [
-    "https://mercatometropolitano.com/wp-content/uploads/2025/08/no-price-19.02.26-80x110-BADIANI-MENU.pdf",
-    "https://mercatometropolitano.com/wp-content/uploads/2025/03/BADIANI-DRINKS-MENU.pdf"
-   ],
-   "photo": "/img/vendors/badiani.jpg",
-   "alsoAt": [
-    "Wood Wharf",
-    "Mayfair"
-   ],
-   "source": "https://mercatometropolitano.com/traders/badiani/",
-   "mmSlug": "badiani",
-   "menu": [
-    {
-     "id": "badiani-1",
-     "section": "Cones & Cups",
-     "name": "Piccolo",
-     "description": "1 flavour",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-2",
-     "section": "Cones & Cups",
-     "name": "Medio",
-     "description": "Up to 2 flavours",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-3",
-     "section": "Cones & Cups",
-     "name": "Grande",
-     "description": "Up to 3 flavours",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-4",
-     "section": "Cones & Cups",
-     "name": "Gluten free cone",
-     "description": "Up to 2 flavours",
-     "price": null,
-     "dietary": [
-      "gluten-free"
-     ]
-    },
-    {
-     "id": "badiani-5",
-     "section": "Cones & Cups",
-     "name": "Choco cone",
-     "description": "Up to 2 flavours",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-6",
-     "section": "Cones & Cups",
-     "name": "Add a mini cone",
-     "description": "",
-     "price": 120,
-     "dietary": []
-    },
-    {
-     "id": "badiani-7",
-     "section": "Fresh Crêpes",
-     "name": "Signature crêpe",
-     "description": "Crêpe with a sauce of choice and a scoop of Buontalenti",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-8",
-     "section": "Fresh Crêpes",
-     "name": "Buontalenti crêpe",
-     "description": "Plain crêpe with a scoop of Buontalenti",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-9",
-     "section": "Fresh Crêpes",
-     "name": "Sauce crêpe",
-     "description": "Crêpe with a sauce of choice",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-10",
-     "section": "Take Me Home",
-     "name": "Piccolo 500ml",
-     "description": "",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-11",
-     "section": "Take Me Home",
-     "name": "Medio 750ml",
-     "description": "",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-12",
-     "section": "Take Me Home",
-     "name": "Grande 1000ml",
-     "description": "",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-13",
-     "section": "Frozen Treats",
-     "name": "Gelato Croissant",
-     "description": "Your favourite gelato + one sauce in a fresh croissant",
-     "price": null,
-     "dietary": []
-    },
-    {
-     "id": "badiani-14",
-     "section": "Frozen Treats",
-     "name": "Gelato Burger",
-     "description": "Your favourite gelato + one sauce, toasted in a brioche bun",
-     "price": null,
-     "dietary": []
-    }
-   ],
-   "menuNotes": "Gelato/food menu is a 'no-price' edition; only the drinks menu has prices"
-  },
-  {
    "slug": "bebek-baklava",
    "name": "Bebek Baklava",
    "tagline": "Baklava, Borek, Kunefe",
@@ -1175,189 +1033,6 @@
    ]
   },
   {
-   "slug": "farmhouse-kebabs",
-   "name": "Farmhouse Kebabs",
-   "tagline": "Turkish. BBQ. Kebabs",
-   "category": "food",
-   "description": "Farmhouse Kebabs was awarded Best Kebab Restaurant in South and East London by the British Kebab Awards. The eatery specialises in a variety of hearty wraps and sides, with the Chicken Wrap and Lamb Wrap among its most popular dishes, often enjoyed alongside Chips or Cheesy Chips. Farmhouse Kebabs also offers a selection of salads, including build-your-own Chicken or Lamb Salad Bowls, as well as diverse sides such as Halloumi Fries and Olives.",
-   "dietary": [
-    "vegetarian",
-    "vegan",
-    "halal"
-   ],
-   "instagram": "farmhouse_kebab",
-   "website": "https://farmhousekebab.com/",
-   "menuLinks": [
-    "https://mercatometropolitano.com/wp-content/uploads/2025/03/farm_house_menu_compressed.pdf"
-   ],
-   "photo": "/img/vendors/farm-house.jpg",
-   "alsoAt": [],
-   "source": "https://mercatometropolitano.com/traders/farm-house/",
-   "mmSlug": "farm-house",
-   "menu": [
-    {
-     "id": "farmhouse-kebabs-1",
-     "section": "Wraps",
-     "name": "Chicken wrap",
-     "description": "With chilli & garlic sauce, fresh salad",
-     "price": 1195,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-2",
-     "section": "Wraps",
-     "name": "Lamb shish wrap",
-     "description": "",
-     "price": 1395,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-3",
-     "section": "Wraps",
-     "name": "Chicken shish wrap",
-     "description": "",
-     "price": 1295,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-4",
-     "section": "Wraps",
-     "name": "Mix wrap",
-     "description": "",
-     "price": 1495,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-5",
-     "section": "Wraps",
-     "name": "Adana kofte wrap",
-     "description": "",
-     "price": 1195,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-6",
-     "section": "Wraps",
-     "name": "Halloumi wrap",
-     "description": "",
-     "price": 1095,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-7",
-     "section": "Wraps",
-     "name": "Falafel wrap",
-     "description": "",
-     "price": 995,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-8",
-     "section": "Plates",
-     "name": "Chicken doner",
-     "description": "With bread, bulgur rice, salad & sauces",
-     "price": 1395,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-9",
-     "section": "Plates",
-     "name": "Chicken kebab",
-     "description": "Chicken cubes in yoghurt & red pepper paste",
-     "price": 1495,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-10",
-     "section": "Plates",
-     "name": "Lamb kebab",
-     "description": "",
-     "price": 1575,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-11",
-     "section": "Plates",
-     "name": "Adana kebab",
-     "description": "Minced lamb with red peppers & parsley",
-     "price": 1295,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-12",
-     "section": "Plates",
-     "name": "Mixed kebab",
-     "description": "Chicken shish, lamb shish, chicken wings",
-     "price": 1650,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-13",
-     "section": "Plates",
-     "name": "Chicken wings (8pcs)",
-     "description": "",
-     "price": 1095,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-14",
-     "section": "Plates",
-     "name": "Turkish combo kebab",
-     "description": "Chicken shish, lamb shish, adana kofte, wings, chicken doner",
-     "price": 3495,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-15",
-     "section": "Sides",
-     "name": "Rice",
-     "description": "",
-     "price": 350,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-16",
-     "section": "Sides",
-     "name": "Chips",
-     "description": "",
-     "price": 395,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-17",
-     "section": "Sides",
-     "name": "Halloumi fries",
-     "description": "",
-     "price": 595,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-18",
-     "section": "Sides",
-     "name": "Falafel fries",
-     "description": "",
-     "price": 595,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-19",
-     "section": "Sides",
-     "name": "Side salad",
-     "description": "",
-     "price": 395,
-     "dietary": []
-    },
-    {
-     "id": "farmhouse-kebabs-24",
-     "section": "Lunch Deal",
-     "name": "Falafel wrap or chicken wings (Mon-Fri 12-5pm)",
-     "description": "",
-     "price": 500,
-     "dietary": []
-    }
-   ]
-  },
-  {
    "slug": "fresco-pizzeria-napoletana",
    "name": "Fresco Pizzeria Napoletana",
    "tagline": "Neapolitan Pizza",
@@ -1620,6 +1295,117 @@
     }
    ],
    "menuNotes": "Menus are 'no-price' editions: pizza prices not printed; only extras/dips priced (one variant lists buffalo swap +£4.50). Margherita/Ortolana can be made vegan"
+  },
+  {
+   "slug": "frico-very-good",
+   "name": "Frico Very Good",
+   "tagline": "Frico, Friulian savoury cheese and potato pancakes, and an Italian deli",
+   "category": "food",
+   "description": "Frico Very Good brings some of the best things Friuli Venezia Giulia has to offer. The star is frico: golden, crispy, built on Montasio cheese, potato and onion. It’s been around since the 15th century, it’s made fresh to order and it’s built for sharing, piled with the good stuff, like San Daniele prosciutto with fresh figs, toasted walnuts and honey. Behind the counter there’s much more: prosciutto and salame sliced to order, young and aged Montasio, and gubana to finish.",
+   "dietary": [
+    "vegetarian"
+   ],
+   "instagram": "",
+   "website": "",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2026/10/Frico_Front_Menu_Mayfair_A3-1.pdf"
+   ],
+   "photo": "/img/vendors/frico-very-good.jpg",
+   "alsoAt": [
+    "Mayfair"
+   ],
+   "source": "https://mercatometropolitano.com/traders/frico-very-good-deli/",
+   "mmSlug": "frico-very-good-deli",
+   "runBy": "Mercato Metropolitano",
+   "menu": [
+    {
+     "id": "frico-very-good-1",
+     "section": "Sandwiches",
+     "name": "Deli Sandwiches",
+     "description": "Filled with salumi and cheese from the counter: ask for today's selection",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-2",
+     "section": "Sandwiches",
+     "name": "Vegetarian Deli Sandwiches",
+     "description": "Today's meat-free fillings, made fresh in the deli",
+     "price": 950,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "frico-very-good-3",
+     "section": "Sandwiches",
+     "name": "Smoked Salmon Focaccia",
+     "description": "Smoked salmon on soft, olive oil-rich focaccia",
+     "price": 1250,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-4",
+     "section": "Cicchetti",
+     "name": "Cicchetti",
+     "description": "A single bite on bread, topped with whatever the counter has today",
+     "price": 325,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-5",
+     "section": "Cicchetti",
+     "name": "Grissini con San Daniele",
+     "description": "Crisp Macoritti grissini wrapped in paper-thin San Daniele",
+     "price": 325,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-6",
+     "section": "Antipasti",
+     "name": "The Antipasti Board",
+     "description": "San Daniele, prosciutto cotto and speck with Montasio, giardiniera and grissini. Built for sharing",
+     "price": 2600,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-7",
+     "section": "Antipasti",
+     "name": "San Daniele Prosciutto (per 100g)",
+     "description": "Aged 20–24 months, sliced to order, with Macoritti grissini",
+     "price": 1850,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-8",
+     "section": "Antipasti",
+     "name": "Salame Friulano (per 100g)",
+     "description": "Coarse-cut pork and black pepper, sliced to order",
+     "price": 1050,
+     "dietary": []
+    },
+    {
+     "id": "frico-very-good-9",
+     "section": "Antipasti",
+     "name": "Montasio Mezzano (per 100g)",
+     "description": "Semi-aged mountain cheese of Friuli with truffle honey",
+     "price": 850,
+     "dietary": [
+      "vegetarian"
+     ]
+    },
+    {
+     "id": "frico-very-good-10",
+     "section": "Dolci",
+     "name": "Gubanetta",
+     "description": "A little gubana: spiral sweet bread with walnuts, raisins and pine nuts, soaked with grappa syrup",
+     "price": 550,
+     "dietary": [
+      "vegetarian"
+     ]
+    }
+   ],
+   "menuNotes": "From the Mayfair deli menu (Oct 2026); frico prices not printed, to confirm with Tom."
   },
   {
    "slug": "hermanos-taco-house",
@@ -2167,6 +1953,189 @@
     }
    ],
    "menuNotes": "Halal certified (badge); leaf icon = vegan"
+  },
+  {
+   "slug": "farmhouse-kebabs",
+   "name": "Kebab Kitchen",
+   "tagline": "Turkish. BBQ. Kebabs",
+   "category": "food",
+   "description": "Kebab Kitchen (formerly Farmhouse Kebabs) was awarded Best Kebab Restaurant in South and East London by the British Kebab Awards. The eatery specialises in a variety of hearty wraps and sides, with the Chicken Wrap and Lamb Wrap among its most popular dishes, often enjoyed alongside Chips or Cheesy Chips. Farmhouse Kebabs also offers a selection of salads, including build-your-own Chicken or Lamb Salad Bowls, as well as diverse sides such as Halloumi Fries and Olives.",
+   "dietary": [
+    "vegetarian",
+    "vegan",
+    "halal"
+   ],
+   "instagram": "farmhouse_kebab",
+   "website": "https://farmhousekebab.com/",
+   "menuLinks": [
+    "https://mercatometropolitano.com/wp-content/uploads/2025/03/farm_house_menu_compressed.pdf"
+   ],
+   "photo": "/img/vendors/farm-house.jpg",
+   "alsoAt": [],
+   "source": "https://mercatometropolitano.com/traders/farm-house/",
+   "mmSlug": "farm-house",
+   "menu": [
+    {
+     "id": "farmhouse-kebabs-1",
+     "section": "Wraps",
+     "name": "Chicken wrap",
+     "description": "With chilli & garlic sauce, fresh salad",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-2",
+     "section": "Wraps",
+     "name": "Lamb shish wrap",
+     "description": "",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-3",
+     "section": "Wraps",
+     "name": "Chicken shish wrap",
+     "description": "",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-4",
+     "section": "Wraps",
+     "name": "Mix wrap",
+     "description": "",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-5",
+     "section": "Wraps",
+     "name": "Adana kofte wrap",
+     "description": "",
+     "price": 1195,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-6",
+     "section": "Wraps",
+     "name": "Halloumi wrap",
+     "description": "",
+     "price": 1095,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-7",
+     "section": "Wraps",
+     "name": "Falafel wrap",
+     "description": "",
+     "price": 995,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-8",
+     "section": "Plates",
+     "name": "Chicken doner",
+     "description": "With bread, bulgur rice, salad & sauces",
+     "price": 1395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-9",
+     "section": "Plates",
+     "name": "Chicken kebab",
+     "description": "Chicken cubes in yoghurt & red pepper paste",
+     "price": 1495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-10",
+     "section": "Plates",
+     "name": "Lamb kebab",
+     "description": "",
+     "price": 1575,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-11",
+     "section": "Plates",
+     "name": "Adana kebab",
+     "description": "Minced lamb with red peppers & parsley",
+     "price": 1295,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-12",
+     "section": "Plates",
+     "name": "Mixed kebab",
+     "description": "Chicken shish, lamb shish, chicken wings",
+     "price": 1650,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-13",
+     "section": "Plates",
+     "name": "Chicken wings (8pcs)",
+     "description": "",
+     "price": 1095,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-14",
+     "section": "Plates",
+     "name": "Turkish combo kebab",
+     "description": "Chicken shish, lamb shish, adana kofte, wings, chicken doner",
+     "price": 3495,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-15",
+     "section": "Sides",
+     "name": "Rice",
+     "description": "",
+     "price": 350,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-16",
+     "section": "Sides",
+     "name": "Chips",
+     "description": "",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-17",
+     "section": "Sides",
+     "name": "Halloumi fries",
+     "description": "",
+     "price": 595,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-18",
+     "section": "Sides",
+     "name": "Falafel fries",
+     "description": "",
+     "price": 595,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-19",
+     "section": "Sides",
+     "name": "Side salad",
+     "description": "",
+     "price": 395,
+     "dietary": []
+    },
+    {
+     "id": "farmhouse-kebabs-24",
+     "section": "Lunch Deal",
+     "name": "Falafel wrap or chicken wings (Mon-Fri 12-5pm)",
+     "description": "",
+     "price": 500,
+     "dietary": []
+    }
+   ]
   },
   {
    "slug": "korean-green-choy",
@@ -3388,234 +3357,6 @@
      ]
     }
    ]
-  },
-  {
-   "slug": "the-italian-corner",
-   "name": "The Italian Corner",
-   "tagline": "Pizza by the slice, focaccia, handmade pasta, crêpes and Badiani gelato",
-   "category": "food",
-   "description": "The Italian Corner is your go-to spot for authentic Italian flavours, offering pizza by the slice, focaccia, handmade pasta, crêpes and artisanal Badiani gelato, all in one cosy, vibrant space. Pizza, focaccia and pasta are served during the market’s opening hours.",
-   "dietary": [
-    "vegetarian",
-    "vegan"
-   ],
-   "instagram": "",
-   "website": "",
-   "menuLinks": [
-    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-pizza-1.pdf",
-    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-pasta.pdf",
-    "https://mercatometropolitano.com/wp-content/uploads/2026/02/badiani-menu-ec.pdf",
-    "https://mercatometropolitano.com/wp-content/uploads/2026/02/menus-ec-bar3.pdf"
-   ],
-   "photo": "/img/vendors/the-italian-corner.jpg",
-   "alsoAt": [],
-   "source": "https://mercatometropolitano.com/traders/the-italian-corner/",
-   "mmSlug": "the-italian-corner",
-   "menu": [
-    {
-     "id": "the-italian-corner-1",
-     "section": "Pizza by the slice",
-     "name": "Marinara",
-     "description": "Tomato, parsley, spicy oil",
-     "price": 500,
-     "dietary": [
-      "vegetarian"
-     ]
-    },
-    {
-     "id": "the-italian-corner-2",
-     "section": "Pizza by the slice",
-     "name": "Margherita",
-     "description": "",
-     "price": 600,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-3",
-     "section": "Pizza by the slice",
-     "name": "Parma ham",
-     "description": "",
-     "price": 900,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-4",
-     "section": "Pizza by the slice",
-     "name": "Peppers & onions",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-5",
-     "section": "Pizza by the slice",
-     "name": "Sausage & friarielli",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-6",
-     "section": "Pizza by the slice",
-     "name": "Spicy salame",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-7",
-     "section": "Focaccia",
-     "name": "Bari",
-     "description": "Tuna, mayo, corn, rocket",
-     "price": 800,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-8",
-     "section": "Focaccia",
-     "name": "Bologna",
-     "description": "Mortadella, bufala",
-     "price": 950,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-9",
-     "section": "Focaccia",
-     "name": "Genova",
-     "description": "Pesto, bufala, sundried tomatoes",
-     "price": 800,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-10",
-     "section": "Focaccia",
-     "name": "Focaccia Parma",
-     "description": "",
-     "price": 1100,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-11",
-     "section": "Focaccia",
-     "name": "Reggio Calabria",
-     "description": "Nduja, bufala, aubergine cream",
-     "price": 1100,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-12",
-     "section": "Focaccia",
-     "name": "Roma",
-     "description": "Salame & pecorino",
-     "price": 850,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-13",
-     "section": "Pasta",
-     "name": "Pici cacio e pepe",
-     "description": "",
-     "price": 1260,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-14",
-     "section": "Pasta",
-     "name": "Tagliatelle bolognese",
-     "description": "",
-     "price": 1200,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-15",
-     "section": "Pasta",
-     "name": "Rigatoni carbonara",
-     "description": "",
-     "price": 1190,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-16",
-     "section": "Pasta",
-     "name": "Lunch deal: gnocchi al pomodoro",
-     "description": "",
-     "price": 650,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-17",
-     "section": "Crêpes",
-     "name": "Signature crêpe",
-     "description": "",
-     "price": 790,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-18",
-     "section": "Crêpes",
-     "name": "Buontalenti crêpe",
-     "description": "",
-     "price": 590,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-19",
-     "section": "Crêpes",
-     "name": "Sauce crêpe",
-     "description": "",
-     "price": 690,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-20",
-     "section": "Gelato",
-     "name": "Piccolo box (500ml)",
-     "description": "",
-     "price": 2000,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-21",
-     "section": "Gelato",
-     "name": "Medio box (750ml)",
-     "description": "",
-     "price": 2500,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-22",
-     "section": "Gelato",
-     "name": "Grande box (1000ml)",
-     "description": "",
-     "price": 3000,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-23",
-     "section": "Gelato",
-     "name": "Gelato burger",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-24",
-     "section": "Gelato",
-     "name": "Gelato croissant",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    },
-    {
-     "id": "the-italian-corner-25",
-     "section": "Gelato",
-     "name": "Gelato shake",
-     "description": "",
-     "price": 750,
-     "dietary": []
-    }
-   ],
-   "menuNotes": "Combined pizza, pasta, Badiani gelato and bar menus; capped ~40"
   },
   {
    "slug": "twisted-london",
