@@ -86,7 +86,8 @@ export function configFrom(env = process.env) {
 
 export async function createApp({ env = process.env, now = () => Date.now(), contentDir } = {}) {
   const cfg = configFrom(env);
-  const content = loadContent(contentDir);
+  // FESTIVAL_HOME_SALES=on (live tam.tv): a festival with its own site (christmas.tam.tv) sells only there
+  const content = loadContent(contentDir, { sellAtHome: env.FESTIVAL_HOME_SALES === 'on' });
   const store = await openStore(cfg.dataDir);
   if (!store.db.meta.secret) { store.db.meta.secret = crypto.randomBytes(32).toString('hex'); await store.save(); }
   cfg.siteUrl = cfg.siteUrl || content.site.url || 'http://localhost:3000';

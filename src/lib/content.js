@@ -45,7 +45,7 @@ function readJson(dir, file, fallback) {
   try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { throw new Error(`content/${file}: ${e.message}`); }
 }
 
-export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'content')) {
+export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'content'), { sellAtHome = false } = {}) {
   const problems = [];
   const check = (ok, msg) => { if (!ok) problems.push(msg); };
 
@@ -136,7 +136,18 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
     const ends = e.ends || (f && f.dates && f.dates.ends) || '23:00';
     const endDate = ends < doors ? addDay(date) : date;
     const label = e.label || (f && (f.nightLabels || {})[date]) || '';
-    const sale = f ? festivalSale(f, date, e) : standaloneSale(e);
+    let sale = f ? festivalSale(f, date, e) : standaloneSale(e);
+    // A festival with a home of its own (Christmas: christmas.tam.tv, which takes card payment) sells there, so
+    // tam.tv never takes a second, unpaid booking for the same night (Vivian, 19 Nov: "the booking simply
+    // reserves a ticket, rather than taking payment straight away").
+    let sellsAt = '', sellsFrom = '';
+    if (sellAtHome && f && f.canonical && f.canonical.host && sale && !e.url) {
+      const prices = sale.mode === 'own' ? sale.tickets.map((t) => t.price) : sale.mode === 'schedule' ? sale.tiers.map((t) => t.price) : [sale.price];
+      const low = Math.min(...prices.filter((x) => Number.isFinite(x)));
+      sellsFrom = Number.isFinite(low) ? `${prices.length > 1 ? 'from ' : ''}£${low % 100 ? (low / 100).toFixed(2) : low / 100}` : '';
+      sellsAt = `${f.canonical.host}${(f.canonical.paths || {})[`/events/${e.slug}`] || `/?night=${date}#tickets`}`;
+      sale = null;
+    }
     return {
       slug: e.slug, date, ...dateParts(date),
       title: e.title || label || (f ? f.name : 'TAM'),
@@ -148,8 +159,8 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       summary: e.summary || '', schedule: e.schedule || [], artists: e.artists || [],
       image: e.image || (f && f.og) || '/img/og.jpg',
       stories: e.stories || null, collection: e.collection || null,
-      handmade: Boolean(e.title), url: e.url || '', sale,
-      ...(e.priceText ? { priceText: e.priceText } : {}), ...(/^https:\/\//.test(e.canonical || '') ? { canonical: e.canonical } : {}),
+      handmade: Boolean(e.title), url: e.url || sellsAt, sale,
+      ...(e.priceText || sellsFrom ? { priceText: e.priceText || sellsFrom } : {}), ...(/^https:\/\//.test(e.canonical || '') ? { canonical: e.canonical } : {}),
     };
   }
 
