@@ -202,4 +202,16 @@ test('food guide: drafts until approved, claims, profile approval, outreach, pre
   assert.doesNotMatch(pub, /sam@hotchick|hello@molo|@x\.test|duck\.test/);
   for (const p of ['/food', '/food/the-duck-shed', '/api/food/preorder']) assert.doesNotMatch((await call(p)).body.toString?.() || JSON.stringify((await call(p)).body), /duck\.test/);
   assert.match((await call('/api/food/manage/orders.csv', { headers: staff })).body, /Ana/);
+
+  // the pitch on the web: the owners' presentation (public, not indexed) and the team's notes and questions
+  const pz = await call('/food/partners');
+  assert.equal(pz.status, 200);
+  assert.equal((pz.body.match(/class="pz-slide/g) || []).length, 10);
+  assert.match(pz.body, /noindex/);
+  assert.match((await call('/food/manage/pitch')).body, /Trader pitch/);
+  assert.equal((await call('/api/food/manage/questions', { method: 'POST', body: { text: 'x' } })).status, 401);
+  const q = await call('/api/food/manage/questions', { method: 'POST', headers: staff, body: { about: 'no-shows', text: 'Should we take a deposit?' } });
+  assert.equal(q.status, 201);
+  await call(`/api/food/manage/questions/${q.body.question.id}`, { method: 'POST', headers: staff, body: { answer: 'Not for Christmas.' } });
+  assert.equal((await call('/api/food/manage/questions', { headers: staff })).body.questions[0].status, 'answered');
 });

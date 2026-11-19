@@ -31,6 +31,7 @@ import { jomDomain } from './domain/jom.js';
 import * as jomPages from './views/jom.js';
 import { vendorsDomain } from './domain/vendors.js';
 import * as foodPages from './views/food.js';
+import * as foodPitch from './views/food-pitch.js';
 import { liveDomain } from './domain/live.js';
 import * as livePages from './views/live.js';
 import * as clubPages from './views/club.js';
@@ -168,6 +169,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
+  foodPitch.routes(site, ctx); // /food/partners (owners' presentation) and /food/manage/pitch (the team's notes): before /food/:slug
   foodPages.routes(site, ctx, ctx.food); // /food: the traders, pre-orders, /food/me and /food/manage
   jomPages.routes(site, ctx, ctx.jom); // /jom (and jom.tam.tv): JOM acts' permanent pages
   livePages.routes(site, ctx, onNow, qr); // /screen for the projector, /checkin for phones
