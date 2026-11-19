@@ -1774,3 +1774,8 @@ body.pz .foot, body.pz .cl-strip { display: none; }
 .pz-qa dt { font-weight: 700; margin-top: 14px; } .pz-qa dd { margin: 4px 0 0; color: var(--ink-dim); line-height: 1.5; }
 .pz-q { border-top: 1px solid var(--line); padding: 12px 0; } .pz-q.done { opacity: .6; } .pz-a { border-left: 3px solid var(--gold); padding-left: 10px; }
 .pz-answer textarea { width: 100%; }
+/* The header: the TAM.TV mark never shrinks under the menu (Vivian, 18 Nov: "TAM.TV" was overlapping "What's on").
+   The menu tightens up first, then drops the word mark, before it turns into the Menu button at 920px. */
+.top .brand { flex: none; white-space: nowrap; }
+@media (min-width: 921px) and (max-width: 1500px) { .nav { gap: 14px; } .nav a { font-size: 14px; } .top .wrap { gap: 14px; } }
+@media (min-width: 921px) and (max-width: 1080px) { .top .brand span { display: none; } }
