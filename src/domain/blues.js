@@ -30,7 +30,7 @@ export const HOST = { name: 'MAZZA', artist: 'mazza' }; // hosts every Saturday;
 const hash = (t) => crypto.createHash('sha256').update(t).digest('hex');
 const addDays = (d, n) => new Date(Date.parse(`${d}T12:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
 const isSat = (d) => new Date(`${d}T12:00:00Z`).getUTCDay() === 6;
-const isJam = (n) => /blues jam/i.test(`${n.title} ${n.label || ''}`) || n.series === 'great-british-blues-jam';
+const isJam = (n) => /great british blues jam/i.test(`${n.title} ${n.label || ''}`) || n.series === 'great-british-blues-jam'; // not another night's "Blues Jam & Open Mic"
 
 export function bluesDomain(ctx) {
   const { db, save, content: c, cfg } = ctx;

@@ -296,7 +296,7 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       const host = f && festNightOn.get(`${f.slug}|${e.date}`);
       if (host) {
         if (host.handmade && !e.series) continue; // the headline night already says who's on
-        host.programme = [...(host.programme || []), { title: titleOf(e), host: e.host || '', series: e.series || null }];
+        host.programme = [...(host.programme || []), { title: titleOf(e), host: e.host || '', series: e.series || null, time: e.time || (SERIES_TIMES[e.series] || [])[0] || '', ends: e.ends || (SERIES_TIMES[e.series] || [])[1] || '' }];
         continue;
       }
       const [doors, ends] = SERIES_TIMES[e.series] || [null, null];
@@ -316,6 +316,17 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       n.programme.sort((a, b) => t(a).localeCompare(t(b)));
       const names = n.programme.map((x) => x.title);
       n.label = n.label || names.join(' + ');
+      // the night runs from its first act to its last (Vivian's times for the Christmas programme)
+      const timed = n.programme.filter((x) => x.time && /^\d\d:\d\d$/.test(x.time));
+      if (timed.length && n.festival && !n.handmade) {
+        const doors = timed.map((x) => x.time).sort()[0];
+        const mins = (x) => { const [h, m] = x.ends.split(':').map(Number); return h * 60 + m + (x.ends < x.time ? 1440 : 0); }; // past midnight counts as later
+        const last = timed.filter((x) => /^\d\d:\d\d$/.test(x.ends || '')).sort((a, b) => mins(a) - mins(b)).pop();
+        const ends = last ? last.ends : n.ends;
+        n.doors = doors; n.ends = ends;
+        n.start = londonToUtc(n.date, doors);
+        n.end = londonToUtc(ends < doors ? addDay(n.date) : n.date, ends);
+      }
       n.summary = `Part of ${festivalBy.get(n.festival).name}: ${names.join(', then ')}.`;
     }
     out.sort((a, b) => a.start.localeCompare(b.start));
