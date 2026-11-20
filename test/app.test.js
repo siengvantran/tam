@@ -477,3 +477,22 @@ test('The home page goes Christmas from 1 November until the festival ends', asy
     await s.close();
   } finally { clock.t = keep; }
 });
+
+test('FESTIVAL_HOME_SALES=on: Christmas nights sell on christmas.tam.tv, not as unpaid bookings on tam.tv', async () => {
+  const { loadContent } = await import('../src/lib/content.js');
+  const c = loadContent(undefined, { sellAtHome: true });
+  const xmas = c.nightsFor('best-christmas-ever').filter((n) => n.date >= '2026-12-04'); // the festival's own dates (1 and 2 Dec are TAM's regular nights)
+  assert.ok(xmas.length > 10);
+  for (const n of xmas) {
+    assert.equal(n.sale, null, n.slug);
+    assert.match(n.url, /^https:\/\/christmas\.tam\.tv\//, n.slug);
+  }
+  const n12 = xmas.find((n) => n.date === '2026-12-12');
+  assert.equal(n12.url, 'https://christmas.tam.tv/?night=2026-12-12#tickets');
+  assert.ok(n12.priceText);
+  // other nights keep TAM's own box office
+  const off = loadContent();
+  assert.ok(off.nightsFor('best-christmas-ever').some((n) => n.sale));
+  // the market is closed 24 to 28 December: no nights then
+  assert.ok(!c.upcoming('2026-11-19').some((n) => n.date >= '2026-12-24' && n.date <= '2026-12-28'));
+});

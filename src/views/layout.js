@@ -222,7 +222,7 @@ export function festivalCalendar(ctx, f) {
       const iso = `${ym}-${String(d).padStart(2, '0')}`;
       const n = byDate.get(iso);
       const p = dateParts(iso);
-      if (n) {
+      if (n && !closed.has(iso)) { // a closed day stays closed, even if a regular night is in the schedule
         const cls = ['on', (f.pricing.special || []).includes(iso) || n.handmade ? 'edge' : '', p.dow === 0 || p.dow >= 5 ? 'wk' : ''].filter(Boolean).join(' ');
         cells.push(html`<td class="${cls}"><a href="/events/${n.slug}" data-night="${n.slug}" aria-label="${p.weekday} ${d} ${p.month}: ${n.label || 'festival night'}">${d}${n.handmade ? '★' : ''}</a></td>`);
       } else {
