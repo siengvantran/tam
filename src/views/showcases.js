@@ -29,7 +29,20 @@ const shardTree = (cls = '') => html`<div class="sc-shard ${cls}" aria-hidden="t
 // show's): one slide per act, a live clip where there is one; acts still to be
 // named are a mystery slide. Tapping an act opens its own page.
 // base: where the tree is (empty on the showcases page itself; '/sunday-showcases' elsewhere, e.g. the home page).
-export function lineupCarousel(l, { base = '' } = {}) {
+// Share posters for a night (content/showcases.json "posters": { date: { post, story, wide } }).
+export const postersFor = (ctx, l) => (l && ((ctx.content.showcases || {}).posters || {})[l.date]) || null;
+
+function posterBox(p, l) {
+  if (!p) return '';
+  const day = l.when.replace(/ \d{4}$/, '');
+  return html`<div class="sc-poster">
+    <a href="${p.post}" target="_blank" rel="noopener"><img src="${p.post}" alt="Poster: Sunday Showcase, ${day}" width="270" height="338" loading="lazy"></a>
+    <div><b>Share the poster</b><p class="small">Post it, add it to your story, send it to friends.</p>
+    <p class="sc-poster-dl small"><a href="${p.post}" download>Instagram post</a> · <a href="${p.story}" download>Story</a> · <a href="${p.wide}" download>Facebook</a></p>
+    <button type="button" class="btn ghost small" data-share-poster="${p.post}" data-text="Sunday Showcase at TAM, ${day}: new acts, one stage, free entry. Doors ${(l.night && l.night.doors) || ''}." data-url="https://www.tam.tv/sunday-showcases" hidden>Share</button></div></div>`;
+}
+
+export function lineupCarousel(l, { base = '', poster = null } = {}) {
   const named = l.acts.filter((a) => !a.tba);
   if (!named.length) return '';
   const label = (a) => (a.tba ? `Act ${a.n} · to be announced` : `Act ${a.n} · ${a.name}${a.plays ? ` · ${a.plays}` : ''}`);
@@ -43,6 +56,7 @@ export function lineupCarousel(l, { base = '' } = {}) {
       <h2 class="fx-title">${l.when.replace(/ \d{4}$/, '')}</h2>
       <p class="fx-when">${l.count} acts${l.night ? html` · ${l.night.title}${l.night.doors ? html` · doors ${l.night.doors}` : ''}` : ''}</p>
       <p class="fx-lede">${named.length === l.count ? 'Meet every act before the night.' : `${named.length} of ${l.count} acts revealed so far.`} Tap an act to step into their world, invite your friends, and vote them into the Christmas Showcase Special.</p>
+      ${posterBox(poster, l)}
       <div class="ctas">${l.night ? html`<a class="btn fx-btn" href="${l.night.onSale ? `${base || PATH}#book` : l.night.href}">${l.night.onSale ? 'Free tickets' : 'The night'}</a>` : ''}<a class="btn ghost" href="${base}#this-sunday">Unwrap the tree</a>${base ? html`<a class="btn ghost" href="${base}">Play a showcase</a>` : ''}</div>
     </div>
     <div class="fx-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="The acts">
@@ -87,7 +101,7 @@ export function treeSection(l) {
 // The tree shows the next showcase still to come.
 function thisWeek(ctx, showcase) {
   const l = showcase && showcase.next();
-  return l ? html`${lineupCarousel(l)}${treeSection(l)}` : '';
+  return l ? html`${lineupCarousel(l, { poster: postersFor(ctx, l) })}${treeSection(l)}` : '';
 }
 
 // The coming nights for one circuit regular, from everything on the site.
@@ -104,7 +118,7 @@ function page(ctx, showcase) {
   const l = showcase && showcase.next();
   const n = l && l.night && l.night.onSale ? ctx.content.nightBy.get(l.night.slug) : null;
   return layout(ctx, {
-    title: s.title, path: PATH, description: desc, scripts: ['/js/showcases.js', ...(n ? ['/js/festival.js'] : [])], og: '/img/og.jpg',
+    title: s.title, path: PATH, description: desc, scripts: ['/js/showcases.js', ...(n ? ['/js/festival.js'] : [])], og: (postersFor(ctx, l) || {}).wide || '/img/og.jpg',
     ...(n ? { data: { booking: { ...bookingData(ctx, [n], null), preselect: n.slug, via: '' } } } : {}),
     jsonLd: { '@context': 'https://schema.org', '@type': 'EventSeries', name: s.title, description: desc, url: `${ctx.cfg.siteUrl}${PATH}`,
       organizer: { '@type': 'Organization', name: 'TAM, Temple of Art and Music', url: ctx.cfg.siteUrl } },

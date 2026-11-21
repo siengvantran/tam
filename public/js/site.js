@@ -73,3 +73,18 @@ if (follow) {
     } catch (err) { formMessage(follow, err.message); }
   });
 }
+
+// "Share the poster" (Sunday Showcase): share the image itself where the phone allows it, else the link.
+for (const b of document.querySelectorAll('[data-share-poster]')) {
+  if (!navigator.share) continue;
+  b.hidden = false;
+  b.addEventListener('click', async () => {
+    const { text, url } = b.dataset;
+    try {
+      const blob = await (await fetch(b.dataset.sharePoster)).blob();
+      const file = new File([blob], 'tam-sunday-showcase.jpg', { type: blob.type || 'image/jpeg' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: `${text} ${url}` });
+      else await navigator.share({ title: 'Sunday Showcase × TAM', text, url });
+    } catch { /* cancelled */ }
+  });
+}

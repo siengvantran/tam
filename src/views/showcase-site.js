@@ -9,7 +9,7 @@ import { html, raw } from './html.js';
 import { embedHtml } from '../lib/media-posts.js';
 import { html as respond, redirect, send } from '../lib/http.js';
 import { layout, when, nightHref } from './layout.js';
-import { lineupCarousel, showcaseLockup } from './showcases.js';
+import { lineupCarousel, showcaseLockup, postersFor } from './showcases.js';
 
 const embed = (w) => raw(embedHtml(w)); // src/lib/media-posts.js
 
@@ -36,7 +36,7 @@ function home(ctx, showcase) {
   ${l ? html`<p class="ssx-next"><span class="ssx-pill">Next</span> <b>${day}</b> · ${l.count} acts · free entry${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''}</p>` : ''}
   <div class="ctas">${l ? html`<a class="btn ssx-btn" href="${tickets}">Free tickets</a>` : ''}<a class="btn ghost" href="#how">Get on the showcase</a><a class="btn ghost" href="#crew">Join the crew</a></div>
 </div></section>
-${l ? lineupCarousel(l, { base: `${W}/sunday-showcases` }) : ''}
+${l ? lineupCarousel(l, { base: `${W}/sunday-showcases`, poster: postersFor(ctx, l) }) : ''}
 <section class="section ssx-how" id="how"><div class="wrap">
   <div class="head"><div class="label">Play a showcase</div><h2>How to get on the line-up</h2></div>
   <ol class="ssx-steps">${s.steps.map((st, i) => html`<li><span class="ssx-n">${i + 1}</span><h3>${st.title}</h3><p>${st.text}</p></li>`)}</ol>
