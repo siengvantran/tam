@@ -30,7 +30,7 @@ const shardTree = (cls = '') => html`<div class="sc-shard ${cls}" aria-hidden="t
 // named are a mystery slide. Tapping an act opens its own page.
 // base: where the tree is (empty on the showcases page itself; '/sunday-showcases' elsewhere, e.g. the home page).
 // Share posters for a night (content/showcases.json "posters": { date: { post, story, wide } }).
-export const postersFor = (ctx, l) => (l && ((ctx.content.showcases || {}).posters || {})[l.date]) || null;
+export const postersFor = (ctx, l) => { const p = l && ((ctx.content.showcases || {}).posters || {})[l.date]; return p ? { ...p, host: ctx.cfg.showcaseHost } : null; };
 
 function posterBox(p, l) {
   if (!p) return '';
@@ -39,7 +39,7 @@ function posterBox(p, l) {
     <a href="${p.post}" target="_blank" rel="noopener"><img src="${p.post}" alt="Poster: Sunday Showcase, ${day}" width="270" height="338" loading="lazy"></a>
     <div><b>Share the poster</b><p class="small">Post it, add it to your story, send it to friends.</p>
     <p class="sc-poster-dl small"><a href="${p.post}" download>Instagram post</a> · <a href="${p.story}" download>Story</a> · <a href="${p.wide}" download>Facebook</a></p>
-    <button type="button" class="btn ghost small" data-share-poster="${p.post}" data-text="Sunday Showcase at TAM, ${day}: new acts, one stage, free entry. Doors ${(l.night && l.night.doors) || ''}." data-url="https://www.tam.tv/sunday-showcases" hidden>Share</button></div></div>`;
+    <button type="button" class="btn ghost small" data-share-poster="${p.post}" data-text="Sunday Showcase at TAM, ${day}: new acts, one stage, free entry. Doors ${(l.night && l.night.doors) || ''}." data-url="https://${p.host}" hidden>Share</button></div></div>`;
 }
 
 export function lineupCarousel(l, { base = '', poster = null } = {}) {
@@ -239,7 +239,7 @@ ${worldMap(a)}
     </div><p class="small muted" data-share-msg role="status" aria-live="polite"></p>
   </div>
   <figure class="va-cardbox">
-    <div class="va-card" data-card data-name="${a.name}" data-plays="${a.plays || ''}" data-day="${day}" data-doors="${a.on ? `On stage ${a.on}` : l.night && l.night.doors ? `Doors ${l.night.doors}` : ''}" data-act="Act ${a.n}" data-site="${url.replace(/^https?:\/\//, '')}" style="--pic:url('${pics[0] || ''}')">
+    <div class="va-card" data-card data-name="${a.name}" data-plays="${a.plays || ''}" data-day="${day}" data-doors="${a.on ? `On stage ${a.on}` : l.night && l.night.doors ? `Doors ${l.night.doors}` : ''}" data-act="Act ${a.n}" data-site="${ctx.cfg.showcaseHost}" style="--pic:url('${pics[0] || ''}')">
       <div class="va-card-top">${showcaseLockup()}</div>
       <div class="va-card-mid"><b class="va-card-name">${a.name}</b>${a.plays ? html`<span>${a.plays}</span>` : ''}</div>
       <div class="va-card-foot"><div class="va-card-title">${showcaseTitle()}</div><p>${day}${l.night && l.night.doors ? html` · doors ${l.night.doors}` : ''} · Elephant & Castle</p></div>
