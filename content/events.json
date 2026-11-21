@@ -75,19 +75,58 @@
   ]
  },
  {
+  "slug": "best-christmas-ever-2026-12-05",
+  "date": "2026-12-05",
+  "festival": "best-christmas-ever",
+  "title": "The MMC Christmas Shindig",
+  "presenters": "Moonlight Medicine Club",
+  "image": "https://christmas.tam.tv/mmc/band.jpg",
+  "summary": "Moonlight Medicine Club’s annual Christmas Shindig: an eight-piece party band playing floor-fillers from Motown classics to modern pop, rock, soul and funk, with a generous sprinkling of Christmas cheer. Over 18s only: please bring ID.",
+  "doors": "19:00",
+  "ends": "22:30",
+  "tickets": [
+   {
+    "id": "ga",
+    "name": "General Admission",
+    "price": 1500,
+    "blurb": "Entry to the MMC Christmas Shindig. Over 18s only: please bring ID."
+   }
+  ]
+ },
+ {
   "slug": "dana-gillespie-live",
   "date": "2026-12-16",
   "festival": "best-christmas-ever",
   "title": "Dana Gillespie Live",
   "image": "/img/dana/bowie4.jpg",
   "summary": "Dana Gillespie live at TAM: Bowie’s friend, the first London Mary Magdalene and the Queen of the Blues.",
-  "timesTbc": true,
   "artists": [
    "danagillespie",
    "gemma-schito"
   ],
   "stories": "dana-gillespie",
-  "collection": "dana-108"
+  "collection": "dana-108",
+  "doors": "19:00",
+  "ends": "22:30"
+ },
+ {
+  "slug": "best-christmas-ever-2026-12-20",
+  "date": "2026-12-20",
+  "festival": "best-christmas-ever",
+  "title": "World Music Big Band featuring Steve Pretty",
+  "presenters": "World Music Big Band",
+  "image": "https://christmas.tam.tv/wmbb/cover.jpg",
+  "summary": "World Music Big Band, led by Steve Pretty on trumpet with Alison Rayner on bass and Mark Huggett on drums: jazz, African and Latin grooves. Sunday 20 December, 5pm.",
+  "doors": "17:00",
+  "ends": "19:00",
+  "tickets": [
+   {
+    "id": "ga",
+    "name": "Entrance",
+    "price": 500,
+    "blurb": "World Music Big Band featuring Steve Pretty. Sunday 20 December, 5pm."
+   }
+  ]
  },
  {
   "slug": "immersive-creator-huddle-17-2026-11-16",
