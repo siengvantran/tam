@@ -56,7 +56,7 @@ test('every page of the old www.tam.tv still answers', async () => {
   assert.equal((await s.call('/nope')).status, 404);
   const ics = await s.call('/events/big-christmas-hootenanny.ics');
   assert.match(ics.body, /DTSTART:20261204T180000Z/);
-  assert.match((await s.call('/events/dana-gillespie-live.ics')).body, /DTSTART;VALUE=DATE:20261216/);
+  assert.match((await s.call('/events/dana-gillespie-live.ics')).body, /DTSTART:20261216T190000Z/); // 7pm to 10:30pm (Vivian, 19 Nov)
   await s.close();
 });
 
@@ -276,9 +276,12 @@ test('the performance schedule: public nights only, and December belongs to the 
   assert.doesNotMatch(raw, /£|min(imum)? spend|private|booking|hire|deposit|birthday|\bbday\b|\d{6}|rehears/i);
   const c = loadContent();
   for (const n of c.nights.filter((x) => x.date.slice(5, 7) === '12')) assert.equal(n.festival, 'best-christmas-ever', n.slug);
-  const sat = c.nightBy.get('best-christmas-ever-2026-12-05');
+  const sat = c.nightBy.get('best-christmas-ever-2026-12-12');
   assert.deepEqual(sat.programme.map((x) => x.series), ['great-british-blues-jam', 'tam-karaoke']);
   assert.match(sat.label, /Blues Jam/);
+  // the headline nights with their own page on christmas.tam.tv are TAM's own nights here too, with a ★ on the calendar
+  for (const slug of ['big-christmas-hootenanny', 'best-christmas-ever-2026-12-05', 'dana-gillespie-live', 'best-christmas-ever-2026-12-20']) assert.ok(c.nightBy.get(slug).handmade, slug);
+  assert.equal(c.nightBy.get('best-christmas-ever-2026-12-05').title, 'The MMC Christmas Shindig');
   assert.equal(c.nightBy.get('big-christmas-hootenanny').title, 'The Big Christmas Hootenanny'); // headline nights keep their own name
   assert.ok(c.nightBy.get('word-of-mouth-2026-12-01').festival === 'best-christmas-ever');
   assert.ok(c.upcoming('2026-11-02').some((n) => n.series === 'singers-sunday-spot' && n.date.startsWith('2027-')));
@@ -307,7 +310,7 @@ test('search engines: previews are never indexed, and festival pages point to th
   assert.match(page.body, /<link rel="canonical" href="https:\/\/tam\.tv\/">/);
   assert.match((await live.call('/robots.txt', real)).body, /Sitemap: https:\/\/tam\.tv\/sitemap\.xml/);
   // pages that christmas.tam.tv also has: canonical there, no duplicate event listing
-  for (const [here, there] of [['/the-best-christmas-ever', '/'], ['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'],
+  for (const [here, there] of [['/the-best-christmas-ever', '/'], ['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'], ['/events/best-christmas-ever-2026-12-05', '/artist/mmc'],
     ['/collections/dana-108', '/books'], ['/invite/band', '/invite/band'], ['/artists/bakers-dozen', '/artist/band']]) {
     const r = await live.call(here);
     assert.ok(r.body.includes(`<link rel="canonical" href="https://christmas.tam.tv${there}">`), here);
@@ -316,8 +319,8 @@ test('search engines: previews are never indexed, and festival pages point to th
   // TAM's own pages keep their own home and markup
   const dana = await live.call('/artists/danagillespie');
   assert.match(dana.body, /<link rel="canonical" href="https:\/\/tam\.tv\/artists\/danagillespie">/);
-  const night = await live.call('/events/best-christmas-ever-2026-12-05');
-  assert.match(night.body, /<link rel="canonical" href="https:\/\/tam\.tv\/events\/best-christmas-ever-2026-12-05">/);
+  const night = await live.call('/events/best-christmas-ever-2026-12-07');
+  assert.match(night.body, /<link rel="canonical" href="https:\/\/tam\.tv\/events\/best-christmas-ever-2026-12-07">/);
   assert.match(night.body, /application\/ld\+json/);
   const sitemap = (await live.call('/sitemap.xml')).body;
   assert.doesNotMatch(sitemap, /the-best-christmas-ever<|big-christmas-hootenanny<|\/invite\//);
