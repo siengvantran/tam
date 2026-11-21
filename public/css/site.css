@@ -1779,3 +1779,9 @@ body.pz .foot, body.pz .cl-strip { display: none; }
 .top .brand { flex: none; white-space: nowrap; }
 @media (min-width: 921px) and (max-width: 1500px) { .nav { gap: 14px; } .nav a { font-size: 14px; } .top .wrap { gap: 14px; } }
 @media (min-width: 921px) and (max-width: 1080px) { .top .brand span { display: none; } }
+/* Sunday Showcase: share the poster */
+.sc-poster { display: flex; gap: 16px; align-items: center; margin: 18px 0; padding: 12px; border: 1px solid rgba(232,199,122,.4); border-radius: 16px; background: rgba(0,0,0,.28); max-width: 460px; }
+.sc-poster img { width: 108px; height: auto; border-radius: 10px; display: block; }
+.sc-poster b { font-family: var(--f-space); font-size: 22px; letter-spacing: .04em; color: var(--gold, #e8c77a); }
+.sc-poster p { margin: 2px 0 6px; }
+.sc-poster-dl a { color: #d4ff3c; }

@@ -81,5 +81,12 @@
       }
     ],
     "crew": "The Showcase Crew is everyone who loves new music at TAM: fans who come to cheer, and musicians on their way up. Join to hear about each showcase first, who's playing, and how to get on the line-up."
+  },
+  "posters": {
+    "2026-11-22": {
+      "post": "/img/showcases/posters/2026-11-22-post.jpg",
+      "story": "/img/showcases/posters/2026-11-22-story.jpg",
+      "wide": "/img/showcases/posters/2026-11-22-wide.jpg"
+    }
   }
 }

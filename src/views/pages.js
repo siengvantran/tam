@@ -1,7 +1,7 @@
 // Public pages.
 
 import { html, raw } from './html.js';
-import { lineupCarousel } from './showcases.js';
+import { lineupCarousel, postersFor } from './showcases.js';
 import { html as respond, redirect, fail } from '../lib/http.js';
 import { pounds } from '../../shared/pricing.js';
 import { longDate, dateParts } from '../lib/content.js';
@@ -207,6 +207,7 @@ function home(ctx, d, req) {
     ...(xm ? { theme: themeOf(xm), festival: xm, scripts: [...featureScripts(xm), '/js/xmas.js'], data: { festival: festivalClient(ctx, xm) } } : {}),
     jsonLd: venueLd(ctx), // address, opening hours (Mondays closed), how to book: for search and AI assistants
     body: html`
+${homeShowcase(ctx)}
 ${xm ? christmasHero(ctx, xm) : ''}
 ${xm ? songSection(ctx, { ...xm, features: { ...xm.features, cards: false } }) : ''}
 <section class="hero home-hero" aria-labelledby="hero-title">
@@ -222,7 +223,6 @@ ${xm ? songSection(ctx, { ...xm, features: { ...xm.features, cards: false } }) :
   <div class="wrap">${pathwayTiles(ctx, p)}${p ? html`<p class="small"><button type="button" class="linkish" data-forget-path>Not you? Choose again</button></p>` : ''}</div>
 </section>
 ${featuredHero(ctx, featuredNow(ctx))}
-${homeShowcase(ctx)}
 ${ticker(c.site.ticker || [])}
 ${sections.map((k) => S[k])}`,
   });
@@ -651,7 +651,7 @@ export function legacyPage(req, res, ctx, p) {
 // This week's Sunday Showcase line-up on the home page: the same carousel as /sunday-showcases.
 function homeShowcase(ctx) {
   const l = ctx.showcase && ctx.showcase.next();
-  return l ? lineupCarousel(l, { base: '/sunday-showcases' }) : '';
+  return l ? lineupCarousel(l, { base: '/sunday-showcases', poster: postersFor(ctx, l) }) : '';
 }
 
 function privacy(ctx) {
