@@ -8,12 +8,13 @@ let last = -1, cur = '', total = 0;
 function floatUp(emoji) {
   const el = document.createElement('span');
   el.className = 'ssc-bubble';
-  el.textContent = emoji;
+  el.innerHTML = '<i></i>'; el.firstChild.textContent = emoji; // the <i> pulses with the music while the bubble rises
+  el.style.animationDuration = `${4.2 - Math.min(1.4, level * 2.5)}s`; // louder music, faster rise
   el.style.left = `${8 + Math.random() * 84}%`;
   el.style.setProperty('--drift', `${(Math.random() - 0.5) * 160}px`);
   el.style.fontSize = `${56 + Math.random() * 56}px`;
   $('#ssc-float').appendChild(el);
-  setTimeout(() => el.remove(), 4200);
+  setTimeout(() => el.remove(), 4300);
 }
 
 function bump(el, to) {
@@ -69,6 +70,7 @@ const NOTE_COLOURS = ['#ff1e1e', '#9b30ff', '#ffe600', '#7a5cff', '#7fd4ff', '#b
 const cv = document.getElementById('ssc-viz');
 const g = cv.getContext('2d');
 const logo = new Image(); logo.src = '/img/tam-logo-640.png';
+const floatBox = document.getElementById('ssc-float');
 let an = null, buf = null, fbuf = null, rate = 48000, level = 0, colour = '#e8c77a', rings = [], lastRing = 0, avg = 0;
 
 function size() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
@@ -127,6 +129,9 @@ function frame(t) {
     g.drawImage(logo, cx - s, cy - s, s * 2, s * 2);
   }
   g.globalAlpha = 1; g.shadowBlur = 0;
+  // the reactions floating up pulse and glow with the same sound
+  floatBox.style.setProperty('--lvl', level.toFixed(3));
+  floatBox.style.setProperty('--col', colour);
 }
 requestAnimationFrame(frame);
 

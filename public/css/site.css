@@ -1829,7 +1829,7 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ssc-lineup b::before { content: counter(a) ' · '; color: #d4ff3c; }
 .ssc-qr.big { margin: 0 auto; display: inline-flex; text-align: left; }
 .ssc-float { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
-.ssc-bubble { position: absolute; bottom: -120px; animation: ssc-up 4.2s ease-out forwards; filter: drop-shadow(0 6px 12px rgba(0,0,0,.5)); }
+.ssc-bubble { position: absolute; bottom: -120px; animation: ssc-up 4.2s ease-out forwards; }
 @keyframes ssc-up { 0% { transform: translate(0, 0) scale(.6); opacity: 0; } 12% { opacity: 1; } 100% { transform: translate(var(--drift), -110vh) scale(1.2); opacity: 0; } }
 .ssc-ctl { position: fixed; right: 1.4vw; bottom: 1.4vh; display: flex; align-items: center; gap: 10px; opacity: .55; color: #fff6e6; text-decoration: none; font-size: 1.4vh; }
 .ssc-ctl img { width: 7vh; height: 7vh; background: #fff; border-radius: 8px; padding: 4px; }
@@ -1847,3 +1847,7 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ssc-mic { position: fixed; left: 1.4vw; bottom: 1.4vh; z-index: 3; font: 600 1.6vh Inter, sans-serif; color: #0b0709; background: #d4ff3c; border: 0; border-radius: 999px; padding: 1vh 1.4vw; cursor: pointer; }
 .ssc-hint { position: fixed; left: 50%; bottom: 2vh; transform: translateX(-50%); z-index: 3; margin: 0; background: rgba(0,0,0,.7); padding: 1vh 1.4vw; border-radius: 999px; font-size: 1.7vh; }
 .ssc-keys { position: fixed; left: 50%; bottom: 1.2vh; transform: translateX(-50%); z-index: 2; margin: 0; font-size: 1.3vh; opacity: .35; }
+/* reactions pulse and glow with the music as they rise */
+.ssc-float { --lvl: 0; --col: #e8c77a; }
+.ssc-bubble i { display: inline-block; font-style: normal; transform: scale(calc(1 + var(--lvl) * .9)); filter: drop-shadow(0 0 calc(8px + var(--lvl) * 50px) var(--col)) drop-shadow(0 6px 12px rgba(0,0,0,.5)); transition: transform .08s linear; animation: ssc-sway 1.6s ease-in-out infinite alternate; }
+@keyframes ssc-sway { from { rotate: -10deg; } to { rotate: 10deg; } }
