@@ -58,7 +58,7 @@ load();
 
 // photos and messages from the audience: straight up by default; staff can switch on "check first"
 const row = (q, buttons) => `<li>${q.kind === 'photo' ? `<img src="${esc(q.src)}" alt="">` : ''}
-  <div class="q-text">${q.kind === 'note' ? `“${esc(q.message)}”<small>${esc(q.name)} · for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}</small>` : `<small>Photo for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}</small>`}</div>${buttons}</li>`;
+  <div class="q-text">${q.kind === 'note' ? `“${esc(q.message)}”<small>${esc(q.name)} · ${q.slug ? `for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}` : 'for everyone'}</small>` : `<small>Photo for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}</small>`}</div>${buttons}</li>`;
 async function queue() {
   if (box.hidden) return;
   try {
@@ -68,7 +68,7 @@ async function queue() {
     $('#ctl-waiting').hidden = !checkFirst && !items.length;
     $('#ctl-qn').textContent = items.length ? `(${items.length})` : '';
     $('#ctl-queue').innerHTML = items.length ? items.map((q) => row(q, `<button class="btn hot small" type="button" data-q="${esc(q.id)}" data-show="1">Show</button><button class="btn ghost small" type="button" data-q="${esc(q.id)}">Hide</button>`)).join('') : '<li class="muted small">Nothing waiting.</li>';
-    $('#ctl-recent').innerHTML = recent.length ? recent.map((q) => row(q, q.kind === 'note' ? `<button class="btn ghost small" type="button" data-q="${esc(q.id)}">Take off the wall</button>` : '')).join('') : '<li class="muted small">Nothing yet.</li>';
+    $('#ctl-recent').innerHTML = recent.length ? recent.map((q) => row(q, q.kind === 'note' && q.slug ? `<button class="btn ghost small" type="button" data-q="${esc(q.id)}">Take off the wall</button>` : '')).join('') : '<li class="muted small">Nothing yet.</li>';
     $$('[data-q]', box).forEach((b) => { b.onclick = async () => { b.disabled = true; try { await api(`/api/showcases/${date}/live/queue/${b.dataset.q}`, { method: 'POST', body: { show: Boolean(b.dataset.show) } }); } catch (e) { msg(e.message); } queue(); }; });
   } catch { /* signed out or offline: try again */ }
 }

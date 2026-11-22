@@ -1843,12 +1843,25 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ctl-act.on { border-color: #d4ff3c; background: rgba(212,255,60,.08); }
 /* the big screen: the TAM logo that hears the music */
 .ssc-viz { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; mix-blend-mode: screen; }
+/* the line-up: the TAM logo (drawn on the canvas) in the middle, the acts orbiting it */
+.ssc-screen.is-idle .ssc-viz { mix-blend-mode: normal; }
+.ssc-screen.is-idle .ssc-idle h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ssc-screen.is-idle .ssc-lineup { position: fixed; inset: 0; margin: 0; display: block; pointer-events: none; z-index: 2; }
+.ssc-screen.is-idle .ssc-lineup li { position: absolute; left: 0; top: 0; width: 17vh; text-align: center; will-change: transform; }
+.ssc-screen.is-idle .ssc-lineup img { width: 17vh; height: 17vh; border-radius: 50%; border: 3px solid var(--col, #e8c77a); box-shadow: 0 0 calc(14px + var(--lvl, 0) * 70px) var(--col, #e8c77a), 0 10px 30px rgba(0,0,0,.6); }
+.ssc-screen.is-idle .ssc-lineup b { font-size: 3vh; text-shadow: 0 2px 10px #000; white-space: nowrap; }
+.ssc-screen.is-idle .ssc-lineup b::before { content: none; }
+.ssc-lineup b i { font-style: normal; color: #d4ff3c; }
+.ssc-screen.is-idle .ssc-qr.big { position: fixed; top: 3vh; right: 2vw; z-index: 3; max-width: 46vh; padding: 1.4vh 1.4vw; gap: 1.4vw; }
+.ssc-screen.is-idle .ssc-qr.big img { width: 15vh; height: 15vh; }
+.ssc-screen.is-idle .ssc-qr.big b { font-size: 3.6vh; }
+.ssc-screen.is-idle .ssc-qr.big span { font-size: 2vh; }
 .ssc-top, .ssc-stage { z-index: 1; }
 .ssc-mic { position: fixed; left: 1.4vw; bottom: 1.4vh; z-index: 3; font: 600 1.6vh Inter, sans-serif; color: #0b0709; background: #d4ff3c; border: 0; border-radius: 999px; padding: 1vh 1.4vw; cursor: pointer; }
 .ssc-hint { position: fixed; left: 50%; bottom: 2vh; transform: translateX(-50%); z-index: 3; margin: 0; background: rgba(0,0,0,.7); padding: 1vh 1.4vw; border-radius: 999px; font-size: 1.7vh; }
 .ssc-keys { position: fixed; left: 50%; bottom: 1.2vh; transform: translateX(-50%); z-index: 2; margin: 0; font-size: 1.3vh; opacity: .35; }
 /* reactions pulse and glow with the music as they rise */
-.ssc-float { --lvl: 0; --col: #e8c77a; }
+.ssc-screen { --lvl: 0; --col: #e8c77a; }
 .ssc-bubble i { display: inline-block; font-style: normal; transform: scale(calc(1 + var(--lvl) * .9)); filter: drop-shadow(0 0 calc(8px + var(--lvl) * 50px) var(--col)) drop-shadow(0 6px 12px rgba(0,0,0,.5)); transition: transform .08s linear; animation: ssc-sway 1.6s ease-in-out infinite alternate; }
 @keyframes ssc-sway { from { rotate: -10deg; } to { rotate: 10deg; } }
 /* the big screen: the TAM logo and photos as reactions, and messages from the audience */

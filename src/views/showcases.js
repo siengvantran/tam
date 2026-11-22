@@ -130,6 +130,15 @@ function page(ctx, showcase) {
   <p class="lede">${s.lede}</p>
   <div class="ctas">${n ? html`<a class="btn hot" href="#book">Free tickets · ${l.when.replace(/ \d{4}$/, '')}</a>` : ''}<a class="btn ${n ? 'ghost' : 'hot'}" href="#circuit">Find an open night</a><a class="btn ghost" href="#register">Register your interest</a><a class="btn ghost" href="https://${ctx.cfg.showcaseHost}/#crew">Join the Showcase Crew ↗</a></div>
 </div></section>
+${l && l.date === ctx.today() && l.acts.some((x) => !x.tba) ? html`<section class="section sc-screen-msg" id="screen"><div class="wrap narrow"><div class="va-panel">
+  <div class="label">Live tonight</div><h2>Put a message on the big screen</h2>
+  <p class="muted">Say hello, give a shout-out, cheer the whole line-up: it goes up on the screen at TAM. To cheer one act, tap them below.</p>
+  <form class="stack va-msg" data-live-note="/api/showcases/${l.date}/live/note">
+    <label class="field"><span>Your message</span><textarea name="message" rows="2" maxlength="280" required></textarea></label>
+    <label class="field"><span>Your name</span><input name="name" maxlength="40" required autocomplete="given-name"></label>
+    <button class="btn hot" type="submit">Send to the screen</button><p class="err" role="status"></p>
+  </form>
+</div></div></section>` : ''}
 ${thisWeek(ctx, showcase)}
 ${n ? html`${bookingSection(ctx, { nights: [n], single: true, heading: `Free tickets · ${l.when.replace(/ \d{4}$/, '')}`, intro: `Entry is free: book your place and we'll email your tickets. Doors ${n.doors}.` })}
 <section class="section sc-give" id="donate"><div class="wrap narrow"><div class="sc-give-in">
@@ -218,7 +227,7 @@ function actPage(ctx, showcase, { l, a }) {
       <label class="field"><span>Your name</span><input name="name" maxlength="40" required autocomplete="given-name"></label>
       <button class="btn hot small" type="submit">Send to the screen and ${a.name}’s wall</button><p class="err" role="status"></p>
     </form>
-    <p class="small muted">Photos and messages go up on the big screen once TAM has had a quick look, and messages stay on ${a.name}’s wall.</p>
+    <p class="small muted">Photos and messages go up on the big screen while ${a.name} is on, and messages stay on ${a.name}’s wall.</p>
   </div>
   ${insta ? html`<p><a class="btn hot va-insta" href="${insta}" target="_blank" rel="noopener">Follow ${a.name} on Instagram</a></p>` : ''}
 </div>

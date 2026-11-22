@@ -43,3 +43,17 @@ document.addEventListener('click', (e) => {
   const p = document.getElementById(`sc-p-${a.dataset.unwrap}`);
   if (p) p.hidden = false;
 });
+
+// on the night: a message for the big screen, from the line-up page
+const live = document.querySelector('[data-live-note]');
+if (live) live.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const out = live.querySelector('.err');
+  try {
+    const r = await fetch(live.dataset.liveNote, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: live.name.value, message: live.message.value }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'That didn’t work. Try again.');
+    live.reset(); out.classList.add('ok');
+    out.textContent = j.screen === 'shown' ? 'Sent! Look up: it’s on its way to the big screen.' : 'Sent! It goes up on the screen once TAM has had a quick look.';
+  } catch (err) { out.classList.remove('ok'); out.textContent = err.message; }
+});

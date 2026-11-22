@@ -134,6 +134,7 @@ export function showcaseDomain(ctx) {
     lv.queue.push(q);
     if (lv.queue.length > 300) lv.queue.splice(0, lv.queue.length - 300);
     if (!lv.checkFirst) showItem(date, q);
+    return q;
   };
   const pledgeLimited = rateLimiter({ max: 8 });
   // reactions arrive fast: saved at most every few seconds
@@ -306,10 +307,10 @@ export function showcaseDomain(ctx) {
         const w = { id: newId('W'), kind: 'note', name, message, at: new Date(ctx.now()).toISOString(), status: ctx.cfg.pinModeration ? 'pending' : 'shown', by: 'fan' };
         wallOf(params.date, params.slug).push(w);
         // on the night, it waits for a staff OK to go up on the big screen too
-        if (params.date === ctx.today()) queueFor(params.date, { kind: 'note', slug: params.slug, wallId: w.id, name, message });
+        const q = params.date === ctx.today() ? queueFor(params.date, { kind: 'note', slug: params.slug, wallId: w.id, name, message }) : null;
         if (ctx.club) ctx.club.awardReq(req, 'wall', w.id); // a TAM Club point, if they're signed in
         await save();
-        send(res, 201, { ok: true, status: w.status });
+        send(res, 201, { ok: true, status: w.status, screen: q ? q.status : null });
       });
       // the act (with their private link) or staff: add a YouTube video or an Instagram post
       r.post('/api/showcases/:date/act/:slug/wall/post', async (req, res, { params }) => {
@@ -491,9 +492,21 @@ export function showcaseDomain(ctx) {
         if (photoLimited(req)) throw fail(429, 'One photo at a time: try again in a minute.');
         const b = await readJson(req, 1_500_000);
         const src = await savePhoto(ctx, b.image, `react-${params.slug}`);
-        queueFor(params.date, { kind: 'photo', slug: params.slug, src, name: text(b.name, 40) });
+        const q = queueFor(params.date, { kind: 'photo', slug: params.slug, src, name: text(b.name, 40) });
         await save();
-        send(res, 201, { ok: true });
+        send(res, 201, { ok: true, screen: q.status });
+      });
+      // a message for the whole night, from the line-up page: straight to the big screen (on the night only)
+      r.post('/api/showcases/:date/live/note', async (req, res, { params }) => {
+        if (!lineup(params.date).acts.some((a) => !a.tba)) throw fail(404, 'No showcase that day.');
+        if (params.date !== ctx.today()) throw fail(400, 'Messages go to the big screen on the night.');
+        if (wallLimited(req)) throw fail(429, 'That’s a lot of messages. Try again in a bit.');
+        const b = await readJson(req, 4096);
+        const name = text(b.name, 40), message = text(b.message, 280);
+        if (!name || !message) throw fail(400, 'Add your name and a message.');
+        const q = queueFor(params.date, { kind: 'note', slug: '', name, message });
+        await save();
+        send(res, 201, { ok: true, screen: q.status });
       });
       // staff: what's waiting to go on the screen, and OK or hide each
       r.get('/api/showcases/:date/live/queue', (req, res, { params }) => {
