@@ -191,7 +191,8 @@ test('artists sign in with their email and post to their wall; fans leave notes;
   const m = await (await fetch(`${B}/api/showcases/manage`, { headers: H })).json();
   assert.equal(m.showcases[0].acts.find((a) => a.slug === 'justyna').email, 'justyna@example.com');
 
-  // a fan's note waits to be checked
+  // a fan's note waits to be checked (on the night itself notes go straight up unless staff switch on "check first")
+  if (date === app.ctx.today()) await post(`/api/showcases/${date}/live/settings`, { checkFirst: true }, H);
   const note = await (await post(`/api/showcases/${date}/act/justyna/wall`, { name: 'Sam', message: 'See you Sunday!' })).json();
   assert.equal(note.status, 'pending');
   assert.equal((await (await fetch(`${B}/api/showcases/${date}/act/justyna/wall`)).json()).items.length, 0);

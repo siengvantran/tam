@@ -82,7 +82,13 @@ test('big screen: staff pick the act, phones react and pledge, the screen shows 
   assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/react`, { method: 'POST', body: { emoji: 'tam' } })).status, 200);
   assert.match(page, /data-emoji="tam"/);
 
-  // a message and a photo from the audience wait for a staff OK before the screen shows them
+  // by default a message goes straight up on the screen
+  const b0 = (await call(`/api/showcases/${DATE}/live`)).body.last;
+  assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/wall`, { method: 'POST', body: { name: 'Kim', message: 'Straight up!' } })).status, 201);
+  assert.deepEqual((await call(`/api/showcases/${DATE}/live?after=${b0}`)).body.feed.map((x) => x.message), ['Straight up!']);
+  // staff switch on "check first": then a message and a photo wait for an OK
+  assert.equal((await call(`/api/showcases/${DATE}/live/settings`, { method: 'POST', body: { checkFirst: true } })).status, 401);
+  await call(`/api/showcases/${DATE}/live/settings`, { method: 'POST', body: { checkFirst: true }, staff: true });
   assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/wall`, { method: 'POST', body: { name: 'Ali', message: 'What a voice!' } })).status, 201);
   const PNG = `data:image/png;base64,${Buffer.from('89504e470d0a1a0a0000000d4948445200000001000000010806000000', 'hex').toString('base64')}`;
   assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/react/photo`, { method: 'POST', body: { image: PNG } })).status, 201);

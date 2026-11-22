@@ -56,19 +56,26 @@ async function load() {
 }
 load();
 
-// photos and messages from the audience wait here for a staff OK before the screen shows them
+// photos and messages from the audience: straight up by default; staff can switch on "check first"
+const row = (q, buttons) => `<li>${q.kind === 'photo' ? `<img src="${esc(q.src)}" alt="">` : ''}
+  <div class="q-text">${q.kind === 'note' ? `“${esc(q.message)}”<small>${esc(q.name)} · for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}</small>` : `<small>Photo for ${esc((acts.find((a) => a.slug === q.slug) || {}).name || q.slug)}</small>`}</div>${buttons}</li>`;
 async function queue() {
   if (box.hidden) return;
   try {
-    const { items } = await api(`/api/showcases/${date}/live/queue`);
-    const name = (slug) => (acts.find((a) => a.slug === slug) || {}).name || slug;
+    const { items, recent, checkFirst } = await api(`/api/showcases/${date}/live/queue`);
+    const chk = $('#ctl-check');
+    if (document.activeElement !== chk) chk.checked = checkFirst;
+    $('#ctl-waiting').hidden = !checkFirst && !items.length;
     $('#ctl-qn').textContent = items.length ? `(${items.length})` : '';
-    $('#ctl-queue').innerHTML = items.length ? items.map((q) => `<li>${q.kind === 'photo' ? `<img src="${esc(q.src)}" alt="">` : ''}
-      <div class="q-text">${q.kind === 'note' ? `“${esc(q.message)}”<small>${esc(q.name)} · for ${esc(name(q.slug))}</small>` : `<small>Photo for ${esc(name(q.slug))}</small>`}</div>
-      <button class="btn hot small" type="button" data-q="${esc(q.id)}" data-show="1">Show</button><button class="btn ghost small" type="button" data-q="${esc(q.id)}">Hide</button></li>`).join('') : '<li class="muted small">Nothing waiting.</li>';
+    $('#ctl-queue').innerHTML = items.length ? items.map((q) => row(q, `<button class="btn hot small" type="button" data-q="${esc(q.id)}" data-show="1">Show</button><button class="btn ghost small" type="button" data-q="${esc(q.id)}">Hide</button>`)).join('') : '<li class="muted small">Nothing waiting.</li>';
+    $('#ctl-recent').innerHTML = recent.length ? recent.map((q) => row(q, q.kind === 'note' ? `<button class="btn ghost small" type="button" data-q="${esc(q.id)}">Take off the wall</button>` : '')).join('') : '<li class="muted small">Nothing yet.</li>';
     $$('[data-q]', box).forEach((b) => { b.onclick = async () => { b.disabled = true; try { await api(`/api/showcases/${date}/live/queue/${b.dataset.q}`, { method: 'POST', body: { show: Boolean(b.dataset.show) } }); } catch (e) { msg(e.message); } queue(); }; });
   } catch { /* signed out or offline: try again */ }
 }
+$('#ctl-check').addEventListener('change', async (e) => {
+  try { await api(`/api/showcases/${date}/live/settings`, { method: 'POST', body: { checkFirst: e.target.checked } }); msg(e.target.checked ? 'Photos and messages now wait for your OK.' : 'Photos and messages now go straight on the screen.'); } catch (err) { msg(err.message); }
+  queue();
+});
 setInterval(queue, 4000); setTimeout(queue, 1500);
 
 // on a computer (the sound desk): arrow keys and L

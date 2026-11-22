@@ -120,7 +120,21 @@ export function showcaseDomain(ctx) {
   const pledgesOf = (date) => (db.showcasePledges[date] = db.showcasePledges[date] || {});
   const reactLimited = rateLimiter({ max: 40 });
   const photoLimited = rateLimiter({ max: 4 });
-  const queueFor = (date, item) => { const lv = liveOf(date); lv.queue.push({ id: newId('Q'), ...item, at: new Date(ctx.now()).toISOString(), status: 'pending' }); if (lv.queue.length > 300) lv.queue.splice(0, lv.queue.length - 300); };
+  // a photo or message for the screen: straight up, unless staff have switched on "check first"
+  const showItem = (date, q) => {
+    const lv = liveOf(date);
+    q.status = 'shown';
+    if (q.kind === 'note') { const w = wallOf(date, q.slug).find((x) => x.id === q.wallId); if (w) w.status = 'shown'; }
+    lv.seq += 1; lv.feed.push({ id: lv.seq, slug: q.slug, kind: q.kind, ...(q.kind === 'photo' ? { src: q.src } : { name: q.name, message: q.message }) });
+    if (lv.feed.length > 200) lv.feed.splice(0, lv.feed.length - 200);
+  };
+  const queueFor = (date, item) => {
+    const lv = liveOf(date);
+    const q = { id: newId('Q'), ...item, at: new Date(ctx.now()).toISOString(), status: 'pending' };
+    lv.queue.push(q);
+    if (lv.queue.length > 300) lv.queue.splice(0, lv.queue.length - 300);
+    if (!lv.checkFirst) showItem(date, q);
+  };
   const pledgeLimited = rateLimiter({ max: 8 });
   // reactions arrive fast: saved at most every few seconds
   let dirty = false;
@@ -484,7 +498,17 @@ export function showcaseDomain(ctx) {
       // staff: what's waiting to go on the screen, and OK or hide each
       r.get('/api/showcases/:date/live/queue', (req, res, { params }) => {
         ctx.team.guard(req, 'ops');
-        send(res, 200, { items: liveOf(params.date).queue.filter((x) => x.status === 'pending').slice(-50) }, { 'Cache-Control': 'no-store' });
+        const lv = liveOf(params.date);
+        // waiting ones, and the latest that went up (staff can still take a message off the wall)
+        send(res, 200, { checkFirst: Boolean(lv.checkFirst), items: lv.queue.filter((x) => x.status === 'pending').slice(-50), recent: lv.queue.filter((x) => x.status === 'shown').slice(-12).reverse() }, { 'Cache-Control': 'no-store' });
+      });
+      r.post('/api/showcases/:date/live/settings', async (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        const b = await readJson(req, 256);
+        const lv = liveOf(params.date);
+        lv.checkFirst = Boolean(b.checkFirst);
+        await save();
+        send(res, 200, { ok: true, checkFirst: lv.checkFirst });
       });
       r.post('/api/showcases/:date/live/queue/:id', async (req, res, { params }) => {
         ctx.team.guard(req, 'ops');
@@ -492,9 +516,11 @@ export function showcaseDomain(ctx) {
         const lv = liveOf(params.date);
         const q = lv.queue.find((x) => x.id === params.id);
         if (!q) throw fail(404, 'That isn’t waiting any more.');
-        q.status = b.show ? 'shown' : 'hidden';
-        if (q.kind === 'note') { const w = wallOf(params.date, q.slug).find((x) => x.id === q.wallId); if (w) w.status = b.show ? 'shown' : 'removed'; }
-        if (b.show) { lv.seq += 1; lv.feed.push({ id: lv.seq, slug: q.slug, kind: q.kind, ...(q.kind === 'photo' ? { src: q.src } : { name: q.name, message: q.message }) }); if (lv.feed.length > 200) lv.feed.splice(0, lv.feed.length - 200); }
+        if (b.show && q.status === 'pending') showItem(params.date, q);
+        else if (!b.show) {
+          q.status = 'hidden';
+          if (q.kind === 'note') { const w = wallOf(params.date, q.slug).find((x) => x.id === q.wallId); if (w) w.status = 'removed'; }
+        }
         await save();
         send(res, 200, { ok: true });
       });
