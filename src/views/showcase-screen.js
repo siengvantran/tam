@@ -44,6 +44,7 @@ export function routes(r, ctx, showcase) {
 </main>
 <div class="ssc-float" id="ssc-float" aria-hidden="true"></div>
 <aside class="ssc-note" id="ssc-note" hidden><p></p><b></b></aside>
+<figure class="ssc-pic" id="ssc-pic" hidden><img alt=""><figcaption>From the audience</figcaption></figure>
 <button type="button" class="ssc-mic" id="ssc-mic">🎤 Click to let the TAM logo hear the music</button>
 <p class="ssc-hint" id="ssc-hint" hidden></p>
 <p class="ssc-keys">→ next act · ← back · L line-up · M mic · F full screen</p>

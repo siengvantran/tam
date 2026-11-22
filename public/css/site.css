@@ -1855,6 +1855,10 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ssc-tamr { width: 1.3em; height: 1.3em; display: block; }
 .ssc-bubble.is-photo i { font-size: 0; }
 .ssc-photo-r { width: 15vh; height: 15vh; object-fit: cover; border-radius: 50%; border: 5px solid var(--col); display: block; }
+.ssc-pic { position: fixed; right: 4vw; top: 50%; z-index: 4; margin: 0; background: #fffaf0; padding: 1.4vh 1.4vh 0; border-radius: 6px; box-shadow: 0 0 calc(30px + var(--lvl, 0) * 80px) var(--col, #e8c77a), 0 24px 70px rgba(0,0,0,.7); transform: translate(0, -50%) translateY(-120vh) rotate(var(--tilt, 0deg)); transition: transform .6s cubic-bezier(.2,.9,.3,1.2); }
+.ssc-pic.in { transform: translate(0, -50%) rotate(var(--tilt, 0deg)); }
+.ssc-pic img { display: block; max-height: 58vh; max-width: 34vw; width: auto; height: auto; border-radius: 2px; }
+.ssc-pic figcaption { font-family: 'Bebas Neue', sans-serif; letter-spacing: .08em; font-size: 2.6vh; color: #1a1216; text-align: center; padding: 1vh 0 1.2vh; }
 .ssc-note { position: fixed; left: 4vw; bottom: 9vh; z-index: 4; max-width: 46vw; background: rgba(10,6,14,.86); border: 2px solid var(--gold, #e8c77a); border-radius: 26px; padding: 2.4vh 2.2vw; box-shadow: 0 20px 60px rgba(0,0,0,.6); transform: translateX(-120%); transition: transform .5s ease; }
 .ssc-note.in { transform: none; }
 .ssc-note p { margin: 0; font-family: 'DM Serif Display', serif; font-size: 3.6vh; line-height: 1.25; }
