@@ -47,6 +47,7 @@ export const songOf = (x) => {
 export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Website'])[1];
 
 // Each act's page has its own look: a vibe staff pick in the editor.
+export const REACTIONS = ['❤️', '🔥', '👏', '🎶', '✨', '😍'];
 export const VIBES = {
   stage: 'TAM stage: gold and black',
   disco: 'Disco: glitter gold and pink',
@@ -112,6 +113,16 @@ export function showcaseDomain(ctx) {
   // "I want to see them at the Christmas Showcase Special": one per browser
   // (a random id the page keeps; only its hash is stored), rate-limited by address.
   db.showcaseWants = db.showcaseWants || {};
+  // the night itself: who's on the big screen, reactions from phones, pledges for a headline show
+  db.showcaseLive = db.showcaseLive || {};
+  db.showcasePledges = db.showcasePledges || {};
+  const liveOf = (date) => { const v = (db.showcaseLive[date] = db.showcaseLive[date] || {}); v.reacts = v.reacts || {}; v.feed = v.feed || []; v.seq = v.seq || 0; return v; };
+  const pledgesOf = (date) => (db.showcasePledges[date] = db.showcasePledges[date] || {});
+  const reactLimited = rateLimiter({ max: 40 });
+  const pledgeLimited = rateLimiter({ max: 8 });
+  // reactions arrive fast: saved at most every few seconds
+  let dirty = false;
+  setInterval(() => { if (dirty) { dirty = false; save().catch(() => {}); } }, 4000).unref();
   const wantLimited = rateLimiter({ max: 30 });
   const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex').slice(0, 32);
 
@@ -386,6 +397,74 @@ export function showcaseDomain(ctx) {
         const q = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
         const rows = [['Name', 'Email', 'Fan or musician', 'Joined', 'Consent'], ...db.showcaseCrew.map((x) => [x.name, x.email, x.role, x.at, x.consent])];
         send(res, 200, rows.map((r) => r.map(q).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="showcase-crew.csv"' });
+      });
+
+      // ----- the big screen on the night (/sunday-showcases/screen) -----
+      // Staff pick who's on from their phone (/sunday-showcases/control); the projector shows that act
+      // with a QR to their page. Phones send reactions that float up the screen, and fans pledge to
+      // buy a ticket to the act's own headline night at TAM. The screen shows counts only.
+      r.get('/api/showcases/:date/live', (req, res, { params, url }) => {
+        const l = lineup(params.date);
+        if (!l) throw fail(404, 'There’s no showcase on that date.');
+        const lv = liveOf(params.date);
+        const after = Number(url.searchParams.get('after')) || 0;
+        const cur = lv.current ? l.acts.find((a) => a.slug === lv.current) : null;
+        const pl = pledgesOf(params.date);
+        send(res, 200, {
+          date: l.date, when: l.when, night: l.night, current: cur ? { slug: cur.slug, name: cur.name, plays: cur.plays || '', photo: cur.photo || '', n: cur.n, href: cur.href,
+            instagram: (cur.links.find((x) => /instagram\.com/.test(x.url)) || {}).url || '', reacts: lv.reacts[cur.slug] || {}, pledged: (pl[cur.slug] || []).reduce((t, x) => t + x.qty, 0) } : null,
+          acts: l.acts.filter((a) => !a.tba).map((a) => ({ slug: a.slug, name: a.name, photo: a.photo || '', n: a.n, on: a.on || '' })),
+          feed: lv.feed.filter((x) => x.id > after).slice(-40), last: lv.seq, at: lv.at || null,
+        }, { 'Cache-Control': 'no-store' });
+      });
+      r.post('/api/showcases/:date/live', async (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        const l = lineup(params.date);
+        if (!l) throw fail(404, 'There’s no showcase on that date.');
+        const b = await readJson(req, 512);
+        const slug = b.current ? String(b.current) : null;
+        if (slug && !l.acts.some((a) => a.slug === slug)) throw fail(400, 'That act isn’t in this showcase.');
+        const lv = liveOf(params.date);
+        lv.current = slug; lv.at = new Date(ctx.now()).toISOString();
+        await save();
+        send(res, 200, { ok: true, current: slug });
+      });
+      r.post('/api/showcases/:date/act/:slug/react', async (req, res, { params }) => {
+        if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
+        const b = await readJson(req, 256);
+        if (!REACTIONS.includes(b.emoji)) throw fail(400, 'Pick one of the reactions.');
+        if (reactLimited(req)) return send(res, 429, { error: 'Easy! Give it a few seconds.' });
+        const lv = liveOf(params.date);
+        const r0 = (lv.reacts[params.slug] = lv.reacts[params.slug] || {});
+        r0[b.emoji] = (r0[b.emoji] || 0) + 1;
+        lv.seq = (lv.seq || 0) + 1;
+        lv.feed.push({ id: lv.seq, slug: params.slug, emoji: b.emoji });
+        if (lv.feed.length > 200) lv.feed.splice(0, lv.feed.length - 200);
+        dirty = true;
+        send(res, 200, { ok: true, count: r0[b.emoji] });
+      });
+      // "I'd buy a ticket to see them headline TAM": name, email (private) and how many tickets
+      r.post('/api/showcases/:date/act/:slug/pledge', async (req, res, { params }) => {
+        const x = act(params.date, params.slug);
+        if (!x) throw fail(404, 'That act isn’t in this showcase.');
+        if (pledgeLimited(req)) throw fail(429, 'Too many tries. Wait a few minutes.');
+        const b = await readJson(req, 2048);
+        const name = text(b.name, 60), mail = cleanEmail(b.email), qty = Math.max(1, Math.min(10, parseInt(b.qty, 10) || 1));
+        if (!name || !mail) throw fail(400, 'Add your name and email.');
+        if (!b.consent) throw fail(400, 'Tick the box so we can email you when tickets are on sale.');
+        const list = (pledgesOf(params.date)[params.slug] = pledgesOf(params.date)[params.slug] || []);
+        const had = list.find((p) => p.email === mail);
+        if (had) Object.assign(had, { name, qty, at: new Date(ctx.now()).toISOString() });
+        else list.push({ name, email: mail, qty, at: new Date(ctx.now()).toISOString(), consent: true });
+        await save();
+        send(res, 200, { ok: true, again: Boolean(had), people: list.length, tickets: list.reduce((t, p) => t + p.qty, 0) });
+      });
+      r.get('/api/showcases/:date/pledges.csv', (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        const q = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+        const rows = [['Act', 'Name', 'Email', 'Tickets', 'When']];
+        for (const [slug, list] of Object.entries(pledgesOf(params.date))) for (const p of list) rows.push([slug, p.name, p.email, p.qty, p.at]);
+        send(res, 200, rows.map((r) => r.map(q).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="showcase-pledges-${params.date}.csv"` });
       });
 
       r.post('/api/showcases/:date/act/:slug/want', async (req, res, { params }) => {

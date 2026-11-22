@@ -22,6 +22,7 @@ import { bluesDomain } from './domain/blues.js';
 import * as bluesPages from './views/blues.js';
 import * as aiPages from './views/ai.js';
 import * as showcasePages from './views/showcases.js';
+import * as showcaseScreen from './views/showcase-screen.js';
 import { showcaseDomain } from './domain/showcases.js';
 import { serveMicrosite } from './views/showcase-site.js';
 import { clubDomain } from './domain/club.js';
@@ -167,6 +168,7 @@ export async function createApp({ env = process.env, now = () => Date.now(), con
   pathwayPages.routes(site, ctx, d);
   bluesPages.routes(site, ctx, blues, qr);
   aiPages.routes(site, ctx, d); // /llms.txt and /whats-on.json, for AI assistants
+  showcaseScreen.routes(site, ctx, showcase); // /sunday-showcases/screen and /control: the night itself
   showcasePages.routes(site, ctx, showcase); // /sunday-showcases: the call-out for artists
   clubPages.routes(site, ctx, qr); // /club, /newsletter, /club/manage
   stagePages.routes(site, ctx, ctx.stage); // /stage: discover acts, apply, microverses, A&R
