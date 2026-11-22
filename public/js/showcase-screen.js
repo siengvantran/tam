@@ -148,7 +148,7 @@ const IDLE_X = 0.42, IDLE_Y = 0.43; // where the logo sits on the line-up, as a 
 let spin = 0, lastT = 0;
 function orbit(t) {
   const dt = Math.min(64, t - (lastT || t)); lastT = t;
-  spin += dt * (0.00008 + level * 0.0009);
+  spin += dt * (0.00004 + level * 0.00016); // about a minute a lap with music playing
   const cx = innerWidth * IDLE_X, cy = innerHeight * IDLE_Y;
   const rx = Math.min(innerWidth * 0.27, innerHeight * 0.5) * (1 + level * 0.05), ry = innerHeight * 0.18 * (1 + level * 0.05);
   ring.forEach((li, i) => {
