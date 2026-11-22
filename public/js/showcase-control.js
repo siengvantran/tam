@@ -76,6 +76,11 @@ $('#ctl-check').addEventListener('change', async (e) => {
   try { await api(`/api/showcases/${date}/live/settings`, { method: 'POST', body: { checkFirst: e.target.checked } }); msg(e.target.checked ? 'Photos and messages now wait for your OK.' : 'Photos and messages now go straight on the screen.'); } catch (err) { msg(err.message); }
   queue();
 });
+$('#ctl-reset').addEventListener('click', async () => {
+  if (!confirm('Clear every reaction, photo and message for tonight? Counts go back to zero and today’s messages come off the acts’ walls. Pledges are kept.')) return;
+  try { const r = await api(`/api/showcases/${date}/live/reset`, { method: 'POST', body: {} }); msg(`Cleared ${r.reactions} reactions and ${r.messages} messages.`); } catch (e) { msg(e.message); }
+  queue();
+});
 setInterval(queue, 4000); setTimeout(queue, 1500);
 
 // on a computer (the sound desk): arrow keys and L

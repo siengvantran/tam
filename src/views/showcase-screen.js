@@ -70,6 +70,7 @@ export function routes(r, ctx, showcase) {
     <div id="ctl-waiting" hidden><h3 class="h4">Waiting for your OK <small class="muted" id="ctl-qn"></small></h3><ol class="plain ctl-queue" id="ctl-queue"></ol></div>
     <h3 class="h4">Just went up</h3>
     <ol class="plain ctl-queue" id="ctl-recent"></ol>
+    <p><button class="btn ghost small" type="button" id="ctl-reset">Clear all reactions and messages</button> <small class="muted">for after a sound check or testing</small></p>
     <p class="small"><a href="/api/showcases/${date}/pledges.csv">Download tonight’s pledges (CSV)</a>: who wants a ticket to each act’s own show, to email when it’s on sale.</p>
   </div>
   <form id="ctl-login" class="stack" hidden><p>Sign in with your TAM staff email: we’ll send you a link.</p>
