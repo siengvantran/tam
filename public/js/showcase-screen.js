@@ -144,12 +144,13 @@ function noteColour() {
 
 // the line-up orbits the TAM logo: faster and wider when the music is loud, nearer acts bigger
 const ring = [...document.querySelectorAll('#ssc-lineup li')];
+const IDLE_X = 0.42, IDLE_Y = 0.43; // where the logo sits on the line-up, as a share of the screen
 let spin = 0, lastT = 0;
 function orbit(t) {
   const dt = Math.min(64, t - (lastT || t)); lastT = t;
   spin += dt * (0.00008 + level * 0.0009);
-  const cx = innerWidth / 2, cy = innerHeight / 2 + innerHeight * 0.03;
-  const rx = Math.min(innerWidth * 0.36, innerHeight * 0.62) * (1 + level * 0.06), ry = innerHeight * 0.32 * (1 + level * 0.06);
+  const cx = innerWidth * IDLE_X, cy = innerHeight * IDLE_Y;
+  const rx = Math.min(innerWidth * 0.27, innerHeight * 0.5) * (1 + level * 0.05), ry = innerHeight * 0.18 * (1 + level * 0.05);
   ring.forEach((li, i) => {
     const a = spin + (i / ring.length) * Math.PI * 2;
     const depth = (Math.sin(a) + 1) / 2; // 0 at the back (top), 1 at the front (bottom)
@@ -162,7 +163,8 @@ function orbit(t) {
 
 function frame(t) {
   requestAnimationFrame(frame);
-  const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2;
+  const idle = document.body.classList.contains('is-idle');
+  const W = cv.width, H = cv.height, cx = W * (idle ? IDLE_X : 0.5), cy = H * (idle ? IDLE_Y : 0.5);
   g.clearRect(0, 0, W, H);
   if (an) {
     an.getByteTimeDomainData(buf);
@@ -174,8 +176,7 @@ function frame(t) {
     // a beat: louder than the running average sends out a ring
     if (level > avg * 1.5 + 0.06 && t - lastRing > 260) { rings.push({ r: 0, c: colour, w: 3 + level * 12, a: 0.5 }); lastRing = t; }
   } else { level += ((0.12 + Math.sin(t / 900) * 0.05) - level) * 0.05; } // a gentle breath until the mic is on
-  const idle = document.body.classList.contains('is-idle');
-  const base = Math.min(W, H) * (idle ? 0.25 : 0.34);
+  const base = Math.min(W, H) * (idle ? 0.22 : 0.34);
   for (const r of rings) {
     r.r += (6 + level * 30) * devicePixelRatio; r.a *= 0.968;
     g.beginPath(); g.arc(cx, cy, base * 0.55 + r.r, 0, Math.PI * 2);
@@ -186,6 +187,8 @@ function frame(t) {
     const s = base * (1 + level * 0.35);
     g.globalAlpha = idle ? Math.min(1, 0.8 + level * 0.4) : 0.14 + level * 0.4; g.shadowColor = colour; g.shadowBlur = (idle ? 50 : 30) + level * (idle ? 260 : 160);
     g.drawImage(logo, cx - s, cy - s, s * 2, s * 2);
+    // on the line-up, a second pass in 'lighter' so the gold cuts through stage light on the projector
+    if (idle) { g.globalCompositeOperation = 'lighter'; g.globalAlpha = 0.45 + level * 0.5; g.shadowBlur = 0; g.drawImage(logo, cx - s, cy - s, s * 2, s * 2); g.globalCompositeOperation = 'source-over'; }
   }
   g.globalAlpha = 1; g.shadowBlur = 0;
   if (idle) orbit(t);

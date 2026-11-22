@@ -1885,3 +1885,35 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ctl-queue img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; }
 .ctl-queue .q-text { flex: 1; min-width: 0; }
 .ctl-queue .q-text small { display: block; opacity: .7; }
+
+/* Fitted to TAM's screen: the top ~10% sits behind the valance and the bottom third behind the
+   backline, so everything that matters lives in the band between. */
+.ssc-top { padding-top: 11vh; }
+.ssc-screen .ssc-stage { height: auto; position: fixed; inset: 20vh 2vw auto 3vw; display: block; padding: 0; }
+.ssc-act { grid-template-columns: minmax(0, 34vh) minmax(0, 1fr); gap: 3vw; align-items: start; width: calc(100% - 34vw); }
+.ssc-photo { border-radius: 22px; }
+.ssc-info h1 { font-size: 11vh; }
+.ssc-plays { margin-bottom: 0; }
+.ssc-side { position: fixed; top: 11vh; right: 2vw; width: 31vw; z-index: 3; display: flex; flex-direction: column; gap: 2vh; }
+.ssc-side .ssc-qr { max-width: none; padding: 1.6vh 1.4vw; gap: 1.4vw; background: rgba(0,0,0,.6); }
+.ssc-side .ssc-qr img { width: 24vh; height: 24vh; }
+.ssc-side .ssc-qr small { display: none; }
+.ssc-side .ssc-stats { margin: 0; gap: 2vw; padding: 0 .4vw; }
+.ssc-side .ssc-stats b { font-size: 6.5vh; }
+/* the line-up: a big logo left of centre, the acts orbiting it, the QR on the right */
+.ssc-screen.is-idle .ssc-stage { inset: 0; }
+.ssc-screen.is-idle .ssc-lineup li { width: 15vh; }
+.ssc-screen.is-idle .ssc-lineup img { width: 15vh; height: 15vh; }
+.ssc-screen.is-idle .ssc-lineup b { font-size: 2.7vh; }
+.ssc-screen.is-idle .ssc-qr.big { top: 30vh; right: 2vw; flex-direction: column; text-align: center; max-width: 24vw; padding: 2vh 1.4vw; gap: 1.4vh; background: rgba(0,0,0,.6); }
+.ssc-screen.is-idle .ssc-qr.big img { width: 24vh; height: 24vh; }
+.ssc-screen.is-idle .ssc-qr.big b { font-size: 4.4vh; }
+.ssc-screen.is-idle .ssc-qr.big span { font-size: 2.2vh; }
+/* messages and photos sit above the backline */
+.ssc-note { bottom: auto; top: 50vh; }
+.ssc-pic { right: auto; left: 50%; top: 52%; transform: translate(-50%, -50%) translateY(-120vh) rotate(var(--tilt, 0deg)); }
+.ssc-pic.in { transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)); }
+.ssc-pic img { max-height: 46vh; }
+.ssc-screen:not(.is-idle) .ssc-note { left: auto; right: 2vw; top: 52vh; max-width: 31vw; transform: translateX(130%); }
+.ssc-screen:not(.is-idle) .ssc-note.in { transform: none; }
+.ssc-screen:not(.is-idle) .ssc-note p { font-size: 3.2vh; }

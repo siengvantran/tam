@@ -32,9 +32,11 @@ export function routes(r, ctx, showcase) {
     <div class="ssc-info">
       <div class="ssc-now"><span class="ssc-dot"></span>On stage now · act <b id="ssc-n"></b></div>
       <h1 id="ssc-name"></h1><p class="ssc-plays" id="ssc-plays"></p>
-      <div class="ssc-qr"><img id="ssc-qr" alt="QR code for the act's page"><div><b>Scan me</b><span>Follow on Instagram, send a reaction to the screen, and pledge to see them headline TAM</span><small id="ssc-url"></small></div></div>
-      <div class="ssc-stats"><div><b id="ssc-reacts">0</b><span>reactions</span></div><div><b id="ssc-pledged">0</b><span>tickets pledged for their own show</span></div></div>
     </div>
+    <aside class="ssc-side">
+      <div class="ssc-qr"><img id="ssc-qr" alt="QR code for the act's page"><div><b>Scan me</b><span>Follow on Instagram, send a reaction or a message to the screen, and pledge to see them headline TAM</span><small id="ssc-url"></small></div></div>
+      <div class="ssc-stats"><div><b id="ssc-reacts">0</b><span>reactions</span></div><div><b id="ssc-pledged">0</b><span>tickets pledged for their own show</span></div></div>
+    </aside>
   </section>
   <section class="ssc-idle" id="ssc-idle">
     <h1>Tonight’s line-up</h1>
