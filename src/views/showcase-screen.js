@@ -43,6 +43,7 @@ export function routes(r, ctx, showcase) {
   </section>
 </main>
 <div class="ssc-float" id="ssc-float" aria-hidden="true"></div>
+<aside class="ssc-note" id="ssc-note" hidden><p></p><b></b></aside>
 <button type="button" class="ssc-mic" id="ssc-mic">🎤 Click to let the TAM logo hear the music</button>
 <p class="ssc-hint" id="ssc-hint" hidden></p>
 <p class="ssc-keys">→ next act · ← back · L line-up · M mic · F full screen</p>
@@ -62,6 +63,9 @@ export function routes(r, ctx, showcase) {
     <div class="row-btn ctl-nav"><button class="btn ghost" type="button" data-step="-1">‹ Back</button><button class="btn ghost" type="button" data-off>Line-up</button><button class="btn hot" type="button" data-step="1">Next act ›</button></div>
     <ol class="plain ctl-acts" id="ctl-acts"></ol>
     <p class="small muted" role="status" id="ctl-msg"></p>
+    <h2 class="h3">Waiting for your OK <small class="muted" id="ctl-qn"></small></h2>
+    <p class="small muted">Photos and messages from the audience show here first. <b>Show</b> puts them on the big screen (and keeps a message on the act’s wall); <b>Hide</b> drops them.</p>
+    <ol class="plain ctl-queue" id="ctl-queue"></ol>
     <p class="small"><a href="/api/showcases/${date}/pledges.csv">Download tonight’s pledges (CSV)</a>: who wants a ticket to each act’s own show, to email when it’s on sale.</p>
   </div>
   <form id="ctl-login" class="stack" hidden><p>Sign in with your TAM staff email: we’ll send you a link.</p>

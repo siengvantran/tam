@@ -8,13 +8,31 @@ let last = -1, cur = '', total = 0;
 function floatUp(emoji) {
   const el = document.createElement('span');
   el.className = 'ssc-bubble';
-  el.innerHTML = '<i></i>'; el.firstChild.textContent = emoji; // the <i> pulses with the music while the bubble rises
+  el.innerHTML = '<i></i>'; // the <i> pulses with the music while the bubble rises
+  if (emoji === 'tam') el.firstChild.innerHTML = '<img src="/img/tam-mark-96.png" alt="" class="ssc-tamr">';
+  else if (emoji.startsWith('/')) { const im = new Image(); im.src = emoji; im.className = 'ssc-photo-r'; im.alt = ''; el.firstChild.appendChild(im); el.classList.add('is-photo'); }
+  else el.firstChild.textContent = emoji;
   el.style.animationDuration = `${4.2 - Math.min(1.4, level * 2.5)}s`; // louder music, faster rise
   el.style.left = `${8 + Math.random() * 84}%`;
   el.style.setProperty('--drift', `${(Math.random() - 0.5) * 160}px`);
   el.style.fontSize = `${56 + Math.random() * 56}px`;
   $('#ssc-float').appendChild(el);
   setTimeout(() => el.remove(), 4300);
+}
+
+// a message from the audience: a card that slides in, stays a while, and goes
+const notes = [];
+function note(x) {
+  notes.push(x);
+  if (notes.length === 1) nextNote();
+}
+function nextNote() {
+  const x = notes[0]; if (!x) return;
+  const el = document.getElementById('ssc-note');
+  el.querySelector('p').textContent = `“${x.message}”`;
+  el.querySelector('b').textContent = `— ${x.name}`;
+  el.hidden = false; el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+  setTimeout(() => { el.classList.remove('in'); setTimeout(() => { el.hidden = true; notes.shift(); nextNote(); }, 500); }, 9000);
 }
 
 function bump(el, to) {
@@ -51,7 +69,9 @@ async function tick() {
       const S = await r.json();
       show(S.current);
       // on first load, don't replay old reactions
-      if (last >= 0) S.feed.filter((x) => S.current && x.slug === S.current.slug).forEach((x, i) => setTimeout(() => floatUp(x.emoji), i * 180));
+      if (last >= 0) S.feed.filter((x) => S.current && x.slug === S.current.slug).forEach((x, i) => setTimeout(() => {
+        if (x.kind === 'note') note(x); else floatUp(x.kind === 'photo' ? x.src : x.emoji);
+      }, i * 180));
       last = S.last;
     }
   } catch { /* try again */ }

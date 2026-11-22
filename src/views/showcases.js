@@ -207,8 +207,19 @@ function actPage(ctx, showcase, { l, a }) {
 <section class="section va-live" id="live"><div class="wrap narrow"><div class="va-panel">
   <div class="label">Live at the Sunday Showcase</div><h2>Cheer ${a.name} on the big screen</h2>
   <p class="muted">Tap to send a reaction: it floats up the screen while ${a.name} is on.</p>
-  <div class="va-reacts" data-react="/api/showcases/${l.date}/act/${a.slug}/react">${REACTIONS.map((e) => html`<button type="button" class="va-react" data-emoji="${e}" aria-label="Send ${e}">${e}</button>`)}</div>
+  <div class="va-reacts" data-react="/api/showcases/${l.date}/act/${a.slug}/react">${REACTIONS.map((e) => e === 'tam'
+    ? html`<button type="button" class="va-react va-react-tam" data-emoji="tam" aria-label="Send the TAM logo"><img src="/img/tam-mark-96.png" alt="" width="40" height="40"></button>`
+    : html`<button type="button" class="va-react" data-emoji="${e}" aria-label="Send ${e}">${e}</button>`)}</div>
   <p class="small muted va-react-msg" role="status" aria-live="polite"></p>
+  <div class="va-live-more">
+    <label class="btn ghost va-photo-btn">📸 Send a photo to the screen<input type="file" accept="image/*" data-react-photo="/api/showcases/${l.date}/act/${a.slug}/react/photo" hidden></label>
+    <form class="stack va-msg" data-live-note="/api/showcases/${l.date}/act/${a.slug}/wall">
+      <label class="field"><span>A message for ${a.name}</span><textarea name="message" rows="2" maxlength="280" required placeholder="What did you love?"></textarea></label>
+      <label class="field"><span>Your name</span><input name="name" maxlength="40" required autocomplete="given-name"></label>
+      <button class="btn hot small" type="submit">Send to the screen and ${a.name}’s wall</button><p class="err" role="status"></p>
+    </form>
+    <p class="small muted">Photos and messages go up on the big screen once TAM has had a quick look, and messages stay on ${a.name}’s wall.</p>
+  </div>
   ${insta ? html`<p><a class="btn hot va-insta" href="${insta}" target="_blank" rel="noopener">Follow ${a.name} on Instagram</a></p>` : ''}
 </div>
 <div class="va-panel va-pledge">
