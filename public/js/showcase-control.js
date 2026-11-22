@@ -56,6 +56,21 @@ async function load() {
 }
 load();
 
+// photos and messages from the audience wait here for a staff OK before the screen shows them
+async function queue() {
+  if (box.hidden) return;
+  try {
+    const { items } = await api(`/api/showcases/${date}/live/queue`);
+    const name = (slug) => (acts.find((a) => a.slug === slug) || {}).name || slug;
+    $('#ctl-qn').textContent = items.length ? `(${items.length})` : '';
+    $('#ctl-queue').innerHTML = items.length ? items.map((q) => `<li>${q.kind === 'photo' ? `<img src="${esc(q.src)}" alt="">` : ''}
+      <div class="q-text">${q.kind === 'note' ? `“${esc(q.message)}”<small>${esc(q.name)} · for ${esc(name(q.slug))}</small>` : `<small>Photo for ${esc(name(q.slug))}</small>`}</div>
+      <button class="btn hot small" type="button" data-q="${esc(q.id)}" data-show="1">Show</button><button class="btn ghost small" type="button" data-q="${esc(q.id)}">Hide</button></li>`).join('') : '<li class="muted small">Nothing waiting.</li>';
+    $$('[data-q]', box).forEach((b) => { b.onclick = async () => { b.disabled = true; try { await api(`/api/showcases/${date}/live/queue/${b.dataset.q}`, { method: 'POST', body: { show: Boolean(b.dataset.show) } }); } catch (e) { msg(e.message); } queue(); }; });
+  } catch { /* signed out or offline: try again */ }
+}
+setInterval(queue, 4000); setTimeout(queue, 1500);
+
 // on a computer (the sound desk): arrow keys and L
 addEventListener('keydown', (e) => {
   if (box.hidden || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;

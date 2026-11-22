@@ -247,3 +247,30 @@ if (pledge) pledge.addEventListener('submit', async (e) => {
     f.innerHTML = `<p class="ok"><b>Thank you!</b> ${j.again ? 'We’ve updated your pledge.' : 'You’re on the list.'} ${j.tickets} ${j.tickets === 1 ? 'ticket' : 'tickets'} pledged so far. We’ll email you when tickets are on sale.</p>`;
   } catch (err) { out.textContent = err.message; }
 });
+
+// a photo as a reaction, and a message for the screen and the wall
+const photoIn = document.querySelector('[data-react-photo]');
+if (photoIn) photoIn.addEventListener('change', async () => {
+  const say = document.querySelector('.va-react-msg');
+  const f = photoIn.files[0]; if (!f) return;
+  say.textContent = 'Sending your photo…';
+  try {
+    const { shrinkImage } = await import('./lib.js');
+    const image = await shrinkImage(f, 800, 0.8);
+    const r = await fetch(photoIn.dataset.reactPhoto, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ image }) });
+    const j = await r.json().catch(() => ({}));
+    say.textContent = r.ok ? 'Thanks! Your photo goes up on the big screen once TAM has had a quick look.' : (j.error || 'That didn’t work. Try another photo.');
+  } catch (e) { say.textContent = e.message; }
+  photoIn.value = '';
+});
+const note = document.querySelector('[data-live-note]');
+if (note) note.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const out = note.querySelector('.err');
+  try {
+    const r = await fetch(note.dataset.liveNote, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: note.name.value, message: note.message.value }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'That didn’t work. Try again.');
+    note.reset(); out.classList.add('ok'); out.textContent = 'Sent! It goes up on the screen once TAM has had a quick look, and stays on the wall.';
+  } catch (err) { out.classList.remove('ok'); out.textContent = err.message; }
+});

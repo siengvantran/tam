@@ -47,7 +47,7 @@ export const songOf = (x) => {
 export const linkName = (u) => (LINK_NAMES.find(([rx]) => rx.test(u)) || [, 'Website'])[1];
 
 // Each act's page has its own look: a vibe staff pick in the editor.
-export const REACTIONS = ['❤️', '🔥', '👏', '🎶', '✨', '😍'];
+export const REACTIONS = ['🤘', '🔥', '❤️', '👏', '🎸', '🥁', '🎤', '⚡', '🙌', '🎶', '✨', '😍', 'tam']; // 'tam' is the TAM logo
 export const VIBES = {
   stage: 'TAM stage: gold and black',
   disco: 'Disco: glitter gold and pink',
@@ -116,9 +116,11 @@ export function showcaseDomain(ctx) {
   // the night itself: who's on the big screen, reactions from phones, pledges for a headline show
   db.showcaseLive = db.showcaseLive || {};
   db.showcasePledges = db.showcasePledges || {};
-  const liveOf = (date) => { const v = (db.showcaseLive[date] = db.showcaseLive[date] || {}); v.reacts = v.reacts || {}; v.feed = v.feed || []; v.seq = v.seq || 0; return v; };
+  const liveOf = (date) => { const v = (db.showcaseLive[date] = db.showcaseLive[date] || {}); v.reacts = v.reacts || {}; v.feed = v.feed || []; v.queue = v.queue || []; v.seq = v.seq || 0; return v; };
   const pledgesOf = (date) => (db.showcasePledges[date] = db.showcasePledges[date] || {});
   const reactLimited = rateLimiter({ max: 40 });
+  const photoLimited = rateLimiter({ max: 4 });
+  const queueFor = (date, item) => { const lv = liveOf(date); lv.queue.push({ id: newId('Q'), ...item, at: new Date(ctx.now()).toISOString(), status: 'pending' }); if (lv.queue.length > 300) lv.queue.splice(0, lv.queue.length - 300); };
   const pledgeLimited = rateLimiter({ max: 8 });
   // reactions arrive fast: saved at most every few seconds
   let dirty = false;
@@ -289,6 +291,8 @@ export function showcaseDomain(ctx) {
         if (!name || !message) throw fail(400, 'Add your name and a note.');
         const w = { id: newId('W'), kind: 'note', name, message, at: new Date(ctx.now()).toISOString(), status: ctx.cfg.pinModeration ? 'pending' : 'shown', by: 'fan' };
         wallOf(params.date, params.slug).push(w);
+        // on the night, it waits for a staff OK to go up on the big screen too
+        if (params.date === ctx.today()) queueFor(params.date, { kind: 'note', slug: params.slug, wallId: w.id, name, message });
         if (ctx.club) ctx.club.awardReq(req, 'wall', w.id); // a TAM Club point, if they're signed in
         await save();
         send(res, 201, { ok: true, status: w.status });
@@ -465,6 +469,34 @@ export function showcaseDomain(ctx) {
         const rows = [['Act', 'Name', 'Email', 'Tickets', 'When']];
         for (const [slug, list] of Object.entries(pledgesOf(params.date))) for (const p of list) rows.push([slug, p.name, p.email, p.qty, p.at]);
         send(res, 200, rows.map((r) => r.map(q).join(',')).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="showcase-pledges-${params.date}.csv"` });
+      });
+
+      // a photo from the audience, sent as a reaction: it floats up the screen once staff OK it
+      r.post('/api/showcases/:date/act/:slug/react/photo', async (req, res, { params }) => {
+        if (!act(params.date, params.slug)) throw fail(404, 'That act isn’t in this showcase.');
+        if (photoLimited(req)) throw fail(429, 'One photo at a time: try again in a minute.');
+        const b = await readJson(req, 1_500_000);
+        const src = await savePhoto(ctx, b.image, `react-${params.slug}`);
+        queueFor(params.date, { kind: 'photo', slug: params.slug, src, name: text(b.name, 40) });
+        await save();
+        send(res, 201, { ok: true });
+      });
+      // staff: what's waiting to go on the screen, and OK or hide each
+      r.get('/api/showcases/:date/live/queue', (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        send(res, 200, { items: liveOf(params.date).queue.filter((x) => x.status === 'pending').slice(-50) }, { 'Cache-Control': 'no-store' });
+      });
+      r.post('/api/showcases/:date/live/queue/:id', async (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        const b = await readJson(req, 256);
+        const lv = liveOf(params.date);
+        const q = lv.queue.find((x) => x.id === params.id);
+        if (!q) throw fail(404, 'That isn’t waiting any more.');
+        q.status = b.show ? 'shown' : 'hidden';
+        if (q.kind === 'note') { const w = wallOf(params.date, q.slug).find((x) => x.id === q.wallId); if (w) w.status = b.show ? 'shown' : 'removed'; }
+        if (b.show) { lv.seq += 1; lv.feed.push({ id: lv.seq, slug: q.slug, kind: q.kind, ...(q.kind === 'photo' ? { src: q.src } : { name: q.name, message: q.message }) }); if (lv.feed.length > 200) lv.feed.splice(0, lv.feed.length - 200); }
+        await save();
+        send(res, 200, { ok: true });
       });
 
       r.post('/api/showcases/:date/act/:slug/want', async (req, res, { params }) => {
