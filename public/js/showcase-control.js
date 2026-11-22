@@ -55,3 +55,11 @@ async function load() {
   }; });
 }
 load();
+
+// on a computer (the sound desk): arrow keys and L
+addEventListener('keydown', (e) => {
+  if (box.hidden || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); $('[data-step="1"]', box).click(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); $('[data-step="-1"]', box).click(); }
+  else if (e.key === 'l' || e.key === 'L') $('[data-off]', box).click();
+});

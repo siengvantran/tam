@@ -24,6 +24,7 @@ export function routes(r, ctx, showcase) {
 <link rel="icon" type="image/png" href="/img/favicon-48.png"><link rel="stylesheet" href="${FONTS}"><link rel="stylesheet" href="/css/site.css"></head>
 <body class="ssc-screen" data-date="${date}" data-site="${site}" data-base="${ctx.cfg.siteUrl}">
 <div class="ssc-bg" id="ssc-bg" aria-hidden="true"></div>
+<canvas class="ssc-viz" id="ssc-viz" aria-hidden="true"></canvas>
 <header class="ssc-top"><img src="/img/tam-logo-640.png" alt="TAM" class="ssc-tam"><div><div class="ssc-k">Temple of Art &amp; Music</div><div class="ssc-t">Sunday Showcase${l ? html` · ${l.when.replace(/ \d{4}$/, '')}` : ''}</div></div></header>
 <main class="ssc-stage">
   <section class="ssc-act" id="ssc-act" hidden>
@@ -42,6 +43,9 @@ export function routes(r, ctx, showcase) {
   </section>
 </main>
 <div class="ssc-float" id="ssc-float" aria-hidden="true"></div>
+<button type="button" class="ssc-mic" id="ssc-mic">🎤 Click to let the TAM logo hear the music</button>
+<p class="ssc-hint" id="ssc-hint" hidden></p>
+<p class="ssc-keys">→ next act · ← back · L line-up · M mic · F full screen</p>
 <a class="ssc-ctl" href="${control}" aria-label="Staff: control the screen"><img src="/live/qr.svg?u=${encodeURIComponent(control)}" alt=""><span>Staff: scan to run the screen</span></a>
 <script type="module" src="/js/showcase-screen.js"></script>
 </body></html>`}`);
@@ -53,7 +57,7 @@ export function routes(r, ctx, showcase) {
       title: 'Run the big screen', path: `${PATH}/control`, noindex: true, ambient: null, scripts: ['/js/showcase-control.js'], bodyClass: 'staff ssc-control',
       body: html`<section class="section"><div class="wrap narrow">
   <div class="label">Sunday Showcase · staff</div><h1>Run the big screen</h1>
-  <p class="muted">Open <a href="${PATH}/screen" target="_blank">${ctx.cfg.siteUrl.replace(/^https?:\/\//, '')}${PATH}/screen</a> on the projector. Tap an act to put them on screen; tap <b>Line-up</b> between acts.</p>
+  <p class="muted">Open <a href="${PATH}/screen" target="_blank">${ctx.cfg.siteUrl.replace(/^https?:\/\//, '')}${PATH}/screen</a> on the projector. Tap an act to put them on screen; tap <b>Line-up</b> between acts. On a computer (the sound desk), the arrow keys work too: → next act, ← back, L line-up.</p>
   <div id="ctl" data-date="${date}" hidden>
     <div class="row-btn ctl-nav"><button class="btn ghost" type="button" data-step="-1">‹ Back</button><button class="btn ghost" type="button" data-off>Line-up</button><button class="btn hot" type="button" data-step="1">Next act ›</button></div>
     <ol class="plain ctl-acts" id="ctl-acts"></ol>

@@ -1841,3 +1841,9 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ctl-act small { display: block; opacity: .7; }
 .ctl-act em { margin-left: auto; font-style: normal; font-weight: 700; color: #0b0709; background: #d4ff3c; padding: 4px 10px; border-radius: 999px; font-size: 12px; }
 .ctl-act.on { border-color: #d4ff3c; background: rgba(212,255,60,.08); }
+/* the big screen: the TAM logo that hears the music */
+.ssc-viz { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; mix-blend-mode: screen; }
+.ssc-top, .ssc-stage { z-index: 1; }
+.ssc-mic { position: fixed; left: 1.4vw; bottom: 1.4vh; z-index: 3; font: 600 1.6vh Inter, sans-serif; color: #0b0709; background: #d4ff3c; border: 0; border-radius: 999px; padding: 1vh 1.4vw; cursor: pointer; }
+.ssc-hint { position: fixed; left: 50%; bottom: 2vh; transform: translateX(-50%); z-index: 3; margin: 0; background: rgba(0,0,0,.7); padding: 1vh 1.4vw; border-radius: 999px; font-size: 1.7vh; }
+.ssc-keys { position: fixed; left: 50%; bottom: 1.2vh; transform: translateX(-50%); z-index: 2; margin: 0; font-size: 1.3vh; opacity: .35; }
