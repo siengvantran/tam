@@ -86,6 +86,12 @@ test('big screen: staff pick the act, phones react and pledge, the screen shows 
   const b0 = (await call(`/api/showcases/${DATE}/live`)).body.last;
   assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/wall`, { method: 'POST', body: { name: 'Kim', message: 'Straight up!' } })).status, 201);
   assert.deepEqual((await call(`/api/showcases/${DATE}/live?after=${b0}`)).body.feed.map((x) => x.message), ['Straight up!']);
+  // a message for the whole night, from the line-up page: straight up too
+  const b1 = (await call(`/api/showcases/${DATE}/live`)).body.last;
+  assert.equal((await call(`/api/showcases/${DATE}/live/note`, { method: 'POST', body: { name: 'Kim', message: '' } })).status, 400);
+  assert.equal((await call(`/api/showcases/${DATE}/live/note`, { method: 'POST', body: { name: 'Kim', message: 'Hello everyone!' } })).body.screen, 'shown');
+  assert.deepEqual((await call(`/api/showcases/${DATE}/live?after=${b1}`)).body.feed.map((x) => [x.slug, x.message]), [['', 'Hello everyone!']]);
+  assert.equal((await call(`/api/showcases/2026-12-20/live/note`, { method: 'POST', body: { name: 'Kim', message: 'Hi' } })).status, 404);
   // staff switch on "check first": then a message and a photo wait for an OK
   assert.equal((await call(`/api/showcases/${DATE}/live/settings`, { method: 'POST', body: { checkFirst: true } })).status, 401);
   await call(`/api/showcases/${DATE}/live/settings`, { method: 'POST', body: { checkFirst: true }, staff: true });

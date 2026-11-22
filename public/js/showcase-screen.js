@@ -62,6 +62,7 @@ function bump(el, to) {
 
 function show(c) {
   const act = $('#ssc-act'), idle = $('#ssc-idle');
+  document.body.classList.toggle('is-idle', !c);
   if (!c) { act.hidden = true; idle.hidden = false; $('#ssc-bg').style.backgroundImage = ''; cur = ''; return; }
   if (c.slug !== cur) {
     cur = c.slug;
@@ -88,7 +89,7 @@ async function tick() {
       const S = await r.json();
       show(S.current);
       // on first load, don't replay old reactions
-      if (last >= 0) S.feed.filter((x) => S.current && x.slug === S.current.slug).forEach((x, i) => setTimeout(() => {
+      if (last >= 0) S.feed.filter((x) => !S.current || !x.slug || x.slug === S.current.slug).forEach((x, i) => setTimeout(() => {
         if (x.kind === 'note') note(x); else if (x.kind === 'photo') pic(x.src); else floatUp(x.emoji);
       }, i * 180));
       last = S.last;
@@ -141,6 +142,24 @@ function noteColour() {
   return NOTE_COLOURS[note];
 }
 
+// the line-up orbits the TAM logo: faster and wider when the music is loud, nearer acts bigger
+const ring = [...document.querySelectorAll('#ssc-lineup li')];
+let spin = 0, lastT = 0;
+function orbit(t) {
+  const dt = Math.min(64, t - (lastT || t)); lastT = t;
+  spin += dt * (0.00008 + level * 0.0009);
+  const cx = innerWidth / 2, cy = innerHeight / 2 + innerHeight * 0.03;
+  const rx = Math.min(innerWidth * 0.36, innerHeight * 0.62) * (1 + level * 0.06), ry = innerHeight * 0.32 * (1 + level * 0.06);
+  ring.forEach((li, i) => {
+    const a = spin + (i / ring.length) * Math.PI * 2;
+    const depth = (Math.sin(a) + 1) / 2; // 0 at the back (top), 1 at the front (bottom)
+    const sc = 0.72 + depth * 0.4 + level * 0.18;
+    li.style.transform = `translate(${cx + Math.cos(a) * rx}px, ${cy + Math.sin(a) * ry}px) translate(-50%, -50%) scale(${sc.toFixed(3)})`;
+    li.style.zIndex = String(Math.round(depth * 100));
+    li.style.opacity = (0.65 + depth * 0.35).toFixed(2);
+  });
+}
+
 function frame(t) {
   requestAnimationFrame(frame);
   const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2;
@@ -155,7 +174,8 @@ function frame(t) {
     // a beat: louder than the running average sends out a ring
     if (level > avg * 1.5 + 0.06 && t - lastRing > 260) { rings.push({ r: 0, c: colour, w: 3 + level * 12, a: 0.5 }); lastRing = t; }
   } else { level += ((0.12 + Math.sin(t / 900) * 0.05) - level) * 0.05; } // a gentle breath until the mic is on
-  const base = Math.min(W, H) * 0.34;
+  const idle = document.body.classList.contains('is-idle');
+  const base = Math.min(W, H) * (idle ? 0.25 : 0.34);
   for (const r of rings) {
     r.r += (6 + level * 30) * devicePixelRatio; r.a *= 0.968;
     g.beginPath(); g.arc(cx, cy, base * 0.55 + r.r, 0, Math.PI * 2);
@@ -164,13 +184,14 @@ function frame(t) {
   rings = rings.filter((r) => r.a > 0.03 && r.r < Math.max(W, H));
   if (logo.complete && logo.naturalWidth) {
     const s = base * (1 + level * 0.35);
-    g.globalAlpha = 0.14 + level * 0.4; g.shadowColor = colour; g.shadowBlur = 30 + level * 160;
+    g.globalAlpha = idle ? Math.min(1, 0.8 + level * 0.4) : 0.14 + level * 0.4; g.shadowColor = colour; g.shadowBlur = (idle ? 50 : 30) + level * (idle ? 260 : 160);
     g.drawImage(logo, cx - s, cy - s, s * 2, s * 2);
   }
   g.globalAlpha = 1; g.shadowBlur = 0;
+  if (idle) orbit(t);
   // the reactions floating up pulse and glow with the same sound
-  floatBox.style.setProperty('--lvl', level.toFixed(3));
-  floatBox.style.setProperty('--col', colour);
+  document.body.style.setProperty('--lvl', level.toFixed(3));
+  document.body.style.setProperty('--col', colour);
 }
 requestAnimationFrame(frame);
 

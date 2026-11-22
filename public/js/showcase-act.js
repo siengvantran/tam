@@ -259,7 +259,7 @@ if (photoIn) photoIn.addEventListener('change', async () => {
     const image = await shrinkImage(f, 800, 0.8);
     const r = await fetch(photoIn.dataset.reactPhoto, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ image }) });
     const j = await r.json().catch(() => ({}));
-    say.textContent = r.ok ? 'Thanks! Your photo goes up on the big screen once TAM has had a quick look.' : (j.error || 'That didn’t work. Try another photo.');
+    say.textContent = r.ok ? (j.screen === 'shown' ? 'Thanks! Your photo is on its way to the big screen.' : 'Thanks! Your photo goes up on the big screen once TAM has had a quick look.') : (j.error || 'That didn’t work. Try another photo.');
   } catch (e) { say.textContent = e.message; }
   photoIn.value = '';
 });
@@ -271,6 +271,6 @@ if (note) note.addEventListener('submit', async (e) => {
     const r = await fetch(note.dataset.liveNote, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: note.name.value, message: note.message.value }) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(j.error || 'That didn’t work. Try again.');
-    note.reset(); out.classList.add('ok'); out.textContent = 'Sent! It goes up on the screen once TAM has had a quick look, and stays on the wall.';
+    note.reset(); out.classList.add('ok'); out.textContent = j.screen === 'shown' ? 'Sent! It’s on its way to the big screen, and stays on the wall.' : j.screen ? 'Sent! It goes up on the screen once TAM has had a quick look, and stays on the wall.' : 'Sent! It’s on the wall.';
   } catch (err) { out.classList.remove('ok'); out.textContent = err.message; }
 });

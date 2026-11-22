@@ -22,7 +22,7 @@ export function routes(r, ctx, showcase) {
     respond(res, `<!doctype html>${html`<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sunday Showcase · on the big screen</title><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#06040a">
 <link rel="icon" type="image/png" href="/img/favicon-48.png"><link rel="stylesheet" href="${FONTS}"><link rel="stylesheet" href="/css/site.css"></head>
-<body class="ssc-screen" data-date="${date}" data-site="${site}" data-base="${ctx.cfg.siteUrl}">
+<body class="ssc-screen is-idle" data-date="${date}" data-site="${site}" data-base="${ctx.cfg.siteUrl}">
 <div class="ssc-bg" id="ssc-bg" aria-hidden="true"></div>
 <canvas class="ssc-viz" id="ssc-viz" aria-hidden="true"></canvas>
 <header class="ssc-top"><img src="/img/tam-logo-640.png" alt="TAM" class="ssc-tam"><div><div class="ssc-k">Temple of Art &amp; Music</div><div class="ssc-t">Sunday Showcase${l ? html` · ${l.when.replace(/ \d{4}$/, '')}` : ''}</div></div></header>
@@ -38,8 +38,8 @@ export function routes(r, ctx, showcase) {
   </section>
   <section class="ssc-idle" id="ssc-idle">
     <h1>Tonight’s line-up</h1>
-    <ol class="ssc-lineup" id="ssc-lineup">${l ? l.acts.filter((a) => !a.tba).map((a) => html`<li><img src="${a.photo || '/img/christmas/tam-logo-gold.png'}" alt=""><b>${a.name}</b></li>`) : ''}</ol>
-    <div class="ssc-qr big"><img src="/live/qr.svg?u=${encodeURIComponent(`${ctx.cfg.siteUrl}${PATH}`)}" alt="QR code for the Sunday Showcase"><div><b>Meet every act</b><span>${ctx.cfg.showcaseHost}</span></div></div>
+    <ol class="ssc-lineup" id="ssc-lineup">${l ? l.acts.filter((a) => !a.tba).map((a, i) => html`<li><img src="${a.photo || '/img/christmas/tam-logo-gold.png'}" alt=""><b><i>${i + 1}</i> ${a.name}</b></li>`) : ''}</ol>
+    <div class="ssc-qr big"><img src="/live/qr.svg?u=${encodeURIComponent(`${ctx.cfg.siteUrl}${PATH}#screen`)}" alt="QR code to send a message to the screen"><div><b>Scan me</b><span>Put a message up on this screen, and meet every act</span></div></div>
   </section>
 </main>
 <div class="ssc-float" id="ssc-float" aria-hidden="true"></div>
