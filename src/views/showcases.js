@@ -10,7 +10,7 @@ import { html as respond, redirect } from '../lib/http.js';
 import { layout, when, times, nightHref } from './layout.js';
 import { bookingData, bookingSection } from './sections.js';
 import { onMap, TAM } from '../lib/places.js';
-import { VIBE_MARKS } from '../domain/showcases.js';
+import { VIBE_MARKS, REACTIONS } from '../domain/showcases.js';
 
 const vibeMark = (a, cls = 'va-vibe') => { const [name, sign] = VIBE_MARKS[a.vibe] || VIBE_MARKS.stage; return html`<span class="${cls} vibe-${a.vibe || 'stage'}" title="${name}"><i aria-hidden="true">${sign}</i><b>${name}</b></span>`; };
 
@@ -172,6 +172,7 @@ ${n ? html`${bookingSection(ctx, { nights: [n], single: true, heading: `Free tic
 function actPage(ctx, showcase, { l, a }) {
   const day = l.when.replace(/ \d{4}$/, '');
   const url = `${ctx.cfg.siteUrl}${a.href}`;
+  const insta = (a.links.find((k) => /instagram\.com/.test(k.url)) || {}).url || '';
   const fest = showcase.festival();
   const festUrl = fest ? (fest.home && fest.home.url) || fest.path : 'https://christmas.tam.tv';
   const slides = [...(a.photo ? [{ type: 'image', src: a.photo }] : []), ...(a.media || [])];
@@ -246,6 +247,24 @@ ${worldMap(a)}
     </div>
     <figcaption class="small muted">Your invite card</figcaption>
   </figure>
+</div></div></section>
+<section class="section va-live" id="live"><div class="wrap narrow"><div class="va-panel">
+  <div class="label">Live at the Sunday Showcase</div><h2>Cheer ${a.name} on the big screen</h2>
+  <p class="muted">Tap to send a reaction: it floats up the screen while ${a.name} is on.</p>
+  <div class="va-reacts" data-react="/api/showcases/${l.date}/act/${a.slug}/react">${REACTIONS.map((e) => html`<button type="button" class="va-react" data-emoji="${e}" aria-label="Send ${e}">${e}</button>`)}</div>
+  <p class="small muted va-react-msg" role="status" aria-live="polite"></p>
+  ${insta ? html`<p><a class="btn hot va-insta" href="${insta}" target="_blank" rel="noopener">Follow ${a.name} on Instagram</a></p>` : ''}
+</div>
+<div class="va-panel va-pledge">
+  <div class="label">Their own night at TAM</div><h2>Would you buy a ticket to see ${a.name} headline TAM?</h2>
+  <p>Pledge now and we’ll email you first when ${a.name} has their own headline show. No payment now: it shows us who’s ready to sell out a night.</p>
+  <form class="stack" data-pledge="/api/showcases/${l.date}/act/${a.slug}/pledge">
+    <label class="field"><span>Your name</span><input name="name" required maxlength="60" autocomplete="given-name"></label>
+    <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email"></label>
+    <label class="field"><span>How many tickets?</span><select name="qty">${[1, 2, 3, 4, 5, 6].map((n) => html`<option value="${n}">${n}</option>`)}</select></label>
+    <label class="check"><input type="checkbox" name="consent" required> Email me when ${a.name} has a headline show at TAM. I can unsubscribe any time.</label>
+    <button class="btn hot" type="submit">I’d buy a ticket</button><p class="err" role="status"></p>
+  </form>
 </div></div></section>
 <section class="section va-xmas" id="xmas"><div class="sc-snow" aria-hidden="true"></div>${shardTree('va-tree')}<div class="wrap narrow"><div class="va-panel va-xpanel">
   <div class="label">✦ The Best Christmas Ever ✦</div><h2>Want ${a.name} at the Christmas Showcase Special?</h2>

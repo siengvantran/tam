@@ -217,3 +217,33 @@ if (awf) awf.addEventListener('submit', async (e) => {
     if (window.tamTrack) window.tamTrack('showcase_wall_note', { act: SIG.split('/').pop() });
   } catch (err) { msg.textContent = err.message; }
 });
+
+// ----- live on the night: reactions to the big screen, and a pledge for their own headline show -----
+const reacts = document.querySelector('[data-react]');
+if (reacts) {
+  const say = document.querySelector('.va-react-msg');
+  reacts.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-emoji]');
+    if (!b) return;
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    try {
+      const r = await fetch(reacts.dataset.react, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ emoji: b.dataset.emoji }) });
+      const j = await r.json().catch(() => ({}));
+      say.textContent = r.ok ? `Sent ${b.dataset.emoji} to the big screen` : (j.error || 'Try again in a moment.');
+    } catch { say.textContent = 'Try again in a moment.'; }
+  });
+  // arrived from the QR on the big screen: straight to the reactions
+  if (new URLSearchParams(location.search).get('from') === 'screen') document.getElementById('live').scrollIntoView({ block: 'start' });
+}
+const pledge = document.querySelector('[data-pledge]');
+if (pledge) pledge.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = pledge, out = f.querySelector('.err');
+  const body = { name: f.name.value, email: f.email.value, qty: f.qty.value, consent: f.consent.checked };
+  try {
+    const r = await fetch(f.dataset.pledge, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'That didn’t work. Try again.');
+    f.innerHTML = `<p class="ok"><b>Thank you!</b> ${j.again ? 'We’ve updated your pledge.' : 'You’re on the list.'} ${j.tickets} ${j.tickets === 1 ? 'ticket' : 'tickets'} pledged so far. We’ll email you when tickets are on sale.</p>`;
+  } catch (err) { out.textContent = err.message; }
+});
