@@ -35,6 +35,25 @@ function nextNote() {
   setTimeout(() => { el.classList.remove('in'); setTimeout(() => { el.hidden = true; notes.shift(); nextNote(); }, 500); }, 9000);
 }
 
+// a photo from the audience: a big polaroid that drops in on the right, holds, and goes
+const pics = [];
+function pic(src) {
+  pics.push(src);
+  if (pics.length === 1) nextPic();
+}
+function nextPic() {
+  const src = pics[0]; if (!src) return;
+  const el = document.getElementById('ssc-pic');
+  const im = el.querySelector('img');
+  const go = () => {
+    el.style.setProperty('--tilt', `${(Math.random() - 0.5) * 8}deg`);
+    el.hidden = false; el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+    setTimeout(() => { el.classList.remove('in'); setTimeout(() => { el.hidden = true; pics.shift(); nextPic(); }, 600); }, 7000);
+  };
+  im.onload = go; im.onerror = () => { pics.shift(); nextPic(); };
+  im.src = src;
+}
+
 function bump(el, to) {
   if (Number(el.textContent) === to) return;
   el.textContent = to;
@@ -70,7 +89,7 @@ async function tick() {
       show(S.current);
       // on first load, don't replay old reactions
       if (last >= 0) S.feed.filter((x) => S.current && x.slug === S.current.slug).forEach((x, i) => setTimeout(() => {
-        if (x.kind === 'note') note(x); else floatUp(x.kind === 'photo' ? x.src : x.emoji);
+        if (x.kind === 'note') note(x); else if (x.kind === 'photo') pic(x.src); else floatUp(x.emoji);
       }, i * 180));
       last = S.last;
     }
