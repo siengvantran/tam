@@ -523,6 +523,20 @@ export function showcaseDomain(ctx) {
         await save();
         send(res, 200, { ok: true, checkFirst: lv.checkFirst });
       });
+      // staff: wipe the night's reactions, photos and messages (after testing): counts back to zero,
+      // the screen's feed and queue emptied, and fans' messages from that day taken off the acts' walls
+      r.post('/api/showcases/:date/live/reset', async (req, res, { params }) => {
+        ctx.team.guard(req, 'ops');
+        const lv = liveOf(params.date);
+        const reactions = Object.values(lv.reacts).reduce((t, m) => t + Object.values(m || {}).reduce((x, n) => x + n, 0), 0);
+        lv.reacts = {}; lv.feed = []; lv.queue = [];
+        let messages = 0;
+        for (const list of Object.values(db.showcaseWall[params.date] || {})) {
+          for (const w of list) if (w.by === 'fan' && w.status !== 'removed' && String(w.at).slice(0, 10) === params.date) { w.status = 'removed'; messages += 1; }
+        }
+        await save();
+        send(res, 200, { ok: true, reactions, messages });
+      });
       r.post('/api/showcases/:date/live/queue/:id', async (req, res, { params }) => {
         ctx.team.guard(req, 'ops');
         const b = await readJson(req, 256);

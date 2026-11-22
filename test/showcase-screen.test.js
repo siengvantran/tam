@@ -111,6 +111,16 @@ test('big screen: staff pick the act, phones react and pledge, the screen shows 
   // the message stays on the act's wall
   assert.ok((await call(`/api/showcases/${DATE}/act/jo-waves/wall`)).body.items.some((w) => w.message === 'What a voice!'));
 
+  // after testing, staff clear the lot: counts to zero, the queue empty, today's messages off the wall; pledges kept
+  assert.equal((await call(`/api/showcases/${DATE}/live/reset`, { method: 'POST', body: {} })).status, 401);
+  const cleared = (await call(`/api/showcases/${DATE}/live/reset`, { method: 'POST', body: {}, staff: true })).body;
+  assert.ok(cleared.reactions >= 4 && cleared.messages >= 2);
+  live = await call(`/api/showcases/${DATE}/live?after=0`);
+  assert.deepEqual(live.body.current.reacts, {});
+  assert.equal(live.body.feed.length, 0);
+  assert.equal(live.body.current.pledged, 3);
+  assert.equal((await call(`/api/showcases/${DATE}/act/jo-waves/wall`)).body.items.filter((w) => w.kind === 'note').length, 0);
+
   // back to the line-up between acts
   await call(`/api/showcases/${DATE}/live`, { method: 'POST', body: { current: null }, staff: true });
   assert.equal((await call(`/api/showcases/${DATE}/live`)).body.current, null);
