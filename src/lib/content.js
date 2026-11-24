@@ -160,6 +160,8 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       image: e.image || (f && f.og) || '/img/og.jpg',
       stories: e.stories || null, collection: e.collection || null,
       handmade: Boolean(e.title), url: e.url || sellsAt, sale,
+      // the night's one page, when it lives on another TAM site (christmas.tam.tv): /events/<slug> sends people there (Vivian, 24 Nov)
+      ...(/^https:\/\//.test(e.page || '') ? { page: e.page } : {}),
       ...(e.priceText || sellsFrom ? { priceText: e.priceText || sellsFrom } : {}), ...(/^https:\/\//.test(e.canonical || '') ? { canonical: e.canonical } : {}),
     };
   }
