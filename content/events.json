@@ -1,6 +1,7 @@
 [
  {
   "slug": "big-christmas-hootenanny",
+    "page": "https://christmas.tam.tv/opening-night",
   "date": "2026-12-04",
   "festival": "best-christmas-ever",
   "title": "The Big Christmas Hootenanny",
@@ -76,6 +77,7 @@
  },
  {
   "slug": "best-christmas-ever-2026-12-05",
+    "page": "https://christmas.tam.tv/artist/mmc",
   "date": "2026-12-05",
   "festival": "best-christmas-ever",
   "title": "The MMC Christmas Shindig",
@@ -95,6 +97,7 @@
  },
  {
   "slug": "dana-gillespie-live",
+    "page": "https://christmas.tam.tv/dana-gillespie",
   "date": "2026-12-16",
   "festival": "best-christmas-ever",
   "title": "Dana Gillespie Live",
@@ -111,6 +114,7 @@
  },
  {
   "slug": "best-christmas-ever-2026-12-20",
+    "page": "https://christmas.tam.tv/artist/wmbb",
   "date": "2026-12-20",
   "festival": "best-christmas-ever",
   "title": "World Music Big Band featuring Steve Pretty",

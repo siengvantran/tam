@@ -84,6 +84,9 @@ export function routes(r, ctx, d) {
     const sc = ctx.showcase && ctx.showcase.next();
     const scDate = sc && (params.slug.match(/-(\d{4}-\d{2}-\d{2})$/) || [])[1];
     if (!url.search && sc && ((n && sc.night && sc.night.slug === n.slug) || (!n && scDate === sc.date))) return redirect(res, `/sunday-showcases${n && n.sale ? '#book' : '#this-sunday'}`, 302);
+    // one page per night (Vivian, 24 Nov): a headline night with its own page on christmas.tam.tv goes there.
+    // Booking confirmations (?booking=…) still show here.
+    if (n && n.page && !url.search) return redirect(res, n.page, 302);
     if (n) return respond(res, eventPage(ctx, d, n, url));
     const past = c.pastBy.get(params.slug);
     if (past) return redirect(res, `/archive/night/${past.slug}`, 301);

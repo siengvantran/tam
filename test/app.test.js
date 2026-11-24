@@ -49,7 +49,7 @@ test('every page of the old www.tam.tv still answers', async () => {
     if (p.path === '/home') assert.equal(r.status, 301, p.path);
     else assert.equal(r.status, 200, `${p.path} → ${r.status}`);
   }
-  for (const p of ['/', '/whats-on', '/the-best-christmas-ever', '/events/big-christmas-hootenanny', '/events/dana-gillespie-live.ics', '/artists', '/artists/danagillespie',
+  for (const p of ['/', '/whats-on', '/the-best-christmas-ever', '/events/best-christmas-ever-2026-12-07', '/events/dana-gillespie-live.ics', '/artists', '/artists/danagillespie',
     '/archive', '/archive/2024', '/tv', '/invite/band', '/invite/p-bowie-1', '/collections/dana-108', '/verify', '/privacy', '/sitemap.xml', '/robots.txt', '/healthz', '/admin', '/door', '/raffle-desk']) {
     assert.equal((await s.call(p)).status, 200, p);
   }
@@ -310,7 +310,16 @@ test('search engines: previews are never indexed, and festival pages point to th
   assert.match(page.body, /<link rel="canonical" href="https:\/\/tam\.tv\/">/);
   assert.match((await live.call('/robots.txt', real)).body, /Sitemap: https:\/\/tam\.tv\/sitemap\.xml/);
   // pages that christmas.tam.tv also has: canonical there, no duplicate event listing
-  for (const [here, there] of [['/the-best-christmas-ever', '/'], ['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'], ['/events/best-christmas-ever-2026-12-05', '/artist/mmc'],
+  // headline nights with their own page there: one page per night, so tam.tv sends people straight to it (Vivian, 24 Nov)
+  for (const [here, there] of [['/events/big-christmas-hootenanny', '/opening-night'], ['/events/dana-gillespie-live', '/dana-gillespie'], ['/events/best-christmas-ever-2026-12-05', '/artist/mmc'], ['/events/best-christmas-ever-2026-12-20', '/artist/wmbb']]) {
+    const r = await live.call(here);
+    assert.equal(r.status, 302, here);
+    assert.equal(r.headers.get('location'), `https://christmas.tam.tv${there}`, here);
+  }
+  assert.equal((await live.call('/events/big-christmas-hootenanny?booking=x')).status, 200); // booking confirmations still show here
+  const cal = (await live.call('/the-best-christmas-ever')).body;
+  assert.match(cal, /<a href="https:\/\/christmas\.tam\.tv\/opening-night" aria-label="Friday 4 December[^"]*">4★/);
+  for (const [here, there] of [['/the-best-christmas-ever', '/'],
     ['/collections/dana-108', '/books'], ['/invite/band', '/invite/band'], ['/artists/bakers-dozen', '/artist/band']]) {
     const r = await live.call(here);
     assert.ok(r.body.includes(`<link rel="canonical" href="https://christmas.tam.tv${there}">`), here);

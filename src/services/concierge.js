@@ -275,7 +275,7 @@ export function conciergeService(ctx, d) {
       result: {
         name: f.name, url: f.path, season: f.season, about: f.lede, dates: f.dates ? `${longDate(f.dates.from)} to ${longDate(f.dates.to)}` : null,
         closed: f.closed || [], nights: c.nightsFor(f.slug).length,
-        pricing: { flat_nights: p.flat ? `${pounds(p.flat.price)} a ticket on most nights` : null, headline_nights: c.nightsFor(f.slug).filter((n) => n.handmade).map((n) => ({ title: n.title, date: longDate(n.date), url: `/events/${n.slug}` })),
+        pricing: { flat_nights: p.flat ? `${pounds(p.flat.price)} a ticket on most nights` : null, headline_nights: c.nightsFor(f.slug).filter((n) => n.handmade).map((n) => ({ title: n.title, date: longDate(n.date), url: n.page || `/events/${n.slug}` })),
           group_discounts: (p.groupTiers || []).map((t) => `${t.label}: ${Math.round(t.off * 100)}% off (standard-priced nights)`),
           packs: (p.packs || []).map((x) => `${x.name}: ${x.min}–${x.max} people, ${Math.round(x.off * 100)}% off`) },
         team_tables: f.features.teamTables ? `Teams of up to ${f.teamTables.maxTeam} can start a shared table of ${f.teamTables.seats} seats; other teams book the same night and join.` : null,

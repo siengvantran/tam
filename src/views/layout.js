@@ -185,7 +185,7 @@ export const ticketState = (t, now = Date.now()) => (t.status === 'AVAILABLE' ? 
 // The Great British Blues Jam has its own page (hosts, house band, sign-up to jam): its nights link there.
 export const BLUES_JAM = '/great-british-blues-jam#jam';
 export const isBluesJam = (x) => /great british blues jam/i.test(String(x && (x.title || x.name) || x || ''));
-export const nightHref = (n) => (isBluesJam(n.title) && !n.festival ? BLUES_JAM : `/events/${n.slug}`);
+export const nightHref = (n) => n.page || (isBluesJam(n.title) && !n.festival ? BLUES_JAM : `/events/${n.slug}`);
 
 export function nightCard(ctx, n, avail) {
   const f = n.festival ? ctx.content.festivalBy.get(n.festival) : null;
@@ -224,7 +224,9 @@ export function festivalCalendar(ctx, f) {
       const p = dateParts(iso);
       if (n && !closed.has(iso)) { // a closed day stays closed, even if a regular night is in the schedule
         const cls = ['on', (f.pricing.special || []).includes(iso) || n.handmade ? 'edge' : '', p.dow === 0 || p.dow >= 5 ? 'wk' : ''].filter(Boolean).join(' ');
-        cells.push(html`<td class="${cls}"><a href="/events/${n.slug}" data-night="${n.slug}" aria-label="${p.weekday} ${d} ${p.month}: ${n.label || 'festival night'}">${d}${n.handmade ? '★' : ''}</a></td>`);
+        cells.push(n.page // its own page: straight there, not the booking form below
+          ? html`<td class="${cls}"><a href="${n.page}" aria-label="${p.weekday} ${d} ${p.month}: ${n.label || n.title}">${d}${n.handmade ? '★' : ''}</a></td>`
+          : html`<td class="${cls}"><a href="/events/${n.slug}" data-night="${n.slug}" aria-label="${p.weekday} ${d} ${p.month}: ${n.label || 'festival night'}">${d}${n.handmade ? '★' : ''}</a></td>`);
       } else {
         cells.push(html`<td class="${closed.has(iso) ? 'closed' : ''}" aria-label="${p.weekday} ${d} ${p.month}${closed.has(iso) ? ': closed' : ''}">${d}</td>`);
       }

@@ -20,7 +20,7 @@ export function seoRoutes(r, ctx) {
   r.get('/sitemap.xml', (req, res) => {
     const urls = new Set(['/', '/whats-on', '/great-british-blues-jam', '/sunday-showcases', '/festivals', '/artists', '/archive', '/tv', '/verify', '/privacy']);
     for (const f of c.festivals) urls.add(f.path);
-    for (const n of c.nights) urls.add(`/events/${n.slug}`);
+    for (const n of c.nights) if (!n.page) urls.add(`/events/${n.slug}`); // a night with its own page elsewhere redirects there
     for (const a of c.artists) urls.add(`/artists/${a.slug}`);
     for (const p of c.legacy) if (p.path !== '/home') urls.add(p.path);
     for (const y of new Set(c.past.map((e) => e.year))) urls.add(`/archive/${y}`);
