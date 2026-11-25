@@ -97,5 +97,15 @@
         "alt": "The Dreamcatchers: Youth Open Mic, 2–7pm"
       }
     ]
-  }
+  },
+  "privateDates": [
+    {
+      "date": "2026-12-01",
+      "note": "Private booking (Vivian, 25 Nov)"
+    },
+    {
+      "date": "2026-12-10",
+      "note": "Private booking (Vivian, 25 Nov)"
+    }
+  ]
 }
