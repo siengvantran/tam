@@ -9,6 +9,17 @@ import { STAGES, PATHWAYS, PLEDGE_WEIGHT } from '../domain/stage.js';
 import { VIBE_MARKS } from '../domain/showcases.js';
 import { embedHtml } from '../lib/media-posts.js';
 import { raw as rawHtml } from './html.js';
+import { dateParts } from '../lib/content.js';
+
+// "From the audience": what the crowd sent the act at their Sunday Showcase, on the big screen (Vivian, 25 Nov)
+function audienceSection(v) {
+  const p = dateParts(v.audience.date);
+  return html`<section class="st-aud" id="audience"><h2 class="st-h">From the audience</h2>
+  <p class="small muted">Sent by the crowd at ${v.act}’s Sunday Showcase at TAM, ${p.weekday} ${p.day} ${p.month}, and shown live on the big screen.</p>
+  ${v.audience.photos.length ? html`<div class="st-aud-photos">${v.audience.photos.map((x) => html`<figure><img src="${x.src}" alt="A photo from the audience" loading="lazy"></figure>`)}</div>` : ''}
+  ${v.audience.notes.length ? html`<div class="aw-grid st-aud-notes">${v.audience.notes.map((x) => html`<figure class="aw-note"><blockquote>${x.message}</blockquote><figcaption>${x.name}</figcaption></figure>`)}</div>` : ''}
+</section>`;
+}
 
 const OPEN_NIGHTS = ['TAM Open Mic', 'The Original Singers Club', 'The Great British Blues Jam', 'Junior Open Mic / JOM'];
 
@@ -205,7 +216,8 @@ export function routes(r, ctx, stage) {
       <section class="section"><div class="wrap st-body">
         <div>${v.youtube ? html`<div class="aw-embed aw-yt st-video"><iframe src="https://www.youtube-nocookie.com/embed/${v.youtube}" title="${v.act}, live" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>` : ''}
           ${v.bio ? html`<div class="prose">${v.bio.split(/\n\s*\n/).map((p) => html`<p>${p}</p>`)}</div>` : ''}
-          ${v.posts.length ? html`<h2 class="st-h">From ${v.act}</h2><div class="aw-grid st-posts">${v.posts.map((p) => html`<figure class="aw-post">${rawHtml(embedHtml(p))}${p.caption ? html`<figcaption>${p.caption}</figcaption>` : ''}</figure>`)}</div>` : ''}</div>
+          ${v.posts.length ? html`<h2 class="st-h">From ${v.act}</h2><div class="aw-grid st-posts">${v.posts.map((p) => html`<figure class="aw-post">${rawHtml(embedHtml(p))}${p.caption ? html`<figcaption>${p.caption}</figcaption>` : ''}</figure>`)}</div>` : ''}
+          ${v.audience ? audienceSection(v) : ''}</div>
         <aside>${v.links.length ? html`<h2>Listen and follow</h2><ul class="st-links">${v.links.map((l) => html`<li><a href="${l}" target="_blank" rel="noopener">${(() => { try { return new URL(l).hostname.replace(/^www\./, ''); } catch { return l; } })()} ↗</a></li>`)}</ul>` : ''}
           ${pledgeBox(v)}
           ${v.backers.length ? html`<h2>Early backers</h2><p class="st-backers">${v.backers.join(' · ')}</p>` : ''}

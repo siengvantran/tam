@@ -147,6 +147,11 @@ function draw(a) {
           <label class="btn ghost">Upload a video<input type="file" accept="video/mp4,video/webm,video/quicktime" data-up="video" class="sr"></label></div>
           <progress max="100" value="0" hidden></progress><p class="err" role="status" aria-live="polite"></p><p class="small muted">Videos up to 60 MB (MP4 plays everywhere).</p></form>
         <ul class="plain st-postlist">${a.posts.map((p) => `<li><span>${esc({ youtube: 'YouTube video', instagram: 'Instagram post', tiktok: 'TikTok', facebook: 'Facebook post', image: 'Photo', video: 'Video' }[p.kind] || 'Post')}${p.caption ? `: ${esc(p.caption)}` : ''}</span><button class="sh-x" type="button" data-rm-post="${esc(p.id)}" aria-label="Remove">×</button></li>`).join('') || '<li class="muted">No posts yet.</li>'}</ul></section>
+      ${a.audienceAll ? `<section class="cl-panel st-aud-edit"><h2>From the audience</h2>
+        <p class="small">Photos and messages the crowd sent you at your Sunday Showcase. They show on your page under your posts.</p>
+        <label class="check"><input type="checkbox" data-aud-on ${a.audienceAll.on ? 'checked' : ''}> Show “From the audience” on my page</label>
+        <div class="st-aud-photos">${a.audienceAll.photos.map((x) => `<figure class="${x.hidden ? 'off' : ''}"><img src="${esc(x.src)}" alt="" loading="lazy"><button class="btn ghost small" type="button" data-aud="${esc(x.id)}" data-hide="${x.hidden ? '' : '1'}">${x.hidden ? 'Show' : 'Hide'}</button></figure>`).join('')}</div>
+        <ul class="plain st-postlist">${a.audienceAll.notes.map((x) => `<li class="${x.hidden ? 'off' : ''}"><span>“${esc(x.message)}” · ${esc(x.name)}</span><button class="btn ghost small" type="button" data-aud="${esc(x.id)}" data-hide="${x.hidden ? '' : '1'}">${x.hidden ? 'Show' : 'Hide'}</button></li>`).join('')}</ul></section>` : ''}
     </div></div>`;
 }
 if (me) {
@@ -200,12 +205,15 @@ if (me) {
       } catch (err) { formMessage(f, err.message); }
       return;
     }
+    if (e.target.matches('[data-aud-on]')) { try { draw((await api('/api/stage/me/audience', { method: 'POST', body: { show: e.target.checked } })).artist); } catch (err) { alert(err.message); } return; }
     if (!e.target.matches('[data-photo]') || !e.target.files[0]) return;
     try { draw((await api('/api/stage/me/photo', { method: 'POST', body: { photo: await shrinkImage(e.target.files[0], 1000, 0.84) } })).artist); }
     catch (err) { alert(err.message); }
   });
   me.addEventListener('click', async (e) => {
     if (e.target.closest('[data-submit]')) { try { draw((await api('/api/stage/me/submit', { method: 'POST', body: {} })).artist); track('stage_submit'); } catch (err) { alert(err.message); } }
+    const aud = e.target.closest('[data-aud]');
+    if (aud) { try { draw((await api('/api/stage/me/audience', { method: 'POST', body: { id: aud.dataset.aud, hide: Boolean(aud.dataset.hide) } })).artist); } catch (err) { alert(err.message); } return; }
     const rm = e.target.closest('[data-rm-post]');
     if (rm && confirm('Remove this post from your page?')) { try { draw((await api(`/api/stage/me/post/${rm.dataset.rmPost}/remove`, { method: 'POST', body: {} })).artist); } catch (err) { alert(err.message); } }
     if (e.target.closest('[data-copy-me]')) { try { await navigator.clipboard.writeText(A.shareUrl); e.target.textContent = 'Copied'; } catch { prompt('Your link', A.shareUrl); } }

@@ -163,6 +163,29 @@ export function stageDomain(ctx) {
     return { action: 'wait', text: `On the way to ${next.name}. Still to do: ${missing.join('; ')}.` };
   }
 
+  // ---------- from the audience (Vivian, 25 Nov) ----------
+  // An act that played a Sunday Showcase: the photos and messages the audience sent them on the night,
+  // on their microverse. The act can hide the whole section, or any one photo or message.
+  function showcaseOf(a) {
+    const date = a.played && a.played.showcase;
+    if (!date || !ctx.showcase || !ctx.showcase.audience) return null;
+    if (a.showcaseSlug) return { date, slug: a.showcaseSlug };
+    const name = String(a.act || '').trim().toLowerCase();
+    const x = ((db.showcases || {})[date] || {}).acts || [];
+    const hit = x.find((y) => y && y.name && y.name.trim().toLowerCase() === name);
+    return hit && hit.slug ? { date, slug: hit.slug } : null;
+  }
+  function audienceOf(a, { all = false } = {}) {
+    const sc = showcaseOf(a);
+    if (!sc) return null;
+    const { notes, photos } = ctx.showcase.audience(sc.date, sc.slug);
+    const hidden = new Set(a.audienceHidden || []);
+    const mark = (x) => ({ ...x, hidden: hidden.has(x.id) });
+    const keep = (x) => all || !hidden.has(x.id);
+    const out = { date: sc.date, on: a.audience !== false, photos: photos.map(mark).filter(keep).reverse(), notes: notes.map(mark).filter(keep).reverse() };
+    return out.photos.length || out.notes.length ? out : null;
+  }
+
   // ---------- views ----------
   function publicView(a) {
     const s = stats(a);
@@ -173,6 +196,7 @@ export function stageDomain(ctx) {
       goals: goals(a, s).map(([label, done, part]) => ({ label, done, part: done ? 1 : Math.max(0, Math.min(0.99, part || 0)) })),
       backers: backers(a), href: `/stage/${a.slug}`, posts: (a.posts || []).slice().reverse(),
       jom: a.jom ? { slug: a.jomSlug, group: a.plays } : null,
+      audience: a.audience === false ? null : audienceOf(a),
     };
   }
   const progress = (v) => (v.goals.length ? v.goals.reduce((t, g) => t + g.part, 0) / v.goals.length : 1);
@@ -192,6 +216,7 @@ export function stageDomain(ctx) {
     const s = stats(a);
     return { ...publicView(a), name: a.name, email: a.email, status: a.status, ownWork: Boolean(a.ownWork), checks: pageChecks(a), boosters: boosters(a, s), shareable: isPublic(a), stillPlay: a.stillPlay || null,
       canSubmit: a.status === 'draft' && pageChecks(a).every((c) => c.done), views: s.views, shares: s.shares, vibes: VIBES,
+      audienceAll: audienceOf(a, { all: true }),
       messages: (a.decisions || []).filter((d) => d.message).map((d) => ({ at: d.at, message: d.message })).reverse(), shareUrl: `${site()}/stage/${a.slug}` };
   }
   function staffView(a) {
@@ -446,6 +471,22 @@ export function stageDomain(ctx) {
       const a = mine(req);
       await addPost(a, { kind: 'video', src: await saveVideo(ctx, req, `stage-${a.id}`) }, url.searchParams.get('caption'));
       send(res, 201, { artist: ownerView(a) });
+    });
+    // show or hide "From the audience", or one photo or message in it
+    r.post('/api/stage/me/audience', async (req, res) => {
+      const a = mine(req);
+      const b = await readJson(req, 512);
+      if (typeof b.show === 'boolean') a.audience = b.show;
+      if (typeof b.id === 'string' && typeof b.hide === 'boolean') {
+        const all = audienceOf(a, { all: true });
+        if (!all || ![...all.photos, ...all.notes].some((x) => x.id === b.id)) throw fail(404, 'That isn’t on your page.');
+        const set = new Set(a.audienceHidden || []);
+        if (b.hide) set.add(b.id); else set.delete(b.id);
+        a.audienceHidden = [...set];
+      }
+      a.updatedAt = iso();
+      await save();
+      send(res, 200, { artist: ownerView(a) });
     });
     r.post('/api/stage/me/post/:id/remove', async (req, res, { params }) => {
       const a = mine(req);
