@@ -225,7 +225,12 @@ export function showcaseDomain(ctx) {
   };
 
   return {
-    lineup, next, upcoming, act, runView, alumni, latestWall, crewCount: () => db.showcaseCrew.length, wallShown: (date, slug) => wallOf(date, slug).filter((w) => w.status === 'shown').slice(-60).reverse(), festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
+    lineup, next, upcoming, act, runView, alumni, latestWall,
+    // what the audience sent an act on the night: messages still on their wall, and photos that went up on the screen
+    audience: (date, slug) => ({
+      notes: wallOf(date, slug).filter((w) => w.kind === 'note' && w.by === 'fan' && w.status === 'shown').map((w) => ({ id: w.id, kind: 'note', name: w.name, message: w.message, at: w.at })),
+      photos: ((db.showcaseLive[date] || {}).queue || []).filter((q) => q.kind === 'photo' && q.slug === slug && q.status === 'shown').map((q) => ({ id: q.id, kind: 'photo', src: q.src, at: q.at })),
+    }), crewCount: () => db.showcaseCrew.length, wallShown: (date, slug) => wallOf(date, slug).filter((w) => w.status === 'shown').slice(-60).reverse(), festival: () => ctx.content.festivals.find((f) => f.theme === 'christmas') || null,
     routes(r) {
       r.get('/api/showcases', (req, res) => send(res, 200, next() || {}));
 

@@ -1917,3 +1917,11 @@ body.ssc-screen { margin: 0; height: 100vh; overflow: hidden; background: #06040
 .ssc-screen:not(.is-idle) .ssc-note { left: auto; right: 2vw; top: 52vh; max-width: 31vw; transform: translateX(130%); }
 .ssc-screen:not(.is-idle) .ssc-note.in { transform: none; }
 .ssc-screen:not(.is-idle) .ssc-note p { font-size: 3.2vh; }
+
+/* TAM Stage: from the audience (photos and messages from the act's Sunday Showcase) */
+.st-aud { margin-top: 2.5rem; }
+.st-aud-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 1rem 0; }
+.st-aud-photos figure { margin: 0; position: relative; }
+.st-aud-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; display: block; background: #111; }
+.st-aud-edit .st-aud-photos button { position: absolute; left: 6px; bottom: 6px; }
+.st-aud-edit .off img, .st-aud-edit li.off span { opacity: .35; }

@@ -134,3 +134,38 @@ test('reserved addresses are kept, and the showcase acts can be brought onto the
   assert.equal(j.stage, 3);
   assert.equal((await call(`/stage/${j.slug}`)).status, 200);
 });
+
+test('from the audience: photos and messages the crowd sent at the act\'s Sunday Showcase show on their microverse, and the act can hide them', async (t) => {
+  const { app, call, sent, wait, staff } = await setup(t);
+  const date = app.ctx.today();
+  app.ctx.db.showcases = { [date]: { count: 1, acts: [{ slug: 'loud-band', name: 'Loud Band', plays: 'Rock', email: 'loud@band.test', links: [] }] } };
+  // on the night: a message and a photo go up on the big screen
+  assert.equal((await call(`/api/showcases/${date}/act/loud-band/wall`, { method: 'POST', body: { name: 'Kim', message: 'What a set!' } })).status, 201);
+  assert.equal((await call(`/api/showcases/${date}/act/loud-band/react/photo`, { method: 'POST', body: { image: PNG } })).status, 201);
+  // the act's microverse, from the showcase line-up
+  assert.equal((await call('/api/stage/import-showcase', { method: 'POST', body: {}, headers: staff })).body.added, 1);
+  const slug = app.ctx.db.arArtists.find((a) => a.showcaseSlug === 'loud-band').slug;
+  let pg = (await call(`/stage/${slug}`)).body;
+  assert.match(pg, /From the audience/);
+  assert.match(pg, /What a set!/);
+  const photo = /<img src="(\/uploads\/react-loud-band-[^"]+)" alt="A photo from the audience"/.exec(pg);
+  assert.ok(photo, 'the audience photo shows');
+  // the act signs in and hides the photo, then the whole section
+  await call('/api/stage/link', { method: 'POST', body: { email: 'loud@band.test' } });
+  await wait(1);
+  const tok = /stage\/in\?t=([\w-]+)/.exec(sent.find((m) => m.to[0] === 'loud@band.test').html)[1];
+  const cookie = (await call('/api/stage/in', { method: 'POST', body: { t: tok } })).headers.get('set-cookie').split(';')[0];
+  const me = (await call('/api/stage/me', { cookie })).body.artist;
+  assert.equal(me.audienceAll.photos.length, 1);
+  assert.equal(me.audienceAll.notes.length, 1);
+  assert.equal((await call('/api/stage/me/audience', { method: 'POST', cookie, body: { id: 'nope', hide: true } })).status, 404);
+  await call('/api/stage/me/audience', { method: 'POST', cookie, body: { id: me.audienceAll.photos[0].id, hide: true } });
+  pg = (await call(`/stage/${slug}`)).body;
+  assert.ok(!pg.includes(photo[1]), 'a hidden photo is gone');
+  assert.match(pg, /What a set!/);
+  await call('/api/stage/me/audience', { method: 'POST', cookie, body: { show: false } });
+  assert.doesNotMatch((await call(`/stage/${slug}`)).body, /From the audience/);
+  assert.equal((await call('/api/stage/me/audience', { method: 'POST', cookie, body: { show: true } })).body.artist.audience.photos.length, 0); // still hidden
+  // nobody else can change it
+  assert.equal((await call('/api/stage/me/audience', { method: 'POST', body: { show: false } })).status, 401);
+});
