@@ -342,6 +342,10 @@ export function loadContent(dir = path.join(path.dirname(new URL(import.meta.url
       }
       n.summary = `Part of ${festivalBy.get(n.festival).name}: ${names.join(', then ')}.`;
     }
+    // private bookings (site.json privateDates): nothing is listed or sold on those dates, whatever the source
+    const privateDays = new Set((site.privateDates || []).map((x) => (typeof x === 'string' ? x : x.date)));
+    for (let i = out.length - 1; i >= 0; i--) if (privateDays.has(out[i].date) && out[i].source !== 'show') out.splice(i, 1); // a show staff publish in /shows still stands
+    for (let i = scheduledPast.length - 1; i >= 0; i--) if (privateDays.has(scheduledPast[i].date)) scheduledPast.splice(i, 1);
     out.sort((a, b) => a.start.localeCompare(b.start));
     nights.length = 0; nights.push(...out);
     nightBy.clear(); for (const n of nights) nightBy.set(n.slug, n);

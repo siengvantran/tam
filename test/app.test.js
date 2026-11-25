@@ -28,10 +28,12 @@ async function start(env = {}) {
 }
 const book = (s, extra = {}) => s.call('/api/bookings', { method: 'POST', body: { night: 'best-christmas-ever-2026-12-08', type: 'standard', qty: 2, name: 'Sam', email: 'sam@example.com', ...extra } });
 
-test('content: 21 Christmas nights, closed over Christmas, every reference checks', () => {
+test('content: 20 Christmas nights, closed over Christmas and on private bookings, every reference checks', () => {
   const c = loadContent();
   const xmas = c.nightsFor('best-christmas-ever').filter((n) => n.sale);
-  assert.equal(xmas.length, 21);
+  assert.equal(xmas.length, 20);
+  // private bookings (Vivian, 25 Nov): nothing listed or sold on 1 and 10 December
+  assert.ok(!c.nights.some((n) => n.date === '2026-12-01' || n.date === '2026-12-10'));
   assert.ok(!xmas.some((n) => n.date >= '2026-12-24' && n.date <= '2026-12-28'));
   assert.equal(c.nightBy.get('big-christmas-hootenanny').sale.mode, 'own');
   assert.equal(c.nightBy.get('dana-gillespie-live').sale.mode, 'standard');
@@ -283,7 +285,7 @@ test('the performance schedule: public nights only, and December belongs to the 
   for (const slug of ['big-christmas-hootenanny', 'best-christmas-ever-2026-12-05', 'dana-gillespie-live', 'best-christmas-ever-2026-12-20']) assert.ok(c.nightBy.get(slug).handmade, slug);
   assert.equal(c.nightBy.get('best-christmas-ever-2026-12-05').title, 'The MMC Christmas Shindig');
   assert.equal(c.nightBy.get('big-christmas-hootenanny').title, 'The Big Christmas Hootenanny'); // headline nights keep their own name
-  assert.ok(c.nightBy.get('word-of-mouth-2026-12-01').festival === 'best-christmas-ever');
+  assert.ok(c.nights.filter((n) => n.source === 'schedule' && n.date.startsWith('2026-12-')).every((n) => n.festival === 'best-christmas-ever'));
   assert.ok(c.upcoming('2026-11-02').some((n) => n.series === 'singers-sunday-spot' && n.date.startsWith('2027-')));
   const decPast = c.pastForFestival(c.festivalBy.get('best-christmas-ever'));
   assert.ok(decPast.length > 100);
